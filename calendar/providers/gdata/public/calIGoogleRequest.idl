@@ -1,0 +1,154 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Provider for Google Calendar code.
+ *
+ * The Initial Developer of the Original Code is
+ *   Philipp Kewisch <mozilla@kewis.ch>
+ * Portions created by the Initial Developer are Copyright (C) 2008
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+#include "calIOperation.idl"
+
+interface calICalendar;
+interface calIGoogleSession;
+interface calIGoogleCalendar;
+interface calIGenericOperationListener;
+interface calIOperationListener;
+interface calIDateTime;
+interface calIItemBase;
+
+interface nsIVariant;
+
+[scriptable, uuid(53a3438a-21bc-4a0f-b813-77a8b4f19282)]
+interface calIGoogleRequest : calIOperation {
+
+    const unsigned long LOGIN = 0;
+    const unsigned long ADD = 1;
+    const unsigned long MODIFY = 2;
+    const unsigned long DELETE = 3;
+    const unsigned long GET = 4;
+
+    /**
+     * The type of request. Must be one of the above constants.
+     */
+    attribute PRUint32 type;
+
+    /**
+     * The request uri string
+     */
+    attribute AUTF8String uri;
+
+    /**
+     * The operation listener. This is not called by the request object, but can
+     * be used by the response listener to call the original listener that
+     * caused the request
+     */
+    attribute calIOperationListener operationListener;
+
+    /**
+     * The response listener. This will be called as soon as the request to
+     * google has completed.
+     */
+    attribute calIGenericOperationListener responseListener;
+
+    /**
+     * The calendar that initiated the request
+     */
+    attribute calIGoogleCalendar calendar;
+
+    /**
+     * The destination calendar, used for synchronization runs.
+     */
+    attribute calICalendar destinationCal;
+
+    /**
+     * If set to false, an authentication failure should not cause any dialogs
+     * to show up that cause reauthentication, but the failure should be
+     * returned directly.
+     *
+     * This attribute defaults to true.
+     */
+    attribute boolean reauthenticate;
+
+    /**
+     * Various options to be carried through to the response listener.
+     * XXX The corresponding options are not set up automatically just by
+     * setting these options. You still need to use addQueryParameter to filter
+     * by item range or other property.
+     */
+    attribute calIDateTime itemRangeStart;
+    attribute calIDateTime itemRangeEnd;
+    attribute unsigned long itemFilter;
+    attribute AUTF8String itemId;
+
+    /**
+     * For add/modify/delete item requests, these contain the old and new items.
+     */
+    attribute calIItemBase newItem;
+    attribute calIItemBase oldItem;
+
+    /**
+     * Set up some upload data using the given content type
+     *
+     * @param aContentType      The value of the content type header to be set.
+     * @param aData             The Data to be uploaded.
+     */
+    void setUploadData(in AUTF8String aContentType, in AUTF8String aData);
+
+    /**
+     * Adds a query parameter to the request. These will be escaped.
+     *
+     * @param aKey      The key of the query parameter.
+     * @param aValue    The value of the query parameter.
+     */
+    void addQueryParameter(in AUTF8String aKey, in AUTF8String aValue);
+
+    /**
+     * Run the request, using the specified session.
+     *
+     * @param aSession      The session to request with.
+     */
+    void commit(in calIGoogleSession aSession);
+
+    /**
+     * Tell listeners that the operation failed
+     *
+     * @param aCode     The error code to use.
+     * @param aMessage  The error message to use.
+     */
+    void fail(in PRUint32 aCode, in AUTF8String aMessage);
+
+    /**
+     * Tell listeners that the operation succeeded.
+     *
+     * @param aMessage  The error message to use.
+     */
+    void succeed(in AUTF8String aMessage);
+};

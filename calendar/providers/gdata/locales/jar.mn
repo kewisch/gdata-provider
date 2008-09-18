@@ -1,0 +1,6 @@
+#filter substitution
+
+gdata-provider-@AB_CD@.jar:
+% locale gdata-provider @AB_CD@ %locale/@AB_CD@/
+    locale/@AB_CD@/gdata.properties              (%chrome/calendar/providers/gdata/gdata.properties)
+    locale/@AB_CD@/gdata.dtd                     (%chrome/calendar/providers/gdata/gdata.dtd)

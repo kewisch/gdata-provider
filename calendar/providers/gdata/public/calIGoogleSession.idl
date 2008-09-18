@@ -1,0 +1,116 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Provider for Google Calendar code.
+ *
+ * The Initial Developer of the Original Code is
+ *   Philipp Kewisch <mozilla@kewis.ch>
+ * Portions created by the Initial Developer are Copyright (C) 2008
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+#include "nsISupports.idl"
+
+interface calIGoogleSession;
+interface calIGoogleCalendar;
+interface calIEvent;
+interface calIDateTime;
+interface calIGenericOperationListener;
+interface calIOperationListener;
+interface calIGoogleRequest;
+interface calIOperation;
+
+interface nsIVariant;
+
+[scriptable, uuid(6a7ba1f0-f271-49b0-8e93-5ca33651b4af)]
+interface calIGoogleSessionManager : nsISupports {
+    /**
+     * getSessionByUsername
+     * Get a Session object for the specified username. If aCreate is false,
+     * null will be returned if the session doesn't exist. Otherwise, the
+     * session will be created.
+     *
+     * @param aUsername The username to get the session for
+     * @param aCreate   If true, the session will be created prior to returning
+     */
+     calIGoogleSession getSessionByUsername(in AUTF8String aUsername, in boolean aCreate);
+
+};
+
+[scriptable, uuid(652f6233-e03f-438a-bd3b-39877f68c0f4)]
+interface calIGoogleSession : nsISupports {
+    /**
+     * The Authentication Token from Google
+     */
+    readonly attribute AUTF8String authToken;
+
+    /**
+     * The username for this session. To get a session with a different
+     * username, use calIGoogleSessionManager.
+     */
+    readonly attribute AUTF8String userName;
+
+    /**
+     * If set, the password will persist across restarts.
+     */
+    attribute boolean persist;
+
+    /**
+     * The user's full name, usually retrieved from the XML <author> fields. If
+     * unset, this will return the userName attribute.
+     */
+    attribute AUTF8String fullName;
+
+    /**
+     * The password used to authenticate. It is only important to implement the
+     * setter here, since the password is only used internally.
+     */
+    attribute AUTF8String password;
+
+    /**
+     * Resets the Auth token and sets the persist attribute to false.
+     */
+    void invalidate();
+
+    /**
+     * getCalendars
+     * Get the list of calendars for this session. The operaion listener will be
+     * called with an array of calIGoogleCalendars.
+     *
+     * @param aListener The listener to call when the calendars were retrieved
+     */
+    calIOperation getCalendars(in calIGenericOperationListener aListener);
+
+    /**
+     * asyncItemRequest
+     * Send a request to Google, logging in to the session if required.
+     *
+     * @param aRequest      The calIGoogleRequest to send
+     */
+    void asyncItemRequest(in calIGoogleRequest aRequest);
+};

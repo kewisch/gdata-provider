@@ -1,0 +1,15 @@
+#filter substitution
+
+gdata-provider.jar:
+% content gdata-provider %content/
+% skin gdata-provider classic/1.0 %skin/
+% overlay chrome://calendar/content/calendarCreation.xul chrome://gdata-provider/content/calendarCreation.xul
+% overlay chrome://calendar/content/calendar.xul chrome://gdata-provider/content/gdata-migration-overlay.xul    application={718e30fb-e89b-41dd-9da7-e25a45638b28}
+% overlay chrome://messenger/content/messenger.xul chrome://gdata-provider/content/gdata-migration-overlay.xul  application={3550f703-e582-4d05-9a08-453d09bdfdc6}
+% overlay chrome://calendar/content/sun-calendar-event-dialog.xul chrome://gdata-provider/content/gdata-calendar-event-dialog.xul
+    content/calendarCreation.xul                 (content/calendarCreation.xul)
+    content/gdata-calendar-event-dialog.xul      (content/gdata-calendar-event-dialog.xul)
+    content/gdata-migration.js                   (content/gdata-migration.js)
+    content/gdata-migration-overlay.xul          (content/gdata-migration-overlay.xul)
+    content/gdata-migration-wizard.xul           (content/gdata-migration-wizard.xul)
+    content/gcal.png                             (content/gcal.png)
