@@ -274,7 +274,7 @@ calGoogleSession.prototype = {
                         var newSession = getGoogleSessionManager()
                                          .getSessionByUsername(username.value,
                                                                true);
-                        newSession.googlePassword = password.value;
+                        newSession.password = password.value;
                         newSession.persist = persist.value;
                         setCalendarPref(aCalendar,
                                         "googleUser",
