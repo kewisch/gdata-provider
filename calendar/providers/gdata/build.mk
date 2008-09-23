@@ -40,7 +40,6 @@
 # # Options for client.mk.
 # mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-gdata
 #
-# mk_add_options MOZ_CO_PROJECT="gdata"
 # mk_add_options AVAILABLE_PROJECTS="gdata"
 #
 # # Needed to keep toolkit from building (if required)
