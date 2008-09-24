@@ -319,6 +319,7 @@ calGoogleSession.prototype = {
                         // First of all, disable the calendar so no further login
                         // dialogs show up.
                         aCalendar.setProperty("disabled", true);
+                        aCalendar.setProperty("auto-enabled", true);
 
                         // Unset the session in the requesting calendar, if the user
                         // canceled the login dialog that also asks for the
