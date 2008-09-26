@@ -37,8 +37,8 @@
 ifndef OBJDIR
 OBJDIR_PPC = $(MOZ_OBJDIR)/ppc
 OBJDIR_X86 = $(MOZ_OBJDIR)/i386
-DIST_PPC = $(OBJDIR_PPC)/dist
-DIST_X86 = $(OBJDIR_X86)/dist
+DIST_PPC = $(OBJDIR_PPC)/mozilla/dist
+DIST_X86 = $(OBJDIR_X86)/mozilla/dist
 DIST_UNI = $(DIST_PPC)/universal
 OBJDIR = $(OBJDIR_PPC)
 endif
