@@ -361,9 +361,10 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
     var selfIsOrganizer = (!aItem.organizer || aItem.organizer.id == "mailto:" + aAuthorEmail);
 
     function addExtendedProperty(aName, aValue) {
-        if (!selfIsOrganizer) {
+        if (!selfIsOrganizer || !aValue) {
             // We can't set extended properties if we are not the organizer,
-            // discard.
+            // discard. Also, if the value is null/false, we can delete the
+            // extended property by not adding it.
             return;
         }
         var gdExtendedProp = <gd:extendedProperty xmlns:gd={gd}/>;
@@ -531,7 +532,6 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
     // what alarm is used for snoozing.
 
     // gd:extendedProperty (snooze time)
-    var gdAlarmSnoozeTime = <gd:extendedProperty xmlns:gd={gd}/>;
     var itemSnoozeTime = aItem.getProperty("X-MOZ-SNOOZE-TIME");
     var icalSnoozeTime = null;
     if (itemSnoozeTime) {
