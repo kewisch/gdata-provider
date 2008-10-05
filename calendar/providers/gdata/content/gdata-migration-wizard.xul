@@ -50,9 +50,9 @@
         width="300"
         height="300"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/x-javascript" src="chrome://gdata-provider/content/gdata-migration.js"/>
-  <script type="application/x-javascript" src="chrome://calendar/content/calUtils.js"/>
-  <script type="application/x-javascript" src="chrome://calendar/content/calendar-views.js"/>
+  <script type="application/javascript" src="chrome://gdata-provider/content/gdata-migration.js"/>
+  <script type="application/javascript" src="chrome://calendar/content/calUtils.js"/>
+  <script type="application/javascript" src="chrome://calendar/content/calendar-views.js"/>
 
   <description>&gdata.migration.description;</description>
   <listbox id="calendars-listbox" flex="1"/>
