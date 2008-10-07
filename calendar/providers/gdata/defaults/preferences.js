@@ -43,6 +43,13 @@ pref("extensions.{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}.name",
 /* other default prefs */
 pref("calendar.google.useHTTPMethodOverride", true);
 pref("calendar.google.alarmClosest", true);
-pref("calendar.google.sendEventNotifications", false);
-pref("calendar.google.enableAttendees", false);
 pref("calendar.google.migrate", true);
+
+/**
+ * Invitations and notifications.
+ * Note that if enableEmailInvitations is enabled it is a good idea to disable
+ * attendees or at least sending event notifications.
+ */
+pref("calendar.google.sendEventNotifications", true);
+pref("calendar.google.enableAttendees", true);
+pref("calendar.google.enableEmailInvitations", false);

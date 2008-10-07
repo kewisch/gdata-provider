@@ -268,14 +268,24 @@ calGoogleCalendar.prototype = {
                 }
                 break;
             case "itip.transport":
-                // If we explicitly return null here, then these calendars will
-                // not be included in the list of calendars to accept
-                // invitations to and imip will effectively be disabled.
-                return null;
+                if (!this.isDefaultCalendar ||
+                    !getPrefSafe("calendar.google.enableEmailInvitations", false)) {
+                    // If we explicitly return null here, then these calendars
+                    // will not be included in the list of calendars to accept
+                    // invitations to and imip will effectively be disabled.
+                    return null;
+                }
+                break;
             case "imip.identity.disabled":
                 // Disabling this hides the picker for identities in the new
-                // calendar wizard and calendar properties dialog.
-                return true;
+                // calendar wizard and calendar properties dialog. This should
+                // be done for all secondary calendars as they cannot accept
+                // invitations and if email invitations are generally disabled.
+                if (!this.isDefaultCalendar ||
+                    !getPrefSafe("calendar.google.enableEmailInvitations", false)) {
+                    return true;
+                }
+                break;
         }
 
         return this.__proto__.__proto__.getProperty.apply(this, arguments);
