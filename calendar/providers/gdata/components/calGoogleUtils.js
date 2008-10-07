@@ -358,7 +358,8 @@ function passwordManagerRemove(aUsername) {
  */
 function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
 
-    var selfIsOrganizer = (!aItem.organizer || aItem.organizer.id == "mailto:" + aAuthorEmail);
+    var selfIsOrganizer = (!aItem.organizer ||
+                            aItem.organizer.id == "mailto:" + aItem.calendar.googleCalendarName);
 
     function addExtendedProperty(aName, aValue) {
         if (!selfIsOrganizer || !aValue) {
@@ -846,7 +847,7 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
          */
         function parseReminders(reminderTags) {
             if (aXMLEntry.gd::who.(@rel.substring(33) == "event.organizer")
-                         .@email.toString() != aCalendar.session.userName) {
+                         .@email.toString() != aCalendar.googleCalendarName) {
                 // We are not the organizer, so its not smart to set alarms on
                 // this event.
                 return;

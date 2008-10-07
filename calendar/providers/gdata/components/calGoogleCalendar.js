@@ -382,7 +382,13 @@ calGoogleCalendar.prototype = {
             // Set up the request
             var request = new calGoogleRequest(this.session);
 
-            var xmlEntry = ItemToXMLEntry(aNewItem,
+            // We need to clone the new item, its possible that ItemToXMLEntry
+            // will modify the item. For example, if the item is organized by
+            // someone else, we cannot save alarms on it and they should
+            // therefore not be added in the returned item. 
+            var newItem = aNewItem.clone();
+
+            var xmlEntry = ItemToXMLEntry(newItem,
                                           this.session.userName,
                                           this.session.fullName);
 
@@ -401,7 +407,7 @@ calGoogleCalendar.prototype = {
             request.setUploadData("application/atom+xml; charset=UTF-8", xmlEntry);
             request.responseListener = this.modifyItem_response,
             request.operationListener = aListener;
-            request.newItem = aNewItem;
+            request.newItem = newItem;
             request.oldItem = aOldItem;
             request.calendar = this;
 
