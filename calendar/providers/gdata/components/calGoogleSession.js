@@ -248,6 +248,10 @@ calGoogleSession.prototype = {
             ASSERT(!this.mLoggingIn);
             ASSERT(this.mGoogleUser);
 
+            // Start logging in
+            this.mLoggingIn = true;
+
+
             // Check if we have a password. If not, authentication may have
             // failed.
             if (!this.mGooglePass) {
@@ -328,6 +332,9 @@ calGoogleSession.prototype = {
                         aCalendar.session = null;
                     }
 
+                    // We are done logging in
+                    this.mLoggingIn = false;
+
                     // The User even canceled the login prompt asking for
                     // the user. This means we have to fail all requests
                     // that belong to that calendar and are in the queue. This
@@ -342,9 +349,6 @@ calGoogleSession.prototype = {
 
             // Now we should have a password
             ASSERT(this.mGooglePass);
-
-            // Start logging in
-            this.mLoggingIn = true;
 
             // Get Version info
             var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].
