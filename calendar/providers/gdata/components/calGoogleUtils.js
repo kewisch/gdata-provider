@@ -1079,7 +1079,7 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
 
                 attendee.id = "mailto:" + who.@email.toString();
                 attendee.commonName = who.@valueString.toString();
-                attendee.rsvp = false;
+                attendee.rsvp = "FALSE";
                 attendee.userType = "INDIVIDUAL";
                 attendee.isOrganizer = (rel == "event.organizer");
                 attendee.participationStatus = attendeeStatusMap[status];
