@@ -58,21 +58,7 @@ DEFINES += -DAB_CD=$(AB_CD) \
 PREF_JS_EXPORTS = $(srcdir)/defaults/preferences.js
 DIRS = components locales public
 
-# Get all directories in /l10n/*, that contain a
-# calendar/chrome/calendar/providers/gdata subdir.
-calendar_locales := $(subst /calendar/chrome/calendar/providers/gdata,,$(subst $(topsrcdir)/../l10n/,,$(wildcard $(topsrcdir)/../l10n/*/calendar/chrome/calendar/providers/gdata)))
-# Now make sure those dirs are in shipped-locales
-shipped_locales :=$(shell cat $(topsrcdir)/calendar/locales/shipped-locales)
-locales_to_build :=$(foreach locale,$(calendar_locales),$(if $(filter $(locale),$(shipped_locales)),$(locale)))
-
-ifneq ($(strip $(locales_to_build)),)
-# The l10n directory is checked out and contains supported locales, start building our locales
-
-libs:: $(addprefix libs-,$(locales_to_build))
 libs-%:
-	@echo - gdata locales to build -- $(locales_to_build)
 	$(MAKE) -C locales libs AB_CD=$* XPI_NAME=$(XPI_NAME) USE_EXTENSION_MANIFEST=1
-
-endif
 
 include $(topsrcdir)/config/rules.mk
