@@ -36,6 +36,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+Components.utils.import("resource://calendar/modules/calUtils.jsm");
+Components.utils.import("resource://calendar/modules/calIteratorUtils.jsm");
+
 /**
  * getGoogleSessionManager
  * Shortcut to the google session manager
@@ -195,7 +198,7 @@ function fromRFC3339(aStr, aTimezone) {
     //
 
     // Create a DateTime instance (calUtils.js)
-    var dateTime = createDateTime();
+    let dateTime = cal.createDateTime();
 
     // Killer regex to parse RFC3339 dates
     var re = new RegExp("^([0-9]{4})-([0-9]{2})-([0-9]{2})" +
@@ -537,7 +540,7 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
     var icalSnoozeTime = null;
     if (itemSnoozeTime) {
         // The propery is saved as a string, translate back to calIDateTime.
-        icalSnoozeTime = createDateTime();
+        icalSnoozeTime = cal.createDateTime();
         icalSnoozeTime.icalString = itemSnoozeTime;
     }
     addExtendedProperty("X-MOZ-SNOOZE-TIME", toRFC3339(icalSnoozeTime));
@@ -792,7 +795,7 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
     var atom = new Namespace("", "http://www.w3.org/2005/Atom");
     default xml namespace = atom;
 
-    var item = (aReferenceItem ? aReferenceItem.clone() : createEvent());
+    let item = (aReferenceItem ? aReferenceItem.clone() : cal.createEvent());
 
     try {
         // id
@@ -859,8 +862,7 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
                 // We are only intrested in "alert" reminders. Other types
                 // include sms and email alerts, but thats not the point here.
                 if (reminder.@method == "alert") {
-                    var alarmOffset = Components.classes["@mozilla.org/calendar/duration;1"]
-                                        .createInstance(Components.interfaces.calIDuration);
+                    let alarmOffset = cal.createDuration();
 
                     if (reminder.@absoluteTime.toString()) {
                         var absolute = fromRFC3339(reminder.@absoluteTime,
@@ -927,7 +929,7 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
             parseReminders(aXMLEntry.gd::when.gd::reminder);
         } else {
             if (!item.recurrenceInfo) {
-                item.recurrenceInfo = createRecurrenceInfo(item);
+                item.recurrenceInfo = cal.createRecurrenceInfo(item);
             } else {
                 item.recurrenceInfo.clearRecurrenceItems();
             }
@@ -947,10 +949,9 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
             var icsService = getIcsService();
 
             var rootComp = icsService.parseICS(vevent, gdataTimezoneService);
-            var prop = rootComp.getFirstProperty("ANY");
             var i = 0;
             var hasRecurringRules = false;
-            while (prop) {
+            for (let prop in cal.ical.propertyIterator(rootComp)) {
                switch (prop.propertyName) {
                     case "EXDATE":
                         var recItem = Components.classes["@mozilla.org/calendar/recurrence-date;1"]
@@ -964,7 +965,7 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
                         }
                         break;
                     case "RRULE":
-                        var recRule = createRecurrenceRule();
+                        let recRule = cal.createRecurrenceRule();
                         try {
                             recRule.icalProperty = prop;
                             item.recurrenceInfo.appendRecurrenceItem(recRule);
@@ -980,7 +981,6 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
                         item.endDate = prop.valueAsDatetime;
                         break;
                 }
-                prop = rootComp.getNextProperty("ANY");
             }
 
             if (!hasRecurringRules) {
@@ -1071,7 +1071,7 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
 
             // Iterate all attendee tags.
             for each (var who in aXMLEntry.gd::who) {
-                var attendee = createAttendee();
+                let attendee = cal.createAttendee();
 
                 var rel = who.@rel.toString().substring(33);
                 var type = who.gd::attendeeType.@value.toString().substring(33);
