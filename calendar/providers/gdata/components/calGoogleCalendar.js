@@ -403,7 +403,7 @@ calGoogleCalendar.prototype = {
                                           this.session.fullName);
 
             if (aOldItem.parentItem != aOldItem &&
-                !aOldItem.parentItem.recurrenceInfo.getExceptionFor(aOldItem.startDate, false)) {
+                !aOldItem.parentItem.recurrenceInfo.getExceptionFor(aOldItem.startDate)) {
 
                 // In this case we are modifying an occurence, not deleting it
                 request.type = request.ADD;
