@@ -202,7 +202,7 @@ function fromRFC3339(aStr, aTimezone) {
 
     // Killer regex to parse RFC3339 dates
     var re = new RegExp("^([0-9]{4})-([0-9]{2})-([0-9]{2})" +
-        "([Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(\.[0-9]+)?)?" +
+        "([Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(\\.[0-9]+)?)?" +
         "(([Zz]|([+-])([0-9]{2}):([0-9]{2})))?");
 
     var matches = re.exec(aStr);
