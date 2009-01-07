@@ -50,7 +50,11 @@ XPI_PKGNAME = gdata-provider
 STRIP_XPI = 1
 
 CALENDAR_VERSION := $(shell cat $(topsrcdir)/calendar/sunbird/config/version.txt)
+ifdef MOZILLA_1_9_1_BRANCH
+THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version-191.txt)
+else
 THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version.txt)
+endif
 DEFINES += -DAB_CD=$(AB_CD) \
            -DCALENDAR_VERSION=$(CALENDAR_VERSION) \
            -DTHUNDERBIRD_VERSION=$(THUNDERBIRD_VERSION) \
