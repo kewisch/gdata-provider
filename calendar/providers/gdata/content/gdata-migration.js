@@ -69,7 +69,6 @@ function migrateSelectedCalendars() {
 
     // Only bring up the dialog on the next startup if the user wants us to.
     setPref("calendar.google.migrate",
-            "BOOL",
             document.getElementById("showagain-checkbox").checked);
 }
 
@@ -99,10 +98,10 @@ function gdata_migration_loader() {
 
     if (document.documentElement.id == "gdata-migration-wizard") {
         // This is the migration wizard, load the calendars neeeded.
-        var listbox = document.getElementById("calendars-listbox");
+        let listbox = document.getElementById("calendars-listbox");
 
-        for each (var calendar in getMigratableCalendars()) {
-            var item = listbox.appendItem(calendar.name, calendar.id);
+        for each (let calendar in sortCalendarArray(getMigratableCalendars())) {
+            let item = listbox.appendItem(calendar.name, calendar.id);
             item.setAttribute("type", "checkbox");
             item.calendar = calendar;
         }

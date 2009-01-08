@@ -72,7 +72,7 @@ var gGoogleSandbox;
 function setCalendarPref(aCalendar, aPrefName, aPrefType, aPrefValue) {
 
     setPref("calendar.google.calPrefs." + aCalendar.googleCalendarName + "." +
-            aPrefName, aPrefType, aPrefValue);
+            aPrefName, aPrefValue, aPrefType);
 
     return aPrefValue;
 }
