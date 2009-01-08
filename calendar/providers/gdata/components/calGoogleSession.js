@@ -590,9 +590,9 @@ calGoogleSession.prototype = {
         var intervals = [];
         const fbtypes = Components.interfaces.calIFreeBusyInterval;
         for each (var entry in xml.entry) {
-            var start =  fromRFC3339(entry.gd::when.@startTime.toString(), timezone);
-            var end = fromRFC3339(entry.gd::when.@endTime.toString(), timezone);
-            var interval = new calFreeBusyInterval(aCalId, fbtypes.BUSY, start, end);
+            let start =  fromRFC3339(entry.gd::when.@startTime.toString(), timezone);
+            let end = fromRFC3339(entry.gd::when.@endTime.toString(), timezone);
+            let interval = new cal.FreeBusyInterval(aCalId, fbtypes.BUSY, start, end);
             LOGinterval(interval);
             intervals.push(interval);
         }

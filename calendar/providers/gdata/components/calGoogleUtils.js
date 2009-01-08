@@ -123,11 +123,11 @@ function getCalendarCredentials(aCalendarName,
                                 aUsername,
                                 aPassword,
                                 aSavePassword) {
-    return calGetCredentials(getFormattedString("gdata", "loginDialogTitle"),
-                             aCalendarName,
-                             aUsername,
-                             aPassword,
-                             aSavePassword);
+    return cal.auth.getCredentials(getFormattedString("gdata", "loginDialogTitle"),
+                                   aCalendarName,
+                                   aUsername,
+                                   aPassword,
+                                   aSavePassword);
 }
 
 /**
@@ -324,7 +324,7 @@ function toRFC3339(aDateTime) {
  * @param aPassword     The corresponding password
  */
 function passwordManagerSave(aUsername, aPassword) {
-    calPasswordManagerSave(aUsername, aPassword, aUsername, "Google Calendar");
+    cal.auth.passwordManagerSave(aUsername, aPassword, aUsername, "Google Calendar");
 }
 
 /**
@@ -336,7 +336,7 @@ function passwordManagerSave(aUsername, aPassword) {
  * @return                  Does an entry exist in the password manager
  */
 function passwordManagerGet(aUsername, aPassword) {
-    return calPasswordManagerGet(aUsername, aPassword, aUsername, "Google Calendar");
+    return cal.auth.passwordManagerGet(aUsername, aPassword, aUsername, "Google Calendar");
 }
 
 /**
@@ -347,7 +347,7 @@ function passwordManagerGet(aUsername, aPassword) {
  * @return              Could the user be removed?
  */
 function passwordManagerRemove(aUsername) {
-    return calPasswordManagerRemove(aUsername, aUsername, "Google Calendar");
+    return cal.auth.passwordManagerRemove(aUsername, aUsername, "Google Calendar");
 }
 
 /**

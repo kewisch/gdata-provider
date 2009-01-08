@@ -49,7 +49,7 @@ function calGoogleCalendar() {
 }
 
 calGoogleCalendar.prototype = {
-    __proto__: calProviderBase.prototype,
+    __proto__: cal.ProviderBase.prototype,
 
     QueryInterface: function cGS_QueryInterface(aIID) {
         return doQueryInterface(this,
