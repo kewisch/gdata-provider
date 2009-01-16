@@ -498,34 +498,45 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
     entry.gd::when.@endTime = toRFC3339(aItem.endDate);
 
     // gd:reminder
-    if (aItem.alarmOffset && selfIsOrganizer) {
-        var gdReminder = <gd:reminder xmlns:gd={gd}/>;
-        var alarmOffset = aItem.alarmOffset.clone();
+    let alarms = aItem.getAlarms({});
+    let actionMap = {
+        DISPLAY: "alert",
+        EMAIL: "email",
+        SMS: "sms"
+    };
+    if (selfIsOrganizer) {
+        for (let i = 0; i < 5 && i < alarms.length; i++) {
+            let alarm = alarms[i];
+            let gdReminder = <gd:reminder xmlns:gd={gd}/>;
+            if (alarm.related == alarm.ALARM_RELATED_ABSOLUTE) {
+                // Setting an absolute date can be done directly. Google will take
+                // care of calculating the offset.
+                gdReminder.@absoluteTime = toRFC3339(alarm.alarmDate);
+            } else {
+                let alarmOffset = alarm.offset;
+                if (alarm.related == alarm.ALARM_RELATED_END) {
+                    // Google always uses an alarm offset related to the start time
+                    // for relative alarms.
+                    alarmOffset = alarmOffset.clone();
+                    alarmOffset.addDuration(duration);
+                }
 
-        if (aItem.alarmRelated == Components.interfaces.calIItemBase.ALARM_RELATED_END) {
-            // Google always uses an alarm offset related to the start time
-            alarmOffset.addDuration(duration);
+                gdReminder.@minutes = -alarmOffset.inSeconds / 60;
+                gdReminder.@method = actionMap[alarm.action] || "alert";
+            }
+
+
+            if (aItem.recurrenceInfo) {
+                // On recurring items, set the reminder directly in the <entry> tag.
+                entry.gd::reminder += gdReminder;
+            } else {
+                // Otherwise, its a child of the gd:when element
+                entry.gd::when.gd::reminder += gdReminder;
+            }
         }
-
-        gdReminder.@minutes = -aItem.alarmOffset.inSeconds / 60;
-        gdReminder.@method = "alert";
-
-        if (aItem.recurrenceInfo) {
-            // On recurring items, set the reminder directly in the <entry> tag.
-            entry.gd::reminder += gdReminder;
-        } else {
-            // Otherwise, its a child of the gd:when element
-            entry.gd::when.gd::reminder += gdReminder;
-        }
-    } else if (aItem.alarmOffset) {
+    } else if (alarms.length) {
         // We need to reset this so the item gets returned correctly.
-        aItem.alarmOffset = null;
-    }
-
-    // saved alarms
-    var otherAlarms = aItem.getProperty("X-GOOGLE-OTHERALARMS");
-    for each (var alarm in otherAlarms) {
-        entry.gd::when.gd::reminder += new XML(alarm);
+        aItem.clearAlarms();
     }
 
     // gd:extendedProperty (alarmLastAck)
@@ -651,17 +662,15 @@ function relevantFieldsMatch(a, b) {
     }
 
     function compareNotNull(prop) {
-        var ap = a[prop];
-        var bp = b[prop];
+        let ap = a[prop];
+        let bp = b[prop];
         return (ap && !bp || !ap && bp ||
                 (typeof(ap) == 'object' && ap && bp &&
                  ap.compare && ap.compare(bp)));
     }
 
     // Object flat values
-    if (compareNotNull("alarmOffset") ||
-        compareNotNull("alarmLastAck") ||
-        compareNotNull("recurrenceInfo") ||
+    if (compareNotNull("recurrenceInfo") ||
         /* Compare startDate and endDate */
         compareNotNull("startDate") ||
         compareNotNull("endDate") ||
@@ -674,7 +683,7 @@ function relevantFieldsMatch(a, b) {
     const kPROPERTIES = ["DESCRIPTION", "TRANSP", "X-GOOGLE-EDITURL",
                          "LOCATION", "X-MOZ-SNOOZE-TIME"];
 
-    for each (var p in kPROPERTIES) {
+    for each (let p in kPROPERTIES) {
         // null and an empty string should be handled as non-relevant
         if ((a.getProperty(p) || "") != (b.getProperty(p) || "")) {
             return false;
@@ -682,16 +691,16 @@ function relevantFieldsMatch(a, b) {
     }
 
     // categories
-    var aCat = a.getCategories({});
-    var bCat = b.getCategories({});
+    let aCat = a.getCategories({});
+    let bCat = b.getCategories({});
     if ((aCat.length != bCat.length) ||
         aCat.some(function notIn(cat) { return (bCat.indexOf(cat) == -1); })) {
         return false;
     }
 
     // attendees and organzier
-    var aa = a.getAttendees({});
-    var ab = b.getAttendees({});
+    let aa = a.getAttendees({});
+    let ab = b.getAttendees({});
     if (aa.length != ab.length) {
         return false;
     }
@@ -703,8 +712,8 @@ function relevantFieldsMatch(a, b) {
     }
 
     // go through attendees in a, check if its id is in b
-    for each (var attendee in aa) {
-        var ba = b.getAttendeeById(attendee.id);
+    for each (let attendee in aa) {
+        let ba = b.getAttendeeById(attendee.id);
         if (!ba ||
             ba.participationStatus != attendee.participationStatus ||
             ba.commonName != attendee.commonName ||
@@ -714,10 +723,33 @@ function relevantFieldsMatch(a, b) {
         }
     }
 
+    // Alarms
+    aa = a.getAlarms({});
+    ab = b.getAlarms({});
+
+    if (aa.length != ab.length) {
+        return false;
+    }
+
+    let alarmMap = {};
+    for each (let alarm in aa) {
+        alarmMap[alarm.icalString] = true;
+    }
+    let found = 0;
+    for each (let alarm in ab) {
+        if (alarm.icalString in alarmMap) {
+            found++;
+        }
+    }
+
+    if (found != ab.length) {
+        return false;
+    }
+
     // Recurrence Items
     if (a.recurrenceInfo) {
-        var ra = a.recurrenceInfo.getRecurrenceItems({});
-        var rb = b.recurrenceInfo.getRecurrenceItems({});
+        let ra = a.recurrenceInfo.getRecurrenceItems({});
+        let rb = b.recurrenceInfo.getRecurrenceItems({});
 
         // If we have more or less, it definitly changed.
         if (ra.length != rb.length) {
@@ -727,7 +759,7 @@ function relevantFieldsMatch(a, b) {
         // I assume that if the recurrence pattern has not changed, the order
         // of the recurrence items should not change. Anything more will be
         // very expensive.
-        for (var i=0; i < ra.length; i++) {
+        for (let i = 0; i < ra.length; i++) {
             if (ra[i].icalProperty.icalString !=
                 rb[i].icalProperty.icalString) {
                 return false;
@@ -838,13 +870,13 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
                                .substring(39).toUpperCase();
 
         // gd:reminder (preparation)
-        // Google's alarms are always related to the start
-        item.alarmRelated = Components.interfaces.calIItemBase.ALARM_RELATED_START;
+        // If a reference item was passed, it may already contain alarms. Since
+        // we have no alarm id or such and the alarms are contained in every
+        // feed, we can go ahead and clear the alarms here.
+        item.clearAlarms();
 
         /**
-         * Helper function to parse all reminders in a tagset. This sets the
-         * item's alarm, and also saves all other alarms using the
-         * X-GOOGLE-OTHERALARMS property.
+         * Helper function to parse all reminders in a tagset.
          *
          * @param reminderTags      The tagset to parse.
          */
@@ -855,59 +887,37 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
                 // this event.
                 return;
             }
-            var lastAlarm;
-            var otherAlarms = [];
-            // Go through all reminder tags given and pick the best alarm.
-            for each (var reminder in reminderTags) {
-                // We are only intrested in "alert" reminders. Other types
-                // include sms and email alerts, but thats not the point here.
-                if (reminder.@method == "alert") {
+            const actionMap = {
+                email: "EMAIL",
+                alert: "DISPLAY",
+                sms: "SMS"
+            };
+            for each (let reminderTag in reminderTags) {
+                let alarm = cal.createAlarm();
+                alarm.action = actionMap[reminderTag.@method] || "DISPLAY";
+                if (reminderTag.@absoluteTime.toString()) {
+                    alarm.related = Components.interfaces.calIAlarm.ALARM_RELATED_ABSOLUTE;
+                    let absolute = fromRFC3339(reminderTag.@absoluteTime,
+                                               aTimezone);
+                    alarm.alarmDate = absolute;
+                } else {
+                    alarm.related = Components.interfaces.calIAlarm.ALARM_RELATED_START;
                     let alarmOffset = cal.createDuration();
-
-                    if (reminder.@absoluteTime.toString()) {
-                        var absolute = fromRFC3339(reminder.@absoluteTime,
-                                                   aTimezone);
-                        alarmOffset = startDate.subtractDate(absolute);
-                    } else if (reminder.@days.toString()) {
-                        alarmOffset.days = -reminder.@days;
-                    } else if (reminder.@hours.toString()) {
-                        alarmOffset.hours = -reminder.@hours;
-                    } else if (reminder.@minutes.toString()) {
-                        alarmOffset.minutes = -reminder.@minutes;
+                    if (reminderTag.@days.toString()) {
+                        alarmOffset.days = -reminderTag.@days;
+                    } else if (reminderTag.@hours.toString()) {
+                        alarmOffset.hours = -reminderTag.@hours;
+                    } else if (reminderTag.@minutes.toString()) {
+                        alarmOffset.minutes = -reminderTag.@minutes;
                     } else {
                         // Invalid alarm, skip it
                         continue;
                     }
                     alarmOffset.normalize();
-
-                    // If there is more than one alarm, we could either take the
-                    // alarm closest to the event or the alarm furthest to the
-                    // event. Let the user decide (use a property)
-                    var useClosest = getPrefSafe("calendar.google.alarmClosest",
-                                                 true);
-                    if (!item.alarmOffset ||
-                        (useClosest &&
-                         alarmOffset.compare(item.alarmOffset) > 0) ||
-                        (!useClosest &&
-                         alarmOffset.compare(item.alarmOffset) < 0)) {
-
-                        item.alarmOffset = alarmOffset;
-                        if (lastAlarm) {
-                            // If there was already an alarm, then it is now one
-                            // of the other alarms.
-                            otherAlarms.push(lastAlarm.toXMLString());
-                        }
-                        lastAlarm = reminder;
-                        // Don't push the reminder below, since we might be
-                        // keeping this one as our item's alarmOffset.
-                        continue;
-                    }
+                    alarm.offset = alarmOffset;
                 }
-                otherAlarms.push(reminder.toXMLString());
+                item.addAlarm(alarm);
             }
-
-            // Save other alarms that were set so we don't loose them
-            item.setProperty("X-GOOGLE-OTHERALARMS", otherAlarms);
         }
 
         // gd:when
@@ -1212,6 +1222,13 @@ function LOGitem(item) {
         }
     }
 
+    let astr = "\n";
+    let alarms = item.getAlarms({});
+    for each (let alarm in alarms) {
+        astr += "\t\t" + LOGalarm(alarm) + "\n";
+    }
+
+
     LOG("Logging calIEvent:" +
         "\n\tid:" + item.id +
         "\n\tediturl:" + item.getProperty("X-GOOGLE-EDITURL") +
@@ -1225,13 +1242,13 @@ function LOGitem(item) {
         "\n\tendTime:" + item.endDate.toString() +
         "\n\tlocation:" + item.getProperty("LOCATION") +
         "\n\tprivacy:" + item.privacy +
-        "\n\talarmOffset:" + item.alarmOffset +
         "\n\talarmLastAck:" + item.alarmLastAck +
         "\n\tsnoozeTime:" + item.getProperty("X-MOZ-SNOOZE-TIME") +
         "\n\tisOccurrence: " + (item.recurrenceId != null) +
         "\n\tOrganizer: " + LOGattendee(item.organizer) +
         "\n\tAttendees: " + attendeeString +
-        "\n\trecurrence: " + (rstr.length > 1 ? "yes: " + rstr : "no"));
+        "\n\trecurrence: " + (rstr.length > 1 ? "yes: " + rstr : "no") +
+        "\n\talarms: " + (astr.length > 1 ? "yes: " + astr : "no"));
 }
 
 function LOGattendee(aAttendee, asString) {
@@ -1242,6 +1259,30 @@ function LOGattendee(aAttendee, asString) {
          "\n\t\t\tIs Organizer: " +  (aAttendee.isOrganizer ? "yes" : "no") +
          "\n\t\t\tRole: " + aAttendee.role +
          "\n\t\t\tStatus: " + aAttendee.participationStatus);
+}
+
+function LOGalarm(aAlarm) {
+    if (!aAlarm) {
+        return "";
+    }
+
+    let enumerator = aAlarm.propertyEnumerator;
+    let xpropstr = "";
+    while (enumerator.hasMoreElements()) {
+        let el = enumerator.getNext();
+        xpropstr += "\n\t\t\t" + el.key + ":" + el.value;
+    }
+
+    return ("\n\t\tAction: " +  aAlarm.action +
+            "\n\t\tOffset: " + (aAlarm.offset && aAlarm.offset.toString()) +
+            "\n\t\talarmDate: " + (aAlarm.alarmDate && aAlarm.alarmDate.toString()) +
+            "\n\t\trelated: " + aAlarm.related +
+            "\n\t\trepeat: " + aAlarm.repeat +
+            "\n\t\trepeatOffset: " + (aAlarm.repeatOffset && aAlarm.repeatOffset.toString()) +
+            "\n\t\trepeatDate: " + (aAlarm.repeatDate && aAlarm.repeatDate.toString()) +
+            "\n\t\tdescription: " + aAlarm.description +
+            "\n\t\tsummary: " + aAlarm.summary +
+            "\n\t\tproperties: " + (xpropstr.length > 0 ? "yes:" + xpropstr : "no"));
 }
 
 function LOGinterval(aInterval) {
