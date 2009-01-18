@@ -38,6 +38,7 @@
 
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
 Components.utils.import("resource://calendar/modules/calIteratorUtils.jsm");
+Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
 
 /**
  * getGoogleSessionManager
