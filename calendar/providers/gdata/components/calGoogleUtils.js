@@ -184,139 +184,6 @@ var gdataTimezoneService = {
 };
 
 /**
- * fromRFC3339
- * Convert a RFC3339 compliant Date string to a calIDateTime.
- *
- * @param aStr          The RFC3339 compliant Date String
- * @param aTimezone     The timezone this date string is most likely in
- * @return              A calIDateTime object
- */
-function fromRFC3339(aStr, aTimezone) {
-
-    // XXX I have not covered leapseconds (matches[8]), this might need to
-    // be done. The only reference to leap seconds I found is bug 227329.
-    //
-
-    // Create a DateTime instance (calUtils.js)
-    let dateTime = cal.createDateTime();
-
-    // Killer regex to parse RFC3339 dates
-    var re = new RegExp("^([0-9]{4})-([0-9]{2})-([0-9]{2})" +
-        "([Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(\\.[0-9]+)?)?" +
-        "(([Zz]|([+-])([0-9]{2}):([0-9]{2})))?");
-
-    var matches = re.exec(aStr);
-
-    if (!matches) {
-        return null;
-    }
-
-    // Set usual date components
-    dateTime.isDate = (matches[4]==null);
-
-    dateTime.year = matches[1];
-    dateTime.month = matches[2] - 1; // Jan is 0
-    dateTime.day = matches[3];
-
-    if (!dateTime.isDate) {
-        dateTime.hour = matches[5];
-        dateTime.minute = matches[6];
-        dateTime.second = matches[7];
-    }
-
-    // Timezone handling
-    if (matches[9] == "Z") {
-        // If the dates timezone is "Z", then this is UTC, no matter
-        // what timezone was passed
-        dateTime.timezone = UTC();
-
-    } else if (matches[9] == null) {
-        // We have no timezone info, only a date. We have no way to
-        // know what timezone we are in, so lets assume we are in the
-        // timezone of our local calendar, or whatever was passed.
-
-        dateTime.timezone = aTimezone;
-
-    } else {
-        var offset_in_s = (matches[11] == "-" ? -1 : 1) *
-            ( (matches[12] * 3600) + (matches[13] * 60) );
-
-        // try local timezone first
-        dateTime.timezone = aTimezone;
-
-        // If offset does not match, go through timezones. This will
-        // give you the first tz in the alphabet and kill daylight
-        // savings time, but we have no other choice
-        if (dateTime.timezoneOffset != offset_in_s) {
-            // TODO A patch to Bug 363191 should make this more efficient.
-
-			var tzService = getTimezoneService();
-            // Enumerate timezones, set them, check their offset
-            var enumerator = tzService.timezoneIds;
-            while (enumerator.hasMore()) {
-                var id = enumerator.getNext();
-                dateTime.timezone = tzService.getTimezone(id);
-                if (dateTime.timezoneOffset == offset_in_s) {
-                    // This is our last step, so go ahead and return
-                    return dateTime;
-                }
-            }
-            // We are still here: no timezone was found
-            dateTime.timezone = UTC();
-            if (!dateTime.isDate) {
-                dateTime.hour += (matches[11] == "-" ? -1 : 1) * matches[12];
-                dateTime.minute += (matches[11] == "-" ? -1 : 1) * matches[13];
-             }
-        }
-    }
-    return dateTime;
-}
-
-/**
- * toRFC3339
- * Convert a calIDateTime to a RFC3339 compliant Date string
- *
- * @param aDateTime     The calIDateTime object
- * @return              The RFC3339 compliant date string
- */
-function toRFC3339(aDateTime) {
-
-    if (!aDateTime) {
-        return "";
-    }
-
-    var full_tzoffset = aDateTime.timezoneOffset;
-    var tzoffset_hr = Math.floor(Math.abs(full_tzoffset) / 3600);
-
-    var tzoffset_mn = ((Math.abs(full_tzoffset) / 3600).toFixed(2) -
-                       tzoffset_hr) * 60;
-
-    var str = aDateTime.year + "-" +
-        ("00" + (aDateTime.month + 1)).substr(-2) +  "-" +
-        ("00" + aDateTime.day).substr(-2);
-
-    // Time and Timezone extension
-    if (!aDateTime.isDate) {
-        str += "T" +
-               ("00" + aDateTime.hour).substr(-2) + ":" +
-               ("00" + aDateTime.minute).substr(-2) + ":" +
-               ("00" + aDateTime.second).substr(-2);
-        if (aDateTime.timezoneOffset != 0) {
-            str += (full_tzoffset < 0 ? "-" : "+") +
-                   ("00" + tzoffset_hr).substr(-2) + ":" +
-                   ("00" + tzoffset_mn).substr(-2);
-        } else if (aDateTime.timezone.isFloating) {
-            // RFC3339 Section 4.3 Unknown Local Offset Convention
-            str += "-00:00";
-        } else {
-            // ZULU Time, according to ISO8601's timezone-offset
-            str += "Z";
-        }
-    }
-    return str;
-}
-
-/**
  * passwordManagerSave
  * Helper to insert an entry to the password manager.
  *
@@ -494,8 +361,8 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
 
     // gd:when
     var duration = aItem.endDate.subtractDate(aItem.startDate);
-    entry.gd::when.@startTime = toRFC3339(aItem.startDate);
-    entry.gd::when.@endTime = toRFC3339(aItem.endDate);
+    entry.gd::when.@startTime = cal.toRFC3339(aItem.startDate);
+    entry.gd::when.@endTime = cal.toRFC3339(aItem.endDate);
 
     // gd:reminder
     let alarms = aItem.getAlarms({});
@@ -511,7 +378,7 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
             if (alarm.related == alarm.ALARM_RELATED_ABSOLUTE) {
                 // Setting an absolute date can be done directly. Google will take
                 // care of calculating the offset.
-                gdReminder.@absoluteTime = toRFC3339(alarm.alarmDate);
+                gdReminder.@absoluteTime = cal.toRFC3339(alarm.alarmDate);
             } else {
                 let alarmOffset = alarm.offset;
                 if (alarm.related == alarm.ALARM_RELATED_END) {
@@ -540,7 +407,7 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
     }
 
     // gd:extendedProperty (alarmLastAck)
-    addExtendedProperty("X-MOZ-LASTACK", toRFC3339(aItem.alarmLastAck));
+    addExtendedProperty("X-MOZ-LASTACK", cal.toRFC3339(aItem.alarmLastAck));
 
     // XXX While Google now supports multiple alarms and alarm values, we still
     // need to fix bug 353492 first so we can better take care of finding out
@@ -554,7 +421,7 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
         icalSnoozeTime = cal.createDateTime();
         icalSnoozeTime.icalString = itemSnoozeTime;
     }
-    addExtendedProperty("X-MOZ-SNOOZE-TIME", toRFC3339(icalSnoozeTime));
+    addExtendedProperty("X-MOZ-SNOOZE-TIME", cal.toRFC3339(icalSnoozeTime));
 
     // gd:extendedProperty (snooze recurring alarms)
     var snoozeValue = "";
@@ -626,7 +493,7 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
     if (aItem.recurrenceId) {
         entry.gd::originalEvent.@id = aItem.parentItem.id;
         entry.gd::originalEvent.gd::when.@startTime =
-            toRFC3339(aItem.recurrenceId.getInTimezone(UTC()));
+            cal.toRFC3339(aItem.recurrenceId.getInTimezone(UTC()));
     }
 
     // While it may sometimes not work out, we can always try to set the uid and
@@ -799,7 +666,7 @@ function getRecurrenceIdFromEntry(aXMLEntry, aTimezone) {
     var gd = new Namespace("gd", "http://schemas.google.com/g/2005");
     if (aXMLEntry.gd::originalEvent.toString().length > 0) {
         var rId = aXMLEntry.gd::originalEvent.gd::when.@startTime;
-        return fromRFC3339(rId.toString(), aTimezone);
+        return cal.fromRFC3339(rId.toString(), aTimezone);
     }
     return null;
 }
@@ -897,8 +764,8 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
                 alarm.action = actionMap[reminderTag.@method] || "DISPLAY";
                 if (reminderTag.@absoluteTime.toString()) {
                     alarm.related = Components.interfaces.calIAlarm.ALARM_RELATED_ABSOLUTE;
-                    let absolute = fromRFC3339(reminderTag.@absoluteTime,
-                                               aTimezone);
+                    let absolute = cal.fromRFC3339(reminderTag.@absoluteTime,
+                                                   aTimezone);
                     alarm.alarmDate = absolute;
                 } else {
                     alarm.related = Components.interfaces.calIAlarm.ALARM_RELATED_START;
@@ -927,8 +794,8 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
             // one gd:when tag. Otherwise, we will be parsing the startDate from
             // the recurrence information.
             var when = aXMLEntry.gd::when;
-            item.startDate = fromRFC3339(when.@startTime, aTimezone);
-            item.endDate = fromRFC3339(when.@endTime, aTimezone);
+            item.startDate = cal.fromRFC3339(when.@startTime, aTimezone);
+            item.endDate = cal.fromRFC3339(when.@endTime, aTimezone);
 
             if (!item.endDate) {
                 // We have a zero-duration event
@@ -1026,12 +893,12 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
         var alarmLastAck = aXMLEntry.gd::extendedProperty
                            .(@name == "X-MOZ-LASTACK")
                            .@value.toString();
-        item.alarmLastAck = fromRFC3339(alarmLastAck, aTimezone);
+        item.alarmLastAck = cal.fromRFC3339(alarmLastAck, aTimezone);
 
         // gd:extendedProperty (snooze time)
         var xmlSnoozeTime = aXMLEntry.gd::extendedProperty
                          .(@name == "X-MOZ-SNOOZE-TIME").@value.toString();
-        var dtSnoozeTime = fromRFC3339(xmlSnoozeTime, aTimezone);
+        var dtSnoozeTime = cal.fromRFC3339(xmlSnoozeTime, aTimezone);
         var snoozeProperty = (dtSnoozeTime ? dtSnoozeTime.icalString : null);
         item.setProperty("X-MOZ-SNOOZE-TIME", snoozeProperty);
 
@@ -1122,12 +989,12 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
         item.setCategories(categories.length, categories);
 
         // published
-        item.setProperty("CREATED", fromRFC3339(aXMLEntry.published,
-                                                aTimezone));
+        item.setProperty("CREATED", cal.fromRFC3339(aXMLEntry.published,
+                                                    aTimezone));
 
         // updated (This must be set last!)
-        item.setProperty("LAST-MODIFIED", fromRFC3339(aXMLEntry.updated,
-                                                      aTimezone));
+        item.setProperty("LAST-MODIFIED", cal.fromRFC3339(aXMLEntry.updated,
+                                                          aTimezone));
 
         // TODO gd:comments: Enhancement tracked in bug 362653
 

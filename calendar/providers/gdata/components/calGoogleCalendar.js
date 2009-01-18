@@ -36,6 +36,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
+
 /**
  * calGoogleCalendar
  * This Implements a calICalendar Object adapted to the Google Calendar
@@ -586,8 +588,8 @@ calGoogleCalendar.prototype = {
                 aRangeEnd.isDate = false;
             }
 
-            var rfcRangeStart = toRFC3339(aRangeStart);
-            var rfcRangeEnd = toRFC3339(aRangeEnd);
+            var rfcRangeStart = cal.toRFC3339(aRangeStart);
+            var rfcRangeEnd = cal.toRFC3339(aRangeEnd);
 
             var request = new calGoogleRequest(this);
 
@@ -898,10 +900,10 @@ calGoogleCalendar.prototype = {
                         var status = oid.parent().gd::eventStatus.@value.toString().substring(39);
 
                         if (status == "canceled") {
-                            var rId = oid.gd::when.@startTime.toString();
-                            LOG("Negative exception " + rId + "/" + fromRFC3339(rId, timezone));
-                            rId = (rId.length > 0 ? fromRFC3339(rId, timezone) : null);
-                            item.recurrenceInfo.removeOccurrenceAt(rId);
+                            let rId = oid.gd::when.@startTime.toString();
+                            let rDate = cal.fromRFC3339(rId, timezone));
+                            LOG("Negative exception " + rId + "/" + rDate);
+                            item.recurrenceInfo.removeOccurrenceAt(rDate);
                         } else {
                             // Parse the exception and modify the current item
                             var excItem = XMLEntryToItem(oid.parent(),
@@ -1078,7 +1080,7 @@ calGoogleCalendar.prototype = {
 
         if (lastUpdateDateTime) {
             // Partial sync requires sending updated-min
-            request.addQueryParameter("updated-min", toRFC3339(lastUpdateDateTime));
+            request.addQueryParameter("updated-min", cal.toRFC3339(lastUpdateDateTime));
         }
 
         // Request the item. The response function is ready to take care of both
@@ -1168,9 +1170,10 @@ calGoogleCalendar.prototype = {
                         var status = oid.parent().gd::eventStatus.@value.toString().substring(39);
 
                         if (status == "canceled") {
-                            var rId = oid.gd::when.@startTime.toString();
-                            rId = (rId.length > 0 ? fromRFC3339(rId, timezone) : null);
-                            item.recurrenceInfo.removeOccurrenceAt(rId);
+                            let rId = oid.gd::when.@startTime.toString();
+                            let rDate = cal.fromRFC3339(rId, timezone));
+                            item.recurrenceInfo.removeOccurrenceAt(rDate);
+                            LOG("Negative exception " + rId + "/" + rDate);
                         } else {
                             // Parse the exception and modify the current item
                             var excItem = XMLEntryToItem(oid.parent(),

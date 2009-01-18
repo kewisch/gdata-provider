@@ -34,6 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
+
 // This constant is an arbitrary large number. It is used to tell google to get
 // many events, the exact number is not important.
 const kMANY_EVENTS = 0x7FFFFFFF;
@@ -522,8 +524,8 @@ calGoogleSession.prototype = {
             aRangeEnd.isDate = false;
         }
 
-        var rfcRangeStart = toRFC3339(aRangeStart);
-        var rfcRangeEnd = toRFC3339(aRangeEnd);
+        var rfcRangeStart = cal.toRFC3339(aRangeStart);
+        var rfcRangeEnd = cal.toRFC3339(aRangeEnd);
 
         var request = new calGoogleRequest(this);
 
@@ -590,8 +592,8 @@ calGoogleSession.prototype = {
         var intervals = [];
         const fbtypes = Components.interfaces.calIFreeBusyInterval;
         for each (var entry in xml.entry) {
-            let start =  fromRFC3339(entry.gd::when.@startTime.toString(), timezone);
-            let end = fromRFC3339(entry.gd::when.@endTime.toString(), timezone);
+            let start = cal.fromRFC3339(entry.gd::when.@startTime.toString(), timezone);
+            let end = cal.fromRFC3339(entry.gd::when.@endTime.toString(), timezone);
             let interval = new cal.FreeBusyInterval(aCalId, fbtypes.BUSY, start, end);
             LOGinterval(interval);
             intervals.push(interval);
