@@ -41,6 +41,7 @@
 
 <dialog id="gdata-migration-wizard"
         title="&gdata.migration.title;"
+        windowtype="Calendar:GData:MigrationDialog"
         buttons="accept,cancel"
         acceptLabel="&gdata.migration.upgrade.label;"
         acceptKey="&gdata.migration.upgrade.accesskey;"
