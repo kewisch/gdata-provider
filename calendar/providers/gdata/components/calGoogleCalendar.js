@@ -901,7 +901,7 @@ calGoogleCalendar.prototype = {
 
                         if (status == "canceled") {
                             let rId = oid.gd::when.@startTime.toString();
-                            let rDate = cal.fromRFC3339(rId, timezone));
+                            let rDate = cal.fromRFC3339(rId, timezone);
                             LOG("Negative exception " + rId + "/" + rDate);
                             item.recurrenceInfo.removeOccurrenceAt(rDate);
                         } else {
@@ -1171,7 +1171,7 @@ calGoogleCalendar.prototype = {
 
                         if (status == "canceled") {
                             let rId = oid.gd::when.@startTime.toString();
-                            let rDate = cal.fromRFC3339(rId, timezone));
+                            let rDate = cal.fromRFC3339(rId, timezone);
                             item.recurrenceInfo.removeOccurrenceAt(rDate);
                             LOG("Negative exception " + rId + "/" + rDate);
                         } else {
