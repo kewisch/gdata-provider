@@ -259,6 +259,10 @@ calGoogleCalendar.prototype = {
                 return false;
             case "capabilities.privacy.values":
                 return ["DEFAULT", "PUBLIC", "PRIVATE"];
+            case "capabilities.alarms.maxCount":
+                return 5;
+            case "capabilities.alarms.actionValues":
+                return ["DISPLAY", "EMAIL", "SMS"];
             case "organizerId":
                 if (this.mSession) {
                     return "mailto:" + this.session.userName;

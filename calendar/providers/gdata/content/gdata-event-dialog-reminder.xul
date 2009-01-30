@@ -12,7 +12,7 @@
    - for the specific language governing rights and limitations under the
    - License.
    -
-   - The Original Code is Provider for Google Calendar code.
+   - The Original Code is Sun Microsystems code.
    -
    - The Initial Developer of the Original Code is
    -   Philipp Kewisch <mozilla@kewis.ch>
@@ -35,38 +35,18 @@
    -
    - ***** END LICENSE BLOCK ***** -->
 
+<?xml-stylesheet type="text/css" href="chrome://gdata-provider/skin/gdata-event-dialog-reminder.css"?>
+
 <!DOCTYPE overlay SYSTEM "chrome://gdata-provider/locale/gdata.dtd">
 
-<overlay id="gdata-calendar-event-dialog"
+<overlay id="gdata-event-dialog-reminder-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-
-  <!-- Privacy items -->
-  <menupopup id="options-privacy-menupopup">
-    <menuitem id="gdata-options-privacy-default-menuitem"
-              insertbefore="options-privacy-public-menuitem,options-privacy-private-menuitem"
-              label="&gdata.privacy.default.label;"
-              accesskey="&gdata.privacy.default.accesskey;"
-              type="radio"
-              privacy="DEFAULT"
+  <menupopup id="reminder-actions-menupopup">
+    <menuitem id="reminder-action-SMS"
+              class="reminder-icon menuitem-iconic"
+              value="SMS"
+              insertafter="reminder-action-EMAIL reminder-action-DISPLAY"
               provider="gdata"
-              oncommand="editPrivacy(this)"/>
+              label="&gdata.reminder.action.sms.label;"/>
   </menupopup>
-
-  <menupopup id="event-privacy-menupopup">
-    <menuitem id="gdata-event-privacy-default-menuitem"
-              name="event-privacy-group"
-              insertbefore="event-privacy-public-menuitem,event-privacy-private-menuitem"
-              label="&gdata.privacy.default.label;"
-              type="radio"
-              provider="gdata"
-              privacy="DEFAULT"
-              oncommand="editPrivacy(this)"/>
-  </menupopup>
-
-  <statusbarpanel id="status-privacy">
-    <hbox id="gdata-status-privacy-default-box"
-          insertbefore="status-privacy-public-box,status-privacy-private-box"
-          privacy="DEFAULT"
-          provider="gdata"/>
-  </statusbarpanel>
 </overlay>

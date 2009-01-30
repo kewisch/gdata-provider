@@ -2,14 +2,21 @@
 
 gdata-provider.jar:
 % content gdata-provider %content/
-% skin gdata-provider classic/1.0 %skin/
 % overlay chrome://calendar/content/calendarCreation.xul chrome://gdata-provider/content/calendarCreation.xul
 % overlay chrome://sunbird/content/calendar.xul chrome://gdata-provider/content/gdata-migration-overlay.xul    application={718e30fb-e89b-41dd-9da7-e25a45638b28}
 % overlay chrome://messenger/content/messenger.xul chrome://gdata-provider/content/gdata-migration-overlay.xul  application={3550f703-e582-4d05-9a08-453d09bdfdc6}
 % overlay chrome://calendar/content/calendar-event-dialog.xul chrome://gdata-provider/content/gdata-calendar-event-dialog.xul
+% overlay chrome://calendar/content/sun-calendar-event-dialog-reminder.xul chrome://gdata-provider/content/gdata-event-dialog-reminder.xul
+% style chrome://calendar/content/sun-calendar-event-dialog.xul chrome://gdata-provider/skin/gdata-event-dialog-reminder.css
+% style chrome://calendar/content/calendar.xul chrome://gdata-provider/skin/gdata-event-dialog-reminder.css     application={718e30fb-e89b-41dd-9da7-e25a45638b28}
+% style chrome://messenger/content/messenger.xul chrome://gdata-provider/skin/gdata-event-dialog-reminder.css   application={3550f703-e582-4d05-9a08-453d09bdfdc6}
     content/calendarCreation.xul                 (content/calendarCreation.xul)
     content/gdata-calendar-event-dialog.xul      (content/gdata-calendar-event-dialog.xul)
+    content/gdata-event-dialog-reminder.xul      (content/gdata-event-dialog-reminder.xul)
     content/gdata-migration.js                   (content/gdata-migration.js)
     content/gdata-migration-overlay.xul          (content/gdata-migration-overlay.xul)
     content/gdata-migration-wizard.xul           (content/gdata-migration-wizard.xul)
     content/gcal.png                             (content/gcal.png)
+% skin gdata-provider classic/1.0 %skin/
+    skin/reminder-action-sms.png                 (content/reminder-action-sms.png)
+    skin/gdata-event-dialog-reminder.css         (content/gdata-event-dialog-reminder.css)
