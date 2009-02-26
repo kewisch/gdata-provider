@@ -213,6 +213,10 @@ calGoogleCalendar.prototype = {
         return "gdata";
     },
 
+    get providerID cGC_getProviderID() {
+        return "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
+    },
+
     get uri cGC_getUri() {
         return this.mUri;
     },
