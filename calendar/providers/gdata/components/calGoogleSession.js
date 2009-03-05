@@ -578,9 +578,8 @@ calGoogleSession.prototype = {
             return;
         }
 
-        // A feed was passed back, parse it. Due to bug 336551 we need to
-        // filter out the <?xml...?> part.
-        var xml = new XML(aData.substring(38));
+        // A feed was passed back, parse it.
+        var xml = cal.safeNewXML(aData);
         var timezoneString = xml.gCal::timezone.@value.toString() || "UTC";
         var timezone = getTimezoneService().getTimezone(timezoneString);
 

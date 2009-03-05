@@ -750,9 +750,8 @@ calGoogleCalendar.prototype = {
             var atom = new Namespace("", "http://www.w3.org/2005/Atom");
             default xml namespace = atom;
 
-            // A feed was passed back, parse it. Due to bug 336551 we need to
-            // filter out the <?xml...?> part.
-            var xml = new XML(aData.substring(38));
+            // A feed was passed back, parse it.
+            var xml = cal.safeNewXML(aData);
             var timezoneString = xml.gCal::timezone.@value.toString() || "UTC";
             var timezone = gdataTimezoneService.getTimezone(timezoneString);
 
@@ -846,9 +845,8 @@ calGoogleCalendar.prototype = {
             var atom = new Namespace("", "http://www.w3.org/2005/Atom");
             default xml namespace = atom;
 
-            // A feed was passed back, parse it. Due to bug 336551 we need to
-            // filter out the <?xml...?> part.
-            var xml = new XML(aData.substring(38));
+            // A feed was passed back, parse it.
+            var xml = cal.safeNewXML(aData);
             var timezoneString = xml.gCal::timezone.@value.toString() || "UTC";
             var timezone = gdataTimezoneService.getTimezone(timezoneString);
             
@@ -980,9 +978,8 @@ calGoogleCalendar.prototype = {
                 throw new Components.Exception(aData, aOperation.status);
             }
 
-            // An Item was passed back, parse it. Due to bug 336551 we need to
-            // filter out the <?xml...?> part.
-            var xml = new XML(aData.substring(38));
+            // An Item was passed back, parse it.
+            var xml = cal.safeNewXML(aData);
 
             // Get the local timezone from the preferences
             var timezone = calendarDefaultTimezone();
@@ -1121,9 +1118,8 @@ calGoogleCalendar.prototype = {
             var atom = new Namespace("", "http://www.w3.org/2005/Atom");
             default xml namespace = atom;
 
-            // A feed was passed back, parse it. Due to bug 336551 we need to
-            // filter out the <?xml...?> part.
-            var xml = new XML(aData.substring(38));
+            // A feed was passed back, parse it.
+            var xml = cal.safeNewXML(aData);
             var timezoneString = xml.gCal::timezone.@value.toString() || "UTC";
             var timezone = gdataTimezoneService.getTimezone(timezoneString);
 
