@@ -152,7 +152,7 @@ function getCorrectedDate(aDate) {
  * The timezone service to translate Google timezones.
  */
 var gdataTimezoneService = {
-    ctz: getTimezoneService(),
+    ctz: cal.getTimezoneService(),
 
     get floating gTS_get_floating() {
         return this.ctz.floating;

@@ -34,6 +34,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+Components.utils.import("resource://calendar/modules/calUtils.jsm");
 Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
 
 // This constant is an arbitrary large number. It is used to tell google to get
@@ -581,7 +582,7 @@ calGoogleSession.prototype = {
         // A feed was passed back, parse it.
         var xml = cal.safeNewXML(aData);
         var timezoneString = xml.gCal::timezone.@value.toString() || "UTC";
-        var timezone = getTimezoneService().getTimezone(timezoneString);
+        var timezone = cal.getTimezoneService().getTimezone(timezoneString);
 
         // This line is needed, otherwise the for each () block will never
         // be entered. It may seem strange, but if you don't believe me, try
