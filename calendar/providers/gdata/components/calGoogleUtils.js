@@ -1062,6 +1062,25 @@ syncSetter.prototype = {
 };
 
 /**
+ * Helper function to create a timer in a context where window.setTimeout is not
+ * available
+ *
+ * @param aFunc     The function to call when the timer fires
+ * @param aTimeout  The timeout in milliseconds.
+ * @param aThis     (optional) The |this| object to call the function with.
+ */
+function setTimeout(aFunc, aTimeout, aThis) {
+    let timerCallback = {
+        notify: function setTimeout_notify() {
+            aFunc.call(aThis);
+        }
+    };
+    let timer = Components.classes["@mozilla.org/timer;1"]
+                          .createInstance(Components.interfaces.nsITimer);
+    timer.initWithCallback(timerCallback, aTimeout, timer.TYPE_ONE_SHOT);
+}
+
+/**
  * LOGitem
  * Custom logging functions
  */

@@ -477,7 +477,11 @@ calGoogleSession.prototype = {
             // will be processed when the login is complete. Otherwise start
             // logging in.
             if (!this.mLoggingIn && this.mAuthToken == null) {
-                this.loginAndContinue(aRequest.calendar);
+                // We need to do this on a timeout, otherwise the UI thread will
+                // block when the password prompt is shown.
+                setTimeout(function() {
+                    this.loginAndContinue(aRequest.calendar);
+                }, 0, this);
             }
         }
     },
