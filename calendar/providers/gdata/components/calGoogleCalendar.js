@@ -937,6 +937,8 @@ calGoogleCalendar.prototype = {
                                      null,
                                      expandedItems.length,
                                      expandedItems);
+
+                cal.processPendingEvent();
             }
             // Operation Completed successfully.
             this.notifyOperationComplete(listener,
