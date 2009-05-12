@@ -48,7 +48,6 @@ function migrateSelectedCalendars() {
             var newCal = calmgr.createCalendar("gdata", item.calendar.uri);
             calmgr.unregisterCalendar(item.calendar);
             calmgr.deleteCalendar(item.calendar);
-            calmgr.registerCalendar(newCal);
 
             // Copy some properties to the new calendar
             newCal.name = item.calendar.name;
@@ -64,6 +63,8 @@ function migrateSelectedCalendars() {
                                item.calendar.getProperty("calendar-main-in-composite"));
             newCal.setProperty("calendar-main-default",
                                item.calendar.getProperty("calendar-main-default"));
+
+            calmgr.registerCalendar(newCal);
         }
     }
 
