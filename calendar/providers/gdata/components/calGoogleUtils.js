@@ -362,8 +362,11 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
 
     // gd:when
     var duration = aItem.endDate.subtractDate(aItem.startDate);
-    entry.gd::when.@startTime = cal.toRFC3339(aItem.startDate);
-    entry.gd::when.@endTime = cal.toRFC3339(aItem.endDate);
+    if (!aItem.recurrenceInfo) {
+        // gd:when isn't allowed for recurring items where gd:recurrence is set
+        entry.gd::when.@startTime = cal.toRFC3339(aItem.startDate);
+        entry.gd::when.@endTime = cal.toRFC3339(aItem.endDate);
+    }
 
     // gd:reminder
     let alarms = aItem.getAlarms({});
