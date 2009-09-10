@@ -124,7 +124,7 @@ function gdata_migration_loader() {
                 // view specific, so there is no good non-hacked way to do this.
                 setTimeout(function() {
                     window.openDialog("chrome://gdata-provider/content/gdata-migration-wizard.xul",
-                                      "Gdata:MigrationWizard",
+                                      "GdataMigrationWizard",
                                       "chrome,titlebar,modal,alwaysRaised");
                 }, 1000);
             }

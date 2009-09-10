@@ -50,10 +50,8 @@ function calGoogleRequest(aSession) {
 calGoogleRequest.prototype = {
 
     /* Members */
-    uri: null,
     mUploadContent: null,
     mUploadData: null,
-    responseListener: null,
     mSession: null,
     mExtraData: null,
     mQueryParameters: null,
