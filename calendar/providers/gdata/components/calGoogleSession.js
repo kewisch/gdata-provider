@@ -97,20 +97,9 @@ calGoogleSessionManager.prototype = {
  * @class
  */
 function calGoogleSession(aUsername) {
-
     this.mItemQueue = new Array();
     this.mGoogleUser = aUsername;
     this.wrappedJSObject = this;
-
-    var username = { value: aUsername };
-    var password = { value: null };
-
-    // Try to get the password from the password manager
-    if (aUsername && passwordManagerGet(aUsername, password)) {
-        this.mGooglePass = password.value;
-        this.mPersistPassword = true;
-        LOG("Retrieved Password for " + aUsername + " in constructor");
-    }
 
     // Register a freebusy provider for this session
     getFreeBusyService().addProvider(this);
@@ -128,7 +117,8 @@ calGoogleSession.prototype = {
 
     /* Member Variables */
     mGoogleUser: null,
-    mGooglePass: null,
+    // This must be |undefined|, we need this variable to be tri-state.
+    mGooglePass: undefined,
     mGoogleFullName: null,
     mAuthToken: null,
     mSessionID: null,
@@ -254,6 +244,24 @@ calGoogleSession.prototype = {
             // Start logging in
             this.mLoggingIn = true;
 
+
+            if (this.mGooglePass === undefined) {
+                // This happens only on the first run. Try to get the password
+                // from the password manager.
+                let password = {};
+                passwordManagerGet(this.mGoogleUser, password);
+                if (password.value) {
+                    cal.LOG("Retrieved Password for " + this.mGoogleUser +
+                            " from password manager");
+                    this.mPersistPassword = true;
+                    this.mGooglePass = password.value;
+                } else {
+                    // Could not get the password from the password manager, set
+                    // it to null to make sure the password is prompted for in
+                    // the next block.
+                    this.mGooglePass = null;
+                }
+            }
 
             // Check if we have a password. If not, authentication may have
             // failed.
