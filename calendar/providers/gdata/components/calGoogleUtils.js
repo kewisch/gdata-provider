@@ -542,6 +542,7 @@ function relevantFieldsMatch(a, b) {
 
     // Object flat values
     if (compareNotNull("recurrenceInfo") ||
+        compareNotNull("alarmLastAck") ||
         /* Compare startDate and endDate */
         compareNotNull("startDate") ||
         compareNotNull("endDate") ||
