@@ -774,6 +774,7 @@ calGoogleCalendar.prototype = {
                 throw new Components.Exception("Item not found", Components.results.NS_OK);
             }
             var item = XMLEntryToItem(itemEntry, timezone, this);
+            item.calendar = this.superCalendar;
 
             if (item.recurrenceInfo) {
                 // If this item is recurring, get all exceptions for this item.
