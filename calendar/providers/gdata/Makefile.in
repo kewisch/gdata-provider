@@ -49,10 +49,11 @@ DIST_FILES = install.rdf
 XPI_PKGNAME = gdata-provider
 STRIP_XPI = 1
 
-CALENDAR_VERSION := $(shell cat $(topsrcdir)/calendar/sunbird/config/version.txt)
 ifdef MOZILLA_1_9_2_BRANCH
+CALENDAR_VERSION := $(shell cat $(topsrcdir)/calendar/sunbird/config/version-192.txt)
 THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version-192.txt)
 else
+CALENDAR_VERSION := $(shell cat $(topsrcdir)/calendar/sunbird/config/version.txt)
 THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version.txt)
 endif
 ifdef MOZILLA_1_9_1_BRANCH
