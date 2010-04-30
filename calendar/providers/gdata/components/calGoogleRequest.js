@@ -95,11 +95,11 @@ calGoogleRequest.prototype = {
     /**
      * Implement calIOperation
      */
-    get isPending cGR_getIsPending() {
+    get isPending() {
         return (this.mLoader && this.mLoader.request != null);
     },
 
-    get status cGR_status() {
+    get status() {
         if (this.isPending) {
             return this.mLoader.request.status;
         } else {
@@ -120,9 +120,9 @@ calGoogleRequest.prototype = {
      * LOGIN, GET, ADD, MODIFY, DELETE
      * This also sets the Request Method and for the LOGIN request also the uri
      */
-    get type cGR_getType() { return this.mType; },
+    get type() { return this.mType; },
 
-    set type cGR_setType(v) {
+    set type(v) {
         switch (v) {
             case this.LOGIN:
                 this.method = "POST";

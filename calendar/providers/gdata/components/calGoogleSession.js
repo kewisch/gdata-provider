@@ -134,7 +134,7 @@ calGoogleSession.prototype = {
      *
      * The auth token returned from Google Accounts
      */
-    get authToken cGS_getAuthToken() {
+    get authToken() {
         return this.mAuthToken;
     },
 
@@ -144,7 +144,7 @@ calGoogleSession.prototype = {
      * The username for this session. To get a session with a different
      * username, use calIGoogleSessionManager.
      */
-    get userName cGS_getUserName() {
+    get userName() {
         return this.mGoogleUser;
     },
 
@@ -153,10 +153,10 @@ calGoogleSession.prototype = {
      *
      * If set, the password will persist across restarts.
      */
-    get persist cGS_getPersist() {
+    get persist() {
         return this.mPersistPassword;
     },
-    set persist cGS_setPersist(v) {
+    set persist(v) {
         return this.mPersistPassword = v;
     },
 
@@ -165,10 +165,10 @@ calGoogleSession.prototype = {
      *
      * The user's full name, usually retrieved from the XML <author> fields.
      */
-    get fullName cGS_getFullName() {
+    get fullName() {
         return this.mGoogleFullName;
     },
-    set fullName cGS_setFullName(v) {
+    set fullName(v) {
         return this.mGoogleFullName = v;
     },
 
@@ -178,10 +178,10 @@ calGoogleSession.prototype = {
      * The password used to authenticate. It is only important to implement the
      * setter here, since the password is only used internally.
      */
-    get password cGS_getPassword() {
+    get password() {
         return this.mGooglePass;
     },
-    set password cGS_setPassword(v) {
+    set password(v) {
         return this.mGooglePass = v;
     },
 

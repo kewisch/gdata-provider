@@ -154,19 +154,19 @@ function getCorrectedDate(aDate) {
 var gdataTimezoneService = {
     ctz: cal.getTimezoneService(),
 
-    get floating gTS_get_floating() {
+    get floating() {
         return this.ctz.floating;
     },
 
-    get UTC gTS_get_UTC() {
+    get UTC() {
         return this.ctz.UTC;
     },
 
-    get version gTS_get_version() {
+    get version() {
         return this.ctz.version;
     },
 
-    get defaultTimezone gTS_get_defaultTimezone() {
+    get defaultTimezone() {
         return this.ctz.defaultTimezone;
     },
 

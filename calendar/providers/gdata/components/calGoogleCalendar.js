@@ -75,11 +75,11 @@ calGoogleCalendar.prototype = {
      * Google's Calendar name. This represents the <calendar name> in
      * http[s]://www.google.com/calendar/feeds/<calendar name>/private/full
      */
-    get googleCalendarName cGC_getGoogleCalendarName() {
+    get googleCalendarName() {
         return this.mCalendarName;
     },
 
-    get isDefaultCalendar cGC_isDefaultCalendar() {
+    get isDefaultCalendar() {
         return !/@group\.calendar\.google\.com$/.test(this.mCalendarName);
     },
 
@@ -87,52 +87,52 @@ calGoogleCalendar.prototype = {
      * attribute session
      * An calGoogleSession Object that handles the session requests.
      */
-    get session cGC_getSession() {
+    get session() {
         return this.mSession;
     },
-    set session cGC_setSession(v) {
+    set session(v) {
         return this.mSession = v;
     },
 
-    get title cGC_getTitle() {
+    get title() {
         throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
     },
-    set title cGC_setTitle(v) {
-        throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
-    },
-
-    get access cGC_getAccess() {
-        throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
-    },
-    set access cGC_setAccess(v) {
+    set title(v) {
         throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
     },
 
-    get selected cGC_getSelected() {
+    get access() {
         throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
     },
-    set selected cGC_setSelected(v) {
-        throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
-    },
-
-    get hidden cGC_getHidden() {
-        throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
-    },
-    set hidden cGC_setHidden(v) {
+    set access(v) {
         throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
     },
 
-    get color cGC_getColor() {
+    get selected() {
         throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
     },
-    set color cGC_setColor(v) {
+    set selected(v) {
         throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
     },
 
-    get timezone cGC_getTimezone() {
+    get hidden() {
         throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
     },
-    set title cGC_setTitle(v) {
+    set hidden(v) {
+        throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
+    },
+
+    get color() {
+        throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
+    },
+    set color(v) {
+        throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
+    },
+
+    get timezone() {
+        throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
+    },
+    set title(v) {
         throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
     },
     /**
@@ -209,22 +209,22 @@ calGoogleCalendar.prototype = {
     /*
      * implement calICalendar
      */
-    get type cGC_getType() {
+    get type() {
         return "gdata";
     },
 
-    get providerID cGC_getProviderID() {
+    get providerID() {
         return "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
     },
 
-    get uri cGC_getUri() {
+    get uri() {
         return this.mUri;
     },
 
-    get fullUri cGC_getFullUri() {
+    get fullUri() {
         return this.mFullUri;
     },
-    set uri cGC_setUri(aUri) {
+    set uri(aUri) {
         // Parse google url, catch private cookies, public calendars,
         // basic and full types, bogus ics file extensions, invalid hostnames
         var re = new RegExp("/calendar/(feeds|ical)/" +
@@ -301,7 +301,7 @@ calGoogleCalendar.prototype = {
         return this.__proto__.__proto__.getProperty.apply(this, arguments);
     },
 
-    get canRefresh cGC_getCanRefresh() {
+    get canRefresh() {
         return true;
     },
 
