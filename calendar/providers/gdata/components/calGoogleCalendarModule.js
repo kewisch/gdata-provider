@@ -149,7 +149,7 @@ var calGoogleCalendarModule = {
         Components.utils.import("resource://calendar/modules/calUtils.jsm");
         Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
         Components.utils.import("resource://calendar/modules/calAuthUtils.jsm");
-        cal.loadScripts(["calUtils.js"], this.__parent__);
+        cal.loadScripts(["calUtils.js"], Components.utils.getGlobalForObject(this));
 
         // Now load gdata extension scripts. Note that unintuitively,
         // __LOCATION__.parent == . We expect to find the subscripts in ./../js
@@ -157,7 +157,7 @@ var calGoogleCalendarModule = {
         thisDir.append("js");
         cal.loadScripts(["calGoogleCalendar.js", "calGoogleSession.js",
                          "calGoogleRequest.js", "calGoogleUtils.js"],
-                        this.__parent__,
+                        Components.utils.getGlobalForObject(this),
                         thisDir);
 
         this.mUtilsLoaded = true;
