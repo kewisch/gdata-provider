@@ -132,7 +132,7 @@ calGoogleCalendar.prototype = {
     get timezone() {
         throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
     },
-    set title(v) {
+    set timezone(v) {
         throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
     },
     /**
