@@ -56,11 +56,7 @@ else
 CALENDAR_VERSION := $(shell cat $(topsrcdir)/calendar/sunbird/config/version.txt)
 THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version.txt)
 endif
-ifdef MOZILLA_1_9_1_BRANCH
-SEAMONKEY_VERSION := $(shell cat $(topsrcdir)/suite/config/version-191.txt)
-else
 SEAMONKEY_VERSION := $(shell cat $(topsrcdir)/suite/config/version.txt)
-endif
 DEFINES += -DAB_CD=$(AB_CD) \
            -DCALENDAR_VERSION=$(CALENDAR_VERSION) \
            -DSEAMONKEY_VERSION=$(SEAMONKEY_VERSION) \
