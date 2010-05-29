@@ -49,13 +49,8 @@ DIST_FILES = install.rdf
 XPI_PKGNAME = gdata-provider
 STRIP_XPI = 1
 
-ifdef MOZILLA_1_9_2_BRANCH
-CALENDAR_VERSION := $(shell cat $(topsrcdir)/calendar/sunbird/config/version-192.txt)
-THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version-192.txt)
-else
 CALENDAR_VERSION := $(shell cat $(topsrcdir)/calendar/sunbird/config/version.txt)
 THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version.txt)
-endif
 SEAMONKEY_VERSION := $(shell cat $(topsrcdir)/suite/config/version.txt)
 DEFINES += -DAB_CD=$(AB_CD) \
            -DCALENDAR_VERSION=$(CALENDAR_VERSION) \

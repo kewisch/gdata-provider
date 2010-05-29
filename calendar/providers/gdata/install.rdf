@@ -41,11 +41,7 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}</em:id>
-#ifdef MOZILLA_1_9_2_BRANCH
-    <em:version>0.7pre</em:version>
-#else
     <em:version>0.8pre</em:version>
-#endif
     <em:type>2</em:type>
 
     <!-- Target Application this extension can install into,
@@ -54,11 +50,7 @@
       <Description>
         <!-- Sunbird -->
         <em:id>{718e30fb-e89b-41dd-9da7-e25a45638b28}</em:id>
-#ifdef MOZILLA_1_9_2_BRANCH
-        <em:minVersion>1.0b2pre</em:minVersion>
-#else
         <em:minVersion>1.1a1pre</em:minVersion>
-#endif
         <em:maxVersion>@CALENDAR_VERSION@</em:maxVersion>
       </Description>
     </em:targetApplication>
@@ -66,11 +58,7 @@
       <Description>
         <!-- Thunderbird -->
         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
-#ifdef MOZILLA_1_9_2_BRANCH
-        <em:minVersion>3.1a1pre</em:minVersion>
-#else
         <em:minVersion>3.2a1pre</em:minVersion>
-#endif
         <em:maxVersion>@THUNDERBIRD_VERSION@</em:maxVersion>
       </Description>
     </em:targetApplication>
@@ -87,11 +75,7 @@
       <Description>
         <!-- Lightning (also Sunbird via extension stub) -->
         <em:id>{e2fda1a4-762b-4020-b5ad-a41df1933103}</em:id>
-#ifdef MOZILLA_1_9_2_BRANCH
-        <em:minVersion>1.0b2pre</em:minVersion>
-#else
         <em:minVersion>1.1a1pre</em:minVersion>
-#endif
         <em:maxVersion>@CALENDAR_VERSION@</em:maxVersion>
       </Description>
     </em:requires>
