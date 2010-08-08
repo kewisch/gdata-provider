@@ -34,200 +34,46 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+Components.utils.import("resource://calendar/modules/calUtils.jsm");
+
 // This constant is used internally to signal a failed login to the login
 // handler's response function.
 const kGOOGLE_LOGIN_FAILED = 1;
 
-var g_classInfo = {
-     calGoogleCalendar: {
-        getInterfaces: function cI_cGC_getInterfaces (count) {
-            var ifaces = [
-                Components.interfaces.nsISupports,
-                Components.interfaces.calICalendar,
-                Components.interfaces.calIGoogleCalendar,
-                Components.interfaces.calISchedulingSupport,
-                Components.interfaces.calIChangeLog,
-                Components.interfaces.nsIClassInfo
-            ];
-            count.value = ifaces.length;
-            return ifaces;
-        },
+/** Module Registration */
+const calendarScriptLoadOrder = [
+    "calUtils.js",
+];
 
-        getHelperForLanguage: function cI_cGC_getHelperForLanguage(aLanguage) {
-            return null;
-        },
+const gdataScriptLoadOrder = [
+    "calGoogleCalendar.js",
+    "calGoogleSession.js",
+    "calGoogleRequest.js",
+    "calGoogleUtils.js"
+];
 
-        classDescription: "Google Calendar Provider",
-        contractID: "@mozilla.org/calendar/calendar;1?type=gdata",
-        classID:  Components.ID("{d1a6e988-4b4d-45a5-ba46-43e501ea96e3}"),
-        implementationLanguage: Components.interfaces.nsIProgrammingLanguage.JAVASCRIPT,
-        constructor: "calGoogleCalendar",
-        flags: 0
-    },
+function NSGetModule(cid) {
+    if (!this.scriptsLoaded) {
+        // First load the calendar scripts
+        cal.loadScripts(calendarScriptLoadOrder, Components.utils.getGlobalForObject(this));
 
-    calGoogleSession: {
-        getInterfaces: function cI_cGS_getInterfaces (aCount) {
-            var ifaces = [
-                Components.interfaces.nsISupports,
-                Components.interfaces.calIGoogleSession,
-                Components.interfaces.nsIClassInfo
-            ];
-            aCount.value = ifaces.length;
-            return ifaces;
-        },
-
-        getHelperForLanguage: function cI_cGS_getHelperForLanguage(aLanguage) {
-            return null;
-        },
-
-        classDescription: "Google Calendar Session",
-        contractID: "@mozilla.org/calendar/providers/gdata/session;1",
-        classID:  Components.ID("{652f6233-e03f-438a-bd3b-39877f68c0f4}"),
-        implementationLanguage: Components.interfaces.nsIProgrammingLanguage.JAVASCRIPT,
-        constructor: "calGoogleSession",
-        flags: 0
-    },
-
-    calGoogleSessionManager: {
-        getInterfaces: function cI_cGSM_getInterfaces (aCount) {
-            var ifaces = [
-                Components.interfaces.nsISupports,
-                Components.interfaces.calIGoogleSessionManager,
-                Components.interfaces.nsIClassInfo
-            ];
-            aCount.value = ifaces.length;
-            return ifaces;
-        },
-
-        getHelperForLanguage: function cI_cGSM_getHelperForLanguage(aLanguage) {
-            return null;
-        },
-
-        classDescription: "Google Calendar Session Manager",
-        contractID: "@mozilla.org/calendar/providers/gdata/session-manager;1",
-        classID:  Components.ID("{6a7ba1f0-f271-49b0-8e93-5ca33651b4af}"),
-        implementationLanguage: Components.interfaces.nsIProgrammingLanguage.JAVASCRIPT,
-        constructor: "calGoogleSessionManager",
-        flags: Components.interfaces.nsIClassInfo.SINGLETON
-    },
-    calGoogleRequest: {
-        getInterfaces: function cI_cGR_getInterfaces (aCount) {
-            var ifaces = [
-                Components.interfaces.nsISupports,
-                Components.interfaces.calIGoogleRequest,
-                Components.interfaces.calIOperation,
-                Components.interfaces.nsIStreamLoaderObserver,
-                Components.interfaces.nsIInterfaceRequestor,
-                Components.interfaces.nsIChannelEventSink,
-                Components.interfaces.nsIClassInfo
-            ];
-            aCount.value = ifaces.length;
-            return ifaces;
-        },
-
-        getHelperForLanguage: function cI_cGR_getHelperForLanguage(aLanguage) {
-            return null;
-        },
-
-        classDescription: "Google Calendar Request",
-        contractID: "@mozilla.org/calendar/providers/gdata/request;1",
-        classID:  Components.ID("{53a3438a-21bc-4a0f-b813-77a8b4f19282}"),
-        implementationLanguage: Components.interfaces.nsIProgrammingLanguage.JAVASCRIPT,
-        constructor: "calGoogleRequest",
-        flags: 0
-    }
-};
-
-var calGoogleCalendarModule = {
-
-    mUtilsLoaded: false,
-
-    loadUtils: function cGCM_loadUtils() {
-        if (this.mUtilsLoaded)
-            return;
-
-        Components.utils.import("resource://calendar/modules/calUtils.jsm");
-        Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
-        Components.utils.import("resource://calendar/modules/calAuthUtils.jsm");
-        cal.loadScripts(["calUtils.js"], Components.utils.getGlobalForObject(this));
-
-        // Now load gdata extension scripts. Note that unintuitively,
-        // __LOCATION__.parent == . We expect to find the subscripts in ./../js
+        // Now load gdata extension scripts. __LOCATION__ is the current
+        // filename, so  __LOCATION__.parent == . We expect to find the
+        // subscripts in ./../js
         let thisDir = __LOCATION__.parent.parent.clone();
         thisDir.append("js");
-        cal.loadScripts(["calGoogleCalendar.js", "calGoogleSession.js",
-                         "calGoogleRequest.js", "calGoogleUtils.js"],
-                        Components.utils.getGlobalForObject(this),
-                        thisDir);
-
-        this.mUtilsLoaded = true;
-    },
-
-    unregisterSelf: function cGCM_unregisterSelf(aComponentManager) {
-        aComponentManager = aComponentManager
-                            .QueryInterface(Components.interfaces.nsIComponentRegistrar);
-        for each (var component in g_classInfo) {
-            aComponentManager.unregisterFactoryLocation(component.classID);
-        }
-    },
-
-    registerSelf: function cGCM_registerSelf(aComponentManager,
-                                             aFileSpec,
-                                             aLocation,
-                                             aType) {
-        aComponentManager = aComponentManager
-                            .QueryInterface(Components.interfaces.nsIComponentRegistrar);
-
-        for each (var component in g_classInfo) {
-            aComponentManager.registerFactoryLocation(
-                component.classID,
-                component.classDescription,
-                component.contractID,
-                aFileSpec,
-                aLocation,
-                aType);
-        }
-    },
-
-    makeFactoryFor: function cGCM_makeFactoryFor(aConstructor) {
-        var factory = {
-            QueryInterface: function (aIID) {
-                if (!aIID.equals(Components.interfaces.nsISupports) &&
-                    !aIID.equals(Components.interfaces.nsIFactory))
-                    throw Components.results.NS_ERROR_NO_INTERFACE;
-                return this;
-            },
-
-            createInstance: function (aOuter, aIID) {
-                if (aOuter != null)
-                    throw Components.results.NS_ERROR_NO_AGGREGATION;
-                return (new aConstructor()).QueryInterface(aIID);
-            }
-        };
-        return factory;
-    },
-
-    getClassObject: function cGCM_getClassObject(aComponentManager,
-                                                 aCID,
-                                                 aIID) {
-        if (!aIID.equals(Components.interfaces.nsIFactory))
-            throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
-
-        this.loadUtils();
-
-        for each (var component in g_classInfo) {
-            if (aCID.equals(component.classID)) {
-                return this.makeFactoryFor(eval(component.constructor));
-            }
-        }
-        throw Components.results.NS_ERROR_NO_INTERFACE;
-    },
-
-    canUnload: function(aComponentManager) {
-        return true;
+        cal.loadScripts(gdataScriptLoadOrder, Components.utils.getGlobalForObject(this), thisDir);
+        this.scriptsLoaded = true;
     }
-};
 
-function NSGetModule(aComponentManager, aFileSpec) {
-    return calGoogleCalendarModule;
+    let components = [
+        calGoogleCalendar,
+        calGoogleSession,
+        calGoogleSessionManager,
+        calGoogleRequest
+    ];
+
+    return (XPCOMUtils.generateNSGetModule(components))(cid);
 }

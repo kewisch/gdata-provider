@@ -49,12 +49,28 @@ function calGoogleSessionManager() {
 calGoogleSessionManager.prototype = {
     mSessionMap: {},
 
+    getInterfaces: function cI_cGSM_getInterfaces (aCount) {
+        var ifaces = [
+            Components.interfaces.nsISupports,
+            Components.interfaces.calIGoogleSessionManager,
+            Components.interfaces.nsIClassInfo
+        ];
+        aCount.value = ifaces.length;
+        return ifaces;
+    },
+
+    getHelperForLanguage: function cI_cGSM_getHelperForLanguage(aLanguage) {
+        return null;
+    },
+
+    classDescription: "Google Calendar Session Manager",
+    contractID: "@mozilla.org/calendar/providers/gdata/session-manager;1",
+    classID:  Components.ID("{6a7ba1f0-f271-49b0-8e93-5ca33651b4af}"),
+    implementationLanguage: Components.interfaces.nsIProgrammingLanguage.JAVASCRIPT,
+    flags: Components.interfaces.nsIClassInfo.SINGLETON,
+
     QueryInterface: function cGSM_QueryInterface(aIID) {
-        return doQueryInterface(this,
-                                calGoogleSessionManager.prototype,
-                                aIID,
-                                null,
-                                g_classInfo["calGoogleSessionManager"]);
+        return cal.doQueryInterface(this, calGoogleSessionManager.prototype, aIID, null, this);
     },
 
     /**
@@ -106,13 +122,27 @@ function calGoogleSession(aUsername) {
 }
 
 calGoogleSession.prototype = {
+    classDescription: "Google Calendar Session",
+    contractID: "@mozilla.org/calendar/providers/gdata/session;1",
+    classID:  Components.ID("{652f6233-e03f-438a-bd3b-39877f68c0f4}"),
+
+    getInterfaces: function cI_cGS_getInterfaces (aCount) {
+        let ifaces = [
+            Components.interfaces.nsISupports,
+            Components.interfaces.calIGoogleSession,
+            Components.interfaces.nsIClassInfo
+        ];
+        aCount.value = ifaces.length;
+        return ifaces;
+    },
+    getHelperForLanguage: function cI_cGS_getHelperForLanguage(aLanguage) {
+        return null;
+    },
+    implementationLanguage: Components.interfaces.nsIProgrammingLanguage.JAVASCRIPT,
+    flags: 0,
 
     QueryInterface: function cGS_QueryInterface(aIID) {
-        return doQueryInterface(this,
-                                calGoogleSessionManager.prototype,
-                                aIID,
-                                null,
-                                g_classInfo["calGoogleSession"]);
+        return cal.doQueryInterface(this, calGoogleSession.prototype, aIID, null, this);
     },
 
     /* Member Variables */

@@ -37,6 +37,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
+Components.utils.import("resource://calendar/modules/calUtils.jsm");
 
 /**
  * calGoogleCalendar
@@ -53,12 +54,32 @@ function calGoogleCalendar() {
 calGoogleCalendar.prototype = {
     __proto__: cal.ProviderBase.prototype,
 
+    classDescription: "Google Calendar Provider",
+    contractID: "@mozilla.org/calendar/calendar;1?type=gdata",
+    classID:  Components.ID("{d1a6e988-4b4d-45a5-ba46-43e501ea96e3}"),
+
+    getInterfaces: function cI_cGC_getInterfaces (count) {
+        var ifaces = [
+            Components.interfaces.nsISupports,
+            Components.interfaces.calICalendar,
+            Components.interfaces.calIGoogleCalendar,
+            Components.interfaces.calISchedulingSupport,
+            Components.interfaces.calIChangeLog,
+            Components.interfaces.nsIClassInfo
+        ];
+        count.value = ifaces.length;
+        return ifaces;
+    },
+
+    getHelperForLanguage: function cI_cGC_getHelperForLanguage(aLanguage) {
+        return null;
+    },
+
+    implementationLanguage: Components.interfaces.nsIProgrammingLanguage.JAVASCRIPT,
+    flags: 0,
+
     QueryInterface: function cGS_QueryInterface(aIID) {
-        return doQueryInterface(this,
-                                calGoogleCalendar.prototype,
-                                aIID,
-                                null,
-                                g_classInfo["calGoogleCalendar"]);
+        return cal.doQueryInterface(this, calGoogleCalendar.prototype, aIID, null, this);
     },
 
     /* Member Variables */
