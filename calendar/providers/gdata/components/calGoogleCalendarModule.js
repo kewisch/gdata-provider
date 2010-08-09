@@ -54,7 +54,7 @@ const gdataScriptLoadOrder = [
     "calGoogleUtils.js"
 ];
 
-function NSGetModule(cid) {
+function NSGetFactory(cid) {
     if (!this.scriptsLoaded) {
         // First load the calendar scripts
         cal.loadScripts(calendarScriptLoadOrder, Components.utils.getGlobalForObject(this));
@@ -75,5 +75,5 @@ function NSGetModule(cid) {
         calGoogleRequest
     ];
 
-    return (XPCOMUtils.generateNSGetModule(components))(cid);
+    return (XPCOMUtils.generateNSGetFactory(components))(cid);
 }

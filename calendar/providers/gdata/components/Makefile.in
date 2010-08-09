@@ -42,7 +42,7 @@ VPATH = @srcdir@
 include $(DEPTH)/config/autoconf.mk
 
 MODULE = gdata-provider
-EXTRA_COMPONENTS = calGoogleCalendarModule.js
+EXTRA_COMPONENTS = calGoogleCalendarModule.js calGoogleCalendarModule.manifest
 
 EXTRA_SCRIPTS = \
     calGoogleCalendar.js \
