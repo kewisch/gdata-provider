@@ -226,8 +226,7 @@ calGoogleRequest.prototype = {
             }
 
             // create the channel
-            var ioService = Components.classes["@mozilla.org/network/io-service;1"].
-                            getService(Components.interfaces.nsIIOService);
+            var ioService = cal.getIOService();
 
             var uristring = this.uri;
             if (this.mQueryParameters.length > 0) {
