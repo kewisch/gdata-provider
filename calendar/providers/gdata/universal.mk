@@ -35,15 +35,15 @@
 # ***** END LICENSE BLOCK *****
 
 ifndef OBJDIR
-OBJDIR_PPC = $(MOZ_OBJDIR)/ppc
-OBJDIR_X86 = $(MOZ_OBJDIR)/i386
-DIST_PPC = $(OBJDIR_PPC)/mozilla/dist
-DIST_X86 = $(OBJDIR_X86)/mozilla/dist
-DIST_UNI = $(DIST_PPC)/universal
-OBJDIR = $(OBJDIR_PPC)
+OBJDIR_ARCH_1 = $(MOZ_OBJDIR)/$(firstword $(MOZ_BUILD_PROJECTS))
+OBJDIR_ARCH_2 = $(MOZ_OBJDIR)/$(word 2,$(MOZ_BUILD_PROJECTS))
+DIST_ARCH_1 = $(OBJDIR_ARCH_1)/mozilla/dist
+DIST_ARCH_2 = $(OBJDIR_ARCH_2)/mozilla/dist
+DIST_UNI = $(DIST_ARCH_1)/universal
+OBJDIR = $(OBJDIR_ARCH_1)
 endif
 
 # This is fine as long as the gdata provider has no binary components.
 postflight_all:
 	mkdir -p $(DIST_UNI)/xpi-stage
-	cp $(DIST_PPC)/xpi-stage/gdata-provider.xpi $(DIST_UNI)/xpi-stage
+	cp $(DIST_ARCH_1)/xpi-stage/gdata-provider.xpi $(DIST_UNI)/xpi-stage
