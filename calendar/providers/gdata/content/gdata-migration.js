@@ -34,12 +34,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+Components.utils.import("resource://calendar/modules/calUtils.jsm");
+
 /**
  * Migrate the calendar selected in the wizard from ics to gdata.
  */
 function migrateSelectedCalendars() {
     var listbox = document.getElementById("calendars-listbox");
-    var calmgr = getCalendarManager();
+    var calmgr = cal.getCalendarManager();
 
     for (var i = 0; i < listbox.childNodes.length; i++) {
         var item = listbox.childNodes[i];
@@ -69,8 +71,8 @@ function migrateSelectedCalendars() {
     }
 
     // Only bring up the dialog on the next startup if the user wants us to.
-    setPref("calendar.google.migrate",
-            document.getElementById("showagain-checkbox").checked);
+    cal.setPref("calendar.google.migrate",
+                document.getElementById("showagain-checkbox").checked);
 }
 
 /**
@@ -109,11 +111,11 @@ function gdata_migration_loader() {
 
         // Set up the "always check" field
         document.getElementById("showagain-checkbox").checked =
-            getPrefSafe("calendar.google.migrate", true);
+            cal.getPrefSafe("calendar.google.migrate", true);
     } else {
         // This is not the migration wizard, so it must be a main window. Check
         // if the migration wizard needs to be shown.
-        if (getPrefSafe("calendar.google.migrate", true)) {
+        if (cal.getPrefSafe("calendar.google.migrate", true)) {
             // Check if there are calendars that are worth migrating.
             if (getMigratableCalendars().length > 0) {
                 // Do this after load, so the calendar window appears before the

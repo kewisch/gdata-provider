@@ -72,8 +72,8 @@ var gGoogleSandbox;
  */
 function setCalendarPref(aCalendar, aPrefName, aPrefType, aPrefValue) {
 
-    setPref("calendar.google.calPrefs." + aCalendar.googleCalendarName + "." +
-            aPrefName, aPrefValue, aPrefType);
+    cal.setPref("calendar.google.calPrefs." + aCalendar.googleCalendarName + "." +
+                aPrefName, aPrefValue, aPrefType);
 
     return aPrefValue;
 }
@@ -91,8 +91,8 @@ function setCalendarPref(aCalendar, aPrefName, aPrefType, aPrefValue) {
  * @require aCalendar.googleCalendarName
  */
 function getCalendarPref(aCalendar, aPrefName) {
-    return getPrefSafe("calendar.google.calPrefs." +
-                       aCalendar.googleCalendarName + "."  + aPrefName);
+    return cal.getPrefSafe("calendar.google.calPrefs." +
+                           aCalendar.googleCalendarName + "."  + aPrefName);
 }
 
 /**
@@ -297,7 +297,7 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
     entry.gd::where.@valueString = aItem.getProperty("LOCATION") || "";
 
     // gd:who
-    if (getPrefSafe("calendar.google.enableAttendees", false)) {
+    if (cal.getPrefSafe("calendar.google.enableAttendees", false)) {
         // XXX Only parse attendees if they are enabled, due to bug 407961
 
         var attendees = aItem.getAttendees({});
@@ -357,7 +357,7 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
 
     // Don't notify attendees by default. Use a preference in case the user
     // wants this to be turned on.
-    var notify = getPrefSafe("calendar.google.sendEventNotifications", false);
+    var notify = cal.getPrefSafe("calendar.google.sendEventNotifications", false);
     entry.gCal::sendEventNotifications.@value = (notify ? "true" : "false");
 
     // gd:when
@@ -932,7 +932,7 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
         item.setProperty("LOCATION",
                          aXMLEntry.gd::where.@valueString.toString());
         // gd:who
-        if (getPrefSafe("calendar.google.enableAttendees", false)) {
+        if (cal.getPrefSafe("calendar.google.enableAttendees", false)) {
             // XXX Only parse attendees if they are enabled, due to bug 407961
 
             // This object can easily translate Google's values to our values.
