@@ -47,7 +47,6 @@ export USE_EXTENSION_MANIFEST = 1
 export XPI_NAME = gdata-provider
 DIST_FILES = install.rdf
 XPI_PKGNAME = gdata-provider
-STRIP_XPI = 1
 
 CALENDAR_VERSION := $(shell cat $(topsrcdir)/calendar/sunbird/config/version.txt)
 THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version.txt)
