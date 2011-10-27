@@ -223,14 +223,15 @@ function passwordManagerRemove(aUsername) {
  * Converts a calIEvent to a string of xml data.
  *
  * @param aItem         The item to convert
+ * @param aCalendar     The calendar to use, this must be a calIGoogleCalendar
  * @param aAuthorEmail  The email of the author of the event
  * @param aAuthorName   The full name of the author of the event
  * @return              The xml data of the item
  */
-function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
+function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
 
     var selfIsOrganizer = (!aItem.organizer ||
-                            aItem.organizer.id == "mailto:" + aItem.calendar.googleCalendarName);
+                            aItem.organizer.id == "mailto:" + aCalendar.googleCalendarName);
 
     function addExtendedProperty(aName, aValue) {
         if (!selfIsOrganizer || !aValue) {
@@ -456,6 +457,8 @@ function ItemToXMLEntry(aItem, aAuthorEmail, aAuthorName) {
     // categories
     // Google does not support categories natively, but allows us to store data
     // as an "extendedProperty", so we do here
+    cal.WARN("CAT: " + aItem.getCategories({}).toSource() + " = " +
+             categoriesArrayToString(aItem.getCategories({})));
     addExtendedProperty("X-MOZ-CATEGORIES",
                         categoriesArrayToString(aItem.getCategories({})));
 

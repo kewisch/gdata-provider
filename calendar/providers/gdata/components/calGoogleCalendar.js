@@ -347,7 +347,7 @@ calGoogleCalendar.prototype = {
             aItem.calendar = this.superCalendar;
 
             var request = new calGoogleRequest(this);
-            var xmlEntry = ItemToXMLEntry(aItem,
+            var xmlEntry = ItemToXMLEntry(aItem, this,
                                           this.session.userName,
                                           this.session.fullName);
 
@@ -429,7 +429,7 @@ calGoogleCalendar.prototype = {
             // therefore not be added in the returned item. 
             var newItem = aNewItem.clone();
 
-            var xmlEntry = ItemToXMLEntry(newItem,
+            var xmlEntry = ItemToXMLEntry(newItem, this,
                                           this.session.userName,
                                           this.session.fullName);
 
