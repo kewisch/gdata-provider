@@ -219,6 +219,124 @@ function passwordManagerRemove(aUsername) {
 }
 
 /**
+ * If the operation has signaled that a conflict occurred, then prompt the user
+ * to overwrite. If the user chooses to overwrite, restart the request with the
+ * right parameters so the request succeeds.
+ *
+ * @param aOperation        The operation to check
+ * @param aItem             The updated item from the response
+ * @return                  False if further processing should be cancelled
+ */
+function resolveConflicts(aOperation, aItem) {
+    if (aItem && (aOperation.status == kGOOGLE_CONFLICT_DELETED ||
+                  aOperation.status == kGOOGLE_CONFLICT_MODIFY)) {
+        if (aItem == "SEQUENCE-HACK") {
+            // Working around a Google issue here, see what happens on a 400
+            // code in calGoogleRequest.js. This will cause a new request
+            // without the sequence number. In return, we get a new item with
+            // the correct sequence number.
+            let newItem =  aOperation.newItem.clone();
+            let session = aOperation.calendar.session;
+            newItem.deleteProperty("SEQUENCE");
+            let xmlEntry = ItemToXMLEntry(newItem, aOperation.calendar,
+                                          session.userName, session.fullName);
+
+            aOperation.newItem = newItem;
+            aOperation.setUploadData("application/atom+xml; charset=UTF-8", xmlEntry);
+            session.asyncItemRequest(aOperation);
+            return false;
+        } else if (aOperation.status == kGOOGLE_CONFLICT_DELETED &&
+                   aOperation.type == aOperation.DELETE) {
+            // Deleted on the server and deleted locally. Great!
+            return true;
+        } else {
+            // If a conflict occurred, then prompt
+            let method = (aOperation.type == aOperation.DELETE ? "delete" : "modify")
+            let inputItem = aOperation.oldItem || aOperation.newItem;
+            let overwrite = cal.promptOverwrite(method, inputItem);
+            if (overwrite) {
+                if (aOperation.status == kGOOGLE_CONFLICT_DELETED &&
+                    aOperation.type == aOperation.MODIFY) {
+                    // The item was deleted on the server, but modified locally.
+                    // Add it again
+                    aOperation.type = aOperation.ADD;
+                    aOperation.uri = aOperation.calendar.fullUri.spec;
+                    aOperation.calendar.session.asyncItemRequest(aOperation);
+                    return false;
+                } else if (aOperation.status == kGOOGLE_CONFLICT_MODIFY &&
+                           aOperation.type == aOperation.MODIFY) {
+                    // The item was modified in both places, repeat the current
+                    // request with the edit uri of the updated event
+                    aOperation.uri = getItemEditURI(aItem);
+                    aOperation.calendar.session.asyncItemRequest(aOperation);
+                    return false;
+                } else if (aOperation.status == kGOOGLE_CONFLICT_MODIFY &&
+                           aOperation.type == aOperation.DELETE) {
+                    // Modified on the server, deleted locally. Just repeat the
+                    // delete request with the updated edit uri.
+                    aOperation.uri = getItemEditURI(aItem);
+                    aOperation.calendar.session.asyncItemRequest(aOperation);
+                    return false;
+                }
+            }
+        }
+        // Otherwise, we can just continue using the item that was parsed, it
+        // is the newest version on the server.
+    }
+    return true;
+}
+
+/**
+ * Helper function to convert raw data directly into a calIItemBase. If the
+ * passed operation signals an error, then throw an exception
+ *
+ * @param aOperation        The operation to check for errors
+ * @param aData             The result from the response
+ * @param aGoogleCalendar   The calIGoogleCalendar to operate on
+ * @param aReferenceItem    The reference item to apply the information to
+ * @return                  The parsed item
+ * @throws                  An exception on a parsing or request error
+ */
+function DataToItem(aOperation, aData, aGoogleCalendar, aReferenceItem) {
+    if (aOperation.status == kGOOGLE_CONFLICT_DELETED ||
+        aOperation.status == kGOOGLE_CONFLICT_MODIFY ||
+        Components.isSuccessCode(aOperation.status)) {
+
+        let item;
+        if (aData == "SEQUENCE-HACK") {
+            // Working around a Google issue here, see what happens on a 400
+            // code in calGoogleRequest.js. This will be processed in
+            // resolveConflicts().
+            return "SEQUENCE-HACK";
+        }
+
+        if (aData && aData.length) {
+            let xml = cal.safeNewXML(aData);
+            cal.LOG("[calGoogleCalendar] Parsing entry:\n" + xml + "\n");
+
+            // Get the local timezone from the preferences
+            let timezone = calendarDefaultTimezone();
+
+            // Parse the Item with the given timezone
+            item = XMLEntryToItem(xml, timezone,
+                                  aGoogleCalendar,
+                                  aReferenceItem);
+        } else {
+            cal.LOG("[calGoogleCalendar] No content, using reference item instead ");
+            // No data happens for example on delete. Just assume the reference
+            // item.
+            item = aReferenceItem.clone();
+        }
+
+        LOGitem(item);
+        item.calendar = aGoogleCalendar.superCalendar;
+        return item;
+    } else {
+        throw new Components.Exception(aData, aOperation.status);
+    }
+}
+
+/**
  * ItemToXMLEntry
  * Converts a calIEvent to a string of xml data.
  *
@@ -457,8 +575,6 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
     // categories
     // Google does not support categories natively, but allows us to store data
     // as an "extendedProperty", so we do here
-    cal.WARN("CAT: " + aItem.getCategories({}).toSource() + " = " +
-             categoriesArrayToString(aItem.getCategories({})));
     addExtendedProperty("X-MOZ-CATEGORIES",
                         categoriesArrayToString(aItem.getCategories({})));
 
@@ -492,7 +608,7 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
             // Put the ical string in a <gd:recurrence> tag
             entry.gd::recurrence = icalString + kNEWLINE;
         } catch (e) {
-            LOG("Error: " + e);
+            cal.ERROR("[calGoogleCalendar] Error: " + e);
         }
     }
 
@@ -505,7 +621,10 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
 
     // While it may sometimes not work out, we can always try to set the uid and
     // sequence properties
-    entry.gCal::sequence.@value = aItem.getProperty("SEQUENCE") || 0;
+    let sequence = aItem.getProperty("SEQUENCE");
+    if (sequence) {
+        entry.gCal::sequence.@value = sequence;
+    }
     entry.gCal::uid.@value = aItem.id || "";
 
     // TODO gd:comments: Enhancement tracked in bug 362653
@@ -658,7 +777,7 @@ function getItemEditURI(aItem) {
     var edituri = aItem.getProperty("X-GOOGLE-EDITURL");
     if (!edituri) {
         // If the item has no edit uri, it is read-only
-        throw new Components.Exception("", Components.interfaces.calIErrors.CAL_IS_READONLY);
+        throw new Components.Exception("The item is readonly", Components.interfaces.calIErrors.CAL_IS_READONLY);
     }
     return edituri;
 }
@@ -1026,16 +1145,46 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
  * @return              The (possibly expanded) items in an array.
  */
 function expandItems(aItem, aOperation) {
-    var expandedItems;
+    let expandedItems;
     if (aOperation.itemFilter &
         Components.interfaces.calICalendar.ITEM_FILTER_CLASS_OCCURRENCES) {
         expandedItems = aItem.getOccurrencesBetween(aOperation.itemRangeStart,
                                                     aOperation.itemRangeEnd,
                                                     {});
-        LOG("Expanded item " + aItem.title + " to " +
-            expandedItems.length + " items");
+        cal.LOG("[calGoogleCalendar] Expanded item " + aItem.title + " to " +
+                expandedItems.length + " items");
     }
     return expandedItems || [aItem];
+}
+
+/**
+ * Returns true if the exception passed is one that should cause the cache
+ * layer to retry the operation. This is usually a network error or other
+ * temporary error
+ *
+ * @param e     The exception to check
+ */
+function isCacheException(e) {
+    // Stolen from nserror.h
+    const NS_ERROR_MODULE_NETWORK = 6;
+    function NS_ERROR_GET_MODULE(code) {
+        return (((code >> 16) - 0x45) & 0x1fff);
+    }
+
+    if (NS_ERROR_GET_MODULE(e.result) == NS_ERROR_MODULE_NETWORK &&
+        !Components.isSuccessCode(e.result)) {
+        // This is a network error, which most likely means we should
+        // retry it some time.
+        return true;
+    }
+
+    // Other potential errors we want to retry with
+    switch (e.result) {
+        case Components.results.NS_ERROR_NOT_AVAILABLE:
+            return true;
+        default:
+            return false;
+    }
 }
 
 /**
@@ -1123,7 +1272,7 @@ function LOGitem(item) {
     }
 
 
-    LOG("Logging calIEvent:" +
+    cal.LOG("[calGoogleCalendar] Logging calIEvent:" +
         "\n\tid:" + item.id +
         "\n\tediturl:" + item.getProperty("X-GOOGLE-EDITURL") +
         "\n\tcreated:" + item.getProperty("CREATED") +
@@ -1136,6 +1285,7 @@ function LOGitem(item) {
         "\n\tendTime:" + item.endDate.toString() +
         "\n\tlocation:" + item.getProperty("LOCATION") +
         "\n\tprivacy:" + item.privacy +
+        "\n\tsequence:" + item.getProperty("SEQUENCE") +
         "\n\talarmLastAck:" + item.alarmLastAck +
         "\n\tsnoozeTime:" + item.getProperty("X-MOZ-SNOOZE-TIME") +
         "\n\tisOccurrence: " + (item.recurrenceId != null) +
@@ -1189,6 +1339,7 @@ function LOGinterval(aInterval) {
         type = aInterval.freeBusyType + "(UNKNOWN)";
     }
 
-    LOG("Interval from " + aInterval.interval.start + " to "
-                         + aInterval.interval.end + " is " + type);
+    cal.LOG("[calGoogleCalendar] Interval from " +
+            aInterval.interval.start + " to " + aInterval.interval.end +
+            " is " + type);
 }

@@ -183,13 +183,6 @@ calGoogleRequest.prototype = {
     setUploadData: function cGR_setUploadData(aContentType, aData) {
         this.mUploadContent = aContentType;
         this.mUploadData = aData;
-        if (this.mType == this.LOGIN) {
-            LOG("Setting upload data for login request (hidden)");
-        } else {
-            LOG({action:"Setting Upload Data:",
-                 content:aContentType,
-                 data:aData});
-        }
     },
 
     /**
@@ -242,8 +235,8 @@ calGoogleRequest.prototype = {
 
             this.mLoader = cal.createStreamLoader();
 
-            LOG("calGoogleRequest: Requesting " + this.method + " " +
-                channel.URI.spec);
+            cal.LOG("[calGoogleCalendar] Requesting " + this.method + " " +
+                    channel.URI.spec);
 
             channel.notificationCallbacks = this;
 
@@ -300,6 +293,13 @@ calGoogleRequest.prototype = {
             var stream = converter.convertToInputStream(this.mUploadData);
             aChannel = aChannel.QueryInterface(Components.interfaces.nsIUploadChannel);
             aChannel.setUploadStream(stream, this.mUploadContent, -1);
+
+            if (this.mType == this.LOGIN) {
+                cal.LOG("[calGoogleCalendar] Setting upload data for login request (hidden)");
+            } else {
+                cal.LOG("[calGoogleCalendar] Setting Upload Data (" +
+                        this.mUploadContent + "):\n" + this.mUploadData);
+            }
         }
 
         aChannel  = aChannel.QueryInterface(Components.interfaces.nsIHttpChannel);
@@ -398,8 +398,8 @@ calGoogleRequest.prototype = {
             case 401: /* Authorization required. */
             case 403: /* Unsupported standard parameter, or authentication or
                          Authorization failed. */
-                LOG("Login failed for " + this.mSession.userName +
-                    " HTTP Status " + httpChannel.responseStatus );
+                cal.LOG("[calGoogleCalendar] Login failed for " + this.mSession.userName +
+                        " HTTP Status " + httpChannel.responseStatus);
 
                 // login failed. auth token must be invalid, password too
 
@@ -426,21 +426,29 @@ calGoogleRequest.prototype = {
                 }
 
                 break;
+            case 404: /* The resource was not found on the server, which is
+                         also a conflict */
+                //  404 NOT FOUND: Resource (such as a feed or entry) not found.
+                this.fail(kGOOGLE_CONFLICT_DELETED, "");
+                break;
             case 409: /* Specified version number doesn't match resource's
                          latest version number. */
-
-                // 409 Conflict. The client should get a newer version of the
-                // event
-                // and edit that one.
-
-                // TODO Enhancement tracked in bug 362645
-                // Fall through, if 409 is not handled then the event is not
-                // modified/deleted, which is definitly an error.
-            default:
-                // The following codes are caught here:
+                this.fail(kGOOGLE_CONFLICT_MODIFY, result);
+                break;
+            case 400:
                 //  400 BAD REQUEST: Invalid request URI or header, or
                 //                   unsupported nonstandard parameter.
-                //  404 NOT FOUND: Resource (such as a feed or entry) not found.
+
+                // HACK Ugh, this sucks. If we send a lower sequence number, Google
+                // will throw a 400 and not a 409, even though both cases are a conflict.
+                if (result == "Cannot decrease the sequence number of an event") {
+                    this.fail(kGOOGLE_CONFLICT_MODIFY, "SEQUENCE-HACK");
+                    break;
+                }
+
+                // Otherwise fall through
+            default:
+                // The following codes are caught here:
                 //  500 INTERNAL SERVER ERROR: Internal error. This is the
                 //                             default code that is used for
                 //                             all unrecognized errors.
@@ -452,7 +460,7 @@ calGoogleRequest.prototype = {
                             httpChannel.responseStatusText + " Body: " +
                             result;
 
-                this.fail(Components.results.NS_ERROR_FAILURE, error);
+                this.fail(Components.results.NS_ERROR_NOT_AVAILABLE, error);
                 break;
         }
     }

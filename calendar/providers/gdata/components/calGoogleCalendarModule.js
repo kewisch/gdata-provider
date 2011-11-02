@@ -38,9 +38,11 @@ Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
 
-// This constant is used internally to signal a failed login to the login
-// handler's response function.
+// These constants are used internally to signal errors, to avoid the need for
+// our own error range in calIErrors
 const kGOOGLE_LOGIN_FAILED = 1;
+const kGOOGLE_CONFLICT_DELETED = 2;
+const kGOOGLE_CONFLICT_MODIFY = 3
 
 /** Module Registration */
 const calendarScriptLoadOrder = [

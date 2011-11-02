@@ -107,6 +107,7 @@ interface calIGoogleRequest : calIOperation {
     attribute calIDateTime itemRangeEnd;
     attribute unsigned long itemFilter;
     attribute AUTF8String itemId;
+    attribute boolean useCache;
 
     /**
      * For add/modify/delete item requests, these contain the old and new items.

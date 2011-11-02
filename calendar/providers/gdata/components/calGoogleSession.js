@@ -94,10 +94,10 @@ calGoogleSessionManager.prototype = {
             if (!aCreate) {
                 return null;
             }
-            LOG("Creating session for: " + aUsername);
+            cal.LOG("[calGoogleCalendar] Creating session for: " + aUsername);
             this.mSessionMap[aUsername] = new calGoogleSession(aUsername);
         } else {
-            LOG("Reusing session for: " + aUsername);
+            cal.LOG("[calGoogleCalendar] Reusing session for: " + aUsername);
         }
 
         // XXX What happens if the username is "toSource" :)
@@ -261,11 +261,11 @@ calGoogleSession.prototype = {
      */
     loginAndContinue: function cGS_loginAndContinue(aCalendar) {
         if (this.mLoggingIn) {
-            LOG("loginAndContinue called while logging in");
+            cal.LOG("[calGoogleCalendar] loginAndContinue called while logging in");
             return;
         }
         try {
-            LOG("Logging in to " + this.mGoogleUser);
+            cal.LOG("[calGoogleCalendar] Logging in to " + this.mGoogleUser);
 
             // We need to have a user and should not be logging in
             ASSERT(!this.mLoggingIn);
@@ -310,8 +310,8 @@ calGoogleSession.prototype = {
                                            password,
                                            persist)) {
 
-                    LOG("Got the pw from the calendar credentials: " +
-                        calendarName);
+                    cal.LOG("[calGoogleCalendar] Got the pw from the calendar credentials: " +
+                            calendarName);
 
                     // If a different username was entered, switch sessions
 
@@ -328,14 +328,14 @@ calGoogleSession.prototype = {
 
                         // Set the new session for the calendar
                         aCalendar.session = newSession;
-                        LOG("Setting " + aCalendar.name +
-                            "'s Session to " + newSession.userName);
+                        cal.LOG("[calGoogleCalendar] Setting " + aCalendar.name +
+                                "'s Session to " + newSession.userName);
 
                         // Move all requests by this calendar to its new session
                         function cGS_login_moveToSession(element, index, arr) {
                             if (element.calendar == aCalendar) {
-                                LOG("Moving " + element.uri + " to " +
-                                    newSession.userName);
+                                cal.LOG("[calGoogleCalendar] Moving " + element.uri + " to " +
+                                        newSession.userName);
                                 newSession.asyncItemRequest(element);
                                 return false;
                             }
@@ -356,9 +356,9 @@ calGoogleSession.prototype = {
                     this.mGooglePass = password.value;
                     this.persist = persist.value;
                 } else {
-                    LOG("Could not get any credentials for " +
-                        calendarName + " (" +
-                        this.mGoogleUser + ")");
+                    cal.LOG("[calGoogleCalendar] Could not get any credentials for " +
+                            calendarName + " (" +
+                            this.mGoogleUser + ")");
 
                     if (aCalendar) {
                         // First of all, disable the calendar so no further login
@@ -415,7 +415,7 @@ calGoogleSession.prototype = {
         } catch (e) {
             // If something went wrong, reset the login state just in case
             this.mLoggingIn = false;
-            LOG("Error Logging In: " + e);
+            cal.LOG("[calGoogleCalendar] Error Logging In: " + e);
 
             // If something went wrong, then this.loginComplete should handle
             // the error. We don't need to take care of the request that
@@ -445,7 +445,7 @@ calGoogleSession.prototype = {
 
         if (!aData || !Components.isSuccessCode(aOperation.status)) {
             this.mLoggingIn = false;
-            LOG("Login failed. Status: " + aOperation.status);
+            cal.LOG("[calGoogleCalendar] Login failed. Status: " + aOperation.status);
 
             if (aOperation.status == kGOOGLE_LOGIN_FAILED &&
                 aOperation.reauthenticate) {
@@ -453,7 +453,7 @@ calGoogleSession.prototype = {
                 // error that should trigger failing the calICalendar's request.
                 this.loginAndContinue(aOperation.calendar);
             } else {
-                LOG("Failing queue with " + aOperation.status);
+                cal.LOG("[calGoogleCalendar] Failing queue with " + aOperation.status);
                 this.failQueue(aOperation.status);
             }
         } else {
@@ -477,7 +477,7 @@ calGoogleSession.prototype = {
                     } catch (e) {
                         // This error is non-fatal, but would constrict
                         // functionality
-                        LOG("Error adding password to manager");
+                        cal.LOG("[calGoogleCalendar] Error adding password to manager");
                     }
                 }
 
@@ -485,7 +485,7 @@ calGoogleSession.prototype = {
                 var request;
                 // Extra parentheses to avoid js strict warning.
                 while ((request = this.mItemQueue.shift())) {
-                    LOG("Processing Queue Item: " + request.uri);
+                    cal.LOG("[calGoogleCalendar] Processing Queue Item: " + request.uri);
                     request.commit(this);
                 }
             }
@@ -509,7 +509,7 @@ calGoogleSession.prototype = {
             // Push the request in the queue to be executed later
             this.mItemQueue.push(aRequest);
 
-            LOG("Adding item " + aRequest.uri + " to queue");
+            cal.LOG("[calGoogleCalendar] Adding item " + aRequest.uri + " to queue");
 
             // If we are logging in, then we are done since the passed request
             // will be processed when the login is complete. Otherwise start
