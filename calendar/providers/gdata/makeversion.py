@@ -11,11 +11,11 @@
 # for the specific language governing rights and limitations under the
 # License.
 #
-# The Original Code is Google Calendar Provider code.
+# The Original Code is Mozilla Calendar code.
 #
 # The Initial Developer of the Original Code is
 #   Philipp Kewisch <mozilla@kewis.ch>
-# Portions created by the Initial Developer are Copyright (C) 2007
+# Portions created by the Initial Developer are Copyright (C) 2011
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
@@ -34,37 +34,11 @@
 #
 # ***** END LICENSE BLOCK *****
 
-DEPTH = ../../..
-topsrcdir = @top_srcdir@
-srcdir = @srcdir@
-VPATH = @srcdir@
+import sys
+import re
 
-include $(DEPTH)/config/autoconf.mk
-
-MODULE = gdata-provider
-
-export USE_EXTENSION_MANIFEST = 1
-export XPI_NAME = gdata-provider
-DIST_FILES = install.rdf
-XPI_PKGNAME = gdata-provider
-
-CALENDAR_VERSION := $(shell cat $(topsrcdir)/calendar/sunbird/config/version.txt)
-THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version.txt)
-SEAMONKEY_VERSION := $(shell cat $(topsrcdir)/suite/config/version.txt)
-GDATA_VERSION = $(shell $(PYTHON) $(srcdir)/makeversion.py $(CALENDAR_VERSION))
-
-DEFINES += -DAB_CD=$(AB_CD) \
-           -DCALENDAR_VERSION=$(CALENDAR_VERSION) \
-           -DSEAMONKEY_VERSION=$(SEAMONKEY_VERSION) \
-           -DTHUNDERBIRD_VERSION=$(THUNDERBIRD_VERSION) \
-           -DCOMM_BUILD=$(COMM_BUILD) \
-           -DGDATA_VERSION=$(GDATA_VERSION) \
-           $(NULL)
-
-PREF_JS_EXPORTS = $(srcdir)/defaults/preferences.js
-DIRS = components locales public
-
-libs-%:
-	$(MAKE) -C locales libs AB_CD=$* XPI_NAME=$(XPI_NAME) USE_EXTENSION_MANIFEST=1
-
-include $(topsrcdir)/config/rules.mk
+# Converts a Lightning version to a matching gdata version:
+#  Lightning 1.2 -> gdata-provider 0.11
+#  Lightning 1.3a1 -> gdata-provider 0.12pre
+v = re.search(r"(\d+\.\d+)([a-z]\d+)?", sys.argv[1])
+print str((float(v.group(1)) - 0.1)/10) + (v.lastindex == 2 and "pre" or "")
