@@ -291,10 +291,7 @@ calGoogleCalendar.prototype = {
             case "capabilities.alarms.actionValues":
                 return ["DISPLAY", "EMAIL", "SMS"];
             case "organizerId":
-                if (this.mSession) {
-                    return "mailto:" + this.session.userName;
-                }
-                break;
+                return "mailto:" + this.googleCalendarName;
             case "organizerCN":
                 if (this.mSession) {
                     return this.session.fullName;
