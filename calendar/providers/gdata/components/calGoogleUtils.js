@@ -37,8 +37,31 @@
  * ***** END LICENSE BLOCK ***** */
 
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
+Components.utils.import("resource://calendar/modules/calXMLUtils.jsm");
 Components.utils.import("resource://calendar/modules/calIteratorUtils.jsm");
 Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
+
+const atomNS = "http://www.w3.org/2005/Atom";
+const gdNS = "http://schemas.google.com/g/2005";
+const gcalNS = "http://schemas.google.com/gCal/2005";
+
+function gdataNSResolver(prefix) {
+    const ns = {
+        atom: atomNS,
+        gd: gdNS,
+        gCal: gcalNS
+    };
+
+    return ns[prefix] || atomNS;
+}
+
+function gdataXPath(aNode, aExpr, aType) {
+    return cal.xml.evalXPath(aNode, aExpr, gdataNSResolver, aType);
+}
+function gdataXPathFirst(aNode, aExpr, aType) {
+    // Different than the caldav/ics functions, this one will return an empty string on null
+    return cal.xml.evalXPathFirst(aNode, aExpr, gdataNSResolver, aType) || "";
+}
 
 /**
  * getGoogleSessionManager
@@ -52,9 +75,6 @@ function getGoogleSessionManager() {
     }
     return this.mObject;
 }
-
-// Sandbox for evaluating extendedProperties.
-var gGoogleSandbox;
 
 /**
  * setCalendarPref
@@ -178,7 +198,7 @@ var gdataTimezoneService = {
             return UTC();
         }
 
-        var baseTZ = this.ctz.getTimezone(aTzid);
+        let baseTZ = this.ctz.getTimezone(aTzid);
         ASSERT(baseTZ, "Unknown Timezone requested: " + aTzid);
         return baseTZ;
     }
@@ -242,7 +262,7 @@ function resolveConflicts(aOperation, aItem) {
                                           session.userName, session.fullName);
 
             aOperation.newItem = newItem;
-            aOperation.setUploadData("application/atom+xml; charset=UTF-8", xmlEntry);
+            aOperation.setUploadData("application/atom+xml; charset=UTF-8", cal.xml.serializeDOM(xmlEntry));
             session.asyncItemRequest(aOperation);
             return false;
         } else if (aOperation.status == kGOOGLE_CONFLICT_DELETED &&
@@ -311,14 +331,14 @@ function DataToItem(aOperation, aData, aGoogleCalendar, aReferenceItem) {
         }
 
         if (aData && aData.length) {
-            let xml = cal.safeNewXML(aData);
-            cal.LOG("[calGoogleCalendar] Parsing entry:\n" + xml + "\n");
+            let xml = cal.xml.parseString(aData);
+            cal.LOG("[calGoogleCalendar] Parsing entry:\n" + aData + "\n");
 
             // Get the local timezone from the preferences
             let timezone = calendarDefaultTimezone();
 
             // Parse the Item with the given timezone
-            item = XMLEntryToItem(xml, timezone,
+            item = XMLEntryToItem(xml.documentElement, timezone,
                                   aGoogleCalendar,
                                   aReferenceItem);
         } else {
@@ -347,8 +367,7 @@ function DataToItem(aOperation, aData, aGoogleCalendar, aReferenceItem) {
  * @return              The xml data of the item
  */
 function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
-
-    var selfIsOrganizer = (!aItem.organizer ||
+    let selfIsOrganizer = (!aItem.organizer ||
                             aItem.organizer.id == "mailto:" + aCalendar.googleCalendarName);
 
     function addExtendedProperty(aName, aValue) {
@@ -358,10 +377,10 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
             // extended property by not adding it.
             return;
         }
-        var gdExtendedProp = <gd:extendedProperty xmlns:gd={gd}/>;
-        gdExtendedProp.@name = aName;
-        gdExtendedProp.@value = aValue || "";
-        entry.gd::extendedProperty += gdExtendedProp;
+        let gdExtendedProp = document.createElementNS(gdNS, "extendedProperty");
+        gdExtendedProp.setAttribute("name", aName);
+        gdExtendedProp.setAttribute("value", aValue || "");
+        entry.appendChild(gdExtendedProp);
     }
 
     if (!aItem) {
@@ -370,37 +389,40 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
 
     const kEVENT_SCHEMA = "http://schemas.google.com/g/2005#event.";
 
-    // Namespace definitions
-    var gd = new Namespace("gd", "http://schemas.google.com/g/2005");
-    var gCal = new Namespace("gCal", "http://schemas.google.com/gCal/2005");
-    var atom = new Namespace("", "http://www.w3.org/2005/Atom");
-    default xml namespace = atom;
+    // Document creation
+    let document = cal.xml.parseString('<entry xmlns="' + atomNS + '" xmlns:gd="' + gdNS + '" xmlns:gCal="' + gcalNS + '"/>');
+    let entry = document.documentElement;
 
-    var entry = <entry xmlns={atom} xmlns:gd={gd} xmlns:gCal={gCal}/>;
+    // Helper functions
+    function elemNS(ns, name) document.createElementNS(ns, name);
+    function addElemNS(ns, name, parent) (parent || entry).appendChild(elemNS(ns, name));
 
     // Basic elements
-    entry.category.@scheme = "http://schemas.google.com/g/2005#kind";
-    entry.category.@term = "http://schemas.google.com/g/2005#event";
+    let kindElement = addElemNS(atomNS, "category");
+    kindElement.setAttribute("scheme", "http://schemas.google.com/g/2005#kind");
+    kindElement.setAttribute("term", "http://schemas.google.com/g/2005#event");
 
-    entry.title.@type = "text";
-    entry.title = aItem.title;
+    let titleElement = addElemNS(atomNS, "title");
+    titleElement.setAttribute("type", "text");
+    titleElement.textContent = aItem.title;
 
     // atom:content
-    entry.content = aItem.getProperty("DESCRIPTION") || "";
-    entry.content.@type = "text";
+    let contentElement = addElemNS(atomNS, "content");
+    contentElement.setAttribute("type", "text");
+    contentElement.textContent = aItem.getProperty("DESCRIPTION") || "";
 
     // atom:author
-    entry.author.name = aAuthorName;
-    entry.author.email = aAuthorEmail;
+    let authorElement = addElemNS(atomNS, "author");
+    addElemNS(atomNS, "name", authorElement).textContent = aAuthorName || aAuthorEmail;
+    addElemNS(atomNS, "email", authorElement).textContent = aAuthorEmail;
 
     // gd:transparency
-    var transp = aItem.getProperty("TRANSP") || "opaque";
-    transp = kEVENT_SCHEMA + transp.toLowerCase();
-    entry.gd::transparency.@value = transp;
+    let transpElement = addElemNS(gdNS, "transparency");
+    let transpValue = aItem.getProperty("TRANSP") || "opaque";
+    transpElement.setAttribute("value", kEVENT_SCHEMA + transpValue.toLowerCase());
 
     // gd:eventStatus
-    var status = aItem.status || "confirmed";
-
+    let status = aItem.status || "confirmed";
     if (status == "CANCELLED") {
         // If the status is canceled, then the event will be deleted. Since the
         // user didn't choose to delete the event, we will protect him and not
@@ -410,16 +432,16 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
     } else if (status == "NONE") {
         status = "CONFIRMED";
     }
-    entry.gd::eventStatus.@value = kEVENT_SCHEMA + status.toLowerCase();
+    addElemNS(gdNS, "eventStatus").setAttribute("value", kEVENT_SCHEMA + status.toLowerCase());
 
     // gd:where
-    entry.gd::where.@valueString = aItem.getProperty("LOCATION") || "";
+    addElemNS(gdNS, "where").setAttribute("valueString", aItem.getProperty("LOCATION") || "");
 
     // gd:who
     if (cal.getPrefSafe("calendar.google.enableAttendees", false)) {
         // XXX Only parse attendees if they are enabled, due to bug 407961
 
-        var attendees = aItem.getAttendees({});
+        let attendees = aItem.getAttendees({});
         if (aItem.organizer) {
             // Taking care of the organizer is the same as taking care of any other
             // attendee. Add the organizer to the local attendees list.
@@ -439,52 +461,54 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
             "DELEGATED": "tentative"
         };
 
-        for each (var attendee in attendees) {
+        for each (let attendee in attendees) {
             if (attendee.userType && attendee.userType != "INDIVIDUAL") {
                 // We can only take care of individuals.
                 continue;
             }
 
-            var xmlAttendee = <gd:who xmlns:gd={gd}/>;
+            let xmlAttendee = addElemNS(gdNS, "who");
 
             // Strip "mailto:" part
-            xmlAttendee.@email = attendee.id.replace(/^mailto:/, "");
+            xmlAttendee.setAttribute("email", attendee.id.replace(/^mailto:/, ""));
 
             if (attendee.isOrganizer) {
-                xmlAttendee.@rel = kEVENT_SCHEMA + "organizer";
+                xmlAttendee.setAttribute("rel", kEVENT_SCHEMA + "organizer");
             } else {
-                xmlAttendee.@rel = kEVENT_SCHEMA + "attendee";
+                xmlAttendee.setAttribute("rel", kEVENT_SCHEMA + "attendee");
             }
 
             if (attendee.commonName) {
-                xmlAttendee.@valueString = attendee.commonName;
+                xmlAttendee.setAttribute("valueString", attendee.commonName);
             }
 
             if (attendeeStatusMap[attendee.role]) {
-                xmlAttendee.gd::attendeeType.@value = kEVENT_SCHEMA +
-                    attendeeStatusMap[attendee.role];
+                let attendeeTypeElement = addElemNS(gdNS, "attendeeType", xmlAttendee);
+                let attendeeTypeValue = kEVENT_SCHEMA + attendeeStatusMap[attendee.role];
+                attendeeTypeElement.setAttribute("value", attendeeTypeValue);
             }
 
             if (attendeeStatusMap[attendee.participationStatus]) {
-                xmlAttendee.gd::attendeeStatus.@value = kEVENT_SCHEMA +
-                    attendeeStatusMap[attendee.participationStatus];
+                let attendeeStatusElement = addElemNS(gdNS, "attendeeStatus", xmlAttendee);
+                let attendeeStatusValue = kEVENT_SCHEMA + attendeeStatusMap[attendee.participationStatus];
+                attendeeStatusElement.setAttribute("value", attendeeStatusValue);
             }
-
-            entry.gd::who += xmlAttendee;
         }
     }
 
     // Don't notify attendees by default. Use a preference in case the user
     // wants this to be turned on.
-    var notify = cal.getPrefSafe("calendar.google.sendEventNotifications", false);
-    entry.gCal::sendEventNotifications.@value = (notify ? "true" : "false");
+    let notify = cal.getPrefSafe("calendar.google.sendEventNotifications", false);
+    addElemNS(gcalNS, "sendEventNotifications").setAttribute("value", notify ? "true" : "false");
 
     // gd:when
-    var duration = aItem.endDate.subtractDate(aItem.startDate);
+    let duration = aItem.endDate.subtractDate(aItem.startDate);
+    let whenElement;
     if (!aItem.recurrenceInfo) {
         // gd:when isn't allowed for recurring items where gd:recurrence is set
-        entry.gd::when.@startTime = cal.toRFC3339(aItem.startDate);
-        entry.gd::when.@endTime = cal.toRFC3339(aItem.endDate);
+        whenElement = addElemNS(gdNS, "when");
+        whenElement.setAttribute("startTime", cal.toRFC3339(aItem.startDate));
+        whenElement.setAttribute("endTime", cal.toRFC3339(aItem.endDate));
     }
 
     // gd:reminder
@@ -497,11 +521,18 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
     if (selfIsOrganizer) {
         for (let i = 0; i < 5 && i < alarms.length; i++) {
             let alarm = alarms[i];
-            let gdReminder = <gd:reminder xmlns:gd={gd}/>;
+            let gdReminder;
+            if (aItem.recurrenceInfo) {
+                // On recurring items, set the reminder directly in the <entry> tag.
+                gdReminder = addElemNS(gdNS, "reminder");
+            } else {
+                // Otherwise, its a child of the gd:when element
+                gdReminder = addElemNS(gdNS, "reminder", whenElement);
+            }
             if (alarm.related == alarm.ALARM_RELATED_ABSOLUTE) {
                 // Setting an absolute date can be done directly. Google will take
                 // care of calculating the offset.
-                gdReminder.@absoluteTime = cal.toRFC3339(alarm.alarmDate);
+                gdReminder.setAttribute("absoluteTime", cal.toRFC3339(alarm.alarmDate));
             } else {
                 let alarmOffset = alarm.offset;
                 if (alarm.related == alarm.ALARM_RELATED_END) {
@@ -511,17 +542,8 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
                     alarmOffset.addDuration(duration);
                 }
 
-                gdReminder.@minutes = -alarmOffset.inSeconds / 60;
-                gdReminder.@method = actionMap[alarm.action] || "alert";
-            }
-
-
-            if (aItem.recurrenceInfo) {
-                // On recurring items, set the reminder directly in the <entry> tag.
-                entry.gd::reminder += gdReminder;
-            } else {
-                // Otherwise, its a child of the gd:when element
-                entry.gd::when.gd::reminder += gdReminder;
+                gdReminder.setAttribute("minutes", -alarmOffset.inSeconds / 60);
+                gdReminder.setAttribute("method", actionMap[alarm.action] || "alert");
             }
         }
     } else if (alarms.length) {
@@ -537,8 +559,8 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
     // what alarm is used for snoozing.
 
     // gd:extendedProperty (snooze time)
-    var itemSnoozeTime = aItem.getProperty("X-MOZ-SNOOZE-TIME");
-    var icalSnoozeTime = null;
+    let itemSnoozeTime = aItem.getProperty("X-MOZ-SNOOZE-TIME");
+    let icalSnoozeTime = null;
     if (itemSnoozeTime) {
         // The propery is saved as a string, translate back to calIDateTime.
         icalSnoozeTime = cal.createDateTime();
@@ -547,30 +569,30 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
     addExtendedProperty("X-MOZ-SNOOZE-TIME", cal.toRFC3339(icalSnoozeTime));
 
     // gd:extendedProperty (snooze recurring alarms)
-    var snoozeValue = "";
+    let snoozeValue = "";
     if (aItem.recurrenceInfo) {
         // This is an evil workaround since we don't have a really good system
         // to save the snooze time for recurring alarms or even retrieve them
         // from the event. This should change when we have multiple alarms
         // support.
-        var snoozeObj = {};
-        var enumerator = aItem.propertyEnumerator;
+        let snoozeObj = {};
+        let enumerator = aItem.propertyEnumerator;
         while (enumerator.hasMoreElements()) {
-            var prop = enumerator.getNext().QueryInterface(Components.interfaces.nsIProperty);
+            let prop = enumerator.getNext().QueryInterface(Components.interfaces.nsIProperty);
             if (prop.name.substr(0, 18) == "X-MOZ-SNOOZE-TIME-") {
                 // We have a snooze time for a recurring event, add it to our object
                 snoozeObj[prop.name.substr(18)] = prop.value;
             }
         }
-        snoozeValue = snoozeObj.toSource();
+        snoozeValue = JSON.stringify(snoozeObj);
     }
     // Now save the snooze object in source format as an extended property. Do
     // so always, since its currently impossible to unset extended properties.
     addExtendedProperty("X-GOOGLE-SNOOZE-RECUR", snoozeValue);
 
     // gd:visibility
-    var privacy = aItem.privacy || "default";
-    entry.gd::visibility.@value = kEVENT_SCHEMA + privacy.toLowerCase();
+    let privacy = aItem.privacy || "default";
+    addElemNS(gdNS, "visibility").setAttribute("value", kEVENT_SCHEMA + privacy.toLowerCase());
 
     // categories
     // Google does not support categories natively, but allows us to store data
@@ -582,20 +604,20 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
     if (aItem.recurrenceInfo) {
         try {
             const kNEWLINE = "\r\n";
-            var icalString;
-            var recurrenceItems = aItem.recurrenceInfo.getRecurrenceItems({});
+            let icalString;
+            let recurrenceItems = aItem.recurrenceInfo.getRecurrenceItems({});
 
             // Dates of the master event
-            var startTZID = aItem.startDate.timezone.tzid;
-            var endTZID = aItem.endDate.timezone.tzid;
+            let startTZID = aItem.startDate.timezone.tzid;
+            let endTZID = aItem.endDate.timezone.tzid;
             icalString = "DTSTART;TZID=" + startTZID
                          + ":" + aItem.startDate.icalString + kNEWLINE
                          + "DTEND;TZID=" + endTZID
                          + ":"  + aItem.endDate.icalString + kNEWLINE;
 
             // Add all recurrence items to the ical string
-            for each (var ritem in recurrenceItems) {
-                var prop = ritem.icalProperty;
+            for each (let ritem in recurrenceItems) {
+                let prop = ritem.icalProperty;
                 if (calInstanceOf(ritem, Components.interfaces.calIRecurrenceDate)) {
                     // EXDATES require special casing, since they might contain
                     // a TZID. To avoid the need for conversion of TZID strings,
@@ -606,7 +628,7 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
             }
 
             // Put the ical string in a <gd:recurrence> tag
-            entry.gd::recurrence = icalString + kNEWLINE;
+            addElemNS(gdNS, "recurrence").textContent = icalString + kNEWLINE;
         } catch (e) {
             cal.ERROR("[calGoogleCalendar] Error: " + e);
         }
@@ -614,26 +636,26 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
 
     // gd:originalEvent
     if (aItem.recurrenceId) {
-        entry.gd::originalEvent.@id = aItem.parentItem.id;
-        entry.gd::originalEvent.gd::when.@startTime =
-            cal.toRFC3339(aItem.recurrenceId.getInTimezone(UTC()));
+        let originalEvent = addElemNS(gdNS, "originalEvent");
+        originalEvent.setAttribute("id", aItem.parentItem.id);
+
+        let origWhen = addElemNS(gdNS, "when", originalEvent)
+        origWhen.setAttribute("startTime", cal.toRFC3339(aItem.recurrenceId.getInTimezone(cal.UTC())));
     }
 
     // While it may sometimes not work out, we can always try to set the uid and
     // sequence properties
     let sequence = aItem.getProperty("SEQUENCE");
     if (sequence) {
-        entry.gCal::sequence.@value = sequence;
+        addElemNS(gcalNS, "sequence").setAttribute("value", sequence);
     }
-    entry.gCal::uid.@value = aItem.id || "";
-
-    // TODO gd:comments: Enhancement tracked in bug 362653
+    addElemNS(gcalNS, "uid").setAttribute("value", aItem.id || "");
 
     // XXX Google currently has no priority support. See
     // http://code.google.com/p/google-gdata/issues/detail?id=52
     // for details.
 
-    return entry;
+    return document;
 }
 
 /**
@@ -774,7 +796,7 @@ function relevantFieldsMatch(a, b) {
 function getItemEditURI(aItem) {
 
     ASSERT(aItem);
-    var edituri = aItem.getProperty("X-GOOGLE-EDITURL");
+    let edituri = aItem.getProperty("X-GOOGLE-EDITURL");
     if (!edituri) {
         // If the item has no edit uri, it is read-only
         throw new Components.Exception("The item is readonly", Components.interfaces.calIErrors.CAL_IS_READONLY);
@@ -783,19 +805,13 @@ function getItemEditURI(aItem) {
 }
 
 function getIdFromEntry(aXMLEntry) {
-    var gCal = new Namespace("gCal", "http://schemas.google.com/gCal/2005");
-    var gd = new Namespace("gd", "http://schemas.google.com/g/2005");
-    var id = aXMLEntry.gCal::uid.@value.toString();
+    let id = gdataXPathFirst(aXMLEntry, 'gCal:uid/@value');
     return id.replace(/@google.com/,"");
 }
 
 function getRecurrenceIdFromEntry(aXMLEntry, aTimezone) {
-    var gd = new Namespace("gd", "http://schemas.google.com/g/2005");
-    if (aXMLEntry.gd::originalEvent.toString().length > 0) {
-        var rId = aXMLEntry.gd::originalEvent.gd::when.@startTime;
-        return cal.fromRFC3339(rId.toString(), aTimezone);
-    }
-    return null;
+    let rId = gdataXPathFirst(aXMLEntry, 'gd:originalEvent/gd:when/@startTime');
+    return (rId ? cal.fromRFC3339(rId.toString(), aTimezone) : null);
 }
 
 /**
@@ -812,14 +828,13 @@ function getRecurrenceIdFromEntry(aXMLEntry, aTimezone) {
  */
 function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
 
-    if (!aXMLEntry || typeof(aXMLEntry) != "xml" || aXMLEntry.length() == 0) {
-        throw new Components.Exception("", Components.results.NS_ERROR_FAILURE);
-    }
+    function getExtendedProperty(x) gdataXPathFirst(aXMLEntry, 'gd:extendedProperty[@name="' + x + '"]/@value');
 
-    var gCal = new Namespace("gCal", "http://schemas.google.com/gCal/2005");
-    var gd = new Namespace("gd", "http://schemas.google.com/g/2005");
-    var atom = new Namespace("", "http://www.w3.org/2005/Atom");
-    default xml namespace = atom;
+    if (!aXMLEntry) {
+        throw new Components.Exception("", Components.results.NS_ERROR_FAILURE);
+    } else if (typeof aXMLEntry == "string") {
+        aXMLEntry = cal.xml.parseString(aXMLEntry);
+    }
 
     let item = (aReferenceItem ? aReferenceItem.clone() : cal.createEvent());
 
@@ -828,40 +843,35 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
         item.id = getIdFromEntry(aXMLEntry);
 
         // sequence
-        item.setProperty("SEQUENCE",
-                         aXMLEntry.gCal::sequence.@value.toString() || 0);
+        item.setProperty("SEQUENCE", gdataXPathFirst(aXMLEntry, 'gCal:sequence/@value') || 0);
 
         // link (edit url)
         // Since Google doesn't set the edit url to be https if the request is
         // https, we need to work around this here.
-        var editUrl = aXMLEntry.link.(@rel == 'edit').@href.toString();
+        let editUrl = gdataXPathFirst(aXMLEntry, 'atom:link[@rel="edit"]/@href');
         if (aCalendar.uri.schemeIs("https")) {
             editUrl = editUrl.replace(/^http:/, "https:");
         }
         item.setProperty("X-GOOGLE-EDITURL", editUrl);
 
         // link (alternative representation, html)
-        var htmlUrl = aXMLEntry.link.(@rel == 'alternate').@href.toString();
+        let htmlUrl = gdataXPathFirst(aXMLEntry, 'atom:link[@rel="alternate"]/@href');
         if (aCalendar.uri.schemeIs("https")) {
             htmlUrl = htmlUrl.replace(/^http:/, "https:");
         }
         item.setProperty("URL", htmlUrl);
 
         // title
-        item.title = aXMLEntry.title.(@type == 'text');
+        item.title = gdataXPathFirst(aXMLEntry, 'atom:title[@type="text"]/text()');
 
         // content
-        item.setProperty("DESCRIPTION",
-                         aXMLEntry.content.(@type == 'text').toString());
+        item.setProperty("DESCRIPTION", gdataXPathFirst(aXMLEntry, 'atom:content[@type="text"]/text()'));
 
         // gd:transparency
-        item.setProperty("TRANSP",
-                         aXMLEntry.gd::transparency.@value.toString()
-                                  .substring(39).toUpperCase());
+        item.setProperty("TRANSP", gdataXPathFirst(aXMLEntry, 'gd:transparency/@value').substring(39).toUpperCase());
 
         // gd:eventStatus
-        item.status = aXMLEntry.gd::eventStatus.@value.toString()
-                               .substring(39).toUpperCase();
+        item.status = gdataXPathFirst(aXMLEntry, 'gd:eventStatus/@value').substring(39).toUpperCase();
 
         // gd:reminder (preparation)
         // If a reference item was passed, it may already contain alarms. Since
@@ -875,8 +885,8 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
          * @param reminderTags      The tagset to parse.
          */
         function parseReminders(reminderTags) {
-            if (aXMLEntry.gd::who.(@rel.substring(33) == "event.organizer")
-                         .@email.toString() != aCalendar.googleCalendarName) {
+            let organizerEmail = gdataXPathFirst(aXMLEntry, 'gd:who[@rel="http://schemas.google.com/g/2005#event.organizer"]/@email');
+            if (organizerEmail != aCalendar.googleCalendarName) {
                 // We are not the organizer, so its not smart to set alarms on
                 // this event.
                 return;
@@ -888,21 +898,25 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
             };
             for each (let reminderTag in reminderTags) {
                 let alarm = cal.createAlarm();
-                alarm.action = actionMap[reminderTag.@method] || "DISPLAY";
-                if (reminderTag.@absoluteTime.toString()) {
+                alarm.action = actionMap[reminderTag.getAttribute("method")] || "DISPLAY";
+
+                let absoluteTime = reminderTag.getAttribute("absoluteTime");
+                if (absoluteTime) {
                     alarm.related = Components.interfaces.calIAlarm.ALARM_RELATED_ABSOLUTE;
-                    let absolute = cal.fromRFC3339(reminderTag.@absoluteTime,
-                                                   aTimezone);
-                    alarm.alarmDate = absolute;
+                    alarm.alarmDate = cal.fromRFC3339(absoluteTime, aTimezone);
                 } else {
                     alarm.related = Components.interfaces.calIAlarm.ALARM_RELATED_START;
                     let alarmOffset = cal.createDuration();
-                    if (reminderTag.@days.toString()) {
-                        alarmOffset.days = -reminderTag.@days;
-                    } else if (reminderTag.@hours.toString()) {
-                        alarmOffset.hours = -reminderTag.@hours;
-                    } else if (reminderTag.@minutes.toString()) {
-                        alarmOffset.minutes = -reminderTag.@minutes;
+                    let days = reminderTag.getAttribute("days");
+                    let hours = reminderTag.getAttribute("hours");
+                    let minutes = reminderTag.getAttribute("minutes");
+
+                    if (days) {
+                        alarmOffset.days = -days;
+                    } else if (hours) {
+                        alarmOffset.hours = -hours;
+                    } else if (minutes) {
+                        alarmOffset.minutes = -minutes;
                     } else {
                         // Invalid alarm, skip it
                         continue;
@@ -915,14 +929,13 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
         }
 
         // gd:when
-        var recurrenceInfo = aXMLEntry.gd::recurrence.toString();
-        if (recurrenceInfo.length == 0) {
+        let recurrenceInfo = gdataXPathFirst(aXMLEntry, 'gd:recurrence/text()');
+        if (!recurrenceInfo || recurrenceInfo.length == 0) {
             // If no recurrence information is given, then there will only be
             // one gd:when tag. Otherwise, we will be parsing the startDate from
             // the recurrence information.
-            var when = aXMLEntry.gd::when;
-            item.startDate = cal.fromRFC3339(when.@startTime, aTimezone);
-            item.endDate = cal.fromRFC3339(when.@endTime, aTimezone);
+            item.startDate = cal.fromRFC3339(gdataXPathFirst(aXMLEntry, 'gd:when/@startTime'), aTimezone);
+            item.endDate = cal.fromRFC3339(gdataXPathFirst(aXMLEntry, 'gd:when/@endTime'), aTimezone);
 
             if (!item.endDate) {
                 // We have a zero-duration event
@@ -930,7 +943,7 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
             }
 
             // gd:reminder
-            parseReminders(aXMLEntry.gd::when.gd::reminder);
+            parseReminders(gdataXPath(aXMLEntry, 'gd:when/gd:reminder'));
         } else {
             if (!item.recurrenceInfo) {
                 item.recurrenceInfo = cal.createRecurrenceInfo(item);
@@ -941,8 +954,8 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
             // We don't really care about google's timezone info for
             // now. This may change when bug 314339 is fixed. Split out
             // the timezone information so we only have the first bit
-            var vevent = recurrenceInfo;
-            var splitpos = recurrenceInfo.indexOf("BEGIN:VTIMEZONE");
+            let vevent = recurrenceInfo;
+            let splitpos = recurrenceInfo.indexOf("BEGIN:VTIMEZONE");
             if (splitpos > -1) {
                 // Sometimes (i.e if only DATE values are specified), no
                 // timezone info is contained. Only remove it if it shows up.
@@ -950,15 +963,15 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
             }
 
             vevent = "BEGIN:VEVENT\n" + vevent + "END:VEVENT";
-            var icsService = getIcsService();
+            let icsService = cal.getIcsService();
 
-            var rootComp = icsService.parseICS(vevent, gdataTimezoneService);
-            var i = 0;
-            var hasRecurringRules = false;
+            let rootComp = icsService.parseICS(vevent, gdataTimezoneService);
+            let i = 0;
+            let hasRecurringRules = false;
             for (let prop in cal.ical.propertyIterator(rootComp)) {
                switch (prop.propertyName) {
                     case "EXDATE":
-                        var recItem = Components.classes["@mozilla.org/calendar/recurrence-date;1"]
+                        let recItem = Components.classes["@mozilla.org/calendar/recurrence-date;1"]
                                       .createInstance(Components.interfaces.calIRecurrenceDate);
                         try {
                             recItem.icalProperty = prop;
@@ -997,15 +1010,16 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
             // gd:reminder (for recurring events)
             // This element is supplied as a direct child to the <entry> element
             // for recurring items.
-            parseReminders(aXMLEntry.gd::reminder);
+            parseReminders(gdataXPath(aXMLEntry, 'gd:reminder'));
         }
 
         // gd:recurrenceException
-        for each (var exception in aXMLEntry.gd::recurrenceException.(@specialized == "true").gd::entryLink.entry) {
+        let exceptions = gdataXPath(aXMLEntry, 'gd:recurrenceException[@specialized="true"]/gd:entryLink/atom:entry');
+        for each (let exception in exceptions) {
             // We only want specialized exceptions, mainly becuase I haven't
             // quite found out if a non-specialized exception also corresponds
             // to a normal exception as libical knows it.
-            var excItem = XMLEntryToItem(exception, aTimezone, aCalendar);
+            let excItem = XMLEntryToItem(exception, aTimezone, aCalendar);
 
             // Google uses the status field to reflect negative exceptions.
             if (excItem.status == "CANCELED") {
@@ -1017,33 +1031,26 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
         }
 
         // gd:extendedProperty (alarmLastAck)
-        var alarmLastAck = aXMLEntry.gd::extendedProperty
-                           .(@name == "X-MOZ-LASTACK")
-                           .@value.toString();
-        item.alarmLastAck = cal.fromRFC3339(alarmLastAck, aTimezone);
+        item.alarmLastAck = cal.fromRFC3339(getExtendedProperty("X-MOZ-LASTACK"), aTimezone);
 
         // gd:extendedProperty (snooze time)
-        var xmlSnoozeTime = aXMLEntry.gd::extendedProperty
-                         .(@name == "X-MOZ-SNOOZE-TIME").@value.toString();
-        var dtSnoozeTime = cal.fromRFC3339(xmlSnoozeTime, aTimezone);
-        var snoozeProperty = (dtSnoozeTime ? dtSnoozeTime.icalString : null);
+        let dtSnoozeTime = cal.fromRFC3339(getExtendedProperty("X-MOZ-SNOOZE-TIME"), aTimezone);
+        let snoozeProperty = (dtSnoozeTime ? dtSnoozeTime.icalString : null);
         item.setProperty("X-MOZ-SNOOZE-TIME", snoozeProperty);
 
         // gd:extendedProperty (snooze recurring alarms)
         if (item.recurrenceInfo) {
-            if (!gGoogleSandbox) {
-                // Initialize sandbox if it does not already exist
-                gGoogleSandbox = Components.utils.Sandbox("about:blank");
+            // Transform back the string into our snooze properties
+            let snoozeObj;
+            try {
+                let snoozeString = getExtendedProperty("X-GOOGLE-SNOOZE-RECUR");
+                snoozeObj = JSON.parse(snoozeString);
+            } catch (e) {
+                // Just swallow parsing errors, not so important.
             }
 
-            // Transform back the string into our snooze properties
-            var snoozeString = aXMLEntry.gd::extendedProperty
-                                        .(@name == "X-GOOGLE-SNOOZE-RECUR")
-                                        .@value.toString();
-            var snoozeObj = Components.utils.evalInSandbox(snoozeString,
-                                                           gGoogleSandbox);
             if (snoozeObj) {
-                for (var rid in snoozeObj) {
+                for (let rid in snoozeObj) {
                     item.setProperty("X-MOZ-SNOOZE-TIME-" + rid,
                                      snoozeObj[rid]);
                 }
@@ -1051,8 +1058,8 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
         }
 
         // gd:where
-        item.setProperty("LOCATION",
-                         aXMLEntry.gd::where.@valueString.toString());
+        item.setProperty("LOCATION", gdataXPathFirst(aXMLEntry, 'gd:where/@valueString'));
+
         // gd:who
         if (cal.getPrefSafe("calendar.google.enableAttendees", false)) {
             // XXX Only parse attendees if they are enabled, due to bug 407961
@@ -1074,15 +1081,14 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
             item.removeAllAttendees();
 
             // Iterate all attendee tags.
-            for each (var who in aXMLEntry.gd::who) {
+            for each (let who in gdataXPath(aXMLEntry, 'gd:who')) {
                 let attendee = cal.createAttendee();
+                let rel = who.getAttribute("rel").substring(33);
+                let type = gdataXPathFirst(who, 'gd:attendeeType/@value').substring(33);
+                let status = gdataXPathFirst(who, 'gd:attendeeStatus/@value').substring(33);
 
-                var rel = who.@rel.toString().substring(33);
-                var type = who.gd::attendeeType.@value.toString().substring(33);
-                var status = who.gd::attendeeStatus.@value.toString().substring(33);
-
-                attendee.id = "mailto:" + who.@email.toString();
-                attendee.commonName = who.@valueString.toString();
+                attendee.id = "mailto:" + who.getAttribute("email")
+                attendee.commonName = who.getAttribute("valueString");
                 attendee.rsvp = "FALSE";
                 attendee.userType = "INDIVIDUAL";
                 attendee.isOrganizer = (rel == "event.organizer");
@@ -1102,34 +1108,28 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
         item.recurrenceId = getRecurrenceIdFromEntry(aXMLEntry, aTimezone);
 
         // gd:visibility
-        item.privacy = aXMLEntry.gd::visibility.@value.toString()
-                                .substring(39).toUpperCase();
+        item.privacy = gdataXPathFirst(aXMLEntry, "gd:visibility/@value").substring(39).toUpperCase();
 
         // category
         // Google does not support categories natively, but allows us to store
         // data as an "extendedProperty", and here it's going to be retrieved
         // again
-        var gdCategories = aXMLEntry.gd::extendedProperty
-                                    .(@name == "X-MOZ-CATEGORIES")
-                                    .@value.toString();
-        var categories = categoriesStringToArray(gdCategories);
+        let categories = cal.categoriesStringToArray(getExtendedProperty("X-MOZ-CATEGORIES"));
         item.setCategories(categories.length, categories);
 
         // published
-        item.setProperty("CREATED", cal.fromRFC3339(aXMLEntry.published,
-                                                    aTimezone));
+        let createdText = gdataXPathFirst(aXMLEntry, 'atom:published/text()');
+        item.setProperty("CREATED", cal.fromRFC3339(createdText, aTimezone));
 
         // updated (This must be set last!)
-        item.setProperty("LAST-MODIFIED", cal.fromRFC3339(aXMLEntry.updated,
-                                                          aTimezone));
-
-        // TODO gd:comments: Enhancement tracked in bug 362653
+        let lastmodText = gdataXPathFirst(aXMLEntry, 'atom:updated/text()');
+        item.setProperty("LAST-MODIFIED", cal.fromRFC3339(lastmodText, aTimezone));
 
         // XXX Google currently has no priority support. See
         // http://code.google.com/p/google-gdata/issues/detail?id=52
         // for details.
     } catch (e) {
-        ERROR("Error parsing XML stream" + e);
+        cal.ERROR("Error parsing XML stream" + e);
         throw e;
     }
     return item;
@@ -1245,22 +1245,22 @@ function LOGitem(item) {
         return;
     }
 
-    var attendees = item.getAttendees({});
-    var attendeeString = "";
-    for each (var a in attendees) {
+    let attendees = item.getAttendees({});
+    let attendeeString = "";
+    for each (let a in attendees) {
         attendeeString += "\n" + LOGattendee(a);
     }
 
-    var rstr = "\n";
+    let rstr = "\n";
     if (item.recurrenceInfo) {
-        var ritems = item.recurrenceInfo.getRecurrenceItems({});
-        for each (var ritem in ritems) {
+        let ritems = item.recurrenceInfo.getRecurrenceItems({});
+        for each (let ritem in ritems) {
             rstr += "\t\t" + ritem.icalProperty.icalString;
         }
 
         rstr += "\tExceptions:\n";
-        var exids = item.recurrenceInfo.getExceptionIds({});
-        for each (var exc in exids) {
+        let exids = item.recurrenceInfo.getExceptionIds({});
+        for each (let exc in exids) {
             rstr += "\t\t" + exc + "\n";
         }
     }
@@ -1270,7 +1270,6 @@ function LOGitem(item) {
     for each (let alarm in alarms) {
         astr += "\t\t" + LOGalarm(alarm) + "\n";
     }
-
 
     cal.LOG("[calGoogleCalendar] Logging calIEvent:" +
         "\n\tid:" + item.id +

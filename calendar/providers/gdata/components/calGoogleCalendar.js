@@ -37,6 +37,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
+Components.utils.import("resource://calendar/modules/calXMLUtils.jsm");
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
 
 const cICL = Components.interfaces.calIChangeLog;
@@ -61,7 +62,7 @@ calGoogleCalendar.prototype = {
     classID:  Components.ID("{d1a6e988-4b4d-45a5-ba46-43e501ea96e3}"),
 
     getInterfaces: function cI_cGC_getInterfaces (count) {
-        var ifaces = [
+        let ifaces = [
             Components.interfaces.nsISupports,
             Components.interfaces.calICalendar,
             Components.interfaces.calIGoogleCalendar,
@@ -173,8 +174,8 @@ calGoogleCalendar.prototype = {
         }
 
         // We need to find out which Google account fits to this calendar.
-        var sessionMgr = getGoogleSessionManager();
-        var googleUser = getCalendarPref(this, "googleUser");
+        let sessionMgr = getGoogleSessionManager();
+        let googleUser = getCalendarPref(this, "googleUser");
         if (googleUser) {
             this.mSession = sessionMgr.getSessionByUsername(googleUser, true);
         } else {
@@ -182,15 +183,15 @@ calGoogleCalendar.prototype = {
             // user/password prompt and set the session based on those
             // values.
 
-            var username = { value: null };
+            let username = { value: null };
             if (this.isDefaultCalendar) {
                 // Only pre-fill the username if this is the default calendar,
                 // otherwise users might think the cryptic hash is the username
                 // they have to use.
                 username.value = this.mCalendarName;
             }
-            var password = { value: null };
-            var persist = { value: false };
+            let password = { value: null };
+            let persist = { value: false };
 
             if (getCalendarCredentials(this.mCalendarName,
                                        username,
@@ -250,11 +251,11 @@ calGoogleCalendar.prototype = {
     set uri(aUri) {
         // Parse google url, catch private cookies, public calendars,
         // basic and full types, bogus ics file extensions, invalid hostnames
-        var re = new RegExp("/calendar/(feeds|ical)/" +
+        let re = new RegExp("/calendar/(feeds|ical)/" +
                             "([^/]+)/(public|private)-?([^/]+)?/" +
                             "(full|basic)(.ics)?$");
 
-        var matches = aUri.path.match(re);
+        let matches = aUri.path.match(re);
 
         if (!matches) {
             throw new Components.Exception(aUri, Components.results.NS_ERROR_MALFORMED_URI);
@@ -349,14 +350,14 @@ calGoogleCalendar.prototype = {
             // Add the calendar to the item, for later use.
             aItem.calendar = this.superCalendar;
 
-            var request = new calGoogleRequest(this);
-            var xmlEntry = ItemToXMLEntry(aItem, this,
+            let request = new calGoogleRequest(this);
+            let xmlEntry = ItemToXMLEntry(aItem, this,
                                           this.session.userName,
                                           this.session.fullName);
 
             request.type = request.ADD;
             request.uri = this.fullUri.spec;
-            request.setUploadData("application/atom+xml; charset=UTF-8", xmlEntry);
+            request.setUploadData("application/atom+xml; charset=UTF-8", cal.xml.serializeDOM(xmlEntry));
             request.operationListener = aListener;
             request.calendar = this;
             request.newItem = aItem;
@@ -457,15 +458,15 @@ calGoogleCalendar.prototype = {
             }
 
             // Set up the request
-            var request = new calGoogleRequest(this.session);
+            let request = new calGoogleRequest(this.session);
 
             // We need to clone the new item, its possible that ItemToXMLEntry
             // will modify the item. For example, if the item is organized by
             // someone else, we cannot save alarms on it and they should
             // therefore not be added in the returned item.
-            var newItem = aNewItem.clone();
+            let newItem = aNewItem.clone();
 
-            var xmlEntry = ItemToXMLEntry(newItem, this,
+            let xmlEntry = ItemToXMLEntry(newItem, this,
                                           this.session.userName,
                                           this.session.fullName);
 
@@ -481,7 +482,7 @@ calGoogleCalendar.prototype = {
                 request.uri = getItemEditURI(aOldItem);
             }
 
-            request.setUploadData("application/atom+xml; charset=UTF-8", xmlEntry);
+            request.setUploadData("application/atom+xml; charset=UTF-8", cal.xml.serializeDOM(xmlEntry));
             request.responseListener = { onResult: this.modifyItem_response.bind(this) };
             request.operationListener = aListener;
             request.newItem = newItem;
@@ -511,7 +512,6 @@ calGoogleCalendar.prototype = {
         }
         return null;
     },
-
 
     deleteItem: function cGC_deleteItem(aItem, aListener) {
         if (this.mOfflineStorage) {
@@ -564,7 +564,7 @@ calGoogleCalendar.prototype = {
 
             // We need the item in the response, since google dosen't return any
             // item XML data on delete, and we need to call the observers.
-            var request = new calGoogleRequest(this);
+            let request = new calGoogleRequest(this);
 
             request.type = request.DELETE;
             request.uri = getItemEditURI(aItem);
@@ -607,7 +607,7 @@ calGoogleCalendar.prototype = {
 
             // Set up the request
 
-            var request = new calGoogleRequest(this);
+            let request = new calGoogleRequest(this);
 
             request.itemId = aId;
             request.type = request.GET;
@@ -646,11 +646,10 @@ calGoogleCalendar.prototype = {
             this.ensureSession();
 
             // item base type
-            var wantEvents = ((aItemFilter &
+            let wantEvents = ((aItemFilter &
                                Components.interfaces.calICalendar.ITEM_FILTER_TYPE_EVENT) != 0);
-            var wantInvitations = ((aItemFilter &
+            let wantInvitations = ((aItemFilter &
                  Components.interfaces.calICalendar.ITEM_FILTER_REQUEST_NEEDS_ACTION) != 0);
-
 
             if (!wantEvents) {
                 // Events are not wanted, nothing to do. The
@@ -672,10 +671,10 @@ calGoogleCalendar.prototype = {
                 aRangeEnd.isDate = false;
             }
 
-            var rfcRangeStart = cal.toRFC3339(aRangeStart);
-            var rfcRangeEnd = cal.toRFC3339(aRangeEnd);
+            let rfcRangeStart = cal.toRFC3339(aRangeStart);
+            let rfcRangeEnd = cal.toRFC3339(aRangeEnd);
 
-            var request = new calGoogleRequest(this);
+            let request = new calGoogleRequest(this);
 
             request.type = request.GET;
             request.uri = this.fullUri.spec;
@@ -972,44 +971,32 @@ calGoogleCalendar.prototype = {
                 throw new Components.Exception(aData, aOperation.status);
             }
 
-            // Prepare Namespaces
-            var gCal = new Namespace("gCal",
-                                     "http://schemas.google.com/gCal/2005");
-            var gd = new Namespace("gd", "http://schemas.google.com/g/2005");
-            var atom = new Namespace("", "http://www.w3.org/2005/Atom");
-            default xml namespace = atom;
-
             // A feed was passed back, parse it.
-            var xml = cal.safeNewXML(aData);
-            var timezoneString = xml.gCal::timezone.@value.toString() || "UTC";
-            var timezone = gdataTimezoneService.getTimezone(timezoneString);
-
-            // This line is needed, otherwise the for each () block will never
-            // be entered. It may seem strange, but if you don't believe me, try
-            // it!
-            xml.link.(@rel);
+            let xml = cal.xml.parseString(aData);
+            let timezoneString = gdataXPathFirst(xml, 'atom:feed/gCal:timezone/@value') || "UTC";
+            let timezone = gdataTimezoneService.getTimezone(timezoneString);
 
             // We might be able to get the full name through this feed's author
             // tags. We need to make sure we have a session for that.
             this.ensureSession();
 
             // Get the item entry by id.
-            var itemEntry = xml.entry.(id.substring(id.lastIndexOf('/') + 1) == aOperation.itemId ||
-                                       gCal::uid.@value == aOperation.itemId);
-            if (!itemEntry || !itemEntry.length()) {
+            let itemXPath = 'atom:feed/atom:entry[substring-before(atom:id/text(), "' + aOperation.itemId + '")!="" or gCal:uid/@value="' + aOperation.itemId + '"]';
+            let itemEntry = gdataXPathFirst(xml, itemXPath);
+            if (!itemEntry) {
                 // Item wasn't found. Skip onGetResult and just complete. Not
                 // finding an item isn't a user-important error, it may be a
                 // wanted case. (i.e itip)
                 cal.LOG("[calGoogleCalendar] Item " + aOperation.itemId + " not found in calendar " + this.name);
                 throw new Components.Exception("Item not found", Components.results.NS_OK);
             }
-            var item = XMLEntryToItem(itemEntry, timezone, this);
+            let item = XMLEntryToItem(itemEntry, timezone, this);
             item.calendar = this.superCalendar;
 
             if (item.recurrenceInfo) {
                 // If this item is recurring, get all exceptions for this item.
-                for each (var entry in xml.entry.gd::originalEvent.(@id == aOperation.itemId)) {
-                    var excItem = XMLEntryToItem(entry.parent(), timezone, this);
+                for each (let entry in gdataXPath(xml, 'atom:feed/atom:entry[gd:originalEvent/@id="' + aOperation.itemId + '"]')) {
+                    let excItem = XMLEntryToItem(entry, timezone, this);
 
                     // Google uses the status field to reflect negative
                     // exceptions.
@@ -1060,7 +1047,7 @@ calGoogleCalendar.prototype = {
     getItems_response: function cGC_getItems_response(aOperation, aData) {
         // To simplify code, provide a one-stop function to call, independant of
         // if and what type of listener was passed.
-        var listener = aOperation.operationListener ||
+        let listener = aOperation.operationListener ||
             { onGetResult: function() {}, onOperationComplete: function() {} };
 
         cal.LOG("[calGoogleCalendar] Recieved response for " + aOperation.uri);
@@ -1070,55 +1057,41 @@ calGoogleCalendar.prototype = {
                 throw new Components.Exception(aData, aOperation.status);
             }
 
-            // Prepare Namespaces
-            var gCal = new Namespace("gCal",
-                                     "http://schemas.google.com/gCal/2005");
-            var gd = new Namespace("gd", "http://schemas.google.com/g/2005");
-            var atom = new Namespace("", "http://www.w3.org/2005/Atom");
-            default xml namespace = atom;
-
             // A feed was passed back, parse it.
-            var xml = cal.safeNewXML(aData);
-            var timezoneString = xml.gCal::timezone.@value.toString() || "UTC";
-            var timezone = gdataTimezoneService.getTimezone(timezoneString);
-
-            // This line is needed, otherwise the for each () block will never
-            // be entered. It may seem strange, but if you don't believe me, try
-            // it!
-            xml.link.(@rel);
+            let xml = cal.xml.parseString(aData);
+            let timezoneString = gdataXPathFirst(xml, 'atom:feed/gCal:timezone/@value') || "UTC";
+            let timezone = gdataTimezoneService.getTimezone(timezoneString);
 
             // We might be able to get the full name through this feed's author
             // tags. We need to make sure we have a session for that.
             this.ensureSession();
 
-            if (xml.author.email == this.mSession.userName) {
+            if (gdataXPathFirst(xml, 'atom:feed/atom:author/atom:email/text()') == this.mSession.userName) {
                 // If the current entry contains the user's email, then we can
                 // extract the user's full name also.
-                this.mSession.fullName = xml.author.name.toString();
+                this.mSession.fullName = gdataXPathFirst(xml, 'atom:feed/atom:author/atom:name/text()');
             }
 
-
-            var wantInvitations = ((aOperation.itemFilter &
+            let wantInvitations = ((aOperation.itemFilter &
                  Components.interfaces.calICalendar.ITEM_FILTER_REQUEST_NEEDS_ACTION) != 0);
 
             // Parse all <entry> tags
-            for each (var entry in xml.entry) {
-                if (entry.gd::originalEvent.toString().length) {
+            for each (let entry in gdataXPath(xml, 'atom:feed/atom:entry')) {
+                if (gdataXPathFirst(entry, 'gd:originalEvent')) {
                     // This is an exception. If we are doing an uncached
                     // operation, then skip it for now since it will be parsed
                     // later.
                     continue;
                 }
 
-
-                var item = XMLEntryToItem(entry, timezone, this);
+                let item = XMLEntryToItem(entry, timezone, this);
                 item.calendar = this.superCalendar;
 
                 if (wantInvitations) {
                     // If invitations are wanted and this is not an invitation,
                     // or if the user is not an attendee, or has already accepted
                     // then this is not an invitation.
-                    var att = item.getAttendeeById("mailto:" + this.session.userName);
+                    let att = item.getAttendeeById("mailto:" + this.session.userName);
                     if (!this.isInvitation(item) ||
                         !att ||
                         att.participationStatus != "NEEDS-ACTION") {
@@ -1126,25 +1099,25 @@ calGoogleCalendar.prototype = {
                     }
                 }
 
-                cal.LOG("[calGoogleCalendar] Parsing entry:\n" + entry + "\n");
+                cal.LOG("[calGoogleCalendar] Parsing entry:\n" + cal.xml.serializeDOM(entry) + "\n");
 
                 if (item.recurrenceInfo) {
                     // If we are doing an uncached operation, then we need to
                     // gather all exceptions and put them into the item.
                     // Otherwise, our listener will take care of mapping the
                     // exception to the base item.
-                    for each (var oid in xml.entry.gd::originalEvent.(@id == item.id)) {
+                    for each (let oid in gdataXPath(xml, 'atom:feed/atom:entry[gd:originalEvent/@id="' + item.id + '"]')) {
                         // Get specific fields so we can speed up the parsing process
-                        var status = oid.parent().gd::eventStatus.@value.toString().substring(39);
+                        let status = gdataXPathFirst(oid, 'gd:eventStatus/@value').substring(39);
 
                         if (status == "canceled") {
-                            let rId = oid.gd::when.@startTime.toString();
+                            let rId = gdataXPathFirst(oid, 'gd:when/@startTime');
                             let rDate = cal.fromRFC3339(rId, timezone);
                             cal.LOG("[calGoogleCalendar] Negative exception " + rId + "/" + rDate);
                             item.recurrenceInfo.removeOccurrenceAt(rDate);
                         } else {
                             // Parse the exception and modify the current item
-                            var excItem = XMLEntryToItem(oid.parent(),
+                            let excItem = XMLEntryToItem(oid,
                                                          timezone,
                                                          this);
                             if (excItem) {
@@ -1162,7 +1135,7 @@ calGoogleCalendar.prototype = {
 
                 // This is an uncached call, expand the item and tell our
                 // get listener about the item.
-                var expandedItems = expandItems(item, aOperation);
+                let expandedItems = expandItems(item, aOperation);
                 listener.onGetResult(this.superCalendar,
                                      Components.results.NS_OK,
                                      Components.interfaces.calIEvent,
@@ -1203,15 +1176,15 @@ calGoogleCalendar.prototype = {
     },
 
     replayChangesOn: function cGC_replayChangesOn(aListener) {
-        var lastUpdate = this.getProperty("google.lastUpdated");
-        var lastUpdateDateTime;
+        let lastUpdate = this.getProperty("google.lastUpdated");
+        let lastUpdateDateTime;
         if (lastUpdate) {
             // Set up the last sync stamp
             lastUpdateDateTime = createDateTime();
             lastUpdateDateTime.icalString = lastUpdate;
 
             // Set up last week
-            var lastWeek = getCorrectedDate(now().getInTimezone(UTC()));
+            let lastWeek = getCorrectedDate(now().getInTimezone(UTC()));
             lastWeek.day -= 7;
             if (lastWeek.compare(lastUpdateDateTime) >= 0) {
                 // The last sync was longer than a week ago. Google requires a full
@@ -1223,13 +1196,13 @@ calGoogleCalendar.prototype = {
             cal.LOG("[calGoogleCalendar] The calendar " + this.name + " was last modified: " + lastUpdateDateTime);
         }
 
-        var request = new calGoogleRequest(this.mSession);
+        let request = new calGoogleRequest(this.mSession);
 
         request.type = request.GET;
         request.uri = this.fullUri.spec
         request.destinationCal = this.mOfflineStorage;
 
-        var calendar = this;
+        let calendar = this;
         request.responseListener = { onResult: this.syncItems_response.bind(this, (lastUpdateDateTime == null)) }
         request.operationListener = aListener;
         request.calendar = this;
@@ -1267,55 +1240,42 @@ calGoogleCalendar.prototype = {
                 throw new Components.Exception(aData, aOperation.status);
             }
 
-            // Prepare Namespaces
-            var gCal = new Namespace("gCal",
-                                     "http://schemas.google.com/gCal/2005");
-            var gd = new Namespace("gd", "http://schemas.google.com/g/2005");
-            var atom = new Namespace("", "http://www.w3.org/2005/Atom");
-            default xml namespace = atom;
-
             // A feed was passed back, parse it.
-            var xml = cal.safeNewXML(aData);
-            var timezoneString = xml.gCal::timezone.@value.toString() || "UTC";
-            var timezone = gdataTimezoneService.getTimezone(timezoneString);
-
-            // This line is needed, otherwise the for each () block will never
-            // be entered. It may seem strange, but if you don't believe me, try
-            // it!
-            xml.link.(@rel);
+            let xml = cal.xml.parseString(aData);
+            let timezoneString = gdataXPathFirst(xml, 'atom:feed/gCal:timezone/@value') || "UTC";
+            let timezone = gdataTimezoneService.getTimezone(timezoneString);
 
             // We might be able to get the full name through this feed's author
             // tags. We need to make sure we have a session for that.
             this.ensureSession();
 
-            if (xml.author.email == this.mSession.userName) {
+            if (gdataXPathFirst(xml, 'atom:feed/atom:author/atom:email/text()') == this.mSession.userName) {
                 // If the current entry contains the user's email, then we can
                 // extract the user's full name also.
-                this.mSession.fullName = xml.author.name.toString();
+                this.mSession.fullName = gdataXPathFirst(xml, 'atom:feed/atom:author/atom:name/text()');
             }
 
             // This is the calendar we should sync changes into.
-            var destinationCal = aOperation.destinationCal;
+            let destinationCal = aOperation.destinationCal;
 
-            for each (var entry in xml.entry) {
-
-                var recurrenceId = getRecurrenceIdFromEntry(entry, timezone);
+            for each (let entry in gdataXPath(xml, 'atom:feed/atom:entry')) {
+                let recurrenceId = getRecurrenceIdFromEntry(entry, timezone);
                 if (aIsFullSync && recurrenceId) {
                     // On a full sync, we parse exceptions different.
                     continue;
                 }
                 cal.LOG("[calGoogleCalendar] Parsing entry:\n" + entry + "\n");
 
-                var referenceItemObj = {}
+                let referenceItemObj = {}
                 destinationCal.getItem(getIdFromEntry(entry),
                                        new syncSetter(referenceItemObj));
-                var referenceItem = referenceItemObj.value &&
+                let referenceItem = referenceItemObj.value &&
                                     referenceItemObj.value.clone();
 
                 // Parse the item. If we got a reference item from the storage
                 // calendar, put that in to make sure we get all exceptions and
                 // such.
-                var item = XMLEntryToItem(entry,
+                let item = XMLEntryToItem(entry,
                                           timezone,
                                           this,
                                           (recurrenceId && referenceItem ? null : referenceItem));
@@ -1325,18 +1285,18 @@ calGoogleCalendar.prototype = {
                     // On a full synchronization, we can go ahead and pre-parse
                     // all exceptions and then add the item at once. This way we
                     // make sure
-                    for each (var oid in xml.entry.gd::originalEvent.(@id == item.id)) {
+                    for each (let oid in gdataXPath(xml, 'atom:feed/atom:entry[gd:originalEvent/@id="' + item.id + '"]')) {
                         // Get specific fields so we can speed up the parsing process
-                        var status = oid.parent().gd::eventStatus.@value.toString().substring(39);
+                        let status = gdataXPathFirst(oid, 'atom:entry/gd:eventStatus/@value').substring(39);
 
                         if (status == "canceled") {
-                            let rId = oid.gd::when.@startTime.toString();
+                            let rId = gdataXPathFirst(oid, 'atom:entry/gd:when/@startTime');
                             let rDate = cal.fromRFC3339(rId, timezone);
                             item.recurrenceInfo.removeOccurrenceAt(rDate);
                             cal.LOG("[calGoogleCalendar] Negative exception " + rId + "/" + rDate);
                         } else {
                             // Parse the exception and modify the current item
-                            var excItem = XMLEntryToItem(oid.parent(),
+                            let excItem = XMLEntryToItem(oid.parent(),
                                                          timezone,
                                                          this);
                             if (excItem) {

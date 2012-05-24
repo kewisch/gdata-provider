@@ -40,14 +40,14 @@ Components.utils.import("resource://calendar/modules/calUtils.jsm");
  * Migrate the calendar selected in the wizard from ics to gdata.
  */
 function migrateSelectedCalendars() {
-    var listbox = document.getElementById("calendars-listbox");
-    var calmgr = cal.getCalendarManager();
+    let listbox = document.getElementById("calendars-listbox");
+    let calmgr = cal.getCalendarManager();
 
-    for (var i = 0; i < listbox.childNodes.length; i++) {
-        var item = listbox.childNodes[i];
+    for (let i = 0; i < listbox.childNodes.length; i++) {
+        let item = listbox.childNodes[i];
         if (item.checked) {
             // Migrate the calendar to a gdata calendar
-            var newCal = calmgr.createCalendar("gdata", item.calendar.uri);
+            let newCal = calmgr.createCalendar("gdata", item.calendar.uri);
             calmgr.unregisterCalendar(item.calendar);
             calmgr.deleteCalendar(item.calendar);
 
@@ -82,7 +82,7 @@ function migrateSelectedCalendars() {
  */
 function getMigratableCalendars() {
     function isMigratable(c) {
-        var re = new RegExp("^http[s]?://www\\.google\\.com/calendar/ical/" +
+        let re = new RegExp("^http[s]?://www\\.google\\.com/calendar/ical/" +
                             "[^/]+/(private(-[^/]+)?|public)/" +
                             "(full|full-noattendees|composite|" +
                             "attendees-only|free-busy|basic)(\\.ics)?$");

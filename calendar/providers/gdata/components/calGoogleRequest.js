@@ -88,7 +88,7 @@ calGoogleRequest.prototype = {
 
     /* nsIClassInfo */
     getInterfaces: function cI_cGR_getInterfaces (aCount) {
-        var ifaces = [
+        let ifaces = [
             Components.interfaces.nsISupports,
             Components.interfaces.calIGoogleRequest,
             Components.interfaces.calIOperation,
@@ -219,14 +219,14 @@ calGoogleRequest.prototype = {
             }
 
             // create the channel
-            var ioService = cal.getIOService();
+            let ioService = cal.getIOService();
 
-            var uristring = this.uri;
+            let uristring = this.uri;
             if (this.mQueryParameters.length > 0) {
                 uristring += "?" + this.mQueryParameters.join("&");
             }
-            var uri = ioService.newURI(uristring, null, null);
-            var channel = ioService.newChannelFromURI(uri);
+            let uri = ioService.newURI(uristring, null, null);
+            let channel = ioService.newChannelFromURI(uri);
 
             this.prepareChannel(channel);
 
@@ -286,11 +286,11 @@ calGoogleRequest.prototype = {
 
         // Set upload Data
         if (this.mUploadData) {
-            var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].
+            let converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].
                             createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
             converter.charset = "UTF-8";
 
-            var stream = converter.convertToInputStream(this.mUploadData);
+            let stream = converter.convertToInputStream(this.mUploadData);
             aChannel = aChannel.QueryInterface(Components.interfaces.nsIUploadChannel);
             aChannel.setUploadStream(stream, this.mUploadContent, -1);
 
@@ -365,7 +365,7 @@ calGoogleRequest.prototype = {
             return;
         }
 
-        var httpChannel = aLoader.request.QueryInterface(Components.interfaces.nsIHttpChannel);
+        let httpChannel = aLoader.request.QueryInterface(Components.interfaces.nsIHttpChannel);
 
         // Convert the stream, falling back to utf-8 in case its not given.
         let result = cal.convertByteArray(aResult, aResultLength, httpChannel.contentCharset);
@@ -376,8 +376,8 @@ calGoogleRequest.prototype = {
         }
 
         // Calculate Google Clock Skew
-        var serverDate = new Date(httpChannel.getResponseHeader("Date"));
-        var curDate = new Date();
+        let serverDate = new Date(httpChannel.getResponseHeader("Date"));
+        let curDate = new Date();
 
         // The utility function getCorrectedDate in calGoogleUtils.js recieves
         // its clock skew seconds from here. The clock skew is updated on each
@@ -455,7 +455,7 @@ calGoogleRequest.prototype = {
                 //
 
                 // Something else went wrong
-                var error = "A request Error Occurred. Status Code: " +
+                let error = "A request Error Occurred. Status Code: " +
                             httpChannel.responseStatus + " " +
                             httpChannel.responseStatusText + " Body: " +
                             result;
