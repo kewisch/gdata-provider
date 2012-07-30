@@ -293,10 +293,6 @@ calGoogleCalendar.prototype = {
     },
 
     adoptItem: function cGC_adoptItem(aItem, aListener) {
-        return this.adoptItemOrUseCache(aItem, !!this.mOfflineStorage, aListener);
-    },
-
-    adoptItemOrUseCache: function adoptItemOrUseCache(aItem, useCache, aListener) {
         cal.LOG("[calGoogleCalendar] Adding item " + aItem.title);
 
         try {
@@ -327,7 +323,6 @@ calGoogleCalendar.prototype = {
             request.operationListener = aListener;
             request.calendar = this;
             request.newItem = aItem;
-            request.useCache = useCache;
             request.responseListener = { onResult: this.addItem_response.bind(this) };
             request.addQueryParameter("ctz", calendarDefaultTimezone().tzid);
 
@@ -354,47 +349,10 @@ calGoogleCalendar.prototype = {
     addItem: function cGC_addItem(aItem, aListener) {
         // Google assigns an ID to every event added. Any id set here or in
         // adoptItem will be overridden.
-        return this.addItemOrUseCache(aItem, !!this.mOfflineStorage, aListener);
-    },
-
-    addItemOrUseCache: function addItemOrUseCache(aItem, useCache, aListener) {
-        return this.adoptItemOrUseCache(aItem.clone(), useCache, aListener);
+        return this.adoptItem(aItem.clone(), aListener);
     },
 
     modifyItem: function cGC_modifyItem(aNewItem, aOldItem, aListener) {
-        if (this.mOfflineStorage) {
-            return this.modifyItemOrUseCache(aNewItem, aOldItem, true, aListener);
-        } else {
-            return this.doModifyItem(aNewItem, aOldItem, false, aListener);
-        }
-    },
-
-    modifyItemOrUseCache: function modifyItemOrUseCache(aNewItem, aOldItem, useCache, aListener) {
-        let thisCalendar = this;
-        let storage = this.mOfflineStorage.QueryInterface(Components.interfaces.calIOfflineStorage);
-        let modifyOfflineListener = {
-            onGetResult: function(calendar, status, itemType, detail, count, items) {},
-            onOperationComplete: function(calendar, status, opType, id, detail) {
-                storage.modifyOfflineItem(detail, aListener);
-            }
-        };
-
-        let offlineFlagListener = {
-            onGetResult: function(calendar, status, itemType, detail, count, items) {},
-            onOperationComplete: function(calendar, status, opType, id, detail) {
-                let offline_flag = detail;
-                if ((offline_flag == cICL.OFFLINE_FLAG_CREATED_RECORD ||
-                     offline_flag == cICL.OFFLINE_FLAG_MODIFIED_RECORD) && useCache) {
-                    storage.modifyItem(aNewItem, aOldItem, modifyOfflineListener);
-                } else {
-                    thisCalendar.doModifyItem(aNewItem, aOldItem, useCache, aListener, false);
-                }
-            }
-        };
-        storage.getItemOfflineFlag(aOldItem, offlineFlagListener);
-    },
-
-    doModifyItem: function doModifyItem(aNewItem, aOldItem, useCache, aListener) {
         cal.LOG("[calGoogleCalendar] Modifying item " + aOldItem.title);
 
         try {
@@ -454,7 +412,6 @@ calGoogleCalendar.prototype = {
             request.newItem = newItem;
             request.oldItem = aOldItem;
             request.calendar = this;
-            request.useCache = useCache;
             request.addQueryParameter("ctz", calendarDefaultTimezone().tzid);
 
             this.session.asyncItemRequest(request);
@@ -480,42 +437,6 @@ calGoogleCalendar.prototype = {
     },
 
     deleteItem: function cGC_deleteItem(aItem, aListener) {
-        if (this.mOfflineStorage) {
-            return this.deleteItemOrUseCache(aItem, true, aListener);
-        } else {
-            return this.doDeleteItem(aItem, false, aListener);
-        }
-    },
-
-    deleteItemOrUseCache: function deleteItemOrUseCache(aItem, useCache, aListener) {
-        let thisCalendar = this;
-        let storage = this.mOfflineStorage.QueryInterface(Components.interfaces.calIOfflineStorage);
-        let deleteOfflineListener = {
-            onGetResult: function(calendar, status, itemType, detail, count, items) {},
-            onOperationComplete: function(calendar, status, opType, id, detail) {
-                if (aListener) {
-                    aListener.onOperationComplete(calendar, status, opType, aItem.id, aItem);
-                }
-            }
-        };
-
-        let offlineFlagListener = {
-            onGetResult: function(calendar, status, itemType, detail, count, items) {},
-            onOperationComplete: function(calendar, status, opType, id, detail) {
-                let offline_flag = detail;
-                if ((offline_flag == cICL.OFFLINE_FLAG_CREATED_RECORD ||
-                     offline_flag == cICL.OFFLINE_FLAG_MODIFIED_RECORD) && useCache) {
-                    /* We do not delete the item from the cache, but mark it deleted */
-                    storage.deleteOfflineItem(aItem, aListener);
-                } else {
-                    thisCalendar.doDeleteItem(aItem, useCache, aListener);
-                }
-            }
-        };
-        storage.getItemOfflineFlag(aItem, offlineFlagListener);
-    },
-
-    doDeleteItem: function doDeleteItem(aItem, useCache, aListener) {
         cal.LOG("[calGoogleCalendar] Deleting item " + aItem.title + "(" + aItem.id + ")");
 
         try {
@@ -537,7 +458,6 @@ calGoogleCalendar.prototype = {
             request.operationListener = aListener;
             request.oldItem = aItem;
             request.calendar = this;
-            request.useCache = useCache;
             request.responseListener = { onResult: this.deleteItem_response.bind(this) };
 
             this.session.asyncItemRequest(request);
@@ -702,62 +622,21 @@ calGoogleCalendar.prototype = {
             e = exp;
         }
 
-        // Now we can do some processing on it. If the cache is used, then we
-        // ultimately need to add the item to the cache, either as offline item
-        // or normal item. We will also have to notify the listener and the
-        // observers sooner or later.
-        if (aOperation.useCache && this.mOfflineStorage && (!e || isCacheException(e))) {
-            let listener;
-            if (item) {
-                // If we have an item, then we can directly notify the target
-                // listener
-                listener = aOperation.operationListener;
-                cal.LOG("[calGoogleCalendar] Adding item " + aOperation.newItem.title + " successful");
-            } else {
-                // Otherwise we create an intermediate listener that also sets
-                // the offline flag
-                let storage = this.mOfflineStorage.QueryInterface(Components.interfaces.calIOfflineStorage);
-                let self = this;
-                item = aOperation.newItem;
-                listener = {
-                    onGetResult: function(calendar, status, itemType, detail, count, items) {},
-                    onOperationComplete: function(calendar, status, opType, id, detail) {
-                        if (Components.isSuccessCode(status)) {
-                            // On success, the addOfflineItem call will notify the listener
-                            cal.LOG("[calGoogleCalendar] Adding item " + aOperation.newItem.title + " failed, but the operation will be retried (status: " + status + ", exception: " + e + ")");
-                            storage.addOfflineItem(detail, aOperation.operationListener);
-                            self.mObservers.notify("onAddItem", [aOperation.newItem]);
-                        } else if (aOperation.operationListener) {
-                            cal.ERROR("[calGoogleCalendar] Could not add item " + aOperation.newItem.title + " to the offline cache:" +
-                                      new Components.Exception(detail, status));
-                            // Otherwise we have to do it ourselves.
-                            self.notifyOperationComplete(aOperation.operationListener,
-                                                         status,
-                                                         Components.interfaces.calIOperationListener.ADD,
-                                                         null,
-                                                         null);
-                        }
-                    }
-                };
-            }
-
-            // Now send the item to the offline storage
-            this.mOfflineStorage.adoptItem(item, listener);
+        let resultCode;
+        if (item) {
+            cal.LOG("[calGoogleCalendar] Adding item " + item.title + " successful");
+            this.mObservers.notify("onAddItem", [item]);
+            resultCode = Components.results.NS_OK;
         } else {
-            // When not using the cache, we merely have to notify onAddItem and
-            // tell the operation listener we are done (error or not)
-            if (item) {
-                cal.LOG("[calGoogleCalendar] Adding item " + item.title + " successful");
-                this.mObservers.notify("onAddItem", [item]);
-            } else {
-                cal.LOG("[calGoogleCalendar] Adding item " + aOperation.newItem.id + " failed, status " + aOperation.status + ", Exception: " + e);
-            }
-            this.notifyOperationComplete(aOperation.operationListener,
-                                         (item ? Components.results.NS_OK : e.result),
-                                         Components.interfaces.calIOperationListener.ADD,
-                                         (item ? item.id : null),
-                                         (item ? item : e.message));
+            cal.LOG("[calGoogleCalendar] Adding item " + aOperation.newItem.id + " failed, status " + aOperation.status + ", Exception: " + e);
+            resultCode = isCacheException(e) ? Components.results.NS_ERROR_NOT_AVAILABLE : e.result || Components.results.NS_ERROR_FAILURE;
         }
+
+        this.notifyOperationComplete(aOperation.operationListener,
+                                     resultCode,
+                                     Components.interfaces.calIOperationListener.ADD,
+                                     (item ? item.id : null),
+                                     (item ? item : e.message));
     },
 
     /**
@@ -798,59 +677,20 @@ calGoogleCalendar.prototype = {
             e = exp;
         }
 
-        // Now we can do some processing on it. If the cache is used, then we
-        // ultimately need to modify the item in the cache, either as offline item
-        // or normal item. We will also have to notify the listener and the
-        // observers sooner or later.
-        if (aOperation.useCache && this.mOfflineStorage && (!e || isCacheException(e))) {
-            let listener;
-            if (newItem) {
-                // If we have an item, then we can directly notify the target
-                // listener
-                listener = aOperation.operationListener;
-                cal.LOG("[calGoogleCalendar] Modifying item " + aOperation.oldItem.id + " successful");
-            } else {
-                let storage = this.mOfflineStorage.QueryInterface(Components.interfaces.calIOfflineStorage);
-                newItem = aOperation.newItem;
-                listener = {
-                    onGetResult: function(calendar, status, itemType, detail, count, items) {},
-                    onOperationComplete: function(calendar, status, opType, id, detail) {
-                        if (Components.isSuccessCode(status)) {
-                            cal.LOG("[calGoogleCalendar] Modifying item " + aOperation.oldItem.id + " failed, but the operation will be retried (status: " + status + ", exception: " + e + ")");
-                            // On success, the modifyOfflineItem call will notify the listener
-                            storage.modifyOfflineItem(detail, aOperation.operationListener);
-                            notifyObserver(newItem, aOperation.oldItem);
-                        } else if (aOperation.operationListener) {
-                            cal.ERROR("[calGoogleCalendar] Could not modify item " + aOperation.newItem.id + " in the offline cache:" +
-                                      new Components.Exception(detail, status));
-                            // Otherwise we have to do it ourselves.
-                            self.notifyOperationComplete(aOperation.operationListener,
-                                                         status,
-                                                         Components.interfaces.calIOperationListener.MODIFY,
-                                                         null,
-                                                         null);
-                        }
-                    }
-                };
-            }
-
-            // Now send the item to the offline storage
-            this.mOfflineStorage.modifyItem(newItem, aOperation.oldItem, listener);
-        } else {
-            // When not using the cache, we merely have to notify onModifyItem and
-            // tell the operation listener we are done (error or not)
+        let resultCode;
+        if (newItem) {
+            cal.LOG("[calGoogleCalendar] Modifying item " + newItem.id + " successful");
             notifyObserver(newItem, aOperation.oldItem);
-            if (newItem) {
-                cal.LOG("[calGoogleCalendar] Modifying item " + newItem.id + " successful");
-            } else {
-                cal.LOG("[calGoogleCalendar] Modifying item " + aOperation.oldItem.id + " failed, status " + aOperation.status + ", Exception: " + e);
-            }
-            this.notifyOperationComplete(aOperation.operationListener,
-                                         (newItem ? Components.results.NS_OK : e.result || Components.results.NS_ERROR_FAILURE),
-                                         Components.interfaces.calIOperationListener.MODIFY,
-                                         (newItem ? newItem.id : null),
-                                         (newItem ? newItem : e.message));
+            resultCode = Components.results.NS_OK;
+        } else {
+            cal.LOG("[calGoogleCalendar] Modifying item " + aOperation.oldItem.id + " failed, status " + aOperation.status + ", Exception: " + e);
+            resultCode = isCacheException(e) ? Components.results.NS_ERROR_NOT_AVAILABLE : e.result || Components.results.NS_ERROR_FAILURE;
         }
+        this.notifyOperationComplete(aOperation.operationListener,
+                                     resultCode,
+                                     Components.interfaces.calIOperationListener.MODIFY,
+                                     (newItem ? newItem.id : null),
+                                     (newItem ? newItem : e.message));
     },
 
     /**
@@ -877,47 +717,20 @@ calGoogleCalendar.prototype = {
             e = exp;
         }
 
-        if (aOperation.useCache && this.mOfflineStorage && (!e || isCacheException(e))) {
-            if (item) {
-                // If we have an item, then we can directly notify the target
-                // listener using the offline storage
-                cal.LOG("[calGoogleCalendar] Deleting item " + aOperation.oldItem.id + " successful");
-                this.mOfflineStorage.deleteItem(item, aOperation.operationListener);
-            } else {
-                // Otherwise we shouldn't remove it from the cache, but set the
-                // offline flag to mark it deleted
-                let self = this;
-                let offlineListener = {
-                    // We should not return a success code since the listeners can delete the physical item in case of success
-                    onGetResult: function(calendar, status, itemType, detail, count, items) {},
-                    onOperationComplete: function(calendar, status, opType, id, detail) {
-                        self.mObservers.notify("onDeleteItem", [aOperation.oldItem]);
-                        cal.LOG("[calGoogleCalendar] Deleting item " + aOperation.oldItem.id + " failed, but the operation will be retried");
-                        self.notifyOperationComplete(aOperation.operationListener,
-                                                     Components.results.NS_ERROR_NOT_AVAILABLE,
-                                                     Components.interfaces.calIOperationListener.GET,
-                                                     aOperation.oldItem.id,
-                                                     aOperation.oldItem);
-                    }
-                };
-                let storage = this.mOfflineStorage.QueryInterface(Components.interfaces.calIOfflineStorage);
-                storage.deleteOfflineItem(aOperation.oldItem, offlineListener);
-            }
+        let resultCode;
+        if (item) {
+            cal.LOG("[calGoogleCalendar] Deleting item " + aOperation.oldItem.id + " successful");
+            this.mObservers.notify("onDeleteItem", [item]);
+            resultCode = Components.results.NS_OK;
         } else {
-            // When not using the cache, we merely have to notify onDeleteItem and
-            // tell the operation listener we are done (error or not)
-            if (item) {
-                cal.LOG("[calGoogleCalendar] Deleting item " + aOperation.oldItem.id + " successful");
-                this.mObservers.notify("onDeleteItem", [item]);
-            } else {
-                cal.LOG("[calGoogleCalendar] Deleting item " + aOperation.oldItem.id + " failed, status " + aOperation.status + ", Exception: " + e);
-            }
-            this.notifyOperationComplete(aOperation.operationListener,
-                                         (item ? Components.results.NS_OK : e.result || Components.results.NS_ERROR_FAILURE),
-                                         Components.interfaces.calIOperationListener.ADD,
-                                         (item ? item.id : null),
-                                         (item ? item : e.message));
+            cal.LOG("[calGoogleCalendar] Deleting item " + aOperation.oldItem.id + " failed, status " + aOperation.status + ", Exception: " + e);
+            resultCode = isCacheException(e) ? Components.results.NS_ERROR_NOT_AVAILABLE : e.result || Components.results.NS_ERROR_FAILURE;
         }
+        this.notifyOperationComplete(aOperation.operationListener,
+                                     resultCode,
+                                     Components.interfaces.calIOperationListener.DELETE,
+                                     (item ? item.id : null),
+                                     (item ? item : e.message));
     },
 
     /**
