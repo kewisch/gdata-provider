@@ -26,7 +26,7 @@ interface calIGoogleRequest : calIOperation {
     /**
      * The type of request. Must be one of the above constants.
      */
-    attribute PRUint32 type;
+    attribute uint32_t type;
 
     /**
      * The request uri string
@@ -112,7 +112,7 @@ interface calIGoogleRequest : calIOperation {
      * @param aCode     The error code to use.
      * @param aMessage  The error message to use.
      */
-    void fail(in PRUint32 aCode, in AUTF8String aMessage);
+    void fail(in uint32_t aCode, in AUTF8String aMessage);
 
     /**
      * Tell listeners that the operation succeeded.
