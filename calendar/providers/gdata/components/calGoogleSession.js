@@ -5,6 +5,7 @@
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
 Components.utils.import("resource://calendar/modules/calXMLUtils.jsm");
 Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
+Components.utils.import("resource://gre/modules/Services.jsm");
 
 // This constant is an arbitrary large number. It is used to tell google to get
 // many events, the exact number is not important.
@@ -360,11 +361,9 @@ calGoogleSession.prototype = {
             ASSERT(this.mGooglePass);
 
             // Get Version info
-            let appInfo = Components.classes["@mozilla.org/xre/app-info;1"].
-                          getService(Components.interfaces.nsIXULAppInfo);
-            let source = appInfo.vendor + "-" +
-                         appInfo.name + "-" +
-                         appInfo.version;
+            let source = Services.appinfo.vendor + "-" +
+                         Services.appinfo.name + "-" +
+                         Services.appinfo.version;
 
             // Request Login
             let request = new calGoogleRequest(this);

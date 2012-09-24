@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
+Components.utils.import("resource://gre/modules/Services.jsm");
 
 /**
  * calGoogleRequest
@@ -186,15 +187,12 @@ calGoogleRequest.prototype = {
                 this.mSession = aSession;
             }
 
-            // create the channel
-            let ioService = cal.getIOService();
-
             let uristring = this.uri;
             if (this.mQueryParameters.length > 0) {
                 uristring += "?" + this.mQueryParameters.join("&");
             }
-            let uri = ioService.newURI(uristring, null, null);
-            let channel = ioService.newChannelFromURI(uri);
+            let uri = Services.io.newURI(uristring, null, null);
+            let channel = Services.io.newChannelFromURI(uri);
 
             this.prepareChannel(channel);
 
