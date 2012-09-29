@@ -351,7 +351,7 @@ calGoogleRequest.prototype = {
         getCorrectedDate.mClockSkew = curDate.getTime() - serverDate.getTime();
 
         // Remember when this request happened
-        this.requestDate = jsDateToDateTime(serverDate);
+        this.requestDate = cal.jsDateToDateTime(serverDate);
 
         // Handle all (documented) error codes
         switch (httpChannel.responseStatus) {
