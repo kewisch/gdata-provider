@@ -896,9 +896,8 @@ calGoogleCalendar.prototype = {
                             item.recurrenceInfo.removeOccurrenceAt(rDate);
                         } else {
                             // Parse the exception and modify the current item
-                            let excItem = XMLEntryToItem(oid,
-                                                         timezone,
-                                                         this);
+                            let excItem = XMLEntryToItem(oid, timezone, this);
+
                             if (excItem) {
                                 // Google uses the status field to reflect negative
                                 // exceptions.
@@ -1066,18 +1065,17 @@ calGoogleCalendar.prototype = {
                     // make sure
                     for each (let oid in gdataXPath(xml, 'atom:feed/atom:entry[gd:originalEvent/@id="' + item.id + '"]')) {
                         // Get specific fields so we can speed up the parsing process
-                        let status = gdataXPathFirst(oid, 'atom:entry/gd:eventStatus/@value').substring(39);
+                        let status = gdataXPathFirst(oid, 'gd:eventStatus/@value').substring(39);
 
                         if (status == "canceled") {
-                            let rId = gdataXPathFirst(oid, 'atom:entry/gd:when/@startTime');
+                            let rId = gdataXPathFirst(oid, 'gd:when/@startTime');
                             let rDate = cal.fromRFC3339(rId, timezone);
                             item.recurrenceInfo.removeOccurrenceAt(rDate);
                             cal.LOG("[calGoogleCalendar] Negative exception " + rId + "/" + rDate);
                         } else {
                             // Parse the exception and modify the current item
-                            let excItem = XMLEntryToItem(oid.parent(),
-                                                         timezone,
-                                                         this);
+                            let excItem = XMLEntryToItem(oid, timezone, this);
+
                             if (excItem) {
                                 // Google uses the status field to reflect negative
                                 // exceptions.
