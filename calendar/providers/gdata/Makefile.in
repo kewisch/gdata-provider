@@ -8,13 +8,14 @@ srcdir = @srcdir@
 VPATH = @srcdir@
 
 include $(DEPTH)/config/autoconf.mk
+include $(MOZILLA_SRCDIR)/toolkit/mozapps/installer/package-name.mk
 
 MODULE = gdata-provider
 
 export USE_EXTENSION_MANIFEST = 1
 export XPI_NAME = gdata-provider
 DIST_FILES = install.rdf
-XPI_PKGNAME = gdata-provider
+XPI_PKGNAME = gdata-provider-$(GDATA_VERSION).$(AB_CD).$(MOZ_PKG_PLATFORM)
 
 CALENDAR_VERSION := $(shell cat $(topsrcdir)/calendar/sunbird/config/version.txt)
 THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version.txt)
