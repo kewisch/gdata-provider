@@ -9,4 +9,4 @@ import re
 #  Lightning 1.2 -> gdata-provider 0.11
 #  Lightning 1.3a1 -> gdata-provider 0.12pre
 v = re.search(r"(\d+\.\d+)([a-z]\d+)?", sys.argv[1])
-print "{:.2f}".format((float(v.group(1)) - 0.1)/10) + (v.lastindex == 2 and "pre" or "")
+print "{0:.2f}".format((float(v.group(1)) - 0.1)/10) + (v.lastindex == 2 and "pre" or "")
