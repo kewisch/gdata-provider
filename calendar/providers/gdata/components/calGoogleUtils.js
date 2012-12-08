@@ -1085,11 +1085,11 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
 
         // published
         let createdText = gdataXPathFirst(aXMLEntry, 'atom:published/text()');
-        item.setProperty("CREATED", cal.fromRFC3339(createdText, aTimezone));
+        item.setProperty("CREATED", cal.fromRFC3339(createdText, aTimezone).getInTimezone(cal.UTC()));
 
         // updated (This must be set last!)
         let lastmodText = gdataXPathFirst(aXMLEntry, 'atom:updated/text()');
-        item.setProperty("LAST-MODIFIED", cal.fromRFC3339(lastmodText, aTimezone));
+        item.setProperty("LAST-MODIFIED", cal.fromRFC3339(lastmodText, aTimezone).getInTimezone(cal.UTC()));
 
         // XXX Google currently has no priority support. See
         // http://code.google.com/p/google-gdata/issues/detail?id=52
