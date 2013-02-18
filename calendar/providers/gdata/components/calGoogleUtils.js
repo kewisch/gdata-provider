@@ -584,8 +584,7 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
             // Add all recurrence items to the ical string
             for each (let ritem in recurrenceItems) {
                 let prop = ritem.icalProperty;
-                ritem = cal.wrapInstance(ritem, Components.interfaces.calIRecurrenceDate);
-                if (ritem) {
+                if (calInstanceOf(ritem, Components.interfaces.calIRecurrenceDate)) {
                     // EXDATES require special casing, since they might contain
                     // a TZID. To avoid the need for conversion of TZID strings,
                     // convert to UTC before serialization.
