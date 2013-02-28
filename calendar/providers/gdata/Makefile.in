@@ -31,7 +31,6 @@ DEFINES += -DAB_CD=$(AB_CD) \
            $(NULL)
 
 PREF_JS_EXPORTS = $(srcdir)/defaults/preferences.js
-DIRS = components locales public
 
 libs-%:
 	$(MAKE) -C locales libs AB_CD=$* XPI_NAME=$(XPI_NAME) USE_EXTENSION_MANIFEST=1
