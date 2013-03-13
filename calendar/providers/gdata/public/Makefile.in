@@ -10,10 +10,4 @@ VPATH           = @srcdir@
 include $(DEPTH)/config/autoconf.mk
 
 MODULE          = gdata
-XPIDL_MODULE    = gdata
-XPIDLSRCS       = calIGoogleCalendar.idl \
-                  calIGoogleSession.idl \
-                  calIGoogleRequest.idl \
-                  $(NULL)
-
 include $(topsrcdir)/config/rules.mk
