@@ -345,7 +345,7 @@ calGoogleRequest.prototype = {
         let serverDate = new Date(httpChannel.getResponseHeader("Date"));
         let curDate = new Date();
 
-        // The utility function getCorrectedDate in calGoogleUtils.js recieves
+        // The utility function getCorrectedDate in calGoogleUtils.js receives
         // its clock skew seconds from here. The clock skew is updated on each
         // request and is therefore quite accurate.
         getCorrectedDate.mClockSkew = curDate.getTime() - serverDate.getTime();

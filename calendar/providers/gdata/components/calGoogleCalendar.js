@@ -829,7 +829,7 @@ calGoogleCalendar.prototype = {
         let listener = aOperation.operationListener ||
             { onGetResult: function() {}, onOperationComplete: function() {} };
 
-        cal.LOG("[calGoogleCalendar] Recieved response for " + aOperation.uri);
+        cal.LOG("[calGoogleCalendar] Received response for " + aOperation.uri);
         try {
             // Check if the call succeeded
             if (!Components.isSuccessCode(aOperation.status)) {
@@ -1011,7 +1011,7 @@ calGoogleCalendar.prototype = {
      *                        an XML representation of the added item.
      */
     syncItems_response: function cGC_syncItems_response(aIsFullSync, aOperation, aData) {
-        cal.LOG("[calGoogleCalendar] Recieved response for " + aOperation.uri + (aIsFullSync ? " (full sync)" : ""));
+        cal.LOG("[calGoogleCalendar] Received response for " + aOperation.uri + (aIsFullSync ? " (full sync)" : ""));
         try {
             // Check if the call succeeded
             if (!Components.isSuccessCode(aOperation.status)) {
