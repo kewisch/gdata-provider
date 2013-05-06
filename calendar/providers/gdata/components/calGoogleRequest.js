@@ -4,6 +4,7 @@
 
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
 Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 /**
  * calGoogleRequest
@@ -17,7 +18,14 @@ function calGoogleRequest(aSession) {
     this.mSession = aSession;
     this.wrappedJSObject = this;
 }
-
+const calGoogleRequestClassID = Components.ID("{53a3438a-21bc-4a0f-b813-77a8b4f19282}");
+const calGoogleRequestInterfaces = [
+    Components.interfaces.calIGoogleRequest,
+    Components.interfaces.calIOperation,
+    Components.interfaces.nsIStreamLoaderObserver,
+    Components.interfaces.nsIInterfaceRequestor,
+    Components.interfaces.nsIChannelEventSink
+];
 calGoogleRequest.prototype = {
 
     /* Members */
@@ -55,36 +63,14 @@ calGoogleRequest.prototype = {
     oldItem: null,
     destinationCal: null,
 
-    /* nsIClassInfo */
-    getInterfaces: function cI_cGR_getInterfaces (aCount) {
-        let ifaces = [
-            Components.interfaces.nsISupports,
-            Components.interfaces.calIGoogleRequest,
-            Components.interfaces.calIOperation,
-            Components.interfaces.nsIStreamLoaderObserver,
-            Components.interfaces.nsIInterfaceRequestor,
-            Components.interfaces.nsIChannelEventSink,
-            Components.interfaces.nsIClassInfo
-        ];
-        aCount.value = ifaces.length;
-        return ifaces;
-    },
-
-    getHelperForLanguage: function cI_cGR_getHelperForLanguage(aLanguage) {
-        return null;
-    },
-
-    classDescription: "Google Calendar Request",
-    contractID: "@mozilla.org/calendar/providers/gdata/request;1",
-    classID:  Components.ID("{53a3438a-21bc-4a0f-b813-77a8b4f19282}"),
-    implementationLanguage: Components.interfaces.nsIProgrammingLanguage.JAVASCRIPT,
-    constructor: "calGoogleRequest",
-    flags: 0,
-
-    /* nsISupports */
-    QueryInterface: function cGR_QueryInterface(aIID) {
-        return cal.doQueryInterface(this, calGoogleRequest.prototype, aIID, null, this);
-    },
+    classID: calGoogleRequestClassID,
+    QueryInterface: XPCOMUtils.generateQI(calGoogleRequestInterfaces),
+    classInfo: XPCOMUtils.generateCI({
+        classID: calGoogleRequestClassID,
+        contractID: "@mozilla.org/calendar/providers/gdata/request;1",
+        classDescription: "Google Calendar Request",
+        interfaces: calGoogleRequestInterfaces
+    }),
 
     /**
      * Implement calIOperation

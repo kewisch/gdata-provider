@@ -5,6 +5,7 @@
 Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
 Components.utils.import("resource://calendar/modules/calXMLUtils.jsm");
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 const cICL = Components.interfaces.calIChangeLog;
 
@@ -19,37 +20,23 @@ const cICL = Components.interfaces.calIChangeLog;
 function calGoogleCalendar() {
     this.initProviderBase();
 }
-
+const calGoogleCalendarClassID = Components.ID("{d1a6e988-4b4d-45a5-ba46-43e501ea96e3}");
+const calGoogleCalendarInterfaces = [
+    Components.interfaces.calICalendar,
+    Components.interfaces.calIGoogleCalendar,
+    Components.interfaces.calISchedulingSupport,
+    Components.interfaces.calIChangeLog
+];
 calGoogleCalendar.prototype = {
     __proto__: cal.ProviderBase.prototype,
-
-    classDescription: "Google Calendar Provider",
-    contractID: "@mozilla.org/calendar/calendar;1?type=gdata",
-    classID:  Components.ID("{d1a6e988-4b4d-45a5-ba46-43e501ea96e3}"),
-
-    getInterfaces: function cI_cGC_getInterfaces (count) {
-        let ifaces = [
-            Components.interfaces.nsISupports,
-            Components.interfaces.calICalendar,
-            Components.interfaces.calIGoogleCalendar,
-            Components.interfaces.calISchedulingSupport,
-            Components.interfaces.calIChangeLog,
-            Components.interfaces.nsIClassInfo
-        ];
-        count.value = ifaces.length;
-        return ifaces;
-    },
-
-    getHelperForLanguage: function cI_cGC_getHelperForLanguage(aLanguage) {
-        return null;
-    },
-
-    implementationLanguage: Components.interfaces.nsIProgrammingLanguage.JAVASCRIPT,
-    flags: 0,
-
-    QueryInterface: function cGS_QueryInterface(aIID) {
-        return cal.doQueryInterface(this, calGoogleCalendar.prototype, aIID, null, this);
-    },
+    classID: calGoogleCalendarClassID,
+    QueryInterface: XPCOMUtils.generateQI(calGoogleCalendarInterfaces),
+    classInfo: XPCOMUtils.generateCI({
+        classID: calGoogleCalendarClassID,
+        contractID: "@mozilla.org/calendar/calendar;1?type=gdata",
+        classDescription: "Google Calendar Provider",
+        interfaces: calGoogleCalendarInterfaces
+    }),
 
     /* Member Variables */
     mSession: null,
