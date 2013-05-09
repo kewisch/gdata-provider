@@ -9,3 +9,5 @@ DIRS += [
     'public',
 ]
 
+MODULE = 'gdata-provider'
+

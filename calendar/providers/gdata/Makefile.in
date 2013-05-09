@@ -10,8 +10,6 @@ VPATH = @srcdir@
 include $(DEPTH)/config/autoconf.mk
 include $(MOZILLA_SRCDIR)/toolkit/mozapps/installer/package-name.mk
 
-MODULE = gdata-provider
-
 export USE_EXTENSION_MANIFEST = 1
 export XPI_NAME = gdata-provider
 DIST_FILES = install.rdf
