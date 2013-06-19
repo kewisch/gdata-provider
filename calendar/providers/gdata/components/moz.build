@@ -5,3 +5,8 @@
 
 MODULE = 'gdata-provider'
 
+EXTRA_COMPONENTS += [
+    'calGoogleCalendarModule.js',
+    'calGoogleCalendarModule.manifest',
+]
+

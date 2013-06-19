@@ -9,8 +9,6 @@ VPATH = @srcdir@
 
 include $(DEPTH)/config/autoconf.mk
 
-EXTRA_COMPONENTS = calGoogleCalendarModule.js calGoogleCalendarModule.manifest
-
 EXTRA_SCRIPTS = \
     calGoogleCalendar.js \
     calGoogleRequest.js \
