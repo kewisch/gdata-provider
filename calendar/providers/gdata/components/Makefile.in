@@ -17,7 +17,7 @@ EXTRA_SCRIPTS = \
     $(NULL)
 
 # Use NSINSTALL to make the directory, as there's no mtime to preserve.
-libs:: $(EXTRA_SCRIPTS)
+tools:: $(EXTRA_SCRIPTS)
 	if test ! -d $(FINAL_TARGET)/js; then $(NSINSTALL) -D $(FINAL_TARGET)/js; fi
 	$(INSTALL) $^ $(FINAL_TARGET)/js
 
