@@ -10,4 +10,4 @@ DIRS += [
 ]
 
 MODULE = 'gdata-provider'
-
+XPI_NAME = 'gdata-provider'

@@ -10,7 +10,6 @@ VPATH = @srcdir@
 include $(DEPTH)/config/autoconf.mk
 
 export USE_EXTENSION_MANIFEST = 1
-export XPI_NAME = gdata-provider
 DIST_FILES = install.rdf
 XPI_PKGNAME = gdata-provider-$(GDATA_VERSION).$(AB_CD).$(MOZ_PKG_PLATFORM)
 XPI_VERSION = $(GDATA_VERSION)
