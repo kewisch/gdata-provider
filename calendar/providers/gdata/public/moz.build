@@ -9,5 +9,5 @@ XPIDL_SOURCES += [
     'calIGoogleSession.idl',
 ]
 
-MODULE = 'gdata'
+XPIDL_MODULE = 'gdata'
 

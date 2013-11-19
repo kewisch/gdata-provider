@@ -9,5 +9,4 @@ DIRS += [
     'public',
 ]
 
-MODULE = 'gdata-provider'
 XPI_NAME = 'gdata-provider'
