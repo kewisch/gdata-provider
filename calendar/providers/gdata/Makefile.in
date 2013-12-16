@@ -15,9 +15,9 @@ XPI_PKGNAME = gdata-provider-$(GDATA_VERSION).$(AB_CD).$(MOZ_PKG_PLATFORM)
 XPI_VERSION = $(GDATA_VERSION)
 XPI_NO_UNIVERSAL = 1
 
-CALENDAR_VERSION := $(shell cat $(topsrcdir)/calendar/sunbird/config/version.txt)
 THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version.txt)
 SEAMONKEY_VERSION := $(shell cat $(topsrcdir)/suite/config/version.txt)
+CALENDAR_VERSION := $(shell $(PYTHON) $(topsrcdir)/calendar/lightning/build/makeversion.py $(word 1,$(MOZ_PKG_VERSION) $(THUNDERBIRD_VERSION)))
 GDATA_VERSION = $(shell $(PYTHON) $(srcdir)/makeversion.py $(CALENDAR_VERSION))
 
 DEFINES += -DAB_CD=$(AB_CD) \
