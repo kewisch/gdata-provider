@@ -10,3 +10,5 @@ DIRS += [
 ]
 
 XPI_NAME = 'gdata-provider'
+
+JAR_MANIFESTS += ['jar.mn']
