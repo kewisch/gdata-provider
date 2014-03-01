@@ -6,6 +6,7 @@ Components.utils.import("resource://calendar/modules/calUtils.jsm");
 Components.utils.import("resource://calendar/modules/calXMLUtils.jsm");
 Components.utils.import("resource://calendar/modules/calIteratorUtils.jsm");
 Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
+Components.utils.import("resource://gre/modules/Preferences.jsm");
 
 const atomNS = "http://www.w3.org/2005/Atom";
 const gdNS = "http://schemas.google.com/g/2005";
@@ -58,8 +59,8 @@ function getGoogleSessionManager() {
  */
 function setCalendarPref(aCalendar, aPrefName, aPrefType, aPrefValue) {
 
-    cal.setPref("calendar.google.calPrefs." + aCalendar.googleCalendarName + "." +
-                aPrefName, aPrefValue, aPrefType);
+    Preferences.set("calendar.google.calPrefs." + aCalendar.googleCalendarName + "." +
+                    aPrefName, aPrefValue, aPrefType);
 
     return aPrefValue;
 }
@@ -77,7 +78,7 @@ function setCalendarPref(aCalendar, aPrefName, aPrefType, aPrefValue) {
  * @require aCalendar.googleCalendarName
  */
 function getCalendarPref(aCalendar, aPrefName) {
-    return cal.getPrefSafe("calendar.google.calPrefs." +
+    return Preferences.get("calendar.google.calPrefs." +
                            aCalendar.googleCalendarName + "."  + aPrefName);
 }
 
@@ -404,7 +405,7 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
     addElemNS(gdNS, "where").setAttribute("valueString", aItem.getProperty("LOCATION") || "");
 
     // gd:who
-    if (cal.getPrefSafe("calendar.google.enableAttendees", false)) {
+    if (Preferences.get("calendar.google.enableAttendees", false)) {
         // XXX Only parse attendees if they are enabled, due to bug 407961
 
         let attendees = aItem.getAttendees({});
@@ -464,7 +465,7 @@ function ItemToXMLEntry(aItem, aCalendar, aAuthorEmail, aAuthorName) {
 
     // Don't notify attendees by default. Use a preference in case the user
     // wants this to be turned on.
-    let notify = cal.getPrefSafe("calendar.google.sendEventNotifications", false);
+    let notify = Preferences.get("calendar.google.sendEventNotifications", false);
     addElemNS(gcalNS, "sendEventNotifications").setAttribute("value", notify ? "true" : "false");
 
     // gd:when
@@ -1028,7 +1029,7 @@ function XMLEntryToItem(aXMLEntry, aTimezone, aCalendar, aReferenceItem) {
         item.setProperty("LOCATION", gdataXPathFirst(aXMLEntry, 'gd:where/@valueString'));
 
         // gd:who
-        if (cal.getPrefSafe("calendar.google.enableAttendees", false)) {
+        if (Preferences.get("calendar.google.enableAttendees", false)) {
             // XXX Only parse attendees if they are enabled, due to bug 407961
 
             // This object can easily translate Google's values to our values.

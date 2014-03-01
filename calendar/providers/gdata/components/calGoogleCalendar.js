@@ -6,6 +6,7 @@ Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
 Components.utils.import("resource://calendar/modules/calXMLUtils.jsm");
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+Components.utils.import("resource://gre/modules/Preferences.jsm");
 
 const cICL = Components.interfaces.calIChangeLog;
 
@@ -253,7 +254,7 @@ calGoogleCalendar.prototype = {
                 break;
             case "itip.transport":
                 if (!this.isDefaultCalendar ||
-                    !getPrefSafe("calendar.google.enableEmailInvitations", false)) {
+                    !Preferences.get("calendar.google.enableEmailInvitations", false)) {
                     // If we explicitly return null here, then these calendars
                     // will not be included in the list of calendars to accept
                     // invitations to and imip will effectively be disabled.
@@ -266,7 +267,7 @@ calGoogleCalendar.prototype = {
                 // be done for all secondary calendars as they cannot accept
                 // invitations and if email invitations are generally disabled.
                 if (!this.isDefaultCalendar ||
-                    !getPrefSafe("calendar.google.enableEmailInvitations", false)) {
+                    !Preferences.get("calendar.google.enableEmailInvitations", false)) {
                     return true;
                 }
                 break;

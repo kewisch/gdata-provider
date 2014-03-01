@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
+Components.utils.import("resource://gre/modules/Preferences.jsm");
 
 /**
  * Migrate the calendar selected in the wizard from ics to gdata.
@@ -39,8 +40,8 @@ function migrateSelectedCalendars() {
     }
 
     // Only bring up the dialog on the next startup if the user wants us to.
-    cal.setPref("calendar.google.migrate",
-                document.getElementById("showagain-checkbox").checked);
+    Preferences.set("calendar.google.migrate",
+                    document.getElementById("showagain-checkbox").checked);
 }
 
 /**
@@ -79,11 +80,11 @@ function gdata_migration_loader() {
 
         // Set up the "always check" field
         document.getElementById("showagain-checkbox").checked =
-            cal.getPrefSafe("calendar.google.migrate", true);
+            Preferences.get("calendar.google.migrate", true);
     } else {
         // This is not the migration wizard, so it must be a main window. Check
         // if the migration wizard needs to be shown.
-        if (cal.getPrefSafe("calendar.google.migrate", true)) {
+        if (Preferences.get("calendar.google.migrate", true)) {
             // Check if there are calendars that are worth migrating.
             if (getMigratableCalendars().length > 0) {
                 // Do this after load, so the calendar window appears before the

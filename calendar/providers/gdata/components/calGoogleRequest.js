@@ -5,6 +5,7 @@
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+Components.utils.import("resource://gre/modules/Preferences.jsm");
 
 /**
  * calGoogleRequest
@@ -258,7 +259,7 @@ calGoogleRequest.prototype = {
 
         // Depending on the preference, we will use X-HTTP-Method-Override to
         // get around some proxies. This will default to true.
-        if (getPrefSafe("calendar.google.useHTTPMethodOverride", true) &&
+        if (Preferences.get("calendar.google.useHTTPMethodOverride", true) &&
             (this.method == "PUT" || this.method == "DELETE")) {
 
             aChannel.requestMethod = "POST";
