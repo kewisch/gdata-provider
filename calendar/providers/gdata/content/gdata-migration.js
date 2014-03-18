@@ -62,7 +62,7 @@ function getMigratableCalendars() {
 }
 
 /**
- * Load Handler for both the wizard and the Sunbird/Thunderbird main windows.
+ * Load Handler for both the wizard and the Thunderbird main window.
  */
 function gdata_migration_loader() {
     // Only load once

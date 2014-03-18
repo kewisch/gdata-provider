@@ -16,14 +16,6 @@
          with minimum and maximum supported versions. -->
     <em:targetApplication>
       <Description>
-        <!-- Sunbird -->
-        <em:id>{718e30fb-e89b-41dd-9da7-e25a45638b28}</em:id>
-        <em:minVersion>@CALENDAR_VERSION@</em:minVersion>
-        <em:maxVersion>@CALENDAR_VERSION@</em:maxVersion>
-      </Description>
-    </em:targetApplication>
-    <em:targetApplication>
-      <Description>
         <!-- Thunderbird -->
         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
         <em:minVersion>17.0a1</em:minVersion>
@@ -38,15 +30,6 @@
         <em:maxVersion>@SEAMONKEY_VERSION@</em:maxVersion>
       </Description>
     </em:targetApplication>
-
-    <em:requires>
-      <Description>
-        <!-- Lightning (also Sunbird via extension stub) -->
-        <em:id>{e2fda1a4-762b-4020-b5ad-a41df1933103}</em:id>
-        <em:minVersion>1.9a1</em:minVersion>
-        <em:maxVersion>@CALENDAR_VERSION@</em:maxVersion>
-      </Description>
-    </em:requires>
 
     <em:name>Provider for Google Calendar</em:name>
     <em:description>Allows bidirectional access to Google Calendar</em:description>
