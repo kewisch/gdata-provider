@@ -21,8 +21,4 @@ libs:: $(EXTRA_SCRIPTS)
 	if test ! -d $(FINAL_TARGET)/js; then $(NSINSTALL) -D $(FINAL_TARGET)/js; fi
 	$(INSTALL) $^ $(FINAL_TARGET)/js
 
-# The install target must use SYSINSTALL, which is NSINSTALL in copy mode.
-install:: $(EXTRA_SCRIPTS)
-	$(SYSINSTALL) $(IFLAGS1) $^ $(DESTDIR)$(mozappdir)/js
-
 include $(topsrcdir)/config/rules.mk
