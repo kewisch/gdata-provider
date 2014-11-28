@@ -13,4 +13,10 @@
 <!ENTITY gdata.migration.upgrade.accesskey "U">
 <!ENTITY gdata.migration.showagain.label "Always check ">
 
+<!ENTITY gdata.reminder.default "Default Reminder">
 <!ENTITY gdata.reminder.action.sms.label "Send a Text Message">
+
+<!ENTITY gdata.wizard.session.description "Please pick an existing session or enter your email address to create a new session. You only need one session per account.">
+<!ENTITY gdata.wizard.calendars.description "Please select the calendars and task lists you would like to subscribe to.">
+
+<!ENTITY gdata.wizard.nextstep.description "Please advance to the next step to set up your calendars.">

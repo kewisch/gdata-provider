@@ -111,7 +111,7 @@ function getCalendarCredentials(aCalendarName,
                                 aUsername,
                                 aPassword,
                                 aSavePassword) {
-    return cal.auth.getCredentials(getFormattedString("gdata", "loginDialogTitle"),
+    return cal.auth.getCredentials("Google Calendar",
                                    aCalendarName,
                                    aUsername,
                                    aPassword,
