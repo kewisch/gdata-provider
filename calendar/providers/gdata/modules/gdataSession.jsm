@@ -12,6 +12,7 @@ CuImport("resource://gre/modules/XPCOMUtils.jsm", this);
 CuImport("resource://gre/modules/Preferences.jsm", this);
 CuImport("resource://gre/modules/Services.jsm", this);
 CuImport("resource://gre/modules/Promise.jsm", this);
+CuImport("resource://gre/modules/PromiseUtils.jsm", this);
 CuImport("resource://gre/modules/Task.jsm", this);
 CuImport("resource://gre/modules/Timer.jsm", this);
 
@@ -211,7 +212,7 @@ calGoogleSession.prototype = {
         if (this.mLoginPromise) {
             return this.mLoginPromise;
         }
-        let deferred = Promise.defer();
+        let deferred = PromiseUtils.defer();
 
         try {
             // Start logging in

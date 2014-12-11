@@ -10,6 +10,7 @@ Components.utils.import("resource://gdata-provider/modules/timezoneMap.jsm");
 CuImport("resource://gre/modules/Services.jsm", this);
 CuImport("resource://gre/modules/Preferences.jsm", this);
 CuImport("resource://gre/modules/Promise.jsm", this);
+CuImport("resource://gre/modules/PromiseUtils.jsm", this);
 CuImport("resource://gre/modules/Task.jsm", this);
 
 CuImport("resource://calendar/modules/calUtils.jsm", this);
@@ -1255,7 +1256,7 @@ PromiseAll = function (aValues) {
     return Promise.resolve(resolutionValues);
   }
 
-  let deferred = Promise.defer();
+  let deferred = PromiseUtils.defer();
   for (let i = 0; i < values.length; i++) {
     let index = i;
     let value = values[i];
@@ -1312,7 +1313,7 @@ function promisifyCalendar(aCalendar) {
 
     const promisifyProxyHandler = {
         promiseOperation: function(target, name, args) {
-            let deferred = Promise.defer();
+            let deferred = PromiseUtils.defer();
             let listener = promiseOperationListener(deferred);
             args.push(listener);
             target[name].apply(target, args);

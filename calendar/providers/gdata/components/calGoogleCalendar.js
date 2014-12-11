@@ -622,22 +622,22 @@ calGoogleCalendar.prototype = {
     },
 
     resetSync: function() {
-        let deferred = Promise.defer();
-        cal.LOG("[calGoogleCalendar] Resetting last updated counter for " + this.name);
-        this.setProperty("syncToken.events", "");
-        this.setProperty("lastUpdated.tasks", "");
-        this.mThrottle = Object.create(null);
-        this.mOfflineStorage.QueryInterface(Components.interfaces.calICalendarProvider)
-                            .deleteCalendar(this.mOfflineStorage, {
-            onDeleteCalendar: function(aCalendar, aStatus, aDetal) {
-                if (Components.isSuccessCode(aStatus)) {
-                    deferred.resolve();
-                } else {
-                    deferred.reject(aDetail);
+        return new Promise(function(resolve, reject) {
+            cal.LOG("[calGoogleCalendar] Resetting last updated counter for " + this.name);
+            this.setProperty("syncToken.events", "");
+            this.setProperty("lastUpdated.tasks", "");
+            this.mThrottle = Object.create(null);
+            this.mOfflineStorage.QueryInterface(Components.interfaces.calICalendarProvider)
+                                .deleteCalendar(this.mOfflineStorage, {
+                onDeleteCalendar: function(aCalendar, aStatus, aDetal) {
+                    if (Components.isSuccessCode(aStatus)) {
+                        resolve();
+                    } else {
+                        reject(aDetail);
+                    }
                 }
-            }
+           });
        });
-       return deferred.promise;
     },
 
     replayChangesOn: function(aListener) {

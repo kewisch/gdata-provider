@@ -8,6 +8,7 @@ Components.utils.import("resource://gdata-provider/modules/gdataLogging.jsm");
 CuImport("resource://gre/modules/XPCOMUtils.jsm", this);
 CuImport("resource://gre/modules/Services.jsm", this);
 CuImport("resource://gre/modules/Promise.jsm", this);
+CuImport("resource://gre/modules/PromiseUtils.jsm", this);
 CuImport("resource://gre/modules/Preferences.jsm", this);
 
 CuImport("resource://calendar/modules/calUtils.jsm", this);
@@ -177,7 +178,7 @@ calGoogleRequest.prototype = {
      */
     commit: function cGR_commit(aSession) {
         if (!this.mDeferred) {
-            this.mDeferred = Promise.defer();
+            this.mDeferred = PromiseUtils.defer();
         }
         let promise = this.mDeferred.promise;
 

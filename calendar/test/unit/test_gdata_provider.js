@@ -147,15 +147,15 @@ GDataServer.prototype = {
     },
 
     waitForLoad: function(aCalendar) {
-        let { resolve, promise } = Promise.defer();
-        let observer = cal.createAdapter(Components.interfaces.calIObserver, {
-            onLoad: function() {
-                aCalendar.removeObserver(observer);
-                resolve(aCalendar);
-            }
+        return new Promise(function(resolve, reject) {
+            let observer = cal.createAdapter(Components.interfaces.calIObserver, {
+                onLoad: function() {
+                    aCalendar.removeObserver(observer);
+                    resolve(aCalendar);
+                }
+            });
+            aCalendar.addObserver(observer);
         });
-        aCalendar.addObserver(observer);
-        return promise;
     },
 
     getClient: function() {

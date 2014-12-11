@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var EXPORTED_SYMBOLS = ["Promise"];
+var EXPORTED_SYMBOLS = ["Promise", "PromiseUtils"];
 
 const STATUS_PENDING = 0;
 const STATUS_RESOLVED = 1;
@@ -154,3 +154,8 @@ Promise.resolve = function(aValue) {
 Promise.reject = function(aReason) {
     return new Promise(function(_, aReject) aReject(aReason));
 }
+
+// Shim for PromiseUtils. The important thing is Promise.defer, so we can just
+// alias this with Promise because for versions where this is important,
+// Promise.defer still exists.
+var PromiseUtils = Promise;
