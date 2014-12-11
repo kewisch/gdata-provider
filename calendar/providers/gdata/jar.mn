@@ -6,15 +6,26 @@
 
 gdata-provider.jar:
 % content gdata-provider %content/
-% overlay chrome://calendar/content/calendarCreation.xul chrome://gdata-provider/content/calendarCreation.xul
+% resource gdata-provider .
+% overlay chrome://calendar/content/calendarCreation.xul chrome://gdata-provider/content/gdata-calendar-creation.xul
 % overlay chrome://messenger/content/messenger.xul chrome://gdata-provider/content/gdata-migration-overlay.xul  application={3550f703-e582-4d05-9a08-453d09bdfdc6}
 % overlay chrome://calendar/content/calendar-event-dialog.xul chrome://gdata-provider/content/gdata-calendar-event-dialog.xul
 % overlay chrome://calendar/content/calendar-event-dialog-reminder.xul chrome://gdata-provider/content/gdata-event-dialog-reminder.xul
+% overlay chrome://calendar/content/calendar-properties-dialog.xul chrome://gdata-provider/content/gdata-calendar-properties.xul
 % style chrome://calendar/content/calendar-event-dialog.xul chrome://gdata-provider/skin/gdata-event-dialog-reminder.css
 % style chrome://messenger/content/messenger.xul chrome://gdata-provider/skin/gdata-event-dialog-reminder.css   application={3550f703-e582-4d05-9a08-453d09bdfdc6}
-    content/calendarCreation.xul                 (content/calendarCreation.xul)
+% style chrome://messenger/content/messenger.xul chrome://gdata-provider/skin/gdata-event-dialog-reminder.css   application=postbox@postbox-inc.com
+    content/browserRequest.xul                   (content/browserRequest.xul)
+    content/browserRequest.js                    (content/browserRequest.js)
+    content/gdata-calendar-creation.xul          (content/gdata-calendar-creation.xul)
+    content/gdata-calendar-creation.js           (content/gdata-calendar-creation.js)
     content/gdata-calendar-event-dialog.xul      (content/gdata-calendar-event-dialog.xul)
+    content/gdata-calendar-event-dialog.js       (content/gdata-calendar-event-dialog.js)
+    content/gdata-calendar-properties.xul        (content/gdata-calendar-properties.xul)
+    content/gdata-calendar-properties.js         (content/gdata-calendar-properties.js)
     content/gdata-event-dialog-reminder.xul      (content/gdata-event-dialog-reminder.xul)
+    content/gdata-event-dialog-reminder.js       (content/gdata-event-dialog-reminder.js)
+    content/gdata-list-tree.xml                  (content/gdata-list-tree.xml)
     content/gdata-migration.js                   (content/gdata-migration.js)
     content/gdata-migration-overlay.xul          (content/gdata-migration-overlay.xul)
     content/gdata-migration-wizard.xul           (content/gdata-migration-wizard.xul)
@@ -22,3 +33,5 @@ gdata-provider.jar:
 % skin gdata-provider classic/1.0 %skin/
     skin/reminder-action-sms.png                 (content/reminder-action-sms.png)
     skin/gdata-event-dialog-reminder.css         (content/gdata-event-dialog-reminder.css)
+    skin/gdata-bindings.css                      (content/gdata-bindings.css)
+    skin/browserRequest.css                      (content/browserRequest.css)

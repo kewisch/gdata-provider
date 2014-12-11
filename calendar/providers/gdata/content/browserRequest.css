@@ -1,0 +1,59 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#security-button {
+  width: 20px;
+  margin-top: -1px;
+  margin-right: 5px;
+  background-repeat: no-repeat;
+}
+
+#security-button[level="high"],
+#security-button[level="low"] {
+  background-image: url("chrome://messenger/skin/icons/secure.png");
+}
+
+#security-button[level="broken"] {
+  background-image: url("chrome://messenger/skin/icons/insecure.png");
+}
+
+#security-button[loading="true"] {
+  background-image: url("chrome://messenger/skin/icons/loading.png");
+  background-position: 4px 3px;
+}
+
+@media (min-resolution: 2ddpx) {
+  #security-button[loading="true"] {
+    background-image: url("chrome://messenger/skin/icons/loading@2x.png");
+  }
+}
+
+/*
+#header {
+  overflow: hidden;
+  padding: 5px;
+  border-bottom: 1px solid black;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+*/
+
+#header {
+    border-bottom: 1px solid rgb(105, 105, 105);
+    overflow: hidden;
+}
+
+#addressbox {
+    font-weight: bold;
+    font-size: normal;
+    -moz-appearance: textfield;
+    overflow: hidden;
+    margin: 5px 5px;
+    font-weight: normal;
+}
+
+#headerMessage {
+  margin-top: 3px;
+  margin-bottom: 3px;
+}

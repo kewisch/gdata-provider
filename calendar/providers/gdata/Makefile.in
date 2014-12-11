@@ -14,6 +14,10 @@ DIST_FILES = install.rdf
 XPI_PKGNAME = gdata-provider-$(GDATA_VERSION).$(AB_CD).$(MOZ_PKG_PLATFORM)
 XPI_VERSION = $(GDATA_VERSION)
 XPI_NO_UNIVERSAL = 1
+XPI_EM_ID = {a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
+ifndef DISABLE_LIGHTNING_INSTALL
+XPI_INSTALL_EXTENSION = $(XPI_EM_ID)
+endif
 
 THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version.txt)
 SEAMONKEY_VERSION := $(shell cat $(topsrcdir)/suite/config/version.txt)
@@ -29,6 +33,18 @@ DEFINES += -DAB_CD=$(AB_CD) \
            $(NULL)
 
 PREF_JS_EXPORTS = $(srcdir)/defaults/preferences.js
+
+ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
+# If the macbundle dist dir was already created, sync the gdata provider here to avoid
+# the need to make -C objdir/mail/app each time
+tools repackage::
+	[ -d $(DIST)/$(MOZ_MACBUNDLE_NAME) ] && rsync -a $(FINAL_TARGET)/ $(DIST)/$(MOZ_MACBUNDLE_NAME)/Contents/Resources/extensions/$(XPI_EM_ID) || true
+endif
+
+# stage the extension for use in packaged tests
+stage-package:
+	$(NSINSTALL) -D $(PKG_STAGE)/extensions/$(XPI_EM_ID)
+	(cd $(FINAL_TARGET) && tar $(TAR_CREATE_FLAGS) - *) | (cd $(PKG_STAGE)/extensions/$(XPI_EM_ID) && tar -xf -)
 
 include $(topsrcdir)/config/rules.mk
 include $(topsrcdir)/calendar/lightning/lightning-packager.mk

@@ -12,6 +12,8 @@ pref("extensions.{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}.name",
 pref("calendar.google.useHTTPMethodOverride", true);
 pref("calendar.google.alarmClosest", true);
 pref("calendar.google.migrate", true);
+pref("calendar.google.maxResultsPerRequest", 1000);
+pref("calendar.google.idleTime", 300);
 
 /**
  * Invitations and notifications.

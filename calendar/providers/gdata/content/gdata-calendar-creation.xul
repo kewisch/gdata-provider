@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!DOCTYPE overlay [
+  <!ENTITY % gdata SYSTEM "chrome://gdata-provider/locale/gdata.dtd"> %gdata;
+  <!ENTITY % calendarCreation SYSTEM "chrome://calendar/locale/calendarCreation.dtd" > %calendarCreation;
+]>
+
+<?xml-stylesheet href="chrome://calendar/skin/calendar-management.css" type="text/css"?>
+<?xml-stylesheet href="chrome://calendar/content/widgets/calendar-widget-bindings.css" type="text/css"?>
+<?xml-stylesheet href="chrome://gdata-provider/skin/gdata-bindings.css" type="text/css"?>
+
+<overlay id="gdataCalendarCreation"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/javascript" src="chrome://gdata-provider/content/gdata-calendar-creation.js"/>
+  <radiogroup id="calendar-format">
+    <radio value="gdata" label="&gdata-provider.label;"/>
+  </radiogroup>
+
+  <wizard id="calendar-wizard">
+    <description id="gdata-nextstep-description" hidden="true">&gdata.wizard.nextstep.description;</description>
+
+    <wizardpage id="gdata-session"
+                pageid="gdata-session"
+                onpageshow="gdataSessionShow(); checkRequired()"
+                description="&wizard.description;">
+       <description>&gdata.wizard.session.description;</description>
+       <radiogroup id="gdata-session-group" onselect="checkRequired()">
+         <hbox id="session-new">
+           <radio value=""/>
+           <textbox id="gdata-session-name"
+                    type="email"
+                    onfocus="gdataFocusNewSession()"
+                    oninput="gdataFocusNewSession(); checkRequired();"
+                    flex="1"/>
+         </hbox>
+       </radiogroup>
+    </wizardpage>
+    <wizardpage id="gdata-calendars"
+                pageid="gdata-calendars"
+                onpageshow="gdataCalendarsShow(); checkRequired()"
+                onpageadvanced="return gdataCalendarsAdvance()"
+                description="&wizard.description;">
+      <description>&gdata.wizard.calendars.description;</description>
+      <calendar-list-tree type="gdata" id="calendar-list" flex="1"
+                          onselect="checkRequired();" hideheader="true"
+                          onclick="checkRequired()"/>
+    </wizardpage>
+  </wizard>
+</overlay>

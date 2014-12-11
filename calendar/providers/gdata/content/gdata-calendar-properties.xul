@@ -3,10 +3,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!DOCTYPE overlay SYSTEM "chrome://gdata-provider/locale/gdata.dtd">
-<overlay id="calendarCreation"
+<overlay id="gdata-calendar-event-dialog"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-    <radiogroup id="calendar-format">
-        <radio value="gdata" label="&gdata-provider.label;"/>
-    </radiogroup>
+  <script type="application/javascript" src="chrome://gdata-provider/content/gdata-calendar-properties.js"/>
 </overlay>

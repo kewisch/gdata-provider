@@ -7,6 +7,7 @@
 
 <overlay id="gdata-calendar-event-dialog"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/javascript" src="chrome://gdata-provider/content/gdata-calendar-event-dialog.js"/>
 
   <!-- Privacy items -->
   <menupopup id="options-privacy-menupopup">
@@ -37,4 +38,12 @@
           privacy="DEFAULT"
           provider="gdata"/>
   </statusbarpanel>
+
+  <menupopup id="item-alarm-menupopup">
+    <menuitem id="gdata-reminder-default-menuitem"
+              insertbefore="reminder-none-separator"
+              label="&gdata.reminder.default;"
+              provider="gdata"
+              value="default"/>
+  </menupopup>
 </overlay>

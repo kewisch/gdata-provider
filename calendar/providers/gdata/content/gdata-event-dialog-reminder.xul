@@ -9,6 +9,7 @@
 
 <overlay id="gdata-event-dialog-reminder-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/javascript" src="chrome://gdata-provider/content/gdata-event-dialog-reminder.js"/>
   <menupopup id="reminder-actions-menupopup">
     <menuitem id="reminder-action-SMS"
               class="reminder-icon menuitem-iconic"

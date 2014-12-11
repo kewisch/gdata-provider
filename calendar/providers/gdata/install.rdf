@@ -15,10 +15,19 @@
     <!-- Target Application this extension can install into,
          with minimum and maximum supported versions. -->
     <em:targetApplication>
+      <!-- Postbox -->
+      <Description>
+        <em:id>postbox@postbox-inc.com</em:id>
+        <em:minVersion>3.0.0b1</em:minVersion>
+        <em:maxVersion>3.0.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+
+    <em:targetApplication>
       <Description>
         <!-- Thunderbird -->
         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
-        <em:minVersion>17.0a1</em:minVersion>
+        <em:minVersion>24.0</em:minVersion>
         <em:maxVersion>@THUNDERBIRD_VERSION@</em:maxVersion>
       </Description>
     </em:targetApplication>
@@ -26,7 +35,7 @@
       <Description>
         <!-- SeaMonkey -->
         <em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id>
-        <em:minVersion>2.14a1</em:minVersion>
+        <em:minVersion>2.21</em:minVersion>
         <em:maxVersion>@SEAMONKEY_VERSION@</em:maxVersion>
       </Description>
     </em:targetApplication>

@@ -1,0 +1,2 @@
+component {d1a6e988-4b4d-45a5-ba46-43e501ea96e3} calGoogleCalendar.js
+contract @mozilla.org/calendar/calendar;1?type=gdata {d1a6e988-4b4d-45a5-ba46-43e501ea96e3}

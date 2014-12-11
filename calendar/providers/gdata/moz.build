@@ -3,12 +3,34 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+XPI_NAME = 'gdata-provider'
+
 DIRS += [
-    'components',
     'locales',
-    'public',
 ]
 
-XPI_NAME = 'gdata-provider'
+EXTRA_JS_MODULES += [
+    'modules/gdataLogging.jsm',
+    'modules/gdataRequest.jsm',
+    'modules/gdataSession.jsm',
+    'modules/gdataUtils.jsm',
+    'modules/OAuth2.jsm',
+    'modules/timezoneMap.jsm',
+]
+
+EXTRA_JS_MODULES.shim = [
+    'modules/shim/Calendar.jsm',
+    'modules/shim/Http.jsm',
+    'modules/shim/Loader.jsm',
+    'modules/shim/Preferences.jsm',
+    'modules/shim/Promise.jsm',
+    'modules/shim/Task.jsm',
+    'modules/shim/Timer.jsm',
+]
+
+EXTRA_COMPONENTS += [
+    'components/calGoogleCalendar.js',
+    'components/calGoogleCalendar.manifest',
+]
 
 JAR_MANIFESTS += ['jar.mn']

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--# This Source Code Form is subject to the terms of the Mozilla Public
+    # License, v. 2.0. If a copy of the MPL was not distributed with this file,
+    # You can obtain one at http://mozilla.org/MPL/2.0/.
+ -->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://gdata-provider/skin/browserRequest.css" type="text/css"?>
+
+<!DOCTYPE window>
+<window id="browserRequest"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        buttons=","
+        onload="loadRequestedUrl()"
+        onclose="reportUserClosed()"
+        title=""
+        width="800"
+        height="500"
+        orient="vertical">
+
+  <script type="application/javascript" src="chrome://gdata-provider/content/browserRequest.js"/>
+
+  <keyset id="mainKeyset">
+    <key id="key_close" key="w" modifiers="accel" oncommand="cancelRequest()"/>
+    <key id="key_close2"  keycode="VK_ESCAPE" oncommand="cancelRequest()"/>
+  </keyset>
+  <hbox id="header">
+  <hbox id="addressbox" flex="1" disabled="true">
+    <image id="security-button" src="chrome://messenger/skin/icons/mailicon32.png"/>
+    <description id="headerMessage"/>
+  </hbox>
+  </hbox>
+  <browser type="content" disablehistory="true" src="about:blank" id="requestFrame" flex="1"/>
+</window>

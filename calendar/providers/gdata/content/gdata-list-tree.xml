@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!DOCTYPE overlay SYSTEM "chrome://calendar/locale/calendar.dtd">
+
+<bindings id="gdata-list-tree-bindings"
+          xmlns="http://www.mozilla.org/xbl"
+          xmlns:xbl="http://www.mozilla.org/xbl"
+          xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <binding id="gdata-list-tree" extends="chrome://calendar/content/widgets/calendar-list-tree.xml#calendar-list-tree">
+    <content>
+      <xul:tree anonid="tree"
+                xbl:inherits="hidecolumnpicker"
+                hidecolumnpicker="true"
+                seltype="single"
+                flex="1">
+        <xul:treecols anonid="treecols"
+                      xbl:inherits="hideheader"
+                      hideheader="true">
+          <xul:treecol anonid="checkbox-treecol"
+                       xbl:inherits="cycler,hideheader"
+                       cycler="true"
+                       hideheader="true"
+                       width="17"/>
+          <xul:treecol anonid="color-treecol"
+                       xbl:inherits="cycler,hideheader"
+                       hideheader="true"
+                       width="16"/>
+          <xul:treecol anonid="calendarname-treecol"
+                       xbl:inherits="cycler,hideheader"
+                       primary="true"
+                       hideheader="true"
+                       label="&calendar.unifinder.tree.calendarname.label;"
+                       flex="1"/>
+          <xul:treecol anonid="status-treecol"
+                       xbl:inherits="cycler,hideheader"
+                       hideheader="true"
+                       width="18"/>
+          <children includes="treecol"/>
+          <xul:treecol anonid="scrollbar-spacer"
+                       xbl:inherits="cycler,hideheader"
+                       fixed="true"
+                       hideheader="true">
+            <!-- This is a very elegant workaround to make sure the last column
+                 is not covered by the scrollbar in case of an overflow. This
+                 treecol needs to be here last -->
+            <xul:slider anonid="scrollbar-slider" orient="vertical"/>
+          </xul:treecol>
+        </xul:treecols>
+        <xul:treechildren anonid="treechildren"
+                          xbl:inherits="tooltip=childtooltip,context=childcontext"
+                          tooltip="_child"
+                          context="_child"
+                          ondragstart="onDragStart(event);"
+                          onoverflow="displayScrollbarSpacer(true)"
+                          onunderflow="displayScrollbarSpacer(false)">
+          <children includes="tooltip|menupopup"/>
+        </xul:treechildren>
+      </xul:tree>
+    </content>
+    <implementation>
+      <constructor><![CDATA[
+        this.tree.view = this;
+      ]]></constructor>
+      <property name="mockCalendarHeader" readonly="true">
+        <getter><![CDATA[
+          let calmgr = cal.getCalendarManager();
+          let uri = "dummy://calendar";
+          let mem = calmgr.createCalendar("memory", Services.io.newURI(uri, null, null));
+          mem.setProperty("disabled", true);
+          mem.name = "Calendars";
+          mem.id = cal.getUUID();
+          return mem;
+        ]]></getter>
+      </property>
+      <property name="mockTaskHeader" readonly="true">
+        <getter><![CDATA[
+          let calmgr = cal.getCalendarManager();
+          let uri = "dummy://tasks";
+          let mem = calmgr.createCalendar("memory", Services.io.newURI(uri, null, null));
+          mem.setProperty("disabled", true);
+          mem.name = "Task Lists";
+          mem.id = cal.getUUID();
+          return mem;
+        ]]></getter>
+      </property>
+      <field name="mCalendarHeaderIndex">0</field>
+      <field name="mTasksHeaderIndex">0</field>
+
+      <field name="QueryInterface">XPCOMUtils.generateQI([Components.interfaces.nsITreeView])</field>
+
+      <property name="calendars">
+        <getter><![CDATA[
+          return this.mCalendarList;
+        ]]></getter>
+        <setter><![CDATA[
+            for (let i = 0; i < val.length; i++) {
+                let calendar = val[i];
+                let spec = calendar.uri.spec;
+                if (calendar.type == "memory") {
+                    if (spec == "dummy://calendar") {
+                        this.mCalendarHeaderIndex = i;
+                    } else if (spec == "dummy://tasks") {
+                        this.mTasksHeaderIndex = i;
+                    }
+                }
+                this.addCalendar(calendar);
+            }
+            return this.mCalendarList;
+        ]]></setter>
+      </property>
+
+      <method name="removeCalendar">
+        <parameter name="aCalendar"/>
+        <body><![CDATA[
+          let index = this.findIndexById(aCalendar.id);
+          if (index < this.mCalendarHeaderIndex) {
+            this.mCalendarHeaderIndex--;
+          }
+          if (index < this.mTasksHeaderIndex) {
+            this.mTasksHeaderIndex--;
+          }
+          return this.__proto__.__proto__.removeCalendar.call(this, aCalendar);
+        ]]></body>
+      </method>
+
+      <method name="clear">
+        <body><![CDATA[
+          let calendars = this.mCalendarList.concat([]);
+          calendars.forEach(this.removeCalendar, this);
+        ]]></body>
+      </method>
+
+      <method name="getRowProperties">
+        <parameter name="aRow"/>
+        <parameter name="aProps"/>
+        <body><![CDATA[
+          let props = this.__proto__.__proto__.getRowProperties.call(this, aRow, aProps);
+          let calendar = this.getCalendar(aRow);
+
+          if (calendar.readOnly) {
+              if (aProps) {
+                  // Compatibility with old tree props code
+                  aProps.AppendElement(cal.getAtomFromService("checked"));
+              } else {
+                  props += " checked";
+              }
+          }
+
+          return props;
+        ]]></body>
+      </method>
+
+      <method name="isContainerEmpty">
+        <parameter name="aRow"/>
+        <body><![CDATA[
+         return ((aRow == this.mCalendarHeaderIndex &&
+                  aRow + 1 == this.mTasksHeaderIndex) ||
+                 (aRow == this.mTasksHeaderIndex &&
+                  aRow == this.mCalendarList.lengh));
+        ]]></body>
+      </method>
+
+      <method name="isContainer">
+        <parameter name="aRow"/>
+        <body><![CDATA[
+          let calendar = this.getCalendar(aRow);
+          return (calendar.type == "memory" && calendar.uri.schemeIs("dummy"));
+        ]]></body>
+      </method>
+
+      <method name="isContainerOpen">
+        <parameter name="aRow"/>
+        <body><![CDATA[
+          return true;
+        ]]></body>
+      </method>
+
+      <method name="getParentIndex">
+        <parameter name="aRow"/>
+        <body><![CDATA[
+          let calendar = this.getCalendar(aRow);
+          if (calendar.uri.path.contains("?calendar")) {
+              return this.mCalendarHeaderIndex;
+          } else if (calendar.uri.path.contains("?tasks")) {
+              return this.mTasksHeaderIndex;
+          } else {
+              return -1;
+          }
+        ]]></body>
+      </method>
+
+      <method name="hasNextSibling">
+        <parameter name="aRow"/>
+        <parameter name="aAfterIndex"/>
+        <body><![CDATA[
+          if (aRow == this.mCalendarHeaderIndex) {
+              return aAfterIndex < this.mTasksHeaderIndex;
+          } else if (aRow == this.mTasksHeaderIndex) {
+              return false;
+          } else {
+              return aAfterIndex != this.mCalendarHeaderIndex - 1 &&
+                     aAfterIndex != this.mTasksHeaderIndex - 1;
+          }
+        ]]></body>
+      </method>
+      <method name="cycleCell">
+        <parameter name="aRow"/>
+        <parameter name="aCol"/>
+        <body><![CDATA[
+          let calendar = this.getCalendar(aRow);
+          let composite = this.compositeCalendar;
+          if (composite.getCalendarById(calendar.id)) {
+              composite.removeCalendar(calendar);
+          } else {
+              composite.addCalendar(calendar);
+          }
+          this.treebox.invalidateRow(aRow);
+        ]]></body>
+      </method>
+
+      <method name="getLevel">
+        <parameter name="aRow"/>
+        <body><![CDATA[
+          return this.isContainer(aRow) ? 0 : 1;
+        ]]></body>
+      </method>
+    </implementation>
+  </binding>
+</bindings>
