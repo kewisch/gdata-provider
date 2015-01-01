@@ -429,7 +429,9 @@ function run_test() {
     cal.getCalendarManager().startup({onResult: function() {
         gServer = new GDataServer("xpcshell@example.com", "tasksId");
         gServer.start();
-        run_next_test();
+        cal.getTimezoneService().startup({onResult: function() {
+            run_next_test();
+        }});
     }});
 }
 
