@@ -98,7 +98,7 @@ calGoogleCalendar.prototype = {
         }
     },
 
-    get isDefaultCalendar() !this.mCalendarName.endsWith("@group.calendar.google.com"),
+    get isDefaultCalendar() this.mCalendarName ? !this.mCalendarName.endsWith("@group.calendar.google.com") : false,
 
     /*
      * implement calICalendar
