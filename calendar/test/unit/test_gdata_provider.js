@@ -51,9 +51,12 @@ function GDataServer(calendarId, tasksId) {
     this.calendarId = calendarId;
     this.tasksId = tasksId;
 
-    let events = "/calendar/v3/calendars/" + calendarId + "/events";
-    let tasks = "/tasks/v1/lists/" + tasksId + "/tasks";
-    let calendarList = "/calendar/v3/users/me/calendarList/" + calendarId;
+    let encCalendarId = encodeURIComponent(calendarId);
+    let encTasksId = encodeURIComponent(tasksId);
+
+    let events = "/calendar/v3/calendars/" + encCalendarId + "/events";
+    let tasks = "/tasks/v1/lists/" + encTasksId + "/tasks";
+    let calendarList = "/calendar/v3/users/me/calendarList/" + encCalendarId;
 
     this.server.registerPathHandler(calendarList, this.router.bind(this, this.calendarListRequest.bind(this)));
     this.server.registerPathHandler(events, this.router.bind(this, this.eventsRequest.bind(this)));
@@ -100,7 +103,7 @@ GDataServer.prototype = {
         this.nextEventStatus = [];
 
         this.creator = {
-            "email": "xpcshell@example.com",
+            "email": this.calendarId,
             "self": true,
             "displayName": "Eggs P. Seashell"
         };
@@ -186,6 +189,7 @@ GDataServer.prototype = {
                                   request.bodyInputStream.available()));
             } catch (e) {}
 
+            this.lastMethod = method;
             return nextHandler(request, response, method, parameters, body);
         } catch (e) {
             do_print("Server Error: " + e.fileName + ":" + e.lineNumber + ": " + e + "\n");
@@ -231,9 +235,8 @@ GDataServer.prototype = {
             this.events.push(data);
             response.setStatusLine(null, 201, "Created");
             response.write(JSON.stringify(data));
-         } else if (method == "PUT" && request.path.match(/\/events\/([a-z0-9_TZ]+)$/)) {
+         } else if ((method == "PUT" || method == "PATCH") && request.path.match(/\/events\/([a-z0-9_TZ]+)$/)) {
             // Modify an event
-            dump("PUTTING EVENT\n" + body);
             let eventId = RegExp.$1;
             this.handleModify(request, response, body, this.events, eventId,
                               this.processModifyEvent.bind(this));
@@ -421,7 +424,7 @@ function getAllMeta(calendar) {
 function run_test() {
     do_get_profile();
     cal.getCalendarManager().startup({onResult: function() {
-        gServer = new GDataServer("calendarId", "tasksId");
+        gServer = new GDataServer("xpcshell@example.com", "tasksId");
         gServer.start();
         run_next_test();
     }});
@@ -895,6 +898,108 @@ add_task(function* test_import_invitation() {
     do_check_eq(addedItem.icalString, event.icalString);
     gServer.resetClient(client);
     Preferences.set("calendar.google.enableAttendees", false);
+});
+
+add_task(function* test_modify_invitation() {
+    Preferences.set("calendar.google.enableAttendees", true);
+    let organizer = {
+        "displayName": "organizer name",
+        "email": "organizer@example.com",
+        "organizer": true,
+        "responseStatus": "tentative"
+    };
+    let attendee = Object.assign({}, gServer.creator);
+    attendee.responseStatus = "needsAction";
+
+    gServer.events = [
+      {
+         "kind": "calendar#event",
+         "etag": "\"2299601498276000\"",
+         "id": "go6ijb0b46hlpbu4eeu92njevo",
+         "status": "confirmed",
+         "htmlLink": gServer.baseUri + "/calendar/event?eid=eventhash",
+         "created": "2006-06-08T21:04:52.000Z",
+         "updated": "2006-06-08T21:05:49.138Z",
+         "summary": "New Event",
+         "description": "description",
+         "location": "Hard Drive",
+         "colorId": 17,
+         "creator": organizer,
+         "organizer": organizer,
+         "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
+         "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+         "transparency": "transparent",
+         "visibility": "private",
+         "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com",
+         "sequence": 1,
+         "attendees": [organizer, attendee],
+      }
+    ];
+
+    // Case #1: User is attendee
+    let client = yield gServer.getClient();
+    let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
+
+    let items = yield pclient.getAllItems();
+    do_check_eq(items.length, 1);
+
+    let item = items[0];
+    let att = cal.getInvitedAttendee(item);
+    let newItem = item.clone();
+
+    do_check_neq(att, null);
+    do_check_eq(att.id, "mailto:" + attendee.email);
+    do_check_eq(att.participationStatus, "NEEDS-ACTION");
+
+    newItem.removeAttendee(att);
+    att = att.clone();
+    att.participationStatus = "ACCEPTED";
+    newItem.addAttendee(att);
+
+    let modifiedItem = yield pclient.modifyItem(newItem, items[0]);
+    do_check_eq(gServer.lastMethod, "PATCH");
+
+    // Case #2: User is organizer
+    let events = gServer.events;
+    gServer.resetClient(client);
+    gServer.events = events;
+
+    organizer = Object.assign({}, gServer.creator);
+    organizer.responseStatus = "accepted";
+    organizer.organizer = true;
+    attendee = {
+        "displayName": "attendee name",
+        "email": "attendee@example.com",
+        "responseStatus": "tentative"
+    };
+
+    gServer.events[0].organizer = gServer.creator;
+    gServer.events[0].creator = gServer.creator;
+    gServer.events[0].attendees = [organizer, attendee];
+
+    client = yield gServer.getClient();
+    pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
+
+    items = yield pclient.getAllItems();
+    do_check_eq(items.length, 1);
+
+    item = items[0];
+    let org = item.getAttendeeById("mailto:" + organizer.email);
+    newItem = item.clone();
+
+    do_check_neq(org, null);
+    do_check_eq(org.id, "mailto:" + organizer.email);
+    do_check_eq(org.participationStatus, "ACCEPTED");
+
+    newItem.removeAttendee(org);
+    org = org.clone();
+    org.participationStatus = "TENTATIVE";
+    newItem.addAttendee(org);
+
+    modifiedItem = yield pclient.modifyItem(newItem, items[0]);
+    do_check_eq(gServer.lastMethod, "PUT");
+
+    gServer.resetClient(client);
 });
 
 add_task(function* test_metadata() {

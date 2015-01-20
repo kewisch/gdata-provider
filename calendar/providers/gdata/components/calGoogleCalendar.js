@@ -271,7 +271,6 @@ calGoogleCalendar.prototype = {
             case "capabilities.timezones.floating.supported":
             case "capabilities.attachments.supported":
             case "capabilities.priority.supported":
-            case "capabilities.alarms.oninvitations.supported":
                 return false;
             case "capabilities.privacy.values":
                 return ["DEFAULT", "PUBLIC", "PRIVATE"];
@@ -445,7 +444,15 @@ calGoogleCalendar.prototype = {
             request.type = request.MODIFY;
             request.calendar = this;
             if (cal.isEvent(aNewItem)) {
-                request.uri = this.createEventsURI("events", getGoogleId(aNewItem, this.offlineStorage));
+                let googleId = getGoogleId(aNewItem, this.offlineStorage);
+                request.uri = this.createEventsURI("events", googleId);
+
+                // Updating invitations often causes a forbidden error becase
+                // some parts are not writable. Using PATCH ignores anything
+                // that isn't allowed.
+                if (cal.isInvitation(aNewItem)) {
+                    request.type = request.PATCH;
+                }
             } else if (cal.isToDo(aNewItem)) {
                 request.uri = this.createTasksURI("tasks", aNewItem.id);
             }

@@ -48,11 +48,11 @@ function calGoogleRequest() {
     this.mRequestHeaders = new Map();
     this.wrappedJSObject = this;
 }
-calGoogleRequest.LOGIN = 0;
-calGoogleRequest.ADD = 1;
-calGoogleRequest.MODIFY = 2;
-calGoogleRequest.DELETE = 3;
-calGoogleRequest.GET = 4;
+calGoogleRequest.ADD = "POST";
+calGoogleRequest.MODIFY = "PUT";
+calGoogleRequest.DELETE = "DELETE";
+calGoogleRequest.GET = "GET";
+calGoogleRequest.PATCH = "PATCH";
 
 const GDATA_ERROR_BASE = Components.interfaces.calIErrors.ERROR_BASE + 0x400;
 calGoogleRequest.LOGIN_FAILED = GDATA_ERROR_BASE + 1;
@@ -76,10 +76,11 @@ calGoogleRequest.prototype = {
     mStatus: Components.results.NS_OK,
 
     /* Constants */
-    ADD: 1,
-    MODIFY: 2,
-    DELETE: 3,
-    GET: 4,
+    ADD: calGoogleRequest.ADD,
+    MODIFY: calGoogleRequest.MODIFY,
+    DELETE: calGoogleRequest.DELETE,
+    GET: calGoogleRequest.GET,
+    PATCH: calGoogleRequest.PATCH,
 
     /* Simple Attributes */
     method: "GET",
@@ -125,19 +126,15 @@ calGoogleRequest.prototype = {
      * The type of this reqest. Must be one of
      * GET, ADD, MODIFY, DELETE
      */
-    get type() this.mType,
+    get type() this.method,
 
     set type(v) {
-        switch (v) {
-            case this.GET: this.method = "GET"; break;
-            case this.ADD: this.method = "POST"; break;
-            case this.MODIFY: this.method = "PUT"; break;
-            case this.DELETE: this.method = "DELETE"; break;
-            default:
-                throw new Components.Exception("", Components.results.NS_ERROR_ILLEGAL_VALUE);
-                break;
+        let valid = [this.GET, this.ADD, this.MODIFY, this.PATCH, this.DELETE];
+        if (valid.indexOf(v) < 0) {
+            throw new Components.Exception("Invalid request type: " + v,
+                                            Components.results.NS_ERROR_ILLEGAL_VALUE);
         }
-        return (this.mType = v);
+        return (this.method = v);
     },
 
     /**
