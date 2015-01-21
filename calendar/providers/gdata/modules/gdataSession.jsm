@@ -237,8 +237,20 @@ calGoogleSession.prototype = {
                     error = dataObj && dataObj.error;
                 }
 
-                if (error == "invalid_client" || error == "unauthorized_client" || error == "http_401") {
+                if (error == "invalid_client" || error == "http_401") {
                     this.notifyOutdated();
+                } else if (error == "unauthorized_client") {
+                    cal.ERROR("[calGoogleSession] Token for " + this.mId +
+                              " is no longer authorized");
+                    // We need to trigger a login without access token but want
+                    // to login result to the original promise handlers. First
+                    // reset the login promise so that we don't just receive
+                    // the existing token from calling login() again. Then set
+                    // a new login promise in case of another handler.
+                    this.oauth.accessToken = null;
+                    this.mLoginPromise = null;
+                    this.mLoginPromise = this.login().then(deferred.resolve, deferred.reject);
+                    return;
                 } else {
                     cal.ERROR("[calGoogleSession] Authentication failure: " + aData);
                 }

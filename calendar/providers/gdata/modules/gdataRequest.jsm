@@ -417,13 +417,35 @@ calGoogleRequest.prototype = {
                         " Reason: " + (reason || result));
                 switch (reason) {
                     case "invalid_client":
-                    case "unauthorized_client":
                         this.mSession.notifyOutdated();
                         if (this.calendar) {
                             this.calendar.setProperty("disabled", true);
                             this.calendar.setProperty("currentStatus", calGoogleRequest.TOKEN_FAILURE);
                         }
                         this.fail(calGoogleRequest.TOKEN_FAILURE, reason);
+                        break;
+                    case "unauthorized_client":
+                        // This often happens when the client makes a request
+                        // authorized with an old api token. Retry the request
+                        // once.
+                        this.mSession.invalidate();
+                        if (this.reauthenticate) {
+                            cal.LOG("[calGoogleRequest] The access token is not authorized, trying to refresh token.")
+                            this.reauthenticate = false;
+                            this.mSession.asyncItemRequest(this).then(function(aOperation, aData) {
+                                this.succeed(aData);
+                            }.bind(this), function(e) {
+                                this.fail(e.result, e.message || e);
+                            }.bind(this));
+                        } else {
+                            cal.LOG("[calGoogleRequest] Even refreshed token is not authorized, looks like the client is outdated");
+                            this.mSession.notifyOutdated();
+                            if (this.calendar) {
+                                this.calendar.setProperty("disabled", true);
+                                this.calendar.setProperty("currentStatus", calGoogleRequest.TOKEN_FAILURE);
+                            }
+                            this.fail(calGoogleRequest.TOKEN_FAILURE, reason);
+                        }
                         break;
                     case "variableTermLimitExceeded":
                     case "userRateLimitExceeded":
