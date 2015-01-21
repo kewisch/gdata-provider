@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 Components.utils.import("resource://gdata-provider/modules/shim/Loader.jsm").shimIt(this);
+Components.utils.import("resource://gdata-provider/modules/shim/Calendar.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataLogging.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataRequest.jsm");
 Components.utils.import("resource://gdata-provider/modules/timezoneMap.jsm");
@@ -17,9 +18,7 @@ CuImport("resource://calendar/modules/calUtils.jsm", this);
 CuImport("resource://calendar/modules/calIteratorUtils.jsm", this);
 CuImport("resource://calendar/modules/calProviderUtils.jsm", this);
 
-const cIOL = Components.interfaces.calIOperationListener;
 const cIE = Components.interfaces.calIErrors;
-const cIC = Components.interfaces.calICalendar;
 
 const FOUR_WEEKS_IN_MINUTES = 40320;
 
@@ -29,9 +28,7 @@ var EXPORTED_SYMBOLS = [
     "getItemMetadata", "saveItemMetadata",
     "deleteItemMetadata", "migrateItemMetadata",
     "JSONToAlarm", "getProviderString",
-    "monkeyPatch", "spinEventLoop",
-    /* backwards compatibility: */
-    "promisifyCalendar", "PromiseAll"
+    "monkeyPatch", "spinEventLoop"
 ];
 
 /**
@@ -1234,7 +1231,6 @@ function monkeyPatch(obj, x, func) {
 /**
  * Returns a promise that resolves after pending events have been processed.
  */
-
 function spinEventLoop() {
     let diff = new Date() - spinEventLoop.lastSpin;
     if (diff < Preferences.get("calendar.threading.latency", 250)) {
@@ -1247,120 +1243,3 @@ function spinEventLoop() {
     return deferred.promise;
 }
 spinEventLoop.lastSpin = new Date();
-
-/**
- * Shim for Promise.all needed for Gecko 24
- */
-PromiseAll = function (aValues) {
-  function checkForCompletion(aValue, aIndex) {
-    resolutionValues[aIndex] = aValue;
-    if (--countdown === 0) {
-      deferred.resolve(resolutionValues);
-    }
-  }
-
-  if (aValues == null || !Array.isArray(aValues)) {
-    throw new Error("Promise.all() expects an array.");
-  }
-
-  let values = aValues;
-  let countdown = values.length;
-  let resolutionValues = new Array(countdown);
-
-  if (!countdown) {
-    return Promise.resolve(resolutionValues);
-  }
-
-  let deferred = PromiseUtils.defer();
-  for (let i = 0; i < values.length; i++) {
-    let index = i;
-    let value = values[i];
-    let resolver = function(val) checkForCompletion(val, index);
-
-    if (value && typeof(value.then) == "function") {
-      value.then(resolver, deferred.reject);
-    } else {
-      // Given value is not a promise, forward it as a resolution value.
-      resolver(value);
-    }
-  }
-
-  return deferred.promise;
-};
-
-/**
- * Shim for calAsyncUtils' promsifyCalendar for Lightning 2.6 - 3.5
- */
-function promisifyCalendar(aCalendar) {
-    function promiseOperationListener(deferred) {
-        return {
-            items: [],
-            itemStatus: Components.results.NS_OK,
-            onGetResult: function(aCalendar, aStatus, aItemType, aDetail,
-                                  aCount, aItems) {
-                this.itemStatus = aStatus;
-                if (Components.isSuccessCode(aStatus)) {
-                    this.items = this.items.concat(aItems);
-                } else {
-                    this.itemSuccess = aStatus;
-                }
-            },
-
-            onOperationComplete: function(aCalendar, aStatus, aOpType, aId, aDetail) {
-                if (!Components.isSuccessCode(aStatus)) {
-                    // This function has failed, reject with the status
-                    deferred.reject(aStatus)
-                } else if (!Components.isSuccessCode(this.itemStatus)) {
-                    // onGetResult has failed, reject with its status
-                    deferred.reject(this.itemStatus);
-                } else if (aOpType == cIOL.GET) {
-                     // Success of a GET operation: resolve with array of
-                     // resulting items.
-                    deferred.resolve(this.items);
-                } else { /* ADD,MODIFY,DELETE: resolve with 1 item */
-                    // Success of an ADD MODIFY or DELETE operation, resolve
-                    // with the one item that was processed.
-                    deferred.resolve(aDetail)
-                }
-            }
-        }
-    }
-
-    const promisifyProxyHandler = {
-        promiseOperation: function(target, name, args) {
-            let deferred = PromiseUtils.defer();
-            let listener = promiseOperationListener(deferred);
-            args.push(listener);
-            target[name].apply(target, args);
-            return deferred.promise;
-        },
-        get: function(target, name) {
-            switch (name) {
-                case "adoptItem":
-                case "addItem":
-                case "modifyItem":
-                case "deleteItem":
-                case "getItem":
-                case "getItems":
-                    return function() {
-                        return this.promiseOperation(target, name, Array.slice(arguments));
-                    }.bind(this);
-                case "getAllItems":
-                    return function() {
-                        return this.promiseOperation(target, "getItems", [cIC.ITEM_FILTER_ALL_ITEMS, 0, null, null]);
-                    }.bind(this);
-                default:
-                    return target[name];
-            }
-        }
-    };
-    return {
-        // Backwards compat, we can use |new Proxy(aCalendar, promisifyProxyHandler);| in the future.
-        adoptItem: function(aItem) promisifyProxyHandler.get(aCalendar, "adoptItem").apply(this, arguments),
-        addItem: function(aItem) promisifyProxyHandler.get(aCalendar, "addItem").apply(this, arguments),
-        modifyItem: function(aItem) promisifyProxyHandler.get(aCalendar, "modifyItem").apply(this, arguments),
-        deleteItem: function(aItem) promisifyProxyHandler.get(aCalendar, "deleteItem").apply(this, arguments),
-        getItem: function(aItem) promisifyProxyHandler.get(aCalendar, "getItem").apply(this, arguments),
-        getItems: function(aItems) promisifyProxyHandler.get(aCalendar, "getItems").apply(this, arguments),
-    };
-}

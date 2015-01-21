@@ -4,6 +4,7 @@
 
 Components.utils.import("resource://gdata-provider/modules/shim/Loader.jsm").shimIt(this);
 Components.utils.import("resource://gdata-provider/modules/shim/Calendar.jsm");
+Components.utils.import("resource://gdata-provider/modules/shim/PromiseExtras.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataSession.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 

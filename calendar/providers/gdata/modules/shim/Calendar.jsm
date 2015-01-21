@@ -2,11 +2,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var EXPORTED_SYMBOLS = ["calendarShim", "gdataRegisterCalendar"];
+var EXPORTED_SYMBOLS = ["calendarShim", "gdataRegisterCalendar", "promisifyCalendar"];
 
-Components.utils.import("resource://calendar/modules/calUtils.jsm");
+Components.utils.import("resource://gdata-provider/modules/shim/Loader.jsm");
+CuImport("resource://calendar/modules/calUtils.jsm", this);
+CuImport("resource://gre/modules/PromiseUtils.jsm", this);
 
+const cIOL = Components.interfaces.calIOperationListener;
 const cICL = Components.interfaces.calIChangeLog;
+const cIC = Components.interfaces.calICalendar;
 
 /**
  * Shim functions that can be injected into an object implementing calICalendar
@@ -185,4 +189,81 @@ function gdataRegisterCalendar(calendar) {
     }
 
     calmgr.notifyObservers("onCalendarRegistered", [calendar]);
+}
+
+/**
+ * Shim for calAsyncUtils' promsifyCalendar for Lightning before 3.5
+ */
+function promisifyCalendar(aCalendar) {
+    function promiseOperationListener(deferred) {
+        return {
+            items: [],
+            itemStatus: Components.results.NS_OK,
+            onGetResult: function(aCalendar, aStatus, aItemType, aDetail,
+                                  aCount, aItems) {
+                this.itemStatus = aStatus;
+                if (Components.isSuccessCode(aStatus)) {
+                    this.items = this.items.concat(aItems);
+                } else {
+                    this.itemSuccess = aStatus;
+                }
+            },
+
+            onOperationComplete: function(aCalendar, aStatus, aOpType, aId, aDetail) {
+                if (!Components.isSuccessCode(aStatus)) {
+                    // This function has failed, reject with the status
+                    deferred.reject(aStatus)
+                } else if (!Components.isSuccessCode(this.itemStatus)) {
+                    // onGetResult has failed, reject with its status
+                    deferred.reject(this.itemStatus);
+                } else if (aOpType == cIOL.GET) {
+                     // Success of a GET operation: resolve with array of
+                     // resulting items.
+                    deferred.resolve(this.items);
+                } else { /* ADD,MODIFY,DELETE: resolve with 1 item */
+                    // Success of an ADD MODIFY or DELETE operation, resolve
+                    // with the one item that was processed.
+                    deferred.resolve(aDetail)
+                }
+            }
+        }
+    }
+
+    const promisifyProxyHandler = {
+        promiseOperation: function(target, name, args) {
+            let deferred = PromiseUtils.defer();
+            let listener = promiseOperationListener(deferred);
+            args.push(listener);
+            target[name].apply(target, args);
+            return deferred.promise;
+        },
+        get: function(target, name) {
+            switch (name) {
+                case "adoptItem":
+                case "addItem":
+                case "modifyItem":
+                case "deleteItem":
+                case "getItem":
+                case "getItems":
+                    return function() {
+                        return this.promiseOperation(target, name, Array.slice(arguments));
+                    }.bind(this);
+                case "getAllItems":
+                    return function() {
+                        return this.promiseOperation(target, "getItems", [cIC.ITEM_FILTER_ALL_ITEMS, 0, null, null]);
+                    }.bind(this);
+                default:
+                    return target[name];
+            }
+        }
+    };
+    return {
+        // Backwards compat, we can use |new Proxy(aCalendar, promisifyProxyHandler);| in the future.
+        adoptItem: function(aItem) promisifyProxyHandler.get(aCalendar, "adoptItem").apply(this, arguments),
+        addItem: function(aItem) promisifyProxyHandler.get(aCalendar, "addItem").apply(this, arguments),
+        modifyItem: function(aItem) promisifyProxyHandler.get(aCalendar, "modifyItem").apply(this, arguments),
+        deleteItem: function(aItem) promisifyProxyHandler.get(aCalendar, "deleteItem").apply(this, arguments),
+        getItem: function(aItem) promisifyProxyHandler.get(aCalendar, "getItem").apply(this, arguments),
+        getItems: function(aItems) promisifyProxyHandler.get(aCalendar, "getItems").apply(this, arguments),
+    };
 }
