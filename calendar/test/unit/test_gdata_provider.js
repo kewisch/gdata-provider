@@ -26,6 +26,8 @@ Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 Components.utils.import("resource://calendar/modules/calAsyncUtils.jsm");
 Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
 
+var gServer;
+
 var MockConflictPrompt = {
     _origFunc: null,
     overwrite: false,
@@ -170,6 +172,7 @@ GDataServer.prototype = {
         let client = calmgr.createCalendar("gdata", Services.io.newURI(uri, null, null));
         client.name = "xpcshell";
         calmgr.registerCalendar(client);
+        client.wrappedJSObject.mThrottleLimits = {};
         MockConflictPrompt.register();
 
         let cachedCalendar = calmgr.getCalendarById(client.id);
@@ -480,7 +483,7 @@ add_task(function* test_organizerCN() {
        "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
        "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
     }];
-    let client = yield gServer.getClient();
+    client = yield gServer.getClient();
     do_check_eq(client.getProperty("organizerCN"), gServer.creator.displayName);
     gServer.resetClient(client);
 });
@@ -512,7 +515,7 @@ add_task(function* test_always_readOnly() {
     gServer.resetClient(client);
 
     gServer.calendarListData.accessRole = "reader";
-    let client = yield gServer.getClient();
+    client = yield gServer.getClient();
     do_check_true(client.readOnly)
     client.readOnly = false;
     do_check_true(client.readOnly)
@@ -577,7 +580,7 @@ add_task(function* test_reset_sync() {
     do_check_neq(client.getProperty("lastUpdated.tasks"), "");
 
     yield uncached.resetSync();
-    let items = yield pclient.getAllItems();
+    items = yield pclient.getAllItems();
     do_check_eq(items.length, 0);
 
     do_check_eq(client.getProperty("syncToken.events"), "");
@@ -761,7 +764,7 @@ add_task(function* test_addModifyDeleteItem() {
         "DESCRIPTION:description",
         "X-SORTKEY:00000000000000130998",
         "STATUS:COMPLETED",
-        "DUE:20140904",
+        "DUE;VALUE=DATE:20140904",
         "COMPLETED:20140901T170000Z",
         "RELATED-TO;RELTYPE=PARENT:MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo4MDIzOTU2NDc",
         "ATTACH;FILENAME=\"link description\";X-GOOGLE-TYPE=email:mailto:something@example.com",
@@ -785,7 +788,7 @@ add_task(function* test_addModifyDeleteItem() {
     let addedTask = yield pclient.adoptItem(task);
     do_check_neq(addedTask.id, null);
 
-    let items = yield pclient.getAllItems();
+    items = yield pclient.getAllItems();
     do_check_eq(items.length, 2);
     do_check_eq(items[1].id, addedTask.id);
 
@@ -1133,7 +1136,7 @@ add_task(function* test_metadata_recurring() {
     },{
         "kind": "calendar#event",
         "etag": "\"3\"",
-        "id": "go6ijb0b46hlpbu4eeu92njevo_20060610T160000Z",
+        "id": "go6ijb0b46hlpbu4eeu92njevo_20060617T160000Z",
         "summary": "New Event next week",
         "start": { "dateTime": "2006-06-17T18:00:00+02:00" },
         "end": {"dateTime": "2006-06-17T20:00:00+02:00" },
@@ -1161,7 +1164,7 @@ add_task(function* test_metadata_recurring() {
     newEx.title = "New Event changed again";
     gServer.nextEtag = '"4"';
     yield pclient.modifyItem(newEx, ex);
-    let meta = getAllMeta(offline);
+    meta = getAllMeta(offline);
     do_check_eq(meta.size, 3);
     do_check_eq(meta.get(newEx.hashId), ['"4"', "go6ijb0b46hlpbu4eeu92njevo_20060610T160000Z", false].join("\u001A"));
 
@@ -1170,12 +1173,12 @@ add_task(function* test_metadata_recurring() {
     newItem.recurrenceInfo.removeOccurrenceAt(exIds[0]);
     yield pclient.modifyItem(newItem, items[0]);
 
-    let meta = getAllMeta(offline);
+    meta = getAllMeta(offline);
     do_check_eq(meta.size, 2);
 
     // Deleting the master item should remove all metadata entries
     yield pclient.deleteItem(items[0]);
-    let meta = getAllMeta(offline);
+    meta = getAllMeta(offline);
     do_check_eq(meta.size, 0);
 
     gServer.resetClient(client);
@@ -1417,7 +1420,7 @@ add_task(function* test_default_alarms() {
     do_check_eq(gServer.events[1].reminders.overrides.length, 0);
 
     // Case #3: Mixed default/non-default alarms. Not sure this will happen
-    let event = cal.createEvent([
+    event = cal.createEvent([
         "BEGIN:VEVENT",
         "SUMMARY:Default Alarms",
         "DTSTART:20060610T180000Z",

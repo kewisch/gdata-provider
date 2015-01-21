@@ -845,10 +845,10 @@ function JSONToItem(aEntry, aCalendar, aTimezone, aDefaultReminders, aReferenceI
     aMetadata = aMetadata || {};
     if (aEntry.kind == "tasks#task") {
         return JSONToTask.apply(null, arguments);
-    } else if (aEntry.kind = "calendar#event") {
+    } else if (aEntry.kind == "calendar#event") {
         return JSONToEvent.apply(null, arguments);
     } else {
-        cal.ERROR("[calGoogleCalendar] Invalid item type: " + aData.kind);
+        cal.ERROR("[calGoogleCalendar] Invalid item type: " + (aEntry ? aEntry.kind : "<no entry>"));
         return null;
     }
 }
@@ -1236,7 +1236,7 @@ function monkeyPatch(obj, x, func) {
  */
 
 function spinEventLoop() {
-    let diff = (new Date()).getTime() - spinEventLoop.lastSpin;
+    let diff = new Date() - spinEventLoop.lastSpin;
     if (diff < Preferences.get("calendar.threading.latency", 250)) {
         return Promise.resolve(false);
     }
@@ -1246,7 +1246,7 @@ function spinEventLoop() {
     Services.tm.currentThread.dispatch({ run: function() deferred.resolve(true) }, 0);
     return deferred.promise;
 }
-spinEventLoop.lastSpin = new Date().getTime();
+spinEventLoop.lastSpin = new Date();
 
 /**
  * Shim for Promise.all needed for Gecko 24
