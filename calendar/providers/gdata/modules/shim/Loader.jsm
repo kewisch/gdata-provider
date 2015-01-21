@@ -38,7 +38,7 @@ function shimIt(global) {
     if (!global.String.prototype.startsWith) {
         Object.defineProperty(global.String.prototype, 'startsWith', {
             enumerable: false,
-            configurable: false,
+            configurable: true,
             writable: false,
             value: function(searchString, position) {
                 position = position || 0;
@@ -49,6 +49,9 @@ function shimIt(global) {
 
     if (!global.String.prototype.endsWith) {
         Object.defineProperty(global.String.prototype, 'endsWith', {
+            enumerable: false,
+            configurable: true,
+            writable: false,
             value: function(searchString, position) {
                 var subjectString = this.toString();
                 if (position === undefined || position > subjectString.length) {
@@ -64,11 +67,21 @@ function shimIt(global) {
     // See note at the bottom of https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
     // for why the same method is used for contains/includes.
     if (!global.String.prototype.contains) {
-        global.String.prototype.contains = StringContains;
+        Object.defineProperty(global.String.prototype, 'contains', {
+          enumerable: false,
+          configurable: true,
+          writable: false,
+          value: StringContains
+        });
     }
 
     if (!global.String.prototype.includes) {
-        global.String.prototype.includes = StringContains;
+        Object.defineProperty(global.String.prototype, 'includes', {
+          enumerable: false,
+          configurable: true,
+          writable: false,
+          value: StringContains
+        });
     }
 
     if (!global.Map) {
@@ -79,10 +92,20 @@ function shimIt(global) {
     }
 
     if (typeof global.Map.prototype.forEach !== "function") {
-        global.Map.prototype.forEach = MapSetForEach;
+        Object.defineProperty(global.Map.prototype, 'forEach', {
+          enumerable: false,
+          configurable: true,
+          writable: false,
+          value: MapSetForEach
+        });
     }
     if (typeof global.Set.prototype.forEach !== "function") {
-        global.Set.prototype.forEach = MapSetForEach;
+        Object.defineProperty(global.Set.prototype, 'forEach', {
+          enumerable: false,
+          configurable: true,
+          writable: false,
+          value: MapSetForEach
+        });
     }
 }
 
