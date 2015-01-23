@@ -88,7 +88,7 @@ function createAsyncFunction(aTask) {
 }
 
 function TaskImpl(iterator) {
-  this.deferred = PromiseUtils.defer();
+  this.deferred = Promise.defer();
   this._iterator = iterator;
   this._run(true);
 }

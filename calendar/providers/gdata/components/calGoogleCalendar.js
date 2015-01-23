@@ -7,6 +7,7 @@ Components.utils.import("resource://gdata-provider/modules/shim/Calendar.jsm");
 
 CuImport("resource://gre/modules/Preferences.jsm", this);
 CuImport("resource://gre/modules/Promise.jsm", this);
+CuImport("resource://gre/modules/PromiseUtils.jsm", this);
 CuImport("resource://gre/modules/Services.jsm", this);
 CuImport("resource://gre/modules/Task.jsm", this);
 CuImport("resource://gre/modules/XPCOMUtils.jsm", this);
@@ -622,22 +623,22 @@ calGoogleCalendar.prototype = {
     },
 
     resetSync: function() {
-        return new Promise(function(resolve, reject) {
-            cal.LOG("[calGoogleCalendar] Resetting last updated counter for " + this.name);
-            this.setProperty("syncToken.events", "");
-            this.setProperty("lastUpdated.tasks", "");
-            this.mThrottle = Object.create(null);
-            this.mOfflineStorage.QueryInterface(Components.interfaces.calICalendarProvider)
-                                .deleteCalendar(this.mOfflineStorage, {
-                onDeleteCalendar: function(aCalendar, aStatus, aDetal) {
-                    if (Components.isSuccessCode(aStatus)) {
-                        resolve();
-                    } else {
-                        reject(aDetail);
-                    }
+        let deferred = PromiseUtils.defer();
+        cal.LOG("[calGoogleCalendar] Resetting last updated counter for " + this.name);
+        this.setProperty("syncToken.events", "");
+        this.setProperty("lastUpdated.tasks", "");
+        this.mThrottle = Object.create(null);
+        this.mOfflineStorage.QueryInterface(Components.interfaces.calICalendarProvider)
+                            .deleteCalendar(this.mOfflineStorage, {
+            onDeleteCalendar: function(aCalendar, aStatus, aDetail) {
+                if (Components.isSuccessCode(aStatus)) {
+                    deferred.resolve();
+                } else {
+                    deferred.reject(aDetail);
                 }
-           });
+            }
        });
+       return deferred.promise;
     },
 
     replayChangesOn: function(aListener) {
@@ -751,6 +752,10 @@ calGoogleCalendar.prototype = {
                         "starting over.");
                 this.resetSync().then(function() {
                     this.replayChangesOn(aListener);
+                }.bind(this), function(e) {
+                    cal.ERROR("[calGoogleCalendar] Error resetting calendar:\n" +
+                            stringException(e));
+                    aListener.onResult({ status: e.result }, e.message);
                 }.bind(this));
             } else {
                 cal.LOG("[calGoogleCalendar] Error syncing:\n" + code + ":" +

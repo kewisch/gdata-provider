@@ -1242,9 +1242,9 @@ function spinEventLoop() {
     }
     spinEventLoop.lastSpin = new Date();
 
-    return new Promise(function(resolve) {
-      Services.tm.currentThread.dispatch({ run: function() resolve(true) }, 0);
-    });
+    let deferred = PromiseUtils.defer();
+    Services.tm.currentThread.dispatch({ run: function() deferred.resolve(true) }, 0);
+    return deferred.promise;
 }
 spinEventLoop.lastSpin = new Date().getTime();
 

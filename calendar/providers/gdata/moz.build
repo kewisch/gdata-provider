@@ -24,6 +24,7 @@ EXTRA_JS_MODULES.shim = [
     'modules/shim/Loader.jsm',
     'modules/shim/Preferences.jsm',
     'modules/shim/Promise.jsm',
+    'modules/shim/PromiseUtils.jsm',
     'modules/shim/Task.jsm',
     'modules/shim/Timer.jsm',
 ]
