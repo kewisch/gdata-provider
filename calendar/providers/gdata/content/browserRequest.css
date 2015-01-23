@@ -44,6 +44,10 @@
     overflow: hidden;
 }
 
+#dialogMessage {
+    margin: 1em 1em 2em;
+}
+
 #addressbox {
     font-weight: bold;
     font-size: normal;

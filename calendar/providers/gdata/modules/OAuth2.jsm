@@ -72,6 +72,7 @@ OAuth2.prototype = {
     requestWindowURI: "chrome://messenger/content/browserRequest.xul",
     requestWindowFeatures: "chrome,private,centerscreen,width=980,height=600",
     requestWindowTitle: "",
+    requestWindowDescription: "",
     scope: null,
 
     accessToken: null,
@@ -122,6 +123,7 @@ OAuth2.prototype = {
         this._browserRequest = {
             account: this,
             url: this.authURI + "?" + params,
+            description: this.requestWindowDescription,
             _active: true,
             iconURI: "",
             cancelled: function() {

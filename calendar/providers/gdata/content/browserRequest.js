@@ -109,5 +109,12 @@ function loadRequestedUrl()
     browser.setAttribute("src", url);
     document.getElementById("headerMessage").textContent = url;
   }
+
+  var dialogMessage =  document.getElementById("dialogMessage");
+  if (request.description) {
+    dialogMessage.textContent = request.description;
+  } else {
+    dialogMessage.setAttribute("hidden", "true");
+  }
   request.loaded(window, browser.webProgress);
 }

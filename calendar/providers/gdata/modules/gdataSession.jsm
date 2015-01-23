@@ -128,8 +128,9 @@ calGoogleSession.prototype = {
 
     setupOAuth: function setupOAuth() {
         let sessionId = this.mId;
+        let authDescr = getProviderString("requestWindowDescription", sessionId);
         let authTitle = cal.calGetString("commonDialogs", "EnterUserPasswordFor",
-                                         [this.id], "global");
+                                         [sessionId], "global");
 
         // Set up a new OAuth2 instance for logging in.
         this.oauth = new OAuth2(OAUTH_BASE_URI, OAUTH_SCOPE, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET);
@@ -141,6 +142,7 @@ calGoogleSession.prototype = {
         this.oauth.requestWindowURI = "chrome://gdata-provider/content/browserRequest.xul";
         this.oauth.requestWindowFeatures = "chrome,private,centerscreen,width=430,height=600";
         this.oauth.requestWindowTitle = authTitle;
+        this.oauth.requestWindowDescription = authDescr;
 
         // Overwrite the refreshToken attribute, since we want to save it in
         // the password manager

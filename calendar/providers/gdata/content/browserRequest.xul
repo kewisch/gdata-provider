@@ -24,11 +24,12 @@
     <key id="key_close" key="w" modifiers="accel" oncommand="cancelRequest()"/>
     <key id="key_close2"  keycode="VK_ESCAPE" oncommand="cancelRequest()"/>
   </keyset>
-  <hbox id="header">
-  <hbox id="addressbox" flex="1" disabled="true">
-    <image id="security-button" src="chrome://messenger/skin/icons/mailicon32.png"/>
-    <description id="headerMessage"/>
-  </hbox>
-  </hbox>
+  <vbox id="header">
+    <description id="dialogMessage"/>
+    <hbox id="addressbox" flex="1" disabled="true">
+      <image id="security-button" src="chrome://messenger/skin/icons/mailicon32.png"/>
+      <description id="headerMessage"/>
+    </hbox>
+  </vbox>
   <browser type="content" disablehistory="true" src="about:blank" id="requestFrame" flex="1"/>
 </window>
