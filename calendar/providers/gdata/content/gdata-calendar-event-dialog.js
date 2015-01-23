@@ -158,9 +158,15 @@ Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
         if (calendar.type == "gdata" && reminderList.value == "default") {
             item.clearAlarms();
             let unwrappedCal = item.calendar.getProperty("cache.uncachedCalendar").wrappedJSObject;
-            unwrappedCal.defaultReminders.forEach(item.addAlarm, item);
+            let defaultReminders = unwrappedCal.defaultReminders;
+
+            defaultReminders.forEach(item.addAlarm, item);
+            if (!defaultReminders.length) {
+                item.setProperty("X-DEFAULT-ALARM", "TRUE");
+            }
             return null;
         } else {
+            item.deleteProperty("X-DEFAULT-ALARM");
             return protofunc.apply(this, Array.slice(arguments, 1));
         }
     })
@@ -176,7 +182,13 @@ Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
         defaultItem.reminders = defaultReminders;
 
         let rv = null;
-        let usesDefault = reminders.length && reminders.every(function(x) x.hasProperty("X-DEFAULT-ALARM"));
+        let usesDefault;
+        if (reminders.length) {
+            usesDefault = reminders.every(function(x) x.hasProperty("X-DEFAULT-ALARM"));
+        } else {
+            usesDefault = window.calendarItem.getProperty("X-DEFAULT-ALARM") == "TRUE";
+        }
+
         if (calendar.type == "gdata" && (window.mode == "new" || usesDefault)) {
             // If all reminders are default reminders, then select the menuitem.
             reminderList.value = "default";

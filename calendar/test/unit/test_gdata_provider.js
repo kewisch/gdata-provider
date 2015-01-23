@@ -1337,6 +1337,38 @@ add_task(function* test_default_alarms() {
     do_check_eq(gServer.events[2].reminders.overrides[0].minutes, 5);
 
     gServer.resetClient(client);
+
+    // Case #4a: Empty default alarms
+    gServer.calendarListData.defaultReminders = [];
+    gServer.eventsData.defaultReminders = [];
+    client = yield gServer.getClient();
+    pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
+
+    event = cal.createEvent([
+        "BEGIN:VEVENT",
+        "SUMMARY:Default Alarms Empty",
+        "DTSTART:20060610T180000Z",
+        "DTEND:20060610T200000Z",
+        "X-DEFAULT-ALARM:TRUE",
+        "END:VEVENT"
+    ].join("\r\n"));
+
+    yield pclient.addItem(event);
+    do_check_true(gServer.events[0].reminders.useDefault);
+    do_check_eq(gServer.events[0].reminders.overrides, undefined);
+
+    let events = gServer.events;
+    gServer.resetClient(client);
+
+    // Case #4b: Read an item with empty default alarms
+    gServer.events = events;
+    client = yield gServer.getClient();
+    pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
+
+    item = (yield pclient.getAllItems())[0];
+    do_check_eq(item.getProperty("X-DEFAULT-ALARM"), "TRUE");
+
+    gServer.resetClient(client);
 });
 
 add_task(function* test_paginate() {

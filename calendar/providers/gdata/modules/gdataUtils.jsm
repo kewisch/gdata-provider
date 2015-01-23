@@ -348,6 +348,11 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
         itemData.reminders.overrides.push(alarmData);
     }
 
+    if (!alarms.length && aItem.getProperty("X-DEFAULT-ALARM") == "TRUE") {
+        delete itemData.reminders.overrides;
+        itemData.reminders.useDefault = true;
+    }
+
     // gd:extendedProperty (alarmLastAck)
     addExtendedProperty("X-MOZ-LASTACK", cal.toRFC3339(aItem.alarmLastAck), true);
 
@@ -687,13 +692,23 @@ function JSONToEvent(aEntry, aCalendar, aTimezone, aDefaultReminders, aReference
         // reminders
         item.clearAlarms();
 
-        if (aEntry.reminders && aEntry.reminders.useDefault) {
-            aDefaultReminders.forEach(item.addAlarm, item);
-        }
+        if (aEntry.reminders) {
+            if (aEntry.reminders.useDefault) {
+                aDefaultReminders.forEach(item.addAlarm, item);
 
-        if (aEntry.reminders && aEntry.reminders.overrides) {
-            for each (let reminderEntry in aEntry.reminders.overrides) {
-                item.addAlarm(JSONToAlarm(reminderEntry));
+                if (aDefaultReminders.length) {
+                    item.deleteProperty("X-DEFAULT-ALARM");
+                } else {
+                    // Nothing to make clear we are using default reminders.
+                    // Set an X-PROP until VALARM extensions are supported
+                    item.setProperty("X-DEFAULT-ALARM", "TRUE");
+                }
+            }
+
+            if (aEntry.reminders.overrides) {
+                for each (let reminderEntry in aEntry.reminders.overrides) {
+                    item.addAlarm(JSONToAlarm(reminderEntry));
+                }
             }
         }
 
