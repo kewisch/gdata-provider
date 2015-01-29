@@ -154,7 +154,7 @@ function dateToJSON(aDate) {
             let tzoffset_hr = Math.floor(Math.abs(full_tzoffset) / 3600);
             let sign = (full_tzoffset < 0 ? "-" : "+");
             if (tzoffset_hr == 0) {
-                jsonData.timezone = "UTC";
+                jsonData.timeZone = "UTC";
             } else {
                 jsonData.timeZone = "Etc/GMT" + sign + tzoffset_hr;
             }
