@@ -401,7 +401,10 @@ calGoogleSession.prototype = {
         let failSync = function(aStatus, aMessage) {
             cal.LOG("[calGoogleCalendar] Freebusy query for " + aCalId +
                     " failed (" + aStatus + "): " + aMessage);
-            aListener.onResult({ status: aStatus }, aMessage);
+
+            // Usually we would notify with a result, but this causes trouble
+            // with Lightning 3.9 and older.
+            aListener.onResult({ status: aStatus }, null);
         }.bind(this);
 
         if (aCalId.indexOf("@") < 0 || aCalId.indexOf(".") < 0 ||
