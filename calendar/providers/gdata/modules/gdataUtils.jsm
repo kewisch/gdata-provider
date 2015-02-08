@@ -270,7 +270,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
         };
         function createAttendee(attendee) {
             let attendeeData = {};
-            if (aItem.organizer.id == attendee.id) {
+            if (aItem.organizer && aItem.organizer.id == attendee.id) {
                 needsOrganizer = false;
             }
             let lowerId = attendee.id.toLowerCase();
