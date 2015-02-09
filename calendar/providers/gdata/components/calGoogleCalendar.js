@@ -454,6 +454,10 @@ calGoogleCalendar.prototype = {
                 if (cal.isInvitation(aNewItem)) {
                     request.type = request.PATCH;
                 }
+
+                if (Preferences.get("calendar.google.sendEventNotifications", false)) {
+                    request.addQueryParameter("sendNotifications", "true");
+                }
             } else if (cal.isToDo(aNewItem)) {
                 request.uri = this.createTasksURI("tasks", aNewItem.id);
             }
