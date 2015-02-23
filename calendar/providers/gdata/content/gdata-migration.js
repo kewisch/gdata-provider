@@ -19,8 +19,13 @@ function migrateSelectedCalendars() {
         if (item.checked) {
             // Migrate the calendar to a gdata calendar
             let newCal = calmgr.createCalendar("gdata", item.calendar.uri);
-            calmgr.unregisterCalendar(item.calendar);
-            calmgr.deleteCalendar(item.calendar);
+            if (calmgr.removeCalendar) {
+                // Lightning 4.0+
+                calmgr.removeCalendar(item.calendar);
+            } else {
+                calmgr.unregisterCalendar(item.calendar);
+                calmgr.deleteCalendar(item.calendar);
+            }
 
             // Copy some properties to the new calendar
             newCal.name = item.calendar.name;
