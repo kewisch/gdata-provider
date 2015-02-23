@@ -444,9 +444,9 @@ add_test(function test_migrate_uri() {
             let target = ("googleapi://" + session + "/?" +
                          (calendarId ? "&calendar=" + encodeURIComponent(calendarId) : "") +
                          (tasksId ? "&tasks=" + encodeURIComponent(tasksId) : "")).replace("?&", "?");
-            do_check_eq(client.getProperty("uri"), target);
+            equal(client.getProperty("uri"), target);
         } else {
-            do_check_eq(client.getProperty("uri"), null);
+            equal(client.getProperty("uri"), null);
         }
     }
 
@@ -469,7 +469,7 @@ add_test(function test_migrate_uri() {
 add_task(function* test_organizerCN() {
     gServer.events = [];
     let client = yield gServer.getClient();
-    do_check_eq(client.getProperty("organizerCN"), null);
+    equal(client.getProperty("organizerCN"), null);
     gServer.resetClient(client);
 
     gServer.events = [{
@@ -486,7 +486,7 @@ add_task(function* test_organizerCN() {
        "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
     }];
     client = yield gServer.getClient();
-    do_check_eq(client.getProperty("organizerCN"), gServer.creator.displayName);
+    equal(client.getProperty("organizerCN"), gServer.creator.displayName);
     gServer.resetClient(client);
 });
 
@@ -507,20 +507,20 @@ add_task(function* test_always_readOnly() {
     gServer.calendarListData.accessRole = "freeBusyReader";
     let client = yield gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client);
-    do_check_true(client.readOnly)
+    ok(client.readOnly)
     client.readOnly = false;
-    do_check_true(client.readOnly)
+    ok(client.readOnly)
 
     let items = yield pclient.getAllItems();
-    do_check_eq(items.length, 1);
-    do_check_neq(items[0].title, "New Event");
+    equal(items.length, 1);
+    notEqual(items[0].title, "New Event");
     gServer.resetClient(client);
 
     gServer.calendarListData.accessRole = "reader";
     client = yield gServer.getClient();
-    do_check_true(client.readOnly)
+    ok(client.readOnly)
     client.readOnly = false;
-    do_check_true(client.readOnly)
+    ok(client.readOnly)
     gServer.resetClient(client);
 });
 
@@ -576,17 +576,17 @@ add_task(function* test_reset_sync() {
     let pclient = cal.async.promisifyCalendar(client);
 
     let items = yield pclient.getAllItems();
-    do_check_eq(items.length, 4);
+    equal(items.length, 4);
 
-    do_check_neq(client.getProperty("syncToken.events"), "");
-    do_check_neq(client.getProperty("lastUpdated.tasks"), "");
+    notEqual(client.getProperty("syncToken.events"), "");
+    notEqual(client.getProperty("lastUpdated.tasks"), "");
 
     yield uncached.resetSync();
     items = yield pclient.getAllItems();
-    do_check_eq(items.length, 0);
+    equal(items.length, 0);
 
-    do_check_eq(client.getProperty("syncToken.events"), "");
-    do_check_eq(client.getProperty("lastUpdated.tasks"), "");
+    equal(client.getProperty("syncToken.events"), "");
+    equal(client.getProperty("lastUpdated.tasks"), "");
 
     gServer.resetClient(client);
 });
@@ -665,60 +665,60 @@ add_task(function* test_basicItems() {
     let pclient = cal.async.promisifyCalendar(client);
 
     let items = yield pclient.getAllItems();
-    do_check_eq(items.length, 2);
+    equal(items.length, 2);
 
     let event = cal.isEvent(items[0]) ? items[0]: items[1];
-    do_check_eq(event.id, "go6ijb0b46hlpbu4eeu92njevo@google.com");
-    do_check_eq(event.getProperty("STATUS"), "CONFIRMED");
-    do_check_eq(event.getProperty("URL"), gServer.baseUri + "/calendar/event?eid=eventhash");
-    do_check_eq(event.getProperty("CREATED").icalString, "20060608T210452Z");
-    do_check_eq(event.getProperty("LAST-MODIFIED").icalString, "20060608T210549Z");
-    do_check_eq(event.title, "New Event");
-    do_check_eq(event.getProperty("DESCRIPTION"), "description");
-    do_check_eq(event.getProperty("LOCATION"), "Hard Drive");
-    do_check_eq(event.organizer.id, "mailto:xpcshell@example.com");
-    do_check_eq(event.organizer.commonName, "Eggs P. Seashell");
-    do_check_true(event.organizer.isOrganizer);
-    do_check_eq(event.startDate.icalString, "20060610T180000");
-    do_check_eq(event.startDate.timezone.tzid, "Europe/Berlin");
-    do_check_eq(event.endDate.icalString, "20060610T200000");
-    do_check_eq(event.getProperty("TRANSP"), "TRANSPARENT");
-    do_check_eq(event.privacy, "PRIVATE");
-    do_check_eq(event.getProperty("SEQUENCE"), 1);
+    equal(event.id, "go6ijb0b46hlpbu4eeu92njevo@google.com");
+    equal(event.getProperty("STATUS"), "CONFIRMED");
+    equal(event.getProperty("URL"), gServer.baseUri + "/calendar/event?eid=eventhash");
+    equal(event.getProperty("CREATED").icalString, "20060608T210452Z");
+    equal(event.getProperty("LAST-MODIFIED").icalString, "20060608T210549Z");
+    equal(event.title, "New Event");
+    equal(event.getProperty("DESCRIPTION"), "description");
+    equal(event.getProperty("LOCATION"), "Hard Drive");
+    equal(event.organizer.id, "mailto:xpcshell@example.com");
+    equal(event.organizer.commonName, "Eggs P. Seashell");
+    ok(event.organizer.isOrganizer);
+    equal(event.startDate.icalString, "20060610T180000");
+    equal(event.startDate.timezone.tzid, "Europe/Berlin");
+    equal(event.endDate.icalString, "20060610T200000");
+    equal(event.getProperty("TRANSP"), "TRANSPARENT");
+    equal(event.privacy, "PRIVATE");
+    equal(event.getProperty("SEQUENCE"), 1);
     let alarms = event.getAlarms({});
-    do_check_eq(alarms.length, 1);
-    do_check_eq(alarms[0].action, "EMAIL");
-    do_check_eq(alarms[0].related, alarms[0].ALARM_RELATED_START);
-    do_check_eq(alarms[0].offset.icalString, "-PT20M");
-    do_check_null(alarms[0].getProperty("X-DEFAULT-ALARM"));
+    equal(alarms.length, 1);
+    equal(alarms[0].action, "EMAIL");
+    equal(alarms[0].related, alarms[0].ALARM_RELATED_START);
+    equal(alarms[0].offset.icalString, "-PT20M");
+    equal(alarms[0].getProperty("X-DEFAULT-ALARM"), null);
     let attendees = event.getAttendees({});
-    do_check_eq(attendees.length, 1);
-    do_check_eq(attendees[0].id, "mailto:attendee@example.com");
-    do_check_eq(attendees[0].commonName, "attendee name");
-    do_check_eq(attendees[0].role, "OPT-PARTICIPANT");
-    do_check_eq(attendees[0].participationStatus, "TENTATIVE");
-    do_check_eq(event.getCategories({}), "foo,bar");
-    do_check_eq(event.alarmLastAck.icalString, "20140101T010101Z");
-    do_check_eq(event.getProperty("X-MOZ-SNOOZE-TIME"), "20140101T020202Z");
+    equal(attendees.length, 1);
+    equal(attendees[0].id, "mailto:attendee@example.com");
+    equal(attendees[0].commonName, "attendee name");
+    equal(attendees[0].role, "OPT-PARTICIPANT");
+    equal(attendees[0].participationStatus, "TENTATIVE");
+    equal(event.getCategories({}), "foo,bar");
+    equal(event.alarmLastAck.icalString, "20140101T010101Z");
+    equal(event.getProperty("X-MOZ-SNOOZE-TIME"), "20140101T020202Z");
 
     let task = cal.isToDo(items[0]) ? items[0] : items[1];
-    do_check_eq(task.id, "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU");
-    do_check_eq(task.title, "New Task");
-    do_check_eq(task.getProperty("LAST-MODIFIED").icalString, "20140908T163027Z");
-    do_check_eq(task.getProperty("X-GOOGLE-SORTKEY"), "00000000000000130998");
-    do_check_true(task.isCompleted);
-    do_check_eq(task.dueDate.icalString, "20140904");
-    do_check_eq(task.completedDate.icalString, "20140901T170000Z");
-    do_check_eq(task.getProperty("DESCRIPTION"), "description");
+    equal(task.id, "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU");
+    equal(task.title, "New Task");
+    equal(task.getProperty("LAST-MODIFIED").icalString, "20140908T163027Z");
+    equal(task.getProperty("X-GOOGLE-SORTKEY"), "00000000000000130998");
+    ok(task.isCompleted);
+    equal(task.dueDate.icalString, "20140904");
+    equal(task.completedDate.icalString, "20140901T170000Z");
+    equal(task.getProperty("DESCRIPTION"), "description");
     let relations = task.getRelations({});
-    do_check_eq(relations.length, 1);
-    do_check_eq(relations[0].relType, "PARENT");
-    do_check_eq(relations[0].relId, "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo4MDIzOTU2NDc");
+    equal(relations.length, 1);
+    equal(relations[0].relType, "PARENT");
+    equal(relations[0].relId, "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo4MDIzOTU2NDc");
     let attachments = task.getAttachments({});
-    do_check_eq(attachments.length, 1);
-    do_check_eq(attachments[0].uri.spec, "mailto:something@example.com");
-    do_check_eq(attachments[0].getParameter("X-GOOGLE-TYPE"), "email");
-    do_check_eq(attachments[0].getParameter("FILENAME"), "link description");
+    equal(attachments.length, 1);
+    equal(attachments[0].uri.spec, "mailto:something@example.com");
+    equal(attachments[0].getParameter("X-GOOGLE-TYPE"), "email");
+    equal(attachments[0].getParameter("FILENAME"), "link description");
 
     gServer.resetClient(client);
 });
@@ -726,8 +726,8 @@ add_task(function* test_basicItems() {
 add_task(function* test_addModifyDeleteItem() {
     let client = yield gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
-    do_check_eq(gServer.events.length, 0);
-    do_check_eq(gServer.tasks.length, 0);
+    equal(gServer.events.length, 0);
+    equal(gServer.tasks.length, 0);
 
     let event = cal.createEvent([
         "BEGIN:VEVENT",
@@ -775,71 +775,71 @@ add_task(function* test_addModifyDeleteItem() {
 
     // Add an event
     let addedEvent = yield pclient.adoptItem(event);
-    do_check_neq(addedEvent.id, null);
-    do_check_eq(addedEvent.organizer.id, "mailto:xpcshell@example.com");
+    notEqual(addedEvent.id, null);
+    equal(addedEvent.organizer.id, "mailto:xpcshell@example.com");
 
     let items = yield pclient.getAllItems();
-    do_check_eq(items.length, 1);
-    do_check_eq(items[0].id, addedEvent.id);
-    do_check_eq(items[0].organizer.id, "mailto:xpcshell@example.com");
+    equal(items.length, 1);
+    equal(items[0].id, addedEvent.id);
+    equal(items[0].organizer.id, "mailto:xpcshell@example.com");
 
-    do_check_eq(gServer.events.length, 1)
-    do_check_eq(gServer.tasks.length, 0);
+    equal(gServer.events.length, 1)
+    equal(gServer.tasks.length, 0);
 
     // Add a task
     let addedTask = yield pclient.adoptItem(task);
-    do_check_neq(addedTask.id, null);
+    notEqual(addedTask.id, null);
 
     items = yield pclient.getAllItems();
-    do_check_eq(items.length, 2);
-    do_check_eq(items[1].id, addedTask.id);
+    equal(items.length, 2);
+    equal(items[1].id, addedTask.id);
 
-    do_check_eq(gServer.events.length, 1)
-    do_check_eq(gServer.tasks.length, 1);
+    equal(gServer.events.length, 1)
+    equal(gServer.tasks.length, 1);
 
     // Modify an event
     let newEvent = items[0].clone();
     newEvent.title = "changed";
 
     let modifiedEvent = yield pclient.modifyItem(newEvent, items[0]);
-    do_check_eq(modifiedEvent.title, "changed");
-    do_check_neq(modifiedEvent.getProperty("LAST-MODIFIED"), addedEvent.getProperty("LAST-MODIFIED"));
+    equal(modifiedEvent.title, "changed");
+    notEqual(modifiedEvent.getProperty("LAST-MODIFIED"), addedEvent.getProperty("LAST-MODIFIED"));
     items = yield pclient.getAllItems();
-    do_check_eq(items.length, 2);
-    do_check_eq(items[0].title, "changed");
-    do_check_eq(items[0].id, addedEvent.id);
-    do_check_eq(items[0].getProperty("LAST-MODIFIED"), modifiedEvent.getProperty("LAST-MODIFIED"));
-    do_check_eq(gServer.events.length, 1);
-    do_check_eq(gServer.tasks.length, 1);
+    equal(items.length, 2);
+    equal(items[0].title, "changed");
+    equal(items[0].id, addedEvent.id);
+    equal(items[0].getProperty("LAST-MODIFIED"), modifiedEvent.getProperty("LAST-MODIFIED"));
+    equal(gServer.events.length, 1);
+    equal(gServer.tasks.length, 1);
 
     // Modify a task
     let newTask = items[1].clone();
     newTask.title = "changed";
 
     let modifiedTask = yield pclient.modifyItem(newTask, items[1]);
-    do_check_eq(modifiedTask.title, "changed");
-    do_check_neq(modifiedTask.getProperty("LAST-MODIFIED"), addedTask.getProperty("LAST-MODIFIED"));
+    equal(modifiedTask.title, "changed");
+    notEqual(modifiedTask.getProperty("LAST-MODIFIED"), addedTask.getProperty("LAST-MODIFIED"));
     items = yield pclient.getAllItems();
-    do_check_eq(items.length, 2);
-    do_check_eq(items[1].title, "changed");
-    do_check_eq(items[1].id, addedTask.id);
-    do_check_eq(items[1].getProperty("LAST-MODIFIED"), modifiedTask.getProperty("LAST-MODIFIED"));
-    do_check_eq(gServer.events.length, 1);
-    do_check_eq(gServer.tasks.length, 1);
+    equal(items.length, 2);
+    equal(items[1].title, "changed");
+    equal(items[1].id, addedTask.id);
+    equal(items[1].getProperty("LAST-MODIFIED"), modifiedTask.getProperty("LAST-MODIFIED"));
+    equal(gServer.events.length, 1);
+    equal(gServer.tasks.length, 1);
 
     // Delete an event
     yield pclient.deleteItem(modifiedEvent);
     items = yield pclient.getAllItems();
-    do_check_eq(items.length, 1);
-    do_check_eq(gServer.events.length, 0);
-    do_check_eq(gServer.tasks.length, 1);
+    equal(items.length, 1);
+    equal(gServer.events.length, 0);
+    equal(gServer.tasks.length, 1);
 
     // Delete a task
     yield pclient.deleteItem(modifiedTask);
     items = yield pclient.getAllItems();
-    do_check_eq(items.length, 0);
-    do_check_eq(gServer.events.length, 0);
-    do_check_eq(gServer.tasks.length, 0);
+    equal(items.length, 0);
+    equal(gServer.events.length, 0);
+    equal(gServer.tasks.length, 0);
 
     gServer.resetClient(client);
 });
@@ -858,9 +858,9 @@ add_task(function* test_recurring_event() {
     ].join("\r\n"));
 
     event = yield pclient.addItem(event);
-    do_check_eq(gServer.events.length, 1);
-    do_check_eq(gServer.events[0].recurrence.length, 1);
-    do_check_eq(gServer.events[0].recurrence[0], "RRULE:FREQ=WEEKLY");
+    equal(gServer.events.length, 1);
+    equal(gServer.events[0].recurrence.length, 1);
+    equal(gServer.events[0].recurrence[0], "RRULE:FREQ=WEEKLY");
 
     let occ = event.recurrenceInfo.getNextOccurrence(event.startDate);
     let changedOcc = occ.clone();
@@ -869,8 +869,8 @@ add_task(function* test_recurring_event() {
 
     event = yield pclient.modifyItem(changedOcc, occ);
     occ = event.recurrenceInfo.getNextOccurrence(event.startDate);
-    do_check_eq(occ.title, "changed");
-    do_check_eq(gServer.events.length, 2);
+    equal(occ.title, "changed");
+    equal(gServer.events.length, 2);
 
     gServer.resetClient(client);
 });
@@ -899,8 +899,8 @@ add_task(function* test_import_invitation() {
     ].join("\r\n"));
 
     let addedItem = yield pclient.adoptItem(event);
-    do_check_eq(gServer.events.length, 1);
-    do_check_eq(addedItem.icalString, event.icalString);
+    equal(gServer.events.length, 1);
+    equal(addedItem.icalString, event.icalString);
     gServer.resetClient(client);
     Preferences.set("calendar.google.enableAttendees", false);
 });
@@ -946,15 +946,15 @@ add_task(function* test_modify_invitation() {
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
 
     let items = yield pclient.getAllItems();
-    do_check_eq(items.length, 1);
+    equal(items.length, 1);
 
     let item = items[0];
     let att = cal.getInvitedAttendee(item);
     let newItem = item.clone();
 
-    do_check_neq(att, null);
-    do_check_eq(att.id, "mailto:" + attendee.email);
-    do_check_eq(att.participationStatus, "NEEDS-ACTION");
+    notEqual(att, null);
+    equal(att.id, "mailto:" + attendee.email);
+    equal(att.participationStatus, "NEEDS-ACTION");
 
     newItem.removeAttendee(att);
     att = att.clone();
@@ -962,7 +962,7 @@ add_task(function* test_modify_invitation() {
     newItem.addAttendee(att);
 
     let modifiedItem = yield pclient.modifyItem(newItem, items[0]);
-    do_check_eq(gServer.lastMethod, "PATCH");
+    equal(gServer.lastMethod, "PATCH");
 
     // Case #2: User is organizer
     let events = gServer.events;
@@ -986,15 +986,15 @@ add_task(function* test_modify_invitation() {
     pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
 
     items = yield pclient.getAllItems();
-    do_check_eq(items.length, 1);
+    equal(items.length, 1);
 
     item = items[0];
     let org = item.getAttendeeById("mailto:" + organizer.email);
     newItem = item.clone();
 
-    do_check_neq(org, null);
-    do_check_eq(org.id, "mailto:" + organizer.email);
-    do_check_eq(org.participationStatus, "ACCEPTED");
+    notEqual(org, null);
+    equal(org.id, "mailto:" + organizer.email);
+    equal(org.participationStatus, "ACCEPTED");
 
     newItem.removeAttendee(org);
     org = org.clone();
@@ -1002,7 +1002,7 @@ add_task(function* test_modify_invitation() {
     newItem.addAttendee(org);
 
     modifiedItem = yield pclient.modifyItem(newItem, items[0]);
-    do_check_eq(gServer.lastMethod, "PUT");
+    equal(gServer.lastMethod, "PUT");
 
     gServer.resetClient(client);
 });
@@ -1044,11 +1044,11 @@ add_task(function* test_metadata() {
     let items = yield pclient.getAllItems();
     let meta = getAllMeta(offline);
     let [event, task] = items;
-    do_check_true(cal.isEvent(event));
-    do_check_true(cal.isToDo(task));
-    do_check_eq(meta.size, 2);
-    do_check_eq(meta.get(event.hashId), ['"1"', "go6ijb0b46hlpbu4eeu92njevo", false].join("\u001A"));
-    do_check_eq(meta.get(task.hashId), ['"2"', "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU", false].join("\u001A"));
+    ok(cal.isEvent(event));
+    ok(cal.isToDo(task));
+    equal(meta.size, 2);
+    equal(meta.get(event.hashId), ['"1"', "go6ijb0b46hlpbu4eeu92njevo", false].join("\u001A"));
+    equal(meta.get(task.hashId), ['"2"', "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU", false].join("\u001A"));
 
     // Modify an event
     gServer.nextEtag = '"3"';
@@ -1059,11 +1059,11 @@ add_task(function* test_metadata() {
     items = yield pclient.getAllItems();
     meta = getAllMeta(offline);
     [event, task] = items;
-    do_check_true(cal.isEvent(event));
-    do_check_true(cal.isToDo(task));
-    do_check_eq(meta.size, 2);
-    do_check_eq(meta.get(event.hashId), ['"3"', "go6ijb0b46hlpbu4eeu92njevo", false].join("\u001A"));
-    do_check_eq(meta.get(task.hashId), ['"2"', "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU", false].join("\u001A"));
+    ok(cal.isEvent(event));
+    ok(cal.isToDo(task));
+    equal(meta.size, 2);
+    equal(meta.get(event.hashId), ['"3"', "go6ijb0b46hlpbu4eeu92njevo", false].join("\u001A"));
+    equal(meta.get(task.hashId), ['"2"', "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU", false].join("\u001A"));
 
     // Modify a task
     gServer.nextEtag = '"4"';
@@ -1074,38 +1074,38 @@ add_task(function* test_metadata() {
     items = yield pclient.getAllItems();
     meta = getAllMeta(offline);
     [event, task] = items;
-    do_check_eq(meta.size, 2);
-    do_check_eq(meta.get(event.hashId), ['"3"', "go6ijb0b46hlpbu4eeu92njevo", false].join("\u001A"));
-    do_check_eq(meta.get(task.hashId), ['"4"', "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU", false].join("\u001A"));
+    equal(meta.size, 2);
+    equal(meta.get(event.hashId), ['"3"', "go6ijb0b46hlpbu4eeu92njevo", false].join("\u001A"));
+    equal(meta.get(task.hashId), ['"4"', "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU", false].join("\u001A"));
 
     // Delete an event
     yield pclient.deleteItem(event);
     meta = getAllMeta(offline);
-    do_check_eq(meta.size, 1);
-    do_check_eq(meta.get(task.hashId), ['"4"', "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU", false].join("\u001A"));
+    equal(meta.size, 1);
+    equal(meta.get(task.hashId), ['"4"', "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU", false].join("\u001A"));
 
     // Delete a task
     yield pclient.deleteItem(task);
     meta = getAllMeta(offline);
-    do_check_eq(meta.size, 0);
+    equal(meta.size, 0);
 
     // Add an event
     gServer.nextEtag = '"6"';
     newEvent = yield pclient.addItem(event);
     meta = getAllMeta(offline);
-    do_check_eq(meta.size, 1);
-    do_check_eq(gServer.events.length, 1);
-    do_check_eq(meta.get(newEvent.hashId), ['"6"', gServer.events[0].id, false].join("\u001A"));
+    equal(meta.size, 1);
+    equal(gServer.events.length, 1);
+    equal(meta.get(newEvent.hashId), ['"6"', gServer.events[0].id, false].join("\u001A"));
 
     // Add a task
     gServer.nextEtag = '"7"';
     newTask = yield pclient.addItem(task);
     meta = getAllMeta(offline);
-    do_check_eq(meta.size, 2);
-    do_check_eq(gServer.events.length, 1);
-    do_check_eq(gServer.tasks.length, 1);
-    do_check_eq(meta.get(newEvent.hashId), ['"6"', gServer.events[0].id, false].join("\u001A"));
-    do_check_eq(meta.get(newTask.hashId), ['"7"', gServer.tasks[0].id, false].join("\u001A"));
+    equal(meta.size, 2);
+    equal(gServer.events.length, 1);
+    equal(gServer.tasks.length, 1);
+    equal(meta.get(newEvent.hashId), ['"6"', gServer.events[0].id, false].join("\u001A"));
+    equal(meta.get(newTask.hashId), ['"7"', gServer.tasks[0].id, false].join("\u001A"));
 
     gServer.resetClient(client);
 });
@@ -1152,14 +1152,14 @@ add_task(function* test_metadata_recurring() {
     let items = yield pclient.getAllItems();
 
     let meta = getAllMeta(offline);
-    do_check_eq(meta.size, 3);
-    do_check_eq(meta.get(items[0].hashId), ['"1"', "go6ijb0b46hlpbu4eeu92njevo", false].join("\u001A"));
+    equal(meta.size, 3);
+    equal(meta.get(items[0].hashId), ['"1"', "go6ijb0b46hlpbu4eeu92njevo", false].join("\u001A"));
 
     // The exception metadata should also exist
     let exIds = items[0].recurrenceInfo.getExceptionIds({});
-    do_check_eq(exIds.length, 2);
+    equal(exIds.length, 2);
     let ex = items[0].recurrenceInfo.getExceptionFor(exIds[0]);
-    do_check_eq(meta.get(ex.hashId), ['"2"', "go6ijb0b46hlpbu4eeu92njevo_20060610T160000Z", false].join("\u001A"));
+    equal(meta.get(ex.hashId), ['"2"', "go6ijb0b46hlpbu4eeu92njevo_20060610T160000Z", false].join("\u001A"));
 
     // Changing an exception should retain the metadata entries
     let newEx = ex.clone();
@@ -1167,8 +1167,8 @@ add_task(function* test_metadata_recurring() {
     gServer.nextEtag = '"4"';
     yield pclient.modifyItem(newEx, ex);
     meta = getAllMeta(offline);
-    do_check_eq(meta.size, 3);
-    do_check_eq(meta.get(newEx.hashId), ['"4"', "go6ijb0b46hlpbu4eeu92njevo_20060610T160000Z", false].join("\u001A"));
+    equal(meta.size, 3);
+    equal(meta.get(newEx.hashId), ['"4"', "go6ijb0b46hlpbu4eeu92njevo_20060610T160000Z", false].join("\u001A"));
 
     // Deleting an exception should delete the metadata, as it turns into an EXDATE
     let newItem = items[0].clone();
@@ -1176,12 +1176,12 @@ add_task(function* test_metadata_recurring() {
     yield pclient.modifyItem(newItem, items[0]);
 
     meta = getAllMeta(offline);
-    do_check_eq(meta.size, 2);
+    equal(meta.size, 2);
 
     // Deleting the master item should remove all metadata entries
     yield pclient.deleteItem(items[0]);
     meta = getAllMeta(offline);
-    do_check_eq(meta.size, 0);
+    equal(meta.size, 0);
 
     gServer.resetClient(client);
 });
@@ -1215,11 +1215,11 @@ add_task(function* test_conflict_modify() {
     gServer.events[0].summary = "remote change";
     let modifiedItem = yield pclient.modifyItem(newItem, item);
     item = (yield pclient.getAllItems())[0];
-    do_check_eq(gServer.events[0].summary, "local change");
-    do_check_neq(gServer.events[0].etag, '"2"')
-    do_check_eq(item.title, "local change");
-    do_check_eq(modifiedItem.title, "local change");
-    do_check_eq(gServer.events.length, 1);
+    equal(gServer.events[0].summary, "local change");
+    notEqual(gServer.events[0].etag, '"2"')
+    equal(item.title, "local change");
+    equal(modifiedItem.title, "local change");
+    equal(gServer.events.length, 1);
 
     // Case #2: Modified on server, modify locally, don't overwrite conflict
     MockConflictPrompt.overwrite = false;
@@ -1235,9 +1235,9 @@ add_task(function* test_conflict_modify() {
     yield gServer.waitForLoad(client);
 
     item = (yield pclient.getAllItems())[0];
-    do_check_eq(gServer.events[0].summary, "remote change");
-    do_check_eq(gServer.events[0].etag, '"3"')
-    do_check_eq(item.title, "remote change");
+    equal(gServer.events[0].summary, "remote change");
+    equal(gServer.events[0].etag, '"3"')
+    equal(item.title, "remote change");
 
     // Case #3: Modified on server, delete locally, don't overwrite conflict
     MockConflictPrompt.overwrite = false;
@@ -1253,9 +1253,9 @@ add_task(function* test_conflict_modify() {
     yield gServer.waitForLoad(client);
 
     item = (yield pclient.getAllItems())[0];
-    do_check_eq(gServer.events[0].summary, "remote change");
-    do_check_eq(gServer.events[0].etag, '"4"')
-    do_check_eq(item.title, "remote change");
+    equal(gServer.events[0].summary, "remote change");
+    equal(gServer.events[0].etag, '"4"')
+    equal(item.title, "remote change");
 
     // Case #4: Modified on server, delete locally, overwrite conflict
     MockConflictPrompt.overwrite = true;
@@ -1263,7 +1263,7 @@ add_task(function* test_conflict_modify() {
     gServer.events[0].summary = "remote change";
     yield pclient.deleteItem(item);
     item = (yield pclient.getAllItems())[0];
-    do_check_eq(gServer.events.length, 0);
+    equal(gServer.events.length, 0);
 
     gServer.resetClient(client);
 });
@@ -1299,11 +1299,11 @@ add_task(function* test_conflict_delete() {
     newItem.title = "local change";
     let modifiedItem = yield pclient.modifyItem(newItem, item);
     item = (yield pclient.getAllItems())[0];
-    do_check_eq(gServer.events[0].summary, "local change");
-    do_check_neq(gServer.events[0].etag, '"2"')
-    do_check_eq(item.title, "local change");
-    do_check_eq(modifiedItem.title, "local change");
-    do_check_eq(gServer.events.length, 1);
+    equal(gServer.events[0].summary, "local change");
+    notEqual(gServer.events[0].etag, '"2"')
+    equal(item.title, "local change");
+    equal(modifiedItem.title, "local change");
+    equal(gServer.events.length, 1);
 
     // Case #2: Deleted on server, modify locally, don't overwrite conflict
     MockConflictPrompt.overwrite = false;
@@ -1321,15 +1321,15 @@ add_task(function* test_conflict_delete() {
     yield gServer.waitForLoad(client);
 
     let items = yield pclient.getAllItems();
-    do_check_eq(items.length, 0);
-    do_check_eq(gServer.events.length, 1);
+    equal(items.length, 0);
+    equal(gServer.events.length, 1);
 
     // Put the event back in the calendar for the next run
     delete gServer.events[0].status;
     client.refresh();
     yield gServer.waitForLoad(client);
     items = yield pclient.getAllItems();
-    do_check_eq(items.length, 1);
+    equal(items.length, 1);
 
     // Case #3: Deleted on server, delete locally, don't overwrite conflict
     MockConflictPrompt.overwrite = false;
@@ -1346,21 +1346,21 @@ add_task(function* test_conflict_delete() {
     yield gServer.waitForLoad(client);
 
     items = yield pclient.getAllItems();
-    do_check_eq(items.length, 0);
+    equal(items.length, 0);
 
     // Put the event back in the calendar for the next run
     delete gServer.events[0].status;
     client.refresh();
     yield gServer.waitForLoad(client);
     items = yield pclient.getAllItems();
-    do_check_eq(items.length, 1);
+    equal(items.length, 1);
 
     // Case #4: Deleted on server, delete locally, overwrite conflict
     MockConflictPrompt.overwrite = true;
     gServer.events = [];
     yield pclient.deleteItem(item);
     items = yield pclient.getAllItems();
-    do_check_eq(items.length, 0);
+    equal(items.length, 0);
 
     gServer.resetClient(client);
 });
@@ -1390,17 +1390,17 @@ add_task(function* test_default_alarms() {
     // Case #1: read default alarms from event stream
     let client = yield gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
-    do_check_eq(client.getProperty("settings.defaultReminders"), JSON.stringify(defaultReminders));
+    equal(client.getProperty("settings.defaultReminders"), JSON.stringify(defaultReminders));
 
     let item = (yield pclient.getAllItems())[0];
     let alarms = item.getAlarms({});
 
-    do_check_eq(alarms.length, 2);
-    do_check_true(alarms.every(x => x.getProperty("X-DEFAULT-ALARM") == "TRUE"));
-    do_check_eq(alarms[0].action, "DISPLAY");
-    do_check_eq(alarms[0].offset.icalString, "-PT10M");
-    do_check_eq(alarms[1].action, "EMAIL");
-    do_check_eq(alarms[1].offset.icalString, "-PT20M");
+    equal(alarms.length, 2);
+    ok(alarms.every(x => x.getProperty("X-DEFAULT-ALARM") == "TRUE"));
+    equal(alarms[0].action, "DISPLAY");
+    equal(alarms[0].offset.icalString, "-PT10M");
+    equal(alarms[1].action, "EMAIL");
+    equal(alarms[1].offset.icalString, "-PT20M");
 
     // Case #2: add an item with only default alarms
     let event = cal.createEvent([
@@ -1418,8 +1418,8 @@ add_task(function* test_default_alarms() {
     ].join("\r\n"));
 
     yield pclient.addItem(event);
-    do_check_true(gServer.events[1].reminders.useDefault);
-    do_check_eq(gServer.events[1].reminders.overrides.length, 0);
+    ok(gServer.events[1].reminders.useDefault);
+    equal(gServer.events[1].reminders.overrides.length, 0);
 
     // Case #3: Mixed default/non-default alarms. Not sure this will happen
     event = cal.createEvent([
@@ -1442,9 +1442,9 @@ add_task(function* test_default_alarms() {
     ].join("\r\n"));
 
     yield pclient.addItem(event);
-    do_check_true(gServer.events[2].reminders.useDefault);
-    do_check_eq(gServer.events[2].reminders.overrides.length, 1);
-    do_check_eq(gServer.events[2].reminders.overrides[0].minutes, 5);
+    ok(gServer.events[2].reminders.useDefault);
+    equal(gServer.events[2].reminders.overrides.length, 1);
+    equal(gServer.events[2].reminders.overrides[0].minutes, 5);
 
     gServer.resetClient(client);
 
@@ -1464,8 +1464,8 @@ add_task(function* test_default_alarms() {
     ].join("\r\n"));
 
     yield pclient.addItem(event);
-    do_check_true(gServer.events[0].reminders.useDefault);
-    do_check_eq(gServer.events[0].reminders.overrides, undefined);
+    ok(gServer.events[0].reminders.useDefault);
+    equal(gServer.events[0].reminders.overrides, undefined);
 
     let events = gServer.events;
     gServer.resetClient(client);
@@ -1476,7 +1476,7 @@ add_task(function* test_default_alarms() {
     pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
 
     item = (yield pclient.getAllItems())[0];
-    do_check_eq(item.getProperty("X-DEFAULT-ALARM"), "TRUE");
+    equal(item.getProperty("X-DEFAULT-ALARM"), "TRUE");
 
     gServer.resetClient(client);
 });
@@ -1536,15 +1536,15 @@ add_task(function* test_paginate() {
     let pclient = cal.async.promisifyCalendar(client);
 
     // Make sure all pages were requested
-    do_check_eq(gServer.eventsData.nextPageToken, null);
-    do_check_eq(gServer.tasksData.nextPageToken, null);
+    equal(gServer.eventsData.nextPageToken, null);
+    equal(gServer.tasksData.nextPageToken, null);
 
     // ...and we have all items. Not checking props
     // because the other tests do this sufficiently.
     let items = yield pclient.getAllItems();
-    do_check_eq(items.length, 4);
+    equal(items.length, 4);
 
-    do_check_eq(client.getProperty("syncToken.events"), "next-sync-token");
+    equal(client.getProperty("syncToken.events"), "next-sync-token");
 
     Preferences.reset("calendar.google.maxResultsPerRequest");
     gServer.resetClient(client);
@@ -1589,18 +1589,18 @@ add_task(function* test_incremental_reset() {
     let pclient = cal.async.promisifyCalendar(client);
 
     let items = yield pclient.getAllItems();
-    do_check_eq(items.length, 1);
-    do_check_eq(items[0].title, "New Event");
+    equal(items.length, 1);
+    equal(items[0].title, "New Event");
 
     client.refresh();
     yield gServer.waitForLoad(client);
 
     items = yield pclient.getAllItems();
-    do_check_eq(items.length, 1);
-    do_check_eq(items[0].title, "New Event 2");
+    equal(items.length, 1);
+    equal(items[0].title, "New Event 2");
 
-    do_check_eq(gServer.syncs.length, 0);
-    do_check_eq(client.getProperty("syncToken.events"), "last");
+    equal(gServer.syncs.length, 0);
+    equal(client.getProperty("syncToken.events"), "last");
 
     gServer.resetClient(client);
 });
