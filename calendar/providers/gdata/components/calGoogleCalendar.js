@@ -218,15 +218,13 @@ calGoogleCalendar.prototype = {
         return tasksURI;
     },
 
-    STALE_TIME: 7 * 86400,
-
     getUpdatedMin: function getUpdatedMin(aWhich) {
         let updatedMin = null;
         let lastUpdated = this.getProperty("lastUpdated." + aWhich);
         if (lastUpdated) {
             updatedMin = cal.createDateTime(lastUpdated);
             let lastWeek = cal.now();
-            lastWeek.second -= this.STALE_TIME;
+            lastWeek.day -= 7;
             if (updatedMin.compare(lastWeek) <= 0) {
                 cal.LOG("[calGoogleCalendar] Last updated time for " + aWhich +
                         " is very old, doing full sync");
