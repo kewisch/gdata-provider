@@ -41,3 +41,5 @@ JS_PREFERENCE_FILES += [
     'defaults/preferences.js',
 ]
 
+with Files('**'):
+    BUG_COMPONENT = ('Calendar', 'Provider: GData')
