@@ -429,11 +429,7 @@ calGoogleRequest.prototype = {
                         if (this.reauthenticate) {
                             cal.LOG("[calGoogleRequest] The access token is not authorized, trying to refresh token.")
                             this.reauthenticate = false;
-                            this.mSession.asyncItemRequest(this).then(function(aOperation, aData) {
-                                this.succeed(aData);
-                            }.bind(this), function(e) {
-                                this.fail(e.result, e.message || e);
-                            }.bind(this));
+                            this.mSession.asyncItemRequest(this);
                         } else {
                             cal.LOG("[calGoogleRequest] Even refreshed token is not authorized, looks like the client is outdated");
                             this.mSession.notifyOutdated();
@@ -467,11 +463,7 @@ calGoogleRequest.prototype = {
                         this.mSession.invalidate();
                         if (this.reauthenticate) {
                             this.reauthenticate = false;
-                            this.mSession.asyncItemRequest(this).then(function(aOperation, aData) {
-                                this.succeed(aData);
-                            }.bind(this), function(e) {
-                                this.fail(e.result, e.message || e);
-                            }.bind(this));
+                            this.mSession.asyncItemRequest(this);
                         } else {
                             this.fail(calGoogleRequest.LOGIN_FAILED, reason);
                         }
