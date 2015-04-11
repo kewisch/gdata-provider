@@ -17,7 +17,8 @@ SEAMONKEY_VERSION := $(shell cat $(topsrcdir)/suite/config/version.txt)
 LIGHTNING_VERSION := $(shell $(PYTHON) $(topsrcdir)/calendar/lightning/build/makeversion.py $(word 1,$(MOZ_PKG_VERSION) $(THUNDERBIRD_VERSION)))
 GDATA_VERSION = $(shell $(PYTHON) $(srcdir)/makeversion.py $(LIGHTNING_VERSION))
 
-DEFINES += -DLIGHTNING_VERSION=$(LIGHTNING_VERSION) \
+DEFINES += -DAB_CD=$(AB_CD) \
+           -DLIGHTNING_VERSION=$(LIGHTNING_VERSION) \
            -DSEAMONKEY_VERSION=$(SEAMONKEY_VERSION) \
            -DTHUNDERBIRD_VERSION=$(THUNDERBIRD_VERSION) \
            -DCOMM_BUILD=$(COMM_BUILD) \
