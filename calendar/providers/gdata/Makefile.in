@@ -8,9 +8,7 @@ XPI_PKGNAME = gdata-provider-$(GDATA_VERSION).$(AB_CD).$(MOZ_PKG_PLATFORM)
 XPI_VERSION = $(GDATA_VERSION)
 XPI_NO_UNIVERSAL = 1
 XPI_EM_ID = {a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
-ifndef DISABLE_LIGHTNING_INSTALL
 XPI_INSTALL_EXTENSION = $(XPI_EM_ID)
-endif
 
 THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version.txt)
 SEAMONKEY_VERSION := $(shell cat $(topsrcdir)/suite/config/version.txt)
