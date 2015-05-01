@@ -183,9 +183,9 @@
         <parameter name="aRow"/>
         <body><![CDATA[
           let calendar = this.getCalendar(aRow);
-          if (calendar.uri.path.contains("?calendar")) {
+          if (calendar.uri.path.includes("?calendar")) {
               return this.mCalendarHeaderIndex;
-          } else if (calendar.uri.path.contains("?tasks")) {
+          } else if (calendar.uri.path.includes("?tasks")) {
               return this.mTasksHeaderIndex;
           } else {
               return -1;
