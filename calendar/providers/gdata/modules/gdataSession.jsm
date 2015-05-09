@@ -290,15 +290,14 @@ calGoogleSession.prototype = {
                 // master password prompt will show just the buttons and
                 // possibly hang. If we postpone until the window is loaded,
                 // all is well.
-                function postpone() {
+                setTimeout(function postpone() {
                     let win = cal.getCalendarWindow();
                     if (!win || win.document.readyState != "complete") {
                         setTimeout(postpone, 400);
                     } else {
                         connect();
                     }
-                }
-                setTimeout(postpone, 0);
+                }, 0);
             }
         } catch (e) {
             // If something went wrong, reset the login state just in case

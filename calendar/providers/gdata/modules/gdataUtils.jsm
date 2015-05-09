@@ -262,13 +262,14 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
 
     // Only parse attendees if they are enabled, due to bug 407961
     if (Preferences.get("calendar.google.enableAttendees", false)) {
-        const statusMap = {
-            "NEEDS-ACTION": "needsAction",
-            "DECLINED": "declined",
-            "TENTATIVE": "tentative",
-            "ACCEPTED": "accepted"
-        };
-        function createAttendee(attendee) {
+        let createAttendee = function(attendee) {
+            const statusMap = {
+                "NEEDS-ACTION": "needsAction",
+                "DECLINED": "declined",
+                "TENTATIVE": "tentative",
+                "ACCEPTED": "accepted"
+            };
+
             let attendeeData = {};
             if (aItem.organizer && aItem.organizer.id == attendee.id) {
                 needsOrganizer = false;
@@ -287,7 +288,8 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
             setIf(attendeeData, "resource", attendee.userType && attendee.userType != "INDIVIDUAL");
             setIf(attendeeData, "additionalGuests", attendee.getProperty("X-NUM-GUESTS"));
             return attendeeData;
-        }
+        };
+
         let needsOrganizer = true;
         let attendees = aItem.getAttendees({});
         let attendeeData = [ createAttendee(a) for each (a in attendees) ];
