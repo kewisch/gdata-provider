@@ -5,6 +5,8 @@
 
 XPI_NAME = 'gdata-provider'
 
+DIST_FILES += ['install.rdf']
+
 DIRS += [
     'locales',
 ]
