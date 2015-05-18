@@ -11,8 +11,6 @@ VPATH = @srcdir@
 # directory
 relativesrcdir = calendar/locales
 
-USE_EXTENSION_MANIFEST = 1
-
 include $(DEPTH)/config/autoconf.mk
 
 DEFINES += -DAB_CD=$(AB_CD) \
