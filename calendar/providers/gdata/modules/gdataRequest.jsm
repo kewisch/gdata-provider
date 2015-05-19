@@ -197,7 +197,12 @@ calGoogleRequest.prototype = {
                 uristring += "?" + params.join("&");
             }
             let uri = Services.io.newURI(uristring, null, null);
-            let channel = Services.io.newChannelFromURI(uri);
+            let channel = Services.io.newChannelFromURI2(uri,
+                                                         null,
+                                                         Services.scriptSecurityManager.getSystemPrincipal(),
+                                                         null,
+                                                         Components.interfaces.nsILoadInfo.SEC_NORMAL,
+                                                         Components.interfaces.nsIContentPolicy.TYPE_OTHER);
             cal.LOG("[calGoogleRequest] Requesting " + this.method + " " +
                     channel.URI.spec);
 
