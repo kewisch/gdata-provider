@@ -466,6 +466,64 @@ add_test(function test_migrate_uri() {
     run_next_test();
 });
 
+add_test(function test_dateToJSON() {
+    function _createDateTime(timezone) {
+        let dt = cal.createDateTime();
+        dt.resetTo(2015, 0, 30, 12, 0, 0, timezone);
+    }
+
+    let tzProvider = cal.getTimezoneService();
+    let localTz = Services.prefs.getCharPref("calendar.timezone.local") || null;
+
+    // no timezone
+    let dt = _createDateTime(cal.floating());
+    equal(dateToJSON(dt), {});
+
+    // valid non-Olson tz name
+    dt = _createDateTime(tzProvider.getTimezone("Eastern Standard Time"));
+    equal(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "America/New_York"});
+
+    // valid continent/city Olson tz
+    dt = _createDateTime(tzProvider.getTimezone("America/New_York"));
+    equal(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "America/New_York"});
+
+    // valid continent/region/city Olson tz
+    dt = _createDateTime(tzProvider.getTimezone("America/Argentina/Buenos_Aires"));
+    equal(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "America/New_York"});
+
+    // unknown but formal valid Olson tz
+    dt = _createDateTime(tzProvider.getTimezone("Unknown/Olson/Timezone"));
+    equal(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "Unknown/Olson/Timezone"});
+
+    // invalid non-Olson tz
+    dt = _createDateTime(tzProvider.getTimezone("InvalidTimeZone"));
+    notEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "InvalidTimeZone"});
+
+    // timezone guessing: UTC
+    Services.prefs.setCharPref("calendar.timezone.local", "UTC");
+    equal(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "UTC"});
+
+    // timezone guessing Etc
+    Services.prefs.setCharPref("calendar.timezone.local", "Europe/Berlin");
+    let now = cal.now();
+    ok((now.timezoneOffset == 3600 || now.timezoneOffset == 7200),
+       "Invalid timezone offset for testing Etc guessing!");
+    let tz = (now.timezoneOffset == 3600) ? "Etc/GMT-1" : "Etc/GMT-2";
+    equal(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": tz});
+
+    // date only
+    dt.isDate = true;
+    equal(dateToJSON(dt), {"date": "2015-01-30"});
+
+    if (localTz) {
+        Services.prefs.setCharPref("calendar.timezone.local", localTz);
+    } else {
+        Services.prefs.clearUserPref("calendar.timezone.local");
+    }
+
+    run_next_test();
+});
+
 add_task(function* test_organizerCN() {
     gServer.events = [];
     let client = yield gServer.getClient();

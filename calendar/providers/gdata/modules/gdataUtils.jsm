@@ -144,7 +144,7 @@ function dateToJSON(aDate) {
         if (tzid in windowsTimezoneMap) {
             // A Windows timezone, likely an outlook invitation.
             jsonData.timeZone = windowsTimezoneMap[tzid];
-        } else if (tzid.match(/^[^\/ ]+\/[^\/ ]+$/)) {
+        } else if (tzid.match(/^[^\/ ]+(\/[^\/ ]+){1,2}$/)) {
             // An Olson timezone id
             jsonData.timeZone = aDate.timezone.tzid;
         } else {
@@ -152,7 +152,8 @@ function dateToJSON(aDate) {
             // events, we can fake it with Etc/ timezones.
             let full_tzoffset = aDate.timezoneOffset;
             let tzoffset_hr = Math.floor(Math.abs(full_tzoffset) / 3600);
-            let sign = (full_tzoffset < 0 ? "-" : "+");
+            // sign for etc needs to be the opposite of the UTC tz offset sign
+            let sign = (full_tzoffset > 0 ? "-" : "+");
             if (tzoffset_hr == 0) {
                 jsonData.timeZone = "UTC";
             } else {
