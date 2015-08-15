@@ -43,7 +43,7 @@ if (typeof Promise.all == "function") {
     for (let i = 0; i < values.length; i++) {
       let index = i;
       let value = values[i];
-      let resolver = function(val) checkForCompletion(val, index);
+      let resolver = function(val) { return checkForCompletion(val, index); };
 
       if (value && typeof(value.then) == "function") {
         value.then(resolver, deferred.reject);

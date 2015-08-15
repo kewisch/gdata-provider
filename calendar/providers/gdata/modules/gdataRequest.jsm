@@ -126,7 +126,7 @@ calGoogleRequest.prototype = {
      * The type of this reqest. Must be one of
      * GET, ADD, MODIFY, DELETE
      */
-    get type() this.method,
+    get type() { return this.method; },
 
     set type(v) {
         let valid = [this.GET, this.ADD, this.MODIFY, this.PATCH, this.DELETE];

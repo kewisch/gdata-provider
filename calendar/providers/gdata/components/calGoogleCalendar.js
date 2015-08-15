@@ -100,16 +100,16 @@ calGoogleCalendar.prototype = {
         }
     },
 
-    get isDefaultCalendar() this.mCalendarName ? !this.mCalendarName.endsWith("@group.calendar.google.com") : false,
+    get isDefaultCalendar() { return this.mCalendarName ? !this.mCalendarName.endsWith("@group.calendar.google.com") : false; },
 
     /*
      * implement calICalendar
      */
-    get type() "gdata",
-    get providerID() "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
-    get canRefresh() true,
+    get type() { return "gdata"; },
+    get providerID() { return "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}"; },
+    get canRefresh() { return true; },
 
-    get id() this.mID,
+    get id() { return this.mID; },
     set id(val) {
         let setter = this.__proto__.__proto__.__lookupSetter__("id");
         val = setter.call(this, val);
@@ -120,7 +120,7 @@ calGoogleCalendar.prototype = {
         return val;
     },
 
-    get uri() this.mUri,
+    get uri() { return this.mUri; },
     set uri(aUri) {
         const protocols = ["http", "https", "webcal", "webcals"];
         this.mUri = aUri;
@@ -128,7 +128,7 @@ calGoogleCalendar.prototype = {
             // new format:  googleapi://session-id/?calendar=calhash@group.calendar.google.com&tasks=taskhash
             let [fullUser, path] = aUri.path.substr(2).split("/", 2);
             let parameters = new Map(path.substr(1).split("&").filter(Boolean)
-                             .map(function(x) x.split("=", 2).map(decodeURIComponent)));
+                             .map(function(x) { return x.split("=", 2).map(decodeURIComponent); }));
 
             if (parameters.size == 0) {
                 this.mCalendarName = fullUser;
@@ -339,7 +339,7 @@ calGoogleCalendar.prototype = {
     deleteItemOrUseCache: calendarShim.deleteItemOrUseCache,
     notifyPureOperationComplete: calendarShim.notifyPureOperationComplete,
 
-    addItem: function(aItem, aListener) this.adoptItem(aItem.clone(), aListener),
+    addItem: function(aItem, aListener) { return this.adoptItem(aItem.clone(), aListener); },
     adoptItem: function(aItem, aListener) {
         function stackContains(part, max) {
             if (max === undefined) max = 8;
@@ -603,7 +603,7 @@ calGoogleCalendar.prototype = {
     /**
      * Implement calIChangeLog
      */
-    get offlineStorage() this.mOfflineStorage,
+    get offlineStorage() { return this.mOfflineStorage; },
     set offlineStorage(val) {
         this.mOfflineStorage = val;
         let cacheVersion = this.getProperty("cache.version");
@@ -680,7 +680,7 @@ calGoogleCalendar.prototype = {
             calendarRequest.uri = this.createUsersURI("calendarList", this.mCalendarName)
             calendarPromise = this.session.asyncItemRequest(calendarRequest).then(function(aData) {
                 if (aData.defaultReminders) {
-                    this.defaultReminders = aData.defaultReminders.map(function(x) JSONToAlarm(x, true));
+                    this.defaultReminders = aData.defaultReminders.map(function(x) { return JSONToAlarm(x, true); });
                 } else {
                     this.defaultReminders = [];
                 }
@@ -780,7 +780,7 @@ calGoogleCalendar.prototype = {
      * provider, but we want to advertise that we will always take care of
      * notifications.
      */
-    canNotify: function(aMethod, aItem) true
+    canNotify: function(aMethod, aItem) { return true; }
 };
 
 var NSGetFactory = XPCOMUtils.generateNSGetFactory([calGoogleCalendar]);

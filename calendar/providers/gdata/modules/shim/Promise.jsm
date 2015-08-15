@@ -149,8 +149,8 @@ Promise.resolve = function(aValue) {
     if (aValue instanceof Promise) {
         return aValue;
     }
-    return new Promise(function(aResolve) aResolve(aValue));
+    return new Promise(function(aResolve) { return aResolve(aValue); });
 };
 Promise.reject = function(aReason) {
-    return new Promise(function(_, aReject) aReject(aReason));
+    return new Promise(function(_, aReject) { return aReject(aReason); });
 }

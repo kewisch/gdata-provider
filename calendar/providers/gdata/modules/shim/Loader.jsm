@@ -145,19 +145,19 @@ function Map(values) {
     }
 }
 Map.prototype = {
-    has: function(k) k in this.data,
-    set: function(k, v) this.data[k] = v,
-    get: function(k) this.data[k],
-    delete: function(k) delete this.data[k],
-    get size() Object.keys(this.data).length,
+    has: function(k) { return k in this.data; },
+    set: function(k, v) { return this.data[k] = v; },
+    get: function(k) { return this.data[k]; },
+    delete: function(k) { return delete this.data[k]; },
+    get size() { return Object.keys(this.data).length; },
     forEach: function(cb) {
         for (let k in this.data) {
             cb(this.data[k], k, this);
         }
     },
 
-    toSource: function() Object.prototype.toSource.call(this.data),
-    __iterator__: function() new Iterator(this.data)
+    toSource: function() { return Object.prototype.toSource.call(this.data); },
+    __iterator__: function() { return new Iterator(this.data); }
 };
 
 /**
@@ -178,9 +178,9 @@ Set.prototype = {
         return false;
     },
 
-    get size() this.data.length,
-    add: function(v) this.has(v) ? null : this.data.push(v),
-    clear: function() this.data = [],
+    get size() { return this.data.length; },
+    add: function(v) { return this.has(v) ? null : this.data.push(v); },
+    clear: function() { return this.data = []; },
     delete: function(v) {
         for (let i = 0; i < this.data.length; i++) {
             if (this.data[i] == v) {
@@ -196,7 +196,7 @@ Set.prototype = {
         }
     },
 
-    toSource: function() this.data.toSource(),
+    toSource: function() { return this.data.toSource(); },
     __iterator__: function() {
         for each (let v in this.data) {
             yield v;
@@ -224,7 +224,7 @@ if (!cal.hashColor) {
                               "#000000", "#330000", "#663300", "#663333", "#333300",
                               "#003300", "#003333", "#000066", "#330099", "#330033"];
 
-        let sum = Array.map(str || " ", function(e) e.charCodeAt(0)).reduce(function(a,b) a + b);
+        let sum = Array.map(str || " ", function(e) { return e.charCodeAt(0); }).reduce(function(a, b) { return a + b; });
         return colorPalette[sum % colorPalette.length];
     }
 }

@@ -20,7 +20,7 @@
             Array.slice(refInterval.childNodes).filter(function(n) {
                 let nv = parseInt(n.getAttribute("value"), 10);
                 return nv < 30 && nv != 0;
-            }).forEach(function(n) refInterval.removeChild(n));
+            }).forEach(function(n) { refInterval.removeChild(n); });
 
             // Old Lightning doesn't hide the cache label
             let oldCacheLabel = document.getElementById("cache");

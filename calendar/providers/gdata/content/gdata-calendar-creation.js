@@ -110,7 +110,7 @@ CuImport("resource://gre/modules/Promise.jsm", this);
             wizard.canAdvance = sessionGroup.value || (sessionName.value && sessionNameIsValid);
         } else if (currentPageId == "gdata-calendars") {
             let calendarList = document.getElementById("calendar-list");
-            let calendars = calendarList.selectedCalendars.filter(function(x) !x.getProperty("disabled") && !x.readOnly);
+            let calendars = calendarList.selectedCalendars.filter(function(x) { return !x.getProperty("disabled") && !x.readOnly; });
             wizard.canAdvance = !!calendars.length;
         } else {
             protofunc();
@@ -215,7 +215,7 @@ CuImport("resource://gre/modules/Promise.jsm", this);
 
     this.gdataCalendarsAdvance = trycatch(function() {
         let calendarList = document.getElementById("calendar-list");
-        let calendars = calendarList.selectedCalendars.filter(function(x) !x.getProperty("disabled") && !x.readOnly);
+        let calendars = calendarList.selectedCalendars.filter(function(x) { return !x.getProperty("disabled") && !x.readOnly; });
         let calMgr = cal.getCalendarManager();
 
         if (Services.vc.compare(Services.appinfo.platformVersion, "9.0") < 0) {

@@ -52,7 +52,7 @@ var calGoogleSessionManager = {
         if (uri.schemeIs("googleapi")) {
             let [fullUser, path] = uri.path.substr(2).split("/", 2);
             id = fullUser || cal.getUUID();
-        } else if (host == "www.google.com" && uri.path.startsWith("/calendar/feeds") && protocols.some(function(s) uri.schemeIs(s))) {
+        } else if (host == "www.google.com" && uri.path.startsWith("/calendar/feeds") && protocols.some(function(s) { return uri.schemeIs(s); })) {
             let googleCalendarName = aCalendar.getProperty("googleCalendarName");
             let googleUser = Preferences.get("calendar.google.calPrefs." + googleCalendarName  + ".googleUser");
             id = googleUser || googleCalendarName || cal.getUUID();
@@ -73,7 +73,7 @@ var calGoogleSessionManager = {
         return gdataSessionMap.get(aSessionId);
     }
 };
-function getGoogleSessionManager() calGoogleSessionManager;
+function getGoogleSessionManager() { return calGoogleSessionManager; }
 
 /**
  * calGoogleSession
@@ -98,7 +98,7 @@ calGoogleSession.prototype = {
     mSessionID: null,
     mLoginPromise: null,
 
-    get id() this.mId,
+    get id() { return this.mId; },
 
     notifyQuotaExceeded: function() {
         let now = new Date();
@@ -195,9 +195,9 @@ calGoogleSession.prototype = {
         }
     },
 
-    get accessToken() this.oauth.accessToken,
-    get refreshToken() this.oauth.refreshToken,
-    set refreshToken(val) this.oauth.refreshToken = val,
+    get accessToken() { return this.oauth.accessToken; },
+    get refreshToken() { return this.oauth.refreshToken; },
+    set refreshToken(val) { this.oauth.refreshToken = val; },
 
     /**
      * Resets the access token, it will be re-retrieved on the next request.

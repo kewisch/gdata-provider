@@ -118,7 +118,7 @@ OAuth2.prototype = {
         Array.prototype.push.apply(params, this.extraAuthParams);
 
         // Now map the parameters to a string
-        params = params.map(function([k,v]) k + "=" + encodeURIComponent(v)).join("&");
+        params = params.map(function([k, v]) { return k + "=" + encodeURIComponent(v); }).join("&");
 
         this._browserRequest = {
             account: this,

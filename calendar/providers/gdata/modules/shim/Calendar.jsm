@@ -259,11 +259,11 @@ function promisifyCalendar(aCalendar) {
     };
     return {
         // Backwards compat, we can use |new Proxy(aCalendar, promisifyProxyHandler);| in the future.
-        adoptItem: function(aItem) promisifyProxyHandler.get(aCalendar, "adoptItem").apply(this, arguments),
-        addItem: function(aItem) promisifyProxyHandler.get(aCalendar, "addItem").apply(this, arguments),
-        modifyItem: function(aItem) promisifyProxyHandler.get(aCalendar, "modifyItem").apply(this, arguments),
-        deleteItem: function(aItem) promisifyProxyHandler.get(aCalendar, "deleteItem").apply(this, arguments),
-        getItem: function(aItem) promisifyProxyHandler.get(aCalendar, "getItem").apply(this, arguments),
-        getItems: function(aItems) promisifyProxyHandler.get(aCalendar, "getItems").apply(this, arguments),
+        adoptItem: function(aItem) { return promisifyProxyHandler.get(aCalendar, "adoptItem").apply(this, arguments); },
+        addItem: function(aItem) { return promisifyProxyHandler.get(aCalendar, "addItem").apply(this, arguments); },
+        modifyItem: function(aItem) { return promisifyProxyHandler.get(aCalendar, "modifyItem").apply(this, arguments); },
+        deleteItem: function(aItem) { return promisifyProxyHandler.get(aCalendar, "deleteItem").apply(this, arguments); },
+        getItem: function(aItem) { return promisifyProxyHandler.get(aCalendar, "getItem").apply(this, arguments); },
+        getItems: function(aItems) { return promisifyProxyHandler.get(aCalendar, "getItems").apply(this, arguments); },
     };
 }

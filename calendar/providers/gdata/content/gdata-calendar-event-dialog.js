@@ -184,7 +184,7 @@ Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
         let rv = null;
         let usesDefault;
         if (reminders.length) {
-            usesDefault = reminders.every(function(x) x.hasProperty("X-DEFAULT-ALARM"));
+            usesDefault = reminders.every(function(x) { return x.hasProperty("X-DEFAULT-ALARM"); });
         } else {
             usesDefault = window.calendarItem.getProperty("X-DEFAULT-ALARM") == "TRUE";
         }

@@ -84,7 +84,7 @@ function GDataServer(calendarId, tasksId) {
 GDataServer.prototype = {
     items: null,
 
-    get baseUri() "http://localhost:" + this.server.identity.primaryPort + "/",
+    get baseUri() { return "http://localhost:" + this.server.identity.primaryPort + "/"; },
 
     start: function() {
         this.server.start(-1);

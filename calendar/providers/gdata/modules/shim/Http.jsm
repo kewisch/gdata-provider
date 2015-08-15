@@ -6,8 +6,9 @@ var EXPORTED_SYMBOLS = ["percentEncode", "httpRequest"];
 
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 
-function percentEncode(aString)
-  encodeURIComponent(aString).replace(/[!'()]/g, escape).replace(/\*/g, "%2A");
+function percentEncode(aString) {
+  return encodeURIComponent(aString).replace(/[!'()]/g, escape).replace(/\*/g, "%2A");
+}
 
 function httpRequest(aUrl, aOptions) {
   let xhr = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
@@ -66,7 +67,7 @@ function httpRequest(aUrl, aOptions) {
   if (Array.isArray(POSTData)) {
     xhr.setRequestHeader("Content-Type",
                          "application/x-www-form-urlencoded; charset=utf-8");
-    POSTData = POSTData.map(function(p) p[0] + "=" + percentEncode(p[1]))
+    POSTData = POSTData.map(function(p) { return p[0] + "=" + percentEncode(p[1]); })
                        .join("&");
   }
 

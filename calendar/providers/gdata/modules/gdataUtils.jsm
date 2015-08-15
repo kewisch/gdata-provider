@@ -84,7 +84,7 @@ function migrateItemMetadata(aOfflineStorage, aOldItem, aNewItem, aMetadata) {
 
     // If an exception was turned into an EXDATE, we need to clear its metadata
     if (aOldItem.recurrenceInfo && aNewItem.recurrenceInfo) {
-        let newExIds = new Set(aNewItem.recurrenceInfo.getExceptionIds({}).map(function(x) x.icalString));
+        let newExIds = new Set(aNewItem.recurrenceInfo.getExceptionIds({}).map(function(x) { return x.icalString; }));
         for each (let exId in aOldItem.recurrenceInfo.getExceptionIds({})) {
             if (!newExIds.has(exId.icalString)) {
                 let ex = aOldItem.recurrenceInfo.getExceptionFor(exId);
@@ -939,7 +939,7 @@ ItemSaver.prototype = {
             }
 
             let exceptionItems = [];
-            let defaultReminders = (aData.defaultReminders || []).map(function(x) JSONToAlarm(x, true));
+            let defaultReminders = (aData.defaultReminders || []).map(function(x) { return JSONToAlarm(x, true); });
 
             let tzs = cal.getTimezoneService();
             let defaultTimezone = (aData.timeZone ? tzs.getTimezone(aData.timeZone) :
@@ -1242,7 +1242,7 @@ function spinEventLoop() {
     spinEventLoop.lastSpin = new Date();
 
     let deferred = PromiseUtils.defer();
-    Services.tm.currentThread.dispatch({ run: function() deferred.resolve(true) }, 0);
+    Services.tm.currentThread.dispatch({ run: function() { return deferred.resolve(true); } }, 0);
     return deferred.promise;
 }
 spinEventLoop.lastSpin = new Date();

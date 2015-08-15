@@ -7,7 +7,7 @@ var EXPORTED_SYMBOLS = ["Preferences"];
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
 
 var Preferences = {
-    has: function(k) !!cal.getPrefSafe(k),
-    get: function(k, v) cal.getPrefSafe(k, v),
-    set: function(k, v) cal.setPref(k, v)
+    has: function(k) { return !!cal.getPrefSafe(k); },
+    get: function(k, v) { return cal.getPrefSafe(k, v); },
+    set: function(k, v) { return cal.setPref(k, v); }
 };
