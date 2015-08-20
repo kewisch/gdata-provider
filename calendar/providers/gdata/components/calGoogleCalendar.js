@@ -58,7 +58,7 @@ calGoogleCalendar.prototype = {
     }),
 
     /* Used to reset the local cache between releases */
-    CACHE_DB_VERSION: 2,
+    CACHE_DB_VERSION: 3,
 
     /* Member Variables */
     mCalendarName: null,
@@ -600,29 +600,52 @@ calGoogleCalendar.prototype = {
         this.mObservers.notify("onLoad", [this]);
     },
 
+    migrateStorageCache: function() {
+        let cacheVersion = this.getProperty("cache.version");
+        if (!cacheVersion || cacheVersion >= this.CACHE_DB_VERSION) {
+            // Either up to date or first run, make sure property set right.
+            this.setProperty("cache.version", this.CACHE_DB_VERSION);
+            return Promise.resolve(false);
+        }
+
+        let needsReset = false;
+        cal.LOG("[calGoogleCalendar] Migrating cache from " +
+                cacheVersion + " to " + this.CACHE_DB_VERSION + " for " + this.name);
+
+        if (cacheVersion < 2) {
+            // The initial version 1.0 had some issues that required resetting
+            // the cache.
+            needsReset = true;
+        }
+
+        if (cacheVersion < 3) {
+            // There was an issue with ids from the birthday calendar, we need
+            // to reset just this calendar. See bug 1169062.
+            let birthdayCalendar = "#contacts@group.v.calendar.google.com";
+            if (this.mCalendarName && this.mCalendarName == birthdayCalendar) {
+                needsReset = true;
+            }
+        }
+
+        // Migration all done. Reset if requested.
+        if (needsReset) {
+            return this.resetSync().then(function() {
+                this.setProperty("cache.version", this.CACHE_DB_VERSION);
+                return needsReset;
+            }.bind(this));
+        } else {
+            this.setProperty("cache.version", this.CACHE_DB_VERSION);
+            return Promise.resolve(needsReset);
+        }
+    },
+
     /**
      * Implement calIChangeLog
      */
     get offlineStorage() { return this.mOfflineStorage; },
     set offlineStorage(val) {
         this.mOfflineStorage = val;
-        let cacheVersion = this.getProperty("cache.version");
-        let resetPromise;
-        if (cacheVersion && cacheVersion != this.CACHE_DB_VERSION) {
-            cal.LOG("[calGoogleCalendar] Migrating cache from " +
-                    cacheVersion + " to " + this.CACHE_DB_VERSION);
-            this.resetSync()
-            resetPromise = this.resetSync();
-        } else if (!cacheVersion) {
-            resetPromise = Promise.resolve();
-        }
-
-        if (resetPromise) {
-            resetPromise.then(function() {
-                this.setProperty("cache.version", this.CACHE_DB_VERSION);
-            }.bind(this));
-        }
-
+        this.migrateStorageCache();
         return val;
     },
 

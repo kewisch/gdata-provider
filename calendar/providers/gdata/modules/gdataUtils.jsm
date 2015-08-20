@@ -607,7 +607,7 @@ function JSONToEvent(aEntry, aCalendar, aTimezone, aDefaultReminders, aReference
             // Sometimes recurring event instances don't have recurringEventId
             // set, but are still instances. work around by detecting the ID.
             // http://code.google.com/a/google.com/p/apps-api-issues/issues/detail?id=3199
-            let hack = aEntry.id.match(/([^_]*)_(\d{8}(T\d{6}Z)?)/);
+            let hack = aEntry.id.match(/([^_]*)_(\d{8}(T\d{6}Z)?)$/);
             item.recurrenceId = hack ? cal.createDateTime(hack[2]) : null;
         }
         item.status = (aEntry.status ? aEntry.status.toUpperCase() : null);
