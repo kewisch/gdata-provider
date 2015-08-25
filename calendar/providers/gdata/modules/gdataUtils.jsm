@@ -984,6 +984,7 @@ ItemSaver.prototype = {
                     item = this.masterItems[exc.id];
                 } else {
                     item = (yield this.promiseOfflineStorage.getItem(exc.id))[0];
+                    item = item.clone();
                 }
 
                 // If an item was found, we can process this exception. Otherwise
