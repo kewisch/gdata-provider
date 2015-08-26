@@ -51,6 +51,15 @@
         }
     }
 
+    /**
+     * Hides the "after the event starts" reminder relations, these are not
+     * supported by Google.
+     */
+    function hideReminderRelations() {
+        document.getElementById("reminder-after-start-menuitem").hidden = true;
+        document.getElementById("reminder-after-end-menuitem").hidden = true;
+    }
+
     monkeyPatch(window, "updateReminder", function(protofunc, event) {
         let rv = protofunc.apply(this, Array.slice(arguments, 1));
         if (event.explicitOriginalTarget.localName == "listitem" ||
@@ -67,6 +76,7 @@
     monkeyPatch(window, "loadReminders", function(protofunc /*, ...args */) {
         let rv = protofunc.apply(this, Array.slice(arguments, 1));
         checkAllReminders();
+        hideReminderRelations();
         return rv;
     });
 })();
