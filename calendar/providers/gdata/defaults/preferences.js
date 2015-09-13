@@ -14,6 +14,7 @@ pref("calendar.google.alarmClosest", true);
 pref("calendar.google.migrate", true);
 pref("calendar.google.maxResultsPerRequest", 1000);
 pref("calendar.google.idleTime", 300);
+pref("calendar.google.enableSMSReminders", false);
 
 /**
  * Invitations and notifications.

@@ -276,7 +276,11 @@ calGoogleCalendar.prototype = {
             case "capabilities.alarms.maxCount":
                 return 5;
             case "capabilities.alarms.actionValues":
-                return ["DISPLAY", "EMAIL", "SMS"];
+                let actionValues = ["DISPLAY", "EMAIL"];
+                if (Preferences.get("calendar.google.enableSMSReminders", false)) {
+                    actionValues.push("SMS");
+                }
+                return actionValues;
             case "capabilities.tasks.supported":
                 return !!this.mTasklistName;
             case "capabilities.events.supported":
