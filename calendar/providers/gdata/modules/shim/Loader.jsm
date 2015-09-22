@@ -84,6 +84,15 @@ function shimIt(global) {
         });
     }
 
+    if (!global.Array.prototype.includes) {
+        Object.defineProperty(global.Array.prototype, 'includes', {
+          enumerable: false,
+          configurable: true,
+          writable: false,
+          value: ArrayIncludes
+        });
+    }
+
     if (!global.Map) {
         global.Map = Map;
     }
@@ -114,6 +123,13 @@ function shimIt(global) {
  */
 function StringContains() {
     return String.prototype.indexOf.apply(this, arguments) !== -1;
+}
+
+/**
+ * Implementation for Array.prototype.includes.
+ */
+function ArrayIncludes() {
+    return Array.prototype.indexOf.apply(this, arguments) !== -1;
 }
 
 /**

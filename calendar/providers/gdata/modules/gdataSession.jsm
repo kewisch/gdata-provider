@@ -406,7 +406,7 @@ calGoogleSession.prototype = {
             aListener.onResult({ status: aStatus }, null);
         }.bind(this);
 
-        if (aCalId.indexOf("@") < 0 || aCalId.indexOf(".") < 0 ||
+        if (!aCalId.includes("@") || !aCalId.includes(".") ||
             !aCalId.toLowerCase().startsWith("mailto:")) {
             // No valid email, screw it
             return failSync(Components.results.NS_ERROR_FAILURE, null);

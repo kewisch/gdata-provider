@@ -130,7 +130,7 @@ calGoogleRequest.prototype = {
 
     set type(v) {
         let valid = [this.GET, this.ADD, this.MODIFY, this.PATCH, this.DELETE];
-        if (valid.indexOf(v) < 0) {
+        if (!valid.includes(v)) {
             throw new Components.Exception("Invalid request type: " + v,
                                             Components.results.NS_ERROR_ILLEGAL_VALUE);
         }
