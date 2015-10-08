@@ -28,7 +28,7 @@ const NOTIFY_TIMEOUT = 60 * 1000;
 
 var EXPORTED_SYMBOLS = ["getGoogleSessionManager"];
 
-let gdataSessionMap = new Map();
+var gdataSessionMap = new Map();
 var calGoogleSessionManager = {
     /**
      * Get a Session object for the specified calendar. If aCreate is false,

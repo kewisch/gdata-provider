@@ -19,7 +19,7 @@ Cu.import("resource://gdata-provider/modules/shim/Promise.jsm");
 // reported (possibly redundantly) so as to let programmers fix their code.
 const ERRORS_TO_REPORT = ["EvalError", "RangeError", "ReferenceError", "TypeError"];
 
-let gCurrentTask = null;
+var gCurrentTask = null;
 
 function linesOf(string) {
   let reLine = /([^\r\n])+/g;

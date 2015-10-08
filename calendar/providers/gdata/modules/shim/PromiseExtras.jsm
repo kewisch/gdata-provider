@@ -12,7 +12,7 @@ CuImport("resource://gre/modules/PromiseUtils.jsm", this);
  * Shim for Promise.all needed for Gecko 24. Unfortunately the Promise object
  * is frozen, so we need to export this directly.
  */
-let PromiseAll;
+var PromiseAll;
 if (typeof Promise.all == "function") {
   PromiseAll = Promise.all.bind(Promise);
 } else {
