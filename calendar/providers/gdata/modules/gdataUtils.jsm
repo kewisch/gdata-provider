@@ -18,9 +18,9 @@ CuImport("resource://calendar/modules/calUtils.jsm", this);
 CuImport("resource://calendar/modules/calIteratorUtils.jsm", this);
 CuImport("resource://calendar/modules/calProviderUtils.jsm", this);
 
-const cIE = Components.interfaces.calIErrors;
+var cIE = Components.interfaces.calIErrors;
 
-const FOUR_WEEKS_IN_MINUTES = 40320;
+var FOUR_WEEKS_IN_MINUTES = 40320;
 
 var EXPORTED_SYMBOLS = [
     "ItemToJSON", "JSONToItem", "ItemSaver",

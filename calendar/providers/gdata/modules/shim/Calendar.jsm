@@ -9,9 +9,9 @@ CuImport("resource://calendar/modules/calUtils.jsm", this);
 CuImport("resource://gre/modules/PromiseUtils.jsm", this);
 CuImport("resource://gre/modules/XPCOMUtils.jsm", this);
 
-const cIOL = Components.interfaces.calIOperationListener;
-const cICL = Components.interfaces.calIChangeLog;
-const cIC = Components.interfaces.calICalendar;
+var cIOL = Components.interfaces.calIOperationListener;
+var cICL = Components.interfaces.calIChangeLog;
+var cIC = Components.interfaces.calICalendar;
 
 /**
  * Shim functions that can be injected into an object implementing calICalendar

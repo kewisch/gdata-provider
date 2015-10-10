@@ -21,10 +21,10 @@ CuImport("resource://gdata-provider/modules/gdataRequest.jsm", this);
 CuImport("resource://gdata-provider/modules/gdataSession.jsm", this);
 CuImport("resource://gdata-provider/modules/gdataUtils.jsm", this);
 
-const cICL = Components.interfaces.calIChangeLog;
-const cIOL = Components.interfaces.calIOperationListener;
+var cICL = Components.interfaces.calIChangeLog;
+var cIOL = Components.interfaces.calIOperationListener;
 
-const MIN_REFRESH_INTERVAL = 30;
+var MIN_REFRESH_INTERVAL = 30;
 
 /**
  * calGoogleCalendar
@@ -39,8 +39,8 @@ function calGoogleCalendar() {
     this.mThrottle = Object.create(null);
 }
 
-const calGoogleCalendarClassID = Components.ID("{d1a6e988-4b4d-45a5-ba46-43e501ea96e3}");
-const calGoogleCalendarInterfaces = [
+var calGoogleCalendarClassID = Components.ID("{d1a6e988-4b4d-45a5-ba46-43e501ea96e3}");
+var calGoogleCalendarInterfaces = [
     Components.interfaces.calICalendar,
     Components.interfaces.calISchedulingSupport,
     Components.interfaces.calIChangeLog

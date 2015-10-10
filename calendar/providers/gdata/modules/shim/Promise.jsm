@@ -4,9 +4,9 @@
 
 var EXPORTED_SYMBOLS = ["Promise"];
 
-const STATUS_PENDING = 0;
-const STATUS_RESOLVED = 1;
-const STATUS_REJECTED = 2;
+var STATUS_PENDING = 0;
+var STATUS_RESOLVED = 1;
+var STATUS_REJECTED = 2;
 
 function log(msg) {
     // Enable this to debug promises

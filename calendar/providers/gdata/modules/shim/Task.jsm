@@ -8,16 +8,16 @@ this.EXPORTED_SYMBOLS = [
   "Task"
 ];
 
-const Cc = Components.classes;
-const Ci = Components.interfaces;
-const Cu = Components.utils;
-const Cr = Components.results;
+var Cc = Components.classes;
+var Ci = Components.interfaces;
+var Cu = Components.utils;
+var Cr = Components.results;
 
 Cu.import("resource://gdata-provider/modules/shim/Promise.jsm");
 
 // The following error types are considered programmer errors, which should be
 // reported (possibly redundantly) so as to let programmers fix their code.
-const ERRORS_TO_REPORT = ["EvalError", "RangeError", "ReferenceError", "TypeError"];
+var ERRORS_TO_REPORT = ["EvalError", "RangeError", "ReferenceError", "TypeError"];
 
 var gCurrentTask = null;
 

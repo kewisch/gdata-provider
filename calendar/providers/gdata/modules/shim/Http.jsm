@@ -4,7 +4,7 @@
 
 var EXPORTED_SYMBOLS = ["percentEncode", "httpRequest"];
 
-const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
+var {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 
 function percentEncode(aString) {
   return encodeURIComponent(aString).replace(/[!'()]/g, escape).replace(/\*/g, "%2A");

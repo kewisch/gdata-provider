@@ -21,10 +21,10 @@ CuImport("resource:///modules/iteratorUtils.jsm", this);
 CuImport("resource://calendar/modules/calUtils.jsm", this);
 CuImport("resource://calendar/modules/calProviderUtils.jsm", this);
 
-const cIFBI = Components.interfaces.calIFreeBusyInterval;
-const nIPM = Components.interfaces.nsIPermissionManager;
+var cIFBI = Components.interfaces.calIFreeBusyInterval;
+var nIPM = Components.interfaces.nsIPermissionManager;
 
-const NOTIFY_TIMEOUT = 60 * 1000;
+var NOTIFY_TIMEOUT = 60 * 1000;
 
 var EXPORTED_SYMBOLS = ["getGoogleSessionManager"];
 
