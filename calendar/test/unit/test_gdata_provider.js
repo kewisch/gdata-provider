@@ -500,62 +500,142 @@ add_test(function test_migrate_uri() {
     run_next_test();
 });
 
-add_test(function test_dateToJSON() {
-    function _createDateTime(timezone) {
-        let dt = cal.createDateTime();
-        dt.resetTo(2015, 0, 30, 12, 0, 0, timezone);
+add_task(function* test_dateToJSON() {
+    function _createDateTime(tzid, offset=0) {
+        let offsetFrom = offset <= 0 ? "-0" + (offset - 1) : "+0" + (offset - 1) + "00";
+        let offsetTo = "+0" + offset + "00";
+        let ics = ["BEGIN:VCALENDAR",
+            "BEGIN:VTIMEZONE",
+            "TZID:ThirdPartyZone",
+            "BEGIN:STANDARD",
+            "DTSTART:20071104T020000",
+            "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU;INTERVAL=1",
+            "TZOFFSETFROM:" + offsetFrom,
+            "TZOFFSETTO:" + offsetTo,
+            "TZNAME:TPT",
+            "END:STANDARD",
+            "BEGIN:DAYLIGHT",
+            "DTSTART:20070311T020000",
+            "RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU;INTERVAL=1",
+            "TZOFFSETFROM:" + offsetTo,
+            "TZOFFSETTO:" + offsetFrom,
+            "TZNAME:TPDT",
+            "END:DAYLIGHT",
+            "END:VTIMEZONE",
+            "BEGIN:VEVENT",
+            "UID:123",
+            "DTSTART;TZID=" + tzid + ":20150130T120000",
+            "END:VEVENT",
+            "END:VCALENDAR"].join("\r\n");
+
+        let parser = Components.classes["@mozilla.org/calendar/ics-parser;1"]
+                               .createInstance(Components.interfaces.calIIcsParser);
+        parser.parseString(ics);
+        let items = parser.getItems({});
+        return items[0].startDate;
     }
 
     let tzProvider = cal.getTimezoneService();
-    let localTz = Services.prefs.getCharPref("calendar.timezone.local") || null;
+    let dt, vtimezone;
 
     // no timezone
-    let dt = _createDateTime(cal.floating());
-    equal(dateToJSON(dt), {});
+    dt = _createDateTime(cal.floating());
+    deepEqual(dateToJSON(dt), { "dateTime": "2015-01-30T12:00:00-00:00" });
 
     // valid non-Olson tz name
-    dt = _createDateTime(tzProvider.getTimezone("Eastern Standard Time"));
-    equal(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "America/New_York"});
+    dt = _createDateTime("Eastern Standard Time");
+    deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "America/New_York"});
 
     // valid continent/city Olson tz
-    dt = _createDateTime(tzProvider.getTimezone("America/New_York"));
-    equal(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "America/New_York"});
+    dt = _createDateTime("America/New_York");
+    deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "America/New_York"});
 
     // valid continent/region/city Olson tz
-    dt = _createDateTime(tzProvider.getTimezone("America/Argentina/Buenos_Aires"));
-    equal(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "America/New_York"});
+    dt = _createDateTime("America/Argentina/Buenos_Aires");
+    deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "America/Argentina/Buenos_Aires"});
 
-    // unknown but formal valid Olson tz
-    dt = _createDateTime(tzProvider.getTimezone("Unknown/Olson/Timezone"));
-    equal(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "Unknown/Olson/Timezone"});
+    // ical.js and libical currently have slightly different timezone handling.
+    if (Preferences.get("calendar.icaljs", false)) {
+        // unknown but formal valid Olson tz. ical.js assumes floating
+        dt = _createDateTime("Unknown/Olson/Timezone");
+        deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00-00:00" });
+
+        // Etc with offset. ical.js doesn't understand third party zones and uses floating
+        dt = _createDateTime("ThirdPartyZone", 5);
+        deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00-00:00" });
+
+        // Etc with zero offset. ical.js doesn't understand third party zones and uses floating
+        dt = _createDateTime("ThirdPartyZone", 0);
+        deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00-00:00" });
+    } else {
+        // unknown but formal valid Olson tz
+        dt = _createDateTime("Unknown/Olson/Timezone");
+        deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "Unknown/Olson/Timezone"});
+
+        // Etc with offset
+        dt = _createDateTime("ThirdPartyZone", 5);
+        deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "Etc/GMT-5"});
+
+        // Etc with zero offset
+        dt = _createDateTime("ThirdPartyZone", 0);
+        deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00Z", "timeZone": "UTC"});
+    }
 
     // invalid non-Olson tz
-    dt = _createDateTime(tzProvider.getTimezone("InvalidTimeZone"));
+    dt = _createDateTime("InvalidTimeZone");
     notEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "InvalidTimeZone"});
 
-    // timezone guessing: UTC
-    Services.prefs.setCharPref("calendar.timezone.local", "UTC");
-    equal(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "UTC"});
-
-    // timezone guessing Etc
-    Services.prefs.setCharPref("calendar.timezone.local", "Europe/Berlin");
-    let now = cal.now();
-    ok((now.timezoneOffset == 3600 || now.timezoneOffset == 7200),
-       "Invalid timezone offset for testing Etc guessing!");
-    let tz = (now.timezoneOffset == 3600) ? "Etc/GMT-1" : "Etc/GMT-2";
-    equal(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": tz});
+    // Zone with 0 offset but not UTC
+    dt = _createDateTime("Europe/London");
+    deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "Europe/London"});
 
     // date only
     dt.isDate = true;
-    equal(dateToJSON(dt), {"date": "2015-01-30"});
+    deepEqual(dateToJSON(dt), {"date": "2015-01-30"});
+});
 
-    if (localTz) {
-        Services.prefs.setCharPref("calendar.timezone.local", localTz);
-    } else {
-        Services.prefs.clearUserPref("calendar.timezone.local");
+add_task(function* test_JSONToDate() {
+    function convert(aEntry, aTimezone="Europe/Berlin") {
+        let tzs = cal.getTimezoneService();
+        let calendarTz = tzs.getTimezone(aTimezone);
+        let dt = JSONToDate(aEntry, calendarTz);
+        return dt ? dt.icalString + " in " + dt.timezone.tzid : null;
     }
 
-    run_next_test();
+    // A date, using the passed in default timezone
+    equal(convert({ "date": "2015-01-02" }), "20150102 in Europe/Berlin");
+
+    // A date, with a timezone that has zero offset
+    equal(convert({ "date": "2015-01-02", "timeZone": "Africa/Accra" }), "20150102 in Africa/Accra");
+
+    // A date, using a timezone with a nonzero offset that is not the default timezone
+    equal(convert({ "date": "2015-01-02", "timeZone": "Asia/Baku" }), "20150102 in Asia/Baku");
+
+    // UTC date with and without timezone specified, with a calendar in a timezone without DST
+    equal(convert({ "dateTime": "2015-01-02T03:04:05Z", "timeZone": "UTC" }, "Africa/Accra"), "20150102T030405Z in UTC");
+    equal(convert({ "dateTime": "2015-01-02T03:04:05Z" }, "Africa/Accra"), "20150102T030405 in Africa/Accra");
+
+    // An America/Los_Angeles date-time viewed in Europe/Berlin
+    equal(convert({ "dateTime": "2015-12-01T21:13:14+01:00", "timeZone": "America/Los_Angeles" }), "20151201T121314 in America/Los_Angeles");
+    equal(convert({ "dateTime": "2015-07-01T21:13:14+02:00", "timeZone": "America/Los_Angeles" }), "20150701T121314 in America/Los_Angeles");
+
+    // A timezone that is sometimes in GMT, get ready for: Europe/London!
+    equal(convert({ "dateTime": "2015-12-01T12:13:14Z", "timeZone": "Europe/London"}, "Europe/London"), "20151201T121314 in Europe/London");
+    equal(convert({ "dateTime": "2015-07-01T12:13:14+01:00", "timeZone": "Europe/London" }, "Europe/London"), "20150701T121314 in Europe/London");
+
+    // An event in Los Angeles, with a calendar set to Asia/Baku
+    equal(convert({ "dateTime": "2015-07-01T12:13:14+05:00", "timeZone": "America/Los_Angeles" }, "Asia/Baku"), "20150701T001314 in America/Los_Angeles");
+    equal(convert({ "dateTime": "2015-12-01T12:13:14+04:00", "timeZone": "America/Los_Angeles" }, "Asia/Baku"), "20151201T001314 in America/Los_Angeles");
+
+    // An event without specified timezone, with a calendar set to Asia/Baku
+    equal(convert({ "dateTime": "2015-07-01T12:13:14+05:00" }, "Asia/Baku"), "20150701T121314 in Asia/Baku");
+
+    // An offset matching the passed in calendar timezone. This should NOT be Africa/Algiers
+    equal(convert({ "dateTime": "2015-01-02T03:04:05+01:00" }), "20150102T030405 in Europe/Berlin");
+
+    // An offset that doesn't match the calendar timezone, will use the first timezone in that offset
+    do_print("The following warning is expected: 2015-01-02T03:04:05+04:00 does not match timezone offset for Europe/Berlin");
+    equal(convert({ "dateTime": "2015-01-02T03:04:05+05:00" }), "20150102T030405 in Antarctica/Mawson");
 });
 
 add_task(function* test_organizerCN() {

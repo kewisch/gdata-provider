@@ -399,10 +399,8 @@ calGoogleCalendar.prototype = {
             // All we need to do now is parse the item and complete the
             // operation. The cache layer will take care of adding the item
             // to the storage.
-            let defaultTimezone = cal.calendarDefaultTimezone();
             let metaData = Object.create(null);
-            let item = JSONToItem(data, this, defaultTimezone,
-                                  this.defaultReminders || [],
+            let item = JSONToItem(data, this, this.defaultReminders || [],
                                   null, metaData);
 
             // Make sure to update the etag and id
@@ -489,9 +487,8 @@ calGoogleCalendar.prototype = {
             // All we need to do now is parse the item and complete the
             // operation. The cache layer will take care of adding the item
             // to the storage cache.
-            let defaultTimezone = cal.calendarDefaultTimezone();
             let metaData = Object.create(null);
-            let item = JSONToItem(data, this, defaultTimezone,
+            let item = JSONToItem(data, this,
                                   this.defaultReminders || [],
                                   aNewItem.clone(), metaData);
 
@@ -723,7 +720,6 @@ calGoogleCalendar.prototype = {
         eventsRequest.calendar = this;
         eventsRequest.type = eventsRequest.GET;
         eventsRequest.uri = this.createEventsURI("events");
-        eventsRequest.addQueryParameter("timeZone", cal.calendarDefaultTimezone().tzid);
         eventsRequest.addQueryParameter("maxResults", maxResults);
         let syncToken = this.getProperty("syncToken.events");
         if (syncToken) {

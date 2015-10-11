@@ -27,8 +27,8 @@ var EXPORTED_SYMBOLS = [
     "checkResolveConflict", "getGoogleId",
     "getItemMetadata", "saveItemMetadata",
     "deleteItemMetadata", "migrateItemMetadata",
-    "JSONToAlarm", "getProviderString",
-    "monkeyPatch", "spinEventLoop"
+    "JSONToAlarm", "dateToJSON", "JSONToDate",
+    "getProviderString", "monkeyPatch", "spinEventLoop"
 ];
 
 /**
@@ -160,6 +160,17 @@ function dateToJSON(aDate) {
                 jsonData.timeZone = "Etc/GMT" + sign + tzoffset_hr;
             }
         }
+
+        if (jsonData.timeZone) {
+            // Strip the timezone offset if a timeZone was specified.
+            jsonData.dateTime = jsonData.dateTime.replace(/[+-]\d{2}:\d{2}$/, '');
+
+            // Strip the Z for zones other than UTC, this usually happens for
+            // unknown timezones.
+            if (jsonData.timeZone != "UTC") {
+                jsonData.dateTime = jsonData.dateTime.replace(/Z$/, "");
+            }
+        }
     }
     return jsonData;
 }
@@ -168,18 +179,86 @@ function dateToJSON(aDate) {
  * Convert a JSON date object as received by Google into a calIDateTime.
  *
  * @param aEntry                The JSON entry to convert.
- * @param aDefaultTimezone      The timezone to use if not contained aEntry.
+ * @param aTimezone             The timezone the date/dateTime is specified in.
  * @return                      The converted calIDateTime.
  */
-function JSONToDate(aEntry, aDefaultTimezone) {
-    if (aEntry) {
-        let tzs = cal.getTimezoneService();
-        let timezone = ("timeZone" in aEntry && tzs.getTimezone(aEntry.timeZone)) || aDefaultTimezone;
-        return cal.fromRFC3339(aEntry.dateTime || aEntry.date, timezone);
-    } else {
+function JSONToDate(aEntry, aTimezone) {
+    let dateTime = null;
+    if (!aEntry) {
         return null;
     }
+
+    // The entry is provided in the default zone and the timezone is
+    // specified separately.
+    let entryDate = aEntry.dateTime || aEntry.date;
+    dateTime = fromRFC3339FixedZone(entryDate, aTimezone);
+
+    if (!dateTime) {
+        return null;
+    }
+
+    if ("timeZone" in aEntry) {
+        // If a timezone was specified, convert to that zone
+        let zone = cal.getTimezoneService().getTimezone(aEntry.timeZone);
+        if (zone) {
+            dateTime = dateTime.getInTimezone(zone);
+        }
+    }
+    return dateTime;
 }
+
+/**
+ * Like cal.fromRFC3339(), but assumes that the passed timezone is the timezone
+ * for the date. A quick check is done to make sure the offset matches the
+ * timezone.
+ *
+ * @param aStr          The RFC3339 compliant Date String
+ * @param aTimezone     The timezone this date string is in
+ * @return              A calIDateTime object
+ */
+function fromRFC3339FixedZone(aStr, aTimezone) {
+    let dateTime = cal.createDateTime();
+    let matches = fromRFC3339FixedZone.regex.exec(aStr);
+
+    if (!matches) {
+        return null;
+    }
+
+    dateTime.isDate = matches[4] == null;
+    dateTime.year = matches[1];
+    dateTime.month = matches[2] - 1; // Jan is 0
+    dateTime.day = matches[3];
+
+    if (!dateTime.isDate) {
+        dateTime.hour = matches[5];
+        dateTime.minute = matches[6];
+        dateTime.second = matches[7];
+    }
+
+    dateTime.timezone = aTimezone;
+    if (matches[9] != null) {
+        let offset_in_s = 0;
+        if (matches[10] != null) {
+            offset_in_s = (matches[11] == "-" ? -1 : 1) *
+                (matches[11] * 3600 + matches[12] * 60);
+        }
+
+        if (dateTime.timezoneOffset != offset_in_s) {
+            // Warn here, since this shouldn't be happening. Then use the
+            // original fromRFC3339, which goes through the timezone list and
+            // finds the first matching zone.
+            cal.WARN("[calGoogleCalendar] " + aStr + " does not match timezone offset for " + aTimezone.tzid);
+            dateTime = cal.fromRFC3339(aStr, aTimezone);
+        }
+    }
+
+    return dateTime;
+}
+fromRFC3339FixedZone.regex = new RegExp(
+    "^([0-9]{4})-([0-9]{2})-([0-9]{2})" +
+    "([Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(\\.[0-9]+)?)?" +
+    "([Zz]|([+-])([0-9]{2}):([0-9]{2}))?"
+);
 
 /**
  * Like cal.toRFC3339, but include milliseconds. Google timestamps require
@@ -577,12 +656,11 @@ function JSONToAlarm(aEntry, aDefault) {
  *
  * @param aEntry            The JS Object representation of the item.
  * @param aCalendar         The calendar this item will belong to.
- * @param aTimezone         The Timezone the event is most likely in.
  * @param aDefaultReminders An array of default reminders, as a JS Object.
  * @param aMetadata         (optional,out) Item metadata that should be set.
  * @return                  The calIEvent with the item data.
  */
-function JSONToEvent(aEntry, aCalendar, aTimezone, aDefaultReminders, aReferenceItem, aMetadata) {
+function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetadata) {
     aDefaultReminders = aDefaultReminders || [];
     aMetadata = aMetadata || {};
     let item = aReferenceItem || cal.createEvent();
@@ -600,9 +678,13 @@ function JSONToEvent(aEntry, aCalendar, aTimezone, aDefaultReminders, aReference
         return null;
     }
 
+    let tzs = cal.getTimezoneService();
+    let calendarZoneName = aCalendar.getProperty("settings.timeZone");
+    let calendarZone = calendarZoneName ? tzs.getTimezone(calendarZoneName) : cal.calendarDefaultTimezone();
+
     try {
         item.id = aEntry.iCalUID || ((aEntry.recurringEventId || aEntry.id) + "@google.com");
-        item.recurrenceId = JSONToDate(aEntry.originalStartTime, aTimezone);
+        item.recurrenceId = JSONToDate(aEntry.originalStartTime, calendarZone);
         if (!item.recurrenceId) {
             // Sometimes recurring event instances don't have recurringEventId
             // set, but are still instances. work around by detecting the ID.
@@ -618,7 +700,7 @@ function JSONToEvent(aEntry, aCalendar, aTimezone, aDefaultReminders, aReference
         item.privacy = (aEntry.visibility ? aEntry.visibility.toUpperCase() : null);
 
         item.setProperty("URL", aEntry.htmlLink && aCalendar.uri.schemeIs("https") ? aEntry.htmlLink.replace(/^http:/, "https:") : aEntry.htmlLink);
-        item.setProperty("CREATED", (aEntry.created ? cal.fromRFC3339(aEntry.created, aTimezone).getInTimezone(cal.UTC()) : null));
+        item.setProperty("CREATED", (aEntry.created ? cal.fromRFC3339(aEntry.created, calendarZone).getInTimezone(cal.UTC()) : null));
         item.setProperty("DESCRIPTION", aEntry.description);
         item.setProperty("LOCATION", aEntry.location);
         item.setProperty("TRANSP", (aEntry.transparency ? aEntry.transparency.toUpperCase() : null));
@@ -647,11 +729,11 @@ function JSONToEvent(aEntry, aCalendar, aTimezone, aDefaultReminders, aReference
         }
 
         // start and end
-        item.startDate = JSONToDate(aEntry.start, aTimezone);
-        item.endDate = JSONToDate(aEntry.end, aTimezone);
+        item.startDate = JSONToDate(aEntry.start, calendarZone);
+        item.endDate = JSONToDate(aEntry.end, calendarZone);
 
         // recurrence
-        setupRecurrence(item, aEntry.recurrence, aTimezone);
+        setupRecurrence(item, aEntry.recurrence, calendarZone);
 
         // attendees
         item.removeAllAttendees();
@@ -713,10 +795,10 @@ function JSONToEvent(aEntry, aCalendar, aTimezone, aDefaultReminders, aReference
         }
 
         // extendedProperty (alarmLastAck)
-        item.alarmLastAck = cal.fromRFC3339(privateProps["X-MOZ-LASTACK"], aTimezone);
+        item.alarmLastAck = cal.fromRFC3339(privateProps["X-MOZ-LASTACK"], calendarZone);
 
         // extendedProperty (snooze time)
-        let dtSnoozeTime = cal.fromRFC3339(privateProps["X-MOZ-SNOOZE-TIME"], aTimezone);
+        let dtSnoozeTime = cal.fromRFC3339(privateProps["X-MOZ-SNOOZE-TIME"], calendarZone);
         let snoozeProperty = (dtSnoozeTime ? dtSnoozeTime.icalString : null);
         item.setProperty("X-MOZ-SNOOZE-TIME", snoozeProperty);
 
@@ -746,7 +828,7 @@ function JSONToEvent(aEntry, aCalendar, aTimezone, aDefaultReminders, aReference
 
         // updated (This must be set last!)
         if (aEntry.updated) {
-            let updated = cal.fromRFC3339(aEntry.updated, aTimezone).getInTimezone(cal.UTC());
+            let updated = cal.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.UTC());
             item.setProperty("DTSTAMP", updated);
             item.setProperty("LAST-MODIFIED", updated);
         }
@@ -762,11 +844,10 @@ function JSONToEvent(aEntry, aCalendar, aTimezone, aDefaultReminders, aReference
  *
  * @param aEntry            The JS Object representation of the item.
  * @param aCalendar         The calendar this item will belong to.
- * @param aTimezone         The Timezone the task is most likely in.
  * @param aMetadata         (optional,out) Item metadata that should be set.
  * @return                  The calITodo with the item data.
  */
-function JSONToTask(aEntry, aCalendar, aTimezone, aDefaultReminders, aReferenceItem, aMetadata) {
+function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetadata) {
     aDefaultReminders = aDefaultReminders || [];
     aMetadata = aMetadata || {};
     if (!aEntry || !("kind" in aEntry) || aEntry.kind != "tasks#task") {
@@ -776,6 +857,11 @@ function JSONToTask(aEntry, aCalendar, aTimezone, aDefaultReminders, aReferenceI
     }
     let item = cal.createTodo();
     item.calendar = aCalendar.superCalendar;
+
+    let tzs = cal.getTimezoneService();
+    let calendarZoneName = aCalendar.getProperty("settings.timeZone");
+    let calendarZone = calendarZoneName ? tzs.getTimezone(calendarZoneName) : cal.calendarDefaultTimezone();
+
     try {
         item.id = aEntry.id;
         item.title = aEntry.title || "";
@@ -793,7 +879,7 @@ function JSONToTask(aEntry, aCalendar, aTimezone, aDefaultReminders, aReferenceI
             item.dueDate.timezone = cal.floating();
             item.dueDate.isDate = true;
         }
-        item.completedDate = cal.fromRFC3339(aEntry.completed, aTimezone);
+        item.completedDate = cal.fromRFC3339(aEntry.completed, calendarZone);
         if (aEntry.deleted) {
             item.status = "CANCELLED";
         } else if (aEntry.status == "needsAction") {
@@ -820,8 +906,8 @@ function JSONToTask(aEntry, aCalendar, aTimezone, aDefaultReminders, aReferenceI
         }
 
         // updated (This must be set last!)
-        item.setProperty("DTSTAMP", cal.fromRFC3339(aEntry.updated, aTimezone).getInTimezone(cal.UTC()));
-        item.setProperty("LAST-MODIFIED", cal.fromRFC3339(aEntry.updated, aTimezone).getInTimezone(cal.UTC()));
+        item.setProperty("DTSTAMP", cal.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.UTC()));
+        item.setProperty("LAST-MODIFIED", cal.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.UTC()));
     } catch (e) {
         cal.ERROR("[calGoogleCalendar] Error parsing JSON tasks stream: " + stringException(e));
         throw e;
@@ -836,11 +922,10 @@ function JSONToTask(aEntry, aCalendar, aTimezone, aDefaultReminders, aReferenceI
  *
  * @param aEntry            The JS Object representation of the item.
  * @param aCalendar         The calendar this item will belong to.
- * @param aTimezone         The Timezone the task is most likely in.
  * @param aMetadata         (optional,out) Item metadata that should be set.
  * @return                  The specialized calIItemBase with the item data.
  */
-function JSONToItem(aEntry, aCalendar, aTimezone, aDefaultReminders, aReferenceItem, aMetadata) {
+function JSONToItem(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetadata) {
     aDefaultReminders = aDefaultReminders || [];
     aMetadata = aMetadata || {};
     if (aEntry.kind == "tasks#task") {
@@ -901,7 +986,6 @@ ItemSaver.prototype = {
                 cal.LOG("[calGoogleCalendar] No tasks have been changed on " + this.calendar.name);
             } else {
                 cal.LOG("[calGoogleCalendar] Parsing " + aData.items.length + " received tasks");
-                let defaultTimezone = cal.calendarDefaultTimezone();
 
                 let act = new ActivityShell(this.calendar, "Task");
                 let total = aData.items.length;
@@ -909,7 +993,7 @@ ItemSaver.prototype = {
                     let entry = aData.items[cur];
                     //let metaData = Object.create(null);
                     let metaData = {};
-                    let item = JSONToTask(entry, this.calendar, defaultTimezone, null, null, metaData);
+                    let item = JSONToTask(entry, this.calendar, null, null, metaData);
                     this.metaData[item.hashId] = metaData;
 
                     yield this.commitItem(item);
@@ -931,6 +1015,11 @@ ItemSaver.prototype = {
      */
     parseEventStream: function(aData) {
         return Task.spawn(function() {
+            if (aData.timeZone) {
+                cal.LOG("[calGoogleCalendar] Timezone for " + this.calendar.name + " is " + aData.timeZone);
+                this.calendar.setProperty("settings.timeZone", aData.timeZone);
+            }
+
             if (!aData.items || !aData.items.length) {
                 cal.LOG("[calGoogleCalendar] No events have been changed on " + this.calendar.name);
                 return;
@@ -941,10 +1030,6 @@ ItemSaver.prototype = {
             let exceptionItems = [];
             let defaultReminders = (aData.defaultReminders || []).map(function(x) { return JSONToAlarm(x, true); });
 
-            let tzs = cal.getTimezoneService();
-            let defaultTimezone = (aData.timeZone ? tzs.getTimezone(aData.timeZone) :
-                                    cal.calendarDefaultTimezone());
-
             // In the first pass, we go through the data and sort into master items and
             // exception items, as the master item might be after the exception in the
             // stream.
@@ -954,7 +1039,7 @@ ItemSaver.prototype = {
             for (let cur = 0; cur < total; cur++) {
                 let entry = aData.items[cur];
                 let metaData = Object.create(null);
-                let item = JSONToEvent(entry, this.calendar, defaultTimezone, defaultReminders, null, metaData);
+                let item = JSONToEvent(entry, this.calendar, defaultReminders, null, metaData);
                 LOGitem(item);
 
                 this.metaData[item.hashId] = metaData;
