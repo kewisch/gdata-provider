@@ -19,8 +19,19 @@
     notification.setAttribute("type", "critical");
     notification.setAttribute("hideclose", "true");
 
-    function checkReminderRange(reminder) {
+    function calculateAlarmOffset(item, reminder) {
         let offset = cal.alarms.calculateAlarmOffset(item, reminder);
+        // bug 1196455: The offset calcuated for absolute alarms is flipped
+        if (Services.vc.compare(Services.appinfo.platformVersion, "43.0") < 0) {
+            if (reminder.related == reminder.ALARM_RELATED_ABSOLUTE) {
+                offset.isNegative = !offset.isNegative;
+            }
+        }
+        return offset;
+    }
+
+    function checkReminderRange(reminder) {
+        let offset = calculateAlarmOffset(item, reminder);
         let seconds = offset.inSeconds;
         return (seconds < 1 && seconds >= FOUR_WEEKS_BEFORE);
     }
