@@ -1069,12 +1069,14 @@ ItemSaver.prototype = {
                     item = this.masterItems[exc.id];
                 } else {
                     item = (yield this.promiseOfflineStorage.getItem(exc.id))[0];
-                    item = item.clone();
                 }
 
                 // If an item was found, we can process this exception. Otherwise
                 // save it for later, maybe its on the next page of the request.
                 if (item) {
+                    if (!item.isMutable) {
+                        item = item.clone();
+                    }
                     yield this.processException(exc, item);
                 } else {
                     this.missingParents.push(exc);
