@@ -950,6 +950,7 @@ function ItemSaver(aCalendar) {
     this.missingParents = [];
     this.masterItems = Object.create(null);
     this.metaData = Object.create(null);
+    this.activity = new ActivityShell(aCalendar);
 }
 ItemSaver.prototype = {
     masterItems: null,
@@ -964,8 +965,10 @@ ItemSaver.prototype = {
      */
     parseItemStream: function(aData) {
         if (aData.kind == "calendar#events") {
+            this.activity.type = "Event";
             return this.parseEventStream(aData);
         } else if (aData.kind == "tasks#tasks") {
+            this.activity.type = "Task";
             return this.parseTaskStream(aData);
         } else {
             let message = "Invalid Stream type: " + (aData ? aData.kind || aData.toSource() : null);
@@ -987,8 +990,10 @@ ItemSaver.prototype = {
             } else {
                 cal.LOG("[calGoogleCalendar] Parsing " + aData.items.length + " received tasks");
 
-                let act = new ActivityShell(this.calendar, "Task");
                 let total = aData.items.length;
+                let committedUnits = 0;
+                this.activity.addTotal(total);
+
                 for (let cur = 0; cur < total; cur++) {
                     let entry = aData.items[cur];
                     //let metaData = Object.create(null);
@@ -999,10 +1004,10 @@ ItemSaver.prototype = {
                     yield this.commitItem(item);
 
                     if (yield spinEventLoop()) {
-                        act.setProgress(cur, total);
+                        this.activity.addProgress(cur - committedUnits);
+                        committedUnits = cur;
                     }
                 }
-                act.complete();
             }
         }.bind(this));
     },
@@ -1034,8 +1039,10 @@ ItemSaver.prototype = {
             // exception items, as the master item might be after the exception in the
             // stream.
 
-            let act = new ActivityShell(this.calendar, "Event");
             let total = aData.items.length;
+            let committedUnits = 0;
+            this.activity.addTotal(total);
+
             for (let cur = 0; cur < total; cur++) {
                 let entry = aData.items[cur];
                 let metaData = Object.create(null);
@@ -1052,10 +1059,10 @@ ItemSaver.prototype = {
                 }
 
                 if (yield spinEventLoop()) {
-                    act.setProgress(cur, total);
+                    this.activity.addProgress(cur - committedUnits);
+                    committedUnits = cur;
                 }
             }
-            act.complete();
 
             // Go through all exceptions and attempt to find the master item in the
             // item stream. If it can't be found there, the offline storage is asked
@@ -1147,8 +1154,17 @@ ItemSaver.prototype = {
     },
 
     /**
-     * Handle all remaining exceptions in the item saver. Call this at the end
-     * when all items and exceptions have been loaded to ensure that any
+     * Complete the item saving, this will take care of all steps required
+     * after the last request.
+     */
+    complete: function() {
+        return this.processRemainingExceptions().then(function() {
+            this.activity.complete();
+        }.bind(this));
+    },
+
+    /**
+     * Handle all remaining exceptions in the item saver. Ensures that any
      * missing master items are searched for or created.
      *
      * @return          A promise resolved on completion
@@ -1192,9 +1208,8 @@ ItemSaver.prototype = {
  *
  * @param aCalendar     The calendar for this activity.
  */
-function ActivityShell(aCalendar, aType) {
+function ActivityShell(aCalendar) {
     this.calendar = aCalendar;
-    this.type = aType;
 
     if ('@mozilla.org/activity-process;1' in Components.classes) {
         this.init();
@@ -1217,20 +1232,31 @@ ActivityShell.prototype = {
         this.act.contextType = "gdata-calendar";
         this.act.contextObj = this.calendar;
         this.act.contextDisplayText = this.calendar.name;
+        this.act.state = Components.interfaces.nsIActivityProcess.STATE_INPROGRESS;
 
         this.actMgr.addActivity(this.act);
+    },
+
+    addProgress: function(units) {
+        if (!this.act) {
+            return;
+        }
+        this.setProgress(this.act.workUnitComplete + units, this.act.totalWorkUnits);
+    },
+
+    addTotal: function(units) {
+        if (!this.act) {
+            return;
+        }
+        this.setProgress(this.act.workUnitComplete, this.act.totalWorkUnits + units);
     },
 
     setProgress: function(cur, total) {
         if (!this.act) {
             return;
         }
-        if (cur == total) {
-            this.complete();
-        } else {
-            let str = getProviderString("syncProgress" + this.type, this.calendar.name, cur, total);
-            this.act.setProgress(str, cur, total);
-        }
+        let str = getProviderString("syncProgress" + this.type, this.calendar.name, cur, total);
+        this.act.setProgress(str, cur, total);
     },
 
     complete: function() {

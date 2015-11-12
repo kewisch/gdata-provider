@@ -737,7 +737,7 @@ calGoogleCalendar.prototype = {
                 return saver.parseItemStream(aData);
             }.bind(this), function(aData) {
                 // On last request...
-                return saver.processRemainingExceptions().then(function() {
+                return saver.complete().then(function() {
                     if (aData.nextSyncToken) {
                         cal.LOG("[calGoogleCalendar] New sync token for " +
                                 this.name + "(events) is now: " + aData.nextSyncToken);
@@ -761,15 +761,20 @@ calGoogleCalendar.prototype = {
         }
         if (tasksRequest.uri && this.checkThrottle("tasks")) {
             let saver = new ItemSaver(this);
+            let lastUpdated = null;
             tasksPromise = this.session.asyncPaginatedRequest(tasksRequest, function(aData) {
                 // On the first request...
-                cal.LOG("[calGoogleCalendar] Last sync date for " + this.name +
-                        "(tasks) is now: " + tasksRequest.requestDate.toString());
-                let lastUpdated = tasksRequest.requestDate.icalString;
-                this.setProperty("lastUpdated.tasks", lastUpdated);
+                lastUpdated = tasksRequest.requestDate.icalString;
             }.bind(this), function(aData) {
                 // On each request...
                 return saver.parseItemStream(aData);
+            }.bind(this), function(aData) {
+                // On last request...
+                return saver.complete().then(function() {
+                    cal.LOG("[calGoogleCalendar] Last sync date for " + this.name +
+                            "(tasks) is now: " + tasksRequest.requestDate.toString());
+                    this.setProperty("lastUpdated.tasks", lastUpdated);
+                }.bind(this));
             }.bind(this));
         }
 
