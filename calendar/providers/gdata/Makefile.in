@@ -28,11 +28,7 @@ tools repackage::
 endif
 
 # stage the extension for use in packaged tests
-ifndef UNIVERSAL_BINARY
 PKG_STAGE = $(DIST)/test-stage
-else
-PKG_STAGE = $(DIST)/universal/test-stage
-endif
 
 stage-package:
 	$(NSINSTALL) -D $(PKG_STAGE)/extensions/$(XPI_EM_ID)
