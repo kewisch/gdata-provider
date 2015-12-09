@@ -188,8 +188,13 @@ calGoogleSession.prototype = {
             }
 
             if (!found || found.capability != nIPM.DENY_ACTION) {
-                Services.perms.remove("google.com", "cookie");
                 let uri = Services.io.newURI("http://google.com", null, null);
+                if (Services.vc.compare(Services.appinfo.platformVersion, 42) >= 0) {
+                    Services.perms.remove(uri, "cookie");
+                } else {
+                    // Earlier versions take a string argument instead of nsIURI.
+                    Services.perms.remove(uri.host, "cookie");
+                }
                 Services.perms.add(uri, "cookie", nIPM.ALLOW_ACTION, nIPM.EXPIRE_SESSION);
             }
         }
