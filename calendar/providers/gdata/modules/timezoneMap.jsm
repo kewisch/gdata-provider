@@ -17,7 +17,7 @@ var windowsTimezoneMap = {
     "Canada Central Standard Time": "America/Regina",
     "SA Pacific Standard Time": "America/Bogota",
     "Eastern Standard Time": "America/New_York",
-    "US Eastern Standard Time": "America/Indianapolis",
+    "US Eastern Standard Time": "America/Indiana/Indianapolis",
     "Venezuela Standard Time": "America/Caracas",
     "Paraguay Standard Time": "America/Asuncion",
     "Atlantic Standard Time": "America/Halifax",
