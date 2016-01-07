@@ -510,11 +510,11 @@ calGoogleSession.prototype = {
 // releases and bugfixes.  For a paid developer this would actually mean
 // financial harm.
 // Do you really want all of this to be your fault? Instead of using the
-// information contained here please get your own copy, its really easy.
+// information contained here please get your own copy, it's really easy.
 this["\x65\x76\x61\x6C"]([String["\x66\x72\x6F\x6D\x43\x68\x61\x72\x43\x6F"+
-"\x64\x65"](("wbs!!!PBVUI`CBTF`VSJ>#iuuqt;00bddpvout/hpphmf/dpn0p0#<wbs!!!"+
-"PBVUI`TDPQF>#iuuqt;00xxx/hpphmfbqjt/dpn0bvui0dbmfoebs!iuuqt;00xxx/hpphmfb"+
-"qjt/dpn0bvui0ubtlt#<wbs!!!PBVUI`DMJFOU`JE>#758881386533.o8m3pwsucmb9kh3ru"+
-"qd4cpw2opkdukrq/bqqt/hpphmfvtfsdpoufou/dpn#<wbs!!!PBVUI`DMJFOU`TFDSFU>#f1"+
-"Un{fzChWpEMPSUB8TsDFJV#<")["\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74"](i)-1)
-for(i in (function(){let x=303; while (x--) yield x})())].reverse().join(""));
+"\x64\x65"](("wbs!PBVUI`CBTF`VSJ>#iuuqt;00bddpvout/hpphmf/dpn0p0#<wbs!PBVU"+
+"I`TDPQF>#iuuqt;00xxx/hpphmfbqjt/dpn0bvui0dbmfoebs!iuuqt;00xxx/hpphmfbqjt/"+
+"dpn0bvui0ubtlt#<wbs!PBVUI`DMJFOU`JE>#758881386533.wdee9561upftkbljuiq91b1"+
+"fhj23e9db/bqqt/hpphmfvtfsdpoufou/dpn#<wbs!PBVUI`DMJFOU`TFDSFU>#VQ{2c982Dj"+
+"y:2WbhLtUOlWJ{#<")["\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74"](i)-1)
+for(i in (function(){var x=295; while (x--) yield x})())].reverse().join(""));
