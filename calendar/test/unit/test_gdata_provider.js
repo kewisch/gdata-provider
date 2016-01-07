@@ -184,7 +184,7 @@ GDataServer.prototype = {
             let method = request.hasHeader("X-HTTP-Method-Override") ?
                          request.getHeader("X-HTTP-Method-Override") :
                          request.method;
-            let parameters = new Map([ p.split("=", 2) for (p of request.queryString.split("&")) ]);
+            let parameters = new Map(request.queryString.split("&").map(p => p.split("=", 2)));
 
             let body;
             try {

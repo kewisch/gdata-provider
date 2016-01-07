@@ -371,8 +371,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
         };
 
         let needsOrganizer = true;
-        let attendees = aItem.getAttendees({});
-        let attendeeData = [ createAttendee(a) for each (a in attendees) ];
+        let attendeeData = aItem.getAttendees({}).map(createAttendee);
 
         if (aItem.organizer) {
             itemData.organizer = createAttendee(aItem.organizer);
