@@ -122,8 +122,9 @@ CuImport("resource://gre/modules/Promise.jsm", this);
         let sessionContainer = document.getElementById("gdata-session-group");
         let newSessionItem = document.getElementById("session-new");
         let calendars = cal.getCalendarManager().getCalendars({});
-        let sessions = new Set([ sessionMgr.getSessionByCalendar(calendar, true)
-                                 for each (calendar in calendars) ]);
+        let sessions = new Set(calendars.map(function(calendar) {
+          return sessionMgr.getSessionByCalendar(calendar, true);
+        }));
 
         while (sessionContainer.firstChild.id != "session-new") {
             sessionContainer.removeChild(sessionContainer.firstChild);
