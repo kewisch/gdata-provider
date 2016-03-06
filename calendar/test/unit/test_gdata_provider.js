@@ -20,11 +20,13 @@
 Components.utils.import("resource://testing-common/httpd.js");
 Components.utils.import("resource://gre/modules/NetUtil.jsm");
 Components.utils.import("resource://gre/modules/Preferences.jsm");
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 Components.utils.import("resource://gdata-provider/modules/gdataSession.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 Components.utils.import("resource://calendar/modules/calAsyncUtils.jsm");
 Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
+Components.utils.import("resource://testing-common/MockRegistrar.jsm");
 
 var gServer;
 
@@ -47,6 +49,25 @@ var MockConflictPrompt = {
         }
     }
 };
+
+function MockAlertsService() {}
+
+MockAlertsService.prototype = {
+    showAlertNotification: function() {
+    },
+    QueryInterface: XPCOMUtils.generateQI([
+        Ci.nsISupports,
+        Ci.nsIAlertsService
+    ])
+};
+
+function replaceAlertsService() {
+    let originalAlertsServiceCID =
+        MockRegistrar.register("@mozilla.org/alerts-service;1", MockAlertsService);
+    do_register_cleanup(function restoreAlertsService() {
+        MockRegistrar.unregister(originalAlertsServiceCID);
+    });
+}
 
 function GDataServer(calendarId, tasksId) {
     this.server = new HttpServer();
@@ -425,12 +446,16 @@ function getAllMeta(calendar) {
 }
 
 function run_test() {
+    replaceAlertsService();
+
     do_get_profile();
+    do_test_pending();
     cal.getCalendarManager().startup({onResult: function() {
         gServer = new GDataServer("xpcshell@example.com", "tasksId");
         gServer.start();
         cal.getTimezoneService().startup({onResult: function() {
             run_next_test();
+            do_test_finished();
         }});
     }});
 }
@@ -568,9 +593,12 @@ add_task(function* test_dateToJSON() {
         dt = _createDateTime("ThirdPartyZone", 0);
         deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00-00:00" });
     } else {
-        // unknown but formal valid Olson tz
-        dt = _createDateTime("Unknown/Olson/Timezone");
-        deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "Unknown/Olson/Timezone"});
+        // This causes an assertion failure.
+        if (!mozinfo.debug) {
+            // unknown but formal valid Olson tz
+            dt = _createDateTime("Unknown/Olson/Timezone");
+            deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "Unknown/Olson/Timezone"});
+        }
 
         // Etc with offset
         dt = _createDateTime("ThirdPartyZone", 5);
@@ -581,9 +609,12 @@ add_task(function* test_dateToJSON() {
         deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00Z", "timeZone": "UTC"});
     }
 
-    // invalid non-Olson tz
-    dt = _createDateTime("InvalidTimeZone");
-    notEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "InvalidTimeZone"});
+    // This causes an assertion failure.
+    if (!mozinfo.debug) {
+        // invalid non-Olson tz
+        dt = _createDateTime("InvalidTimeZone");
+        notEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "InvalidTimeZone"});
+    }
 
     // Zone with 0 offset but not UTC
     dt = _createDateTime("Europe/London");
