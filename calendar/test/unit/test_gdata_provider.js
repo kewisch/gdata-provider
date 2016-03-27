@@ -659,7 +659,7 @@ add_task(function* test_JSONToDate() {
     equal(convert({ "dateTime": "2015-12-01T12:13:14+04:00", "timeZone": "America/Los_Angeles" }, "Asia/Baku"), "20151201T001314 in America/Los_Angeles");
 
     // An event without specified timezone, with a calendar set to Asia/Baku
-    equal(convert({ "dateTime": "2015-07-01T12:13:14+05:00" }, "Asia/Baku"), "20150701T121314 in Asia/Baku");
+    equal(convert({ "dateTime": "2015-07-01T12:13:14+04:00" }, "Asia/Baku"), "20150701T121314 in Asia/Baku");
 
     // An offset matching the passed in calendar timezone. This should NOT be Africa/Algiers
     equal(convert({ "dateTime": "2015-01-02T03:04:05+01:00" }), "20150102T030405 in Europe/Berlin");
