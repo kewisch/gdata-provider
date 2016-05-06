@@ -448,9 +448,17 @@ function getAllMeta(calendar) {
 function run_test() {
     replaceAlertsService();
 
-    gServer = new GDataServer("xpcshell@example.com", "tasksId");
-    gServer.start();
-    do_calendar_startup(run_next_test);
+    // TODO: make do_calendar_startup to work with this test and replace the startup code here
+    do_get_profile();
+    do_test_pending();
+    cal.getCalendarManager().startup({onResult: function() {
+        gServer = new GDataServer("xpcshell@example.com", "tasksId");
+        gServer.start();
+        cal.getTimezoneService().startup({onResult: function() {
+            run_next_test();
+            do_test_finished();
+        }});
+    }});
 }
 
 add_task(function* test_migrate_cache() {
