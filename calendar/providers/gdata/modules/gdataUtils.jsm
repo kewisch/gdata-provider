@@ -1103,6 +1103,13 @@ ItemSaver.prototype = {
      *                    calendar.
      */
     processException: function(exc, item) {
+        if (item.status == "CANCELLED") {
+            // Cancelled master items don't have the full amount of
+            // information, specifically no recurrence info. Since they are
+            // cancelled anyway, we can just ignore processing this exception.
+            return Promise.resolve();
+        }
+
         exc.parentItem = item;
         if (exc.status == "CANCELLED") {
             // Canceled means the occurrence is an EXDATE.

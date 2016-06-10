@@ -176,8 +176,14 @@ GDataServer.prototype = {
         return new Promise(function(resolve, reject) {
             let observer = cal.createAdapter(Components.interfaces.calIObserver, {
                 onLoad: function() {
+                    let uncached = aCalendar.wrappedJSObject.mUncachedCalendar.wrappedJSObject;
                     aCalendar.removeObserver(observer);
-                    resolve(aCalendar);
+
+                    if (Components.isSuccessCode(uncached._lastStatus)) {
+                        resolve(aCalendar);
+                    } else {
+                        reject(uncached._lastMessage);
+                    }
                 }
             });
             aCalendar.addObserver(observer);
@@ -191,9 +197,22 @@ GDataServer.prototype = {
                   (this.tasksId ? "&tasks=" + encodeURIComponent(this.tasksId) : "");
         let calmgr = cal.getCalendarManager();
         let client = calmgr.createCalendar("gdata", Services.io.newURI(uri, null, null));
+        let uclient = client.wrappedJSObject;
         client.name = "xpcshell";
+
+        // Make sure we catch the last error message in case sync fails
+        monkeyPatch(uclient, "replayChangesOn", function(protofunc, aListener) {
+            protofunc({
+              onResult: function(op, detail) {
+                uclient._lastStatus = op.status;
+                uclient._lastMessage = detail;
+                aListener.onResult(op, detail);
+              }
+           });
+        });
+
         calmgr.registerCalendar(client);
-        client.wrappedJSObject.mThrottleLimits = {};
+        uclient.mThrottleLimits = {};
         MockConflictPrompt.register();
 
         let cachedCalendar = calmgr.getCalendarById(client.id);
@@ -1144,6 +1163,33 @@ add_task(function* test_recurring_exception() {
 
     exIds = items[0].recurrenceInfo.getExceptionIds({});
     equal(exIds.length, 0);
+
+    gServer.resetClient(client);
+});
+
+add_task(function* test_recurring_cancelled_exception() {
+    gServer.syncs = [{
+        token: "1",
+        events: [{
+            "kind": "calendar#event",
+            "etag": "\"1\"",
+            "id": "go6ijb0b46hlpbu4eeu92njevo",
+            "status": "cancelled",
+        },{
+            "kind": "calendar#event",
+            "etag": "\"2\"",
+            "id": "go6ijb0b46hlpbu4eeu92njevo_20060617T160000Z",
+            "status": "cancelled",
+            "recurringEventId": "go6ijb0b46hlpbu4eeu92njevo",
+            "originalStartTime": { "dateTime": "2006-06-17T18:00:00+02:00" }
+        }]
+    }];
+
+    let client = yield gServer.getClient();
+    let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
+
+    let items = yield pclient.getAllItems();
+    equal(items.length, 0);
 
     gServer.resetClient(client);
 });
