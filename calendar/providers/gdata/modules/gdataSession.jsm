@@ -129,8 +129,7 @@ calGoogleSession.prototype = {
     setupOAuth: function setupOAuth() {
         let sessionId = this.mId;
         let authDescr = getProviderString("requestWindowDescription", sessionId);
-        let authTitle = cal.calGetString("commonDialogs", "EnterUserPasswordFor",
-                                         [sessionId], "global");
+        let authTitle = getProviderString("requestWindowTitle", sessionId);
 
         // Set up a new OAuth2 instance for logging in.
         this.oauth = new OAuth2(OAUTH_BASE_URI, OAUTH_SCOPE, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET);
