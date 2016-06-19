@@ -1292,11 +1292,15 @@ function checkResolveConflict(aOperation, aCalendar, aItem) {
             aOperation.addRequestHeader("If-Match", "*");
             try {
                 throw new Task.Result(yield aCalendar.session.asyncItemRequest(aOperation));
-            } catch (e if e.result == calGoogleRequest.RESOURCE_GONE &&
-                          aOperation.type == aOperation.DELETE) {
-                // The item was deleted on the server and locally, we don't need to
-                // notify the user about this.
-                throw new Task.Result(null);
+            } catch (e) {
+                if (e.result == calGoogleRequest.RESOURCE_GONE &&
+                    aOperation.type == aOperation.DELETE) {
+                    // The item was deleted on the server and locally, we don't need to
+                    // notify the user about this.
+                    throw new Task.Result(null);
+                } else {
+                    throw e;
+                }
             }
         } else {
             // The user has decided to throw away changes, use our existing

@@ -1501,8 +1501,11 @@ add_task(function* test_conflict_modify() {
     try {
         modifiedItem = yield pclient.modifyItem(newItem, item);
         do_throw("Expected modifyItem to be cancelled");
-    } catch (e if e == Components.interfaces.calIErrors.OPERATION_CANCELLED) {
+    } catch (e) {
         // Swallow cancelling the request
+        if (e != Components.interfaces.calIErrors.OPERATION_CANCELLED) {
+            throw e;
+        }
     }
 
     yield gServer.waitForLoad(client);
@@ -1519,8 +1522,11 @@ add_task(function* test_conflict_modify() {
     try {
         yield pclient.deleteItem(item);
         do_throw("Expected deleteItem to be cancelled");
-    } catch (e if e == Components.interfaces.calIErrors.OPERATION_CANCELLED) {
+    } catch (e) {
         // Swallow cancelling the request
+        if (e != Components.interfaces.calIErrors.OPERATION_CANCELLED) {
+            throw e;
+        }
     }
 
     yield gServer.waitForLoad(client);
@@ -1584,8 +1590,11 @@ add_task(function* test_conflict_delete() {
     try {
         modifiedItem = yield pclient.modifyItem(newItem, item);
         do_throw("Expected modifyItem to be cancelled");
-    } catch (e if e == Components.interfaces.calIErrors.OPERATION_CANCELLED) {
+    } catch (e) {
         // Swallow cancelling the request
+        if (e != Components.interfaces.calIErrors.OPERATION_CANCELLED) {
+            throw e;
+        }
     }
     // The next synchronize should cause the event to be deleted locally.
     coreEvent.status = "cancelled";
@@ -1610,8 +1619,11 @@ add_task(function* test_conflict_delete() {
     try {
         yield pclient.deleteItem(item);
         do_throw("Expected deleteItem to be cancelled");
-    } catch (e if e == Components.interfaces.calIErrors.OPERATION_CANCELLED) {
+    } catch (e) {
         // Swallow cancelling the request
+        if (e != Components.interfaces.calIErrors.OPERATION_CANCELLED) {
+            throw e;
+        }
     }
     // The next synchronize should cause the event to be deleted locally.
     coreEvent.status = "cancelled";

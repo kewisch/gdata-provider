@@ -66,10 +66,12 @@ function createAsyncFunction(aTask) {
       try {
         // Let's call into the function ourselves.
         result = aTask.apply(this, arguments);
-      } catch (ex if ex instanceof Task.Result) {
-        return Promise.resolve(ex.value);
       } catch (ex) {
-        return Promise.reject(ex);
+        if (ex instanceof Task.Result) {
+          return Promise.resolve(ex.value);
+        } else {
+          return Promise.reject(ex);
+        }
       }
     }
 
@@ -105,12 +107,14 @@ TaskImpl.prototype = {
         let yielded = aSendResolved ? this._iterator.send(aSendValue)
                                     : this._iterator.throw(aSendValue);
         this._handleResultValue(yielded);
-      } catch (ex if ex instanceof Task.Result) {
-        this.deferred.resolve(ex.value);
-      } catch (ex if ex instanceof StopIteration) {
-        this.deferred.resolve(undefined);
       } catch (ex) {
-        this._handleException(ex);
+        if (ex instanceof Task.Result) {
+          this.deferred.resolve(ex.value);
+        } else if (ex instanceof StopIteration) {
+          this.deferred.resolve(undefined);
+        } else {
+          this._handleException(ex);
+        }
       }
     } finally {
       if (gCurrentTask == this) {

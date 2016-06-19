@@ -174,8 +174,11 @@ OAuth2.prototype = {
                                 this._parent.finishAuthorizationRequest();
                                 this._parent.onAuthorizationFailed(null, '{ "error": "http_' + httpchannel.responseStatus + '" }');
                             }
-                        } catch (e if e.result == Components.results.NS_ERROR_NO_INTERFACE) {
-                            // Catch the case where its not a http channel
+                        } catch (e) {
+                            // Throw the case where it's a http channel.
+                            if (e.result != Components.results.NS_ERROR_NO_INTERFACE) {
+                                throw e;
+                            }
                         }
                       }
 

@@ -20,13 +20,17 @@ var CuImportSubstitutions = {
 function CuImport(uriSpec, globalObj) {
     try {
         Components.utils.import(uriSpec, globalObj)
-    } catch (e if e.result == Components.results.NS_ERROR_FILE_NOT_FOUND) {
-        if (uriSpec in CuImportSubstitutions) {
-            // If we have a substitution, then load it now.
-            Components.utils.import(CuImportSubstitutions[uriSpec], globalObj);
+    } catch (e) {
+        if (e.result == Components.results.NS_ERROR_FILE_NOT_FOUND) {
+            if (uriSpec in CuImportSubstitutions) {
+                // If we have a substitution, then load it now.
+                Components.utils.import(CuImportSubstitutions[uriSpec], globalObj);
+            } else {
+                let fn = Components.stack.caller.filename;
+                Components.utils.reportError("[calGoogleCalendar] Missing: " + fn + " -> " + uriSpec);
+            }
         } else {
-            let fn = Components.stack.caller.filename;
-            Components.utils.reportError("[calGoogleCalendar] Missing: " + fn + " -> " + uriSpec);
+            throw e;
         }
     }
 }
@@ -141,8 +145,12 @@ function MapSetForEach(cb) {
         let k, v;
         try {
             [k,v] = iter.next();
-        } catch (e if e instanceof StopIteration) {
-              break;
+        } catch (e) {
+            if (e instanceof StopIteration) {
+                break;
+            } else {
+                throw e;
+            }
         }
         cb(v, k, this);
     }

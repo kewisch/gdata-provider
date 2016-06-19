@@ -152,8 +152,11 @@ calGoogleSession.prototype = {
                     let pass = { value: null };
                     try {
                         cal.auth.passwordManagerGet(sessionId, pass, sessionId, pwMgrId);
-                    } catch (e if e.result == Components.results.NS_ERROR_ABORT) {
+                    } catch (e) {
                         // User might have cancelled the master password prompt, thats ok
+                        if (e.result != Components.results.NS_ERROR_ABORT) {
+                            throw e;
+                        }
                     }
                     this.mRefreshToken = pass.value;
                 }
@@ -166,8 +169,11 @@ calGoogleSession.prototype = {
                     } else {
                         cal.auth.passwordManagerSave(sessionId, val, sessionId, pwMgrId);
                     }
-                } catch (e if e.result == Components.results.NS_ERROR_ABORT) {
+                } catch (e) {
                     // User might have cancelled the master password prompt, thats ok
+                    if (e.result != Components.results.NS_ERROR_ABORT) {
+                        throw e;
+                    }
                 }
                 return (this.mRefreshToken = val);
             },

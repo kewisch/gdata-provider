@@ -483,9 +483,13 @@ calGoogleCalendar.prototype = {
             let data;
             try {
                 data = yield this.session.asyncItemRequest(request);
-            } catch (e if e.result == calGoogleRequest.CONFLICT_MODIFY ||
-                          e.result == calGoogleRequest.CONFLICT_DELETED) {
-                data = yield checkResolveConflict(request, this, aNewItem);
+            } catch (e) {
+                if (e.result == calGoogleRequest.CONFLICT_MODIFY ||
+                    e.result == calGoogleRequest.CONFLICT_DELETED) {
+                    data = yield checkResolveConflict(request, this, aNewItem);
+                } else {
+                    throw e;
+                }
             }
 
             // All we need to do now is parse the item and complete the
@@ -565,9 +569,13 @@ calGoogleCalendar.prototype = {
 
             try {
                 yield this.session.asyncItemRequest(request);
-            } catch (e if e.result == calGoogleRequest.CONFLICT_MODIFY ||
-                          e.result == calGoogleRequest.CONFLICT_DELETED) {
-                yield checkResolveConflict(request, this, aItem);
+            } catch (e) {
+                if (e.result == calGoogleRequest.CONFLICT_MODIFY ||
+                    e.result == calGoogleRequest.CONFLICT_DELETED) {
+                    yield checkResolveConflict(request, this, aItem);
+                 } else {
+                    throw e;
+                 }
             }
 
             deleteItemMetadata(this.offlineStorage, aItem);
