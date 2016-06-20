@@ -586,7 +586,7 @@ function setupRecurrence(aItem, aRecurrence, aTimezone) {
     }
 
     let hasRecurringRules = false;
-    for (let prop in cal.ical.propertyIterator(rootComp)) {
+    for (let prop of cal.ical.propertyIterator(rootComp)) {
        switch (prop.propertyName) {
             case "RDATE":
             case "EXDATE":
