@@ -166,7 +166,7 @@ GDataServer.prototype = {
                 "notifications": [
                     { "type": "eventCreation", "method": "email" },
                     { "type": "eventChange", "method": "email" },
-                    { "type": "eventCancellation",  "method": "email" }
+                    { "type": "eventCancellation", "method": "email" }
                 ]
             }
         };
@@ -413,7 +413,7 @@ GDataServer.prototype = {
     processModifyEvent: function(jsonData, id) {
         jsonData.kind = "calendar#event";
         jsonData.etag = this.nextEtag || '"' + (new Date()).getTime() + '"';
-        jsonData.updated  = cal.toRFC3339(cal.now());
+        jsonData.updated = cal.toRFC3339(cal.now());
         jsonData.id = id;
         jsonData.iCalUID = (jsonData.recurringEventId || jsonData.id) + "@google.com";
         if (!jsonData.creator) {
@@ -446,7 +446,7 @@ GDataServer.prototype = {
     processModifyTask: function(jsonData) {
         jsonData.kind = "tasks#task";
         jsonData.etag = this.nextEtag || '"' + (new Date()).getTime() + '"';
-        jsonData.updated  = cal.toRFC3339(cal.now());
+        jsonData.updated = cal.toRFC3339(cal.now());
         if (!jsonData.status) {
             jsonData.status = "needsAction";
         }
