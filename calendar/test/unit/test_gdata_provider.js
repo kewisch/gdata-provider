@@ -495,14 +495,14 @@ function run_test() {
     // TODO: make do_calendar_startup to work with this test and replace the startup code here
     do_get_profile();
     do_test_pending();
-    cal.getCalendarManager().startup({onResult: function() {
+    cal.getCalendarManager().startup({ onResult: function() {
         gServer = new GDataServer("xpcshell@example.com", "tasksId");
         gServer.start();
-        cal.getTimezoneService().startup({onResult: function() {
+        cal.getTimezoneService().startup({ onResult: function() {
             run_next_test();
             do_test_finished();
-        }});
-    }});
+        } });
+    } });
 }
 
 add_task(function* test_migrate_cache() {
@@ -613,60 +613,60 @@ add_task(function* test_dateToJSON() {
 
     // valid non-Olson tz name
     dt = _createDateTime("Eastern Standard Time");
-    deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "America/New_York"});
+    deepEqual(dateToJSON(dt), { "dateTime": "2015-01-30T12:00:00", "timeZone": "America/New_York" });
 
     // valid continent/city Olson tz
     dt = _createDateTime("America/New_York");
-    deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "America/New_York"});
+    deepEqual(dateToJSON(dt), { "dateTime": "2015-01-30T12:00:00", "timeZone": "America/New_York" });
 
     // valid continent/region/city Olson tz
     dt = _createDateTime("America/Argentina/Buenos_Aires");
-    deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "America/Argentina/Buenos_Aires"});
+    deepEqual(dateToJSON(dt), { "dateTime": "2015-01-30T12:00:00", "timeZone": "America/Argentina/Buenos_Aires" });
 
     // ical.js and libical currently have slightly different timezone handling.
     if (Preferences.get("calendar.icaljs", false)) {
         // unknown but formal valid Olson tz. ical.js assumes floating
         dt = _createDateTime("Unknown/Olson/Timezone");
-        deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00-00:00" });
+        deepEqual(dateToJSON(dt), { "dateTime": "2015-01-30T12:00:00-00:00" });
 
         // Etc with offset. ical.js doesn't understand third party zones and uses floating
         dt = _createDateTime("ThirdPartyZone", 5);
-        deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00-00:00" });
+        deepEqual(dateToJSON(dt), { "dateTime": "2015-01-30T12:00:00-00:00" });
 
         // Etc with zero offset. ical.js doesn't understand third party zones and uses floating
         dt = _createDateTime("ThirdPartyZone", 0);
-        deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00-00:00" });
+        deepEqual(dateToJSON(dt), { "dateTime": "2015-01-30T12:00:00-00:00" });
     } else {
         // This causes an assertion failure.
         if (!mozinfo.debug) {
             // unknown but formal valid Olson tz
             dt = _createDateTime("Unknown/Olson/Timezone");
-            deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "Unknown/Olson/Timezone"});
+            deepEqual(dateToJSON(dt), { "dateTime": "2015-01-30T12:00:00", "timeZone": "Unknown/Olson/Timezone" });
         }
 
         // Etc with offset
         dt = _createDateTime("ThirdPartyZone", 5);
-        deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "Etc/GMT-5"});
+        deepEqual(dateToJSON(dt), { "dateTime": "2015-01-30T12:00:00", "timeZone": "Etc/GMT-5" });
 
         // Etc with zero offset
         dt = _createDateTime("ThirdPartyZone", 0);
-        deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00Z", "timeZone": "UTC"});
+        deepEqual(dateToJSON(dt), { "dateTime": "2015-01-30T12:00:00Z", "timeZone": "UTC" });
     }
 
     // This causes an assertion failure.
     if (!mozinfo.debug) {
         // invalid non-Olson tz
         dt = _createDateTime("InvalidTimeZone");
-        notEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "InvalidTimeZone"});
+        notEqual(dateToJSON(dt), { "dateTime": "2015-01-30T12:00:00", "timeZone": "InvalidTimeZone" });
     }
 
     // Zone with 0 offset but not UTC
     dt = _createDateTime("Europe/London");
-    deepEqual(dateToJSON(dt), {"dateTime": "2015-01-30T12:00:00", "timeZone": "Europe/London"});
+    deepEqual(dateToJSON(dt), { "dateTime": "2015-01-30T12:00:00", "timeZone": "Europe/London" });
 
     // date only
     dt.isDate = true;
-    deepEqual(dateToJSON(dt), {"date": "2015-01-30"});
+    deepEqual(dateToJSON(dt), { "date": "2015-01-30" });
 });
 
 add_task(function* test_JSONToDate() {
@@ -695,7 +695,7 @@ add_task(function* test_JSONToDate() {
     equal(convert({ "dateTime": "2015-07-01T21:13:14+02:00", "timeZone": "America/Los_Angeles" }), "20150701T121314 in America/Los_Angeles");
 
     // A timezone that is sometimes in GMT, get ready for: Europe/London!
-    equal(convert({ "dateTime": "2015-12-01T12:13:14Z", "timeZone": "Europe/London"}, "Europe/London"), "20151201T121314 in Europe/London");
+    equal(convert({ "dateTime": "2015-12-01T12:13:14Z", "timeZone": "Europe/London" }, "Europe/London"), "20151201T121314 in Europe/London");
     equal(convert({ "dateTime": "2015-07-01T12:13:14+01:00", "timeZone": "Europe/London" }, "Europe/London"), "20150701T121314 in Europe/London");
 
     // An event in Los Angeles, with a calendar set to Asia/Baku
@@ -729,7 +729,7 @@ add_task(function* test_organizerCN() {
        "creator": gServer.creator,
        "organizer": gServer.creator,
        "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-       "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+       "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
        "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
     }];
     client = yield gServer.getClient();
@@ -748,7 +748,7 @@ add_task(function* test_always_readOnly() {
        "creator": gServer.creator,
        "organizer": gServer.creator,
        "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-       "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+       "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
        "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
     }];
     gServer.calendarListData.accessRole = "freeBusyReader";
@@ -803,7 +803,7 @@ add_task(function* test_reset_sync() {
        "creator": gServer.creator,
        "organizer": gServer.creator,
        "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-       "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+       "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
        "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
     }, {
        "kind": "calendar#event",
@@ -815,7 +815,7 @@ add_task(function* test_reset_sync() {
        "creator": gServer.creator,
        "organizer": gServer.creator,
        "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-       "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+       "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
        "iCalUID": "fepf8uf6n7n04w7feukucs9n8e@google.com"
     }];
     let client = yield gServer.getClient();
@@ -855,7 +855,7 @@ add_task(function* test_basicItems() {
          "creator": gServer.creator,
          "organizer": gServer.creator,
          "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-         "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+         "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
          "transparency": "transparent",
          "visibility": "private",
          "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com",
@@ -1135,7 +1135,7 @@ add_task(function* test_recurring_exception() {
             "creator": gServer.creator,
             "organizer": gServer.creator,
             "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-            "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+            "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
             "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com",
             "recurrence": [
                 "RRULE:FREQ=WEEKLY"
@@ -1146,7 +1146,7 @@ add_task(function* test_recurring_exception() {
             "id": "go6ijb0b46hlpbu4eeu92njevo_20060617T160000Z",
             "summary": "New Event changed",
             "start": { "dateTime": "2006-06-17T18:00:00+02:00" },
-            "end": {"dateTime": "2006-06-17T20:00:00+02:00" },
+            "end": { "dateTime": "2006-06-17T20:00:00+02:00" },
             "recurringEventId": "go6ijb0b46hlpbu4eeu92njevo",
             "originalStartTime": { "dateTime": "2006-06-17T18:00:00+02:00" }
         }]
@@ -1160,7 +1160,7 @@ add_task(function* test_recurring_exception() {
             "id": "go6ijb0b46hlpbu4eeu92njevo_20060617T160000Z",
             "summary": "New Event changed",
             "start": { "dateTime": "2006-06-17T18:00:00+02:00" },
-            "end": {"dateTime": "2006-06-17T20:00:00+02:00" },
+            "end": { "dateTime": "2006-06-17T20:00:00+02:00" },
             "status": "cancelled",
             "recurringEventId": "go6ijb0b46hlpbu4eeu92njevo",
             "originalStartTime": { "dateTime": "2006-06-17T18:00:00+02:00" }
@@ -1275,7 +1275,7 @@ add_task(function* test_modify_invitation() {
          "creator": organizer,
          "organizer": organizer,
          "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-         "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+         "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
          "transparency": "transparent",
          "visibility": "private",
          "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com",
@@ -1361,7 +1361,7 @@ add_task(function* test_metadata() {
         "creator": gServer.creator,
         "organizer": gServer.creator,
         "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-        "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+        "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
         "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
     }];
     gServer.tasks = [{
@@ -1459,7 +1459,7 @@ add_task(function* test_metadata_recurring() {
         "creator": gServer.creator,
         "organizer": gServer.creator,
         "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-        "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+        "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
         "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com",
         "recurrence": [
             "RRULE:FREQ=WEEKLY"
@@ -1470,7 +1470,7 @@ add_task(function* test_metadata_recurring() {
         "id": "go6ijb0b46hlpbu4eeu92njevo_20060610T160000Z",
         "summary": "New Event changed",
         "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-        "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+        "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
         "recurringEventId": "go6ijb0b46hlpbu4eeu92njevo",
         "originalStartTime": { "dateTime": "2006-06-10T18:00:00+02:00" }
     }, {
@@ -1479,7 +1479,7 @@ add_task(function* test_metadata_recurring() {
         "id": "go6ijb0b46hlpbu4eeu92njevo_20060617T160000Z",
         "summary": "New Event next week",
         "start": { "dateTime": "2006-06-17T18:00:00+02:00" },
-        "end": {"dateTime": "2006-06-17T20:00:00+02:00" },
+        "end": { "dateTime": "2006-06-17T20:00:00+02:00" },
         "recurringEventId": "go6ijb0b46hlpbu4eeu92njevo",
         "originalStartTime": { "dateTime": "2006-06-17T18:00:00+02:00" }
     }];
@@ -1538,7 +1538,7 @@ add_task(function* test_conflict_modify() {
        "creator": gServer.creator,
        "organizer": gServer.creator,
        "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-       "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+       "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
        "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
     }];
     let client = yield gServer.getClient();
@@ -1626,7 +1626,7 @@ add_task(function* test_conflict_delete() {
        "creator": gServer.creator,
        "organizer": gServer.creator,
        "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-       "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+       "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
        "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
     };
 
@@ -1732,7 +1732,7 @@ add_task(function* test_default_alarms() {
        "creator": gServer.creator,
        "organizer": gServer.creator,
        "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-       "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+       "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
        "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com",
        "reminders": { "useDefault": true }
     }];
@@ -1842,7 +1842,7 @@ add_task(function* test_paginate() {
        "creator": gServer.creator,
        "organizer": gServer.creator,
        "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-       "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+       "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
        "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
     }, {
        "kind": "calendar#event",
@@ -1854,7 +1854,7 @@ add_task(function* test_paginate() {
        "creator": gServer.creator,
        "organizer": gServer.creator,
        "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-       "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+       "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
        "iCalUID": "fepf8uf6n7n04w7feukucs9n8e@google.com"
     }];
 
@@ -1913,7 +1913,7 @@ add_task(function* test_incremental_reset() {
             "creator": gServer.creator,
             "organizer": gServer.creator,
             "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-            "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+            "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
             "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
         }]
     }, {
@@ -1931,7 +1931,7 @@ add_task(function* test_incremental_reset() {
             "creator": gServer.creator,
             "organizer": gServer.creator,
             "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
-            "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
+            "end": { "dateTime": "2006-06-10T20:00:00+02:00" },
             "iCalUID": "fepf8uf6n7n04w7feukucs9n8e@google.com"
         }]
     }];
