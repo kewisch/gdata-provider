@@ -496,14 +496,18 @@ function run_test() {
     // TODO: make do_calendar_startup to work with this test and replace the startup code here
     do_get_profile();
     do_test_pending();
-    cal.getCalendarManager().startup({ onResult: function() {
-        gServer = new GDataServer("xpcshell@example.com", "tasksId");
-        gServer.start();
-        cal.getTimezoneService().startup({ onResult: function() {
-            run_next_test();
-            do_test_finished();
-        } });
-    } });
+    cal.getCalendarManager().startup({
+        onResult: function() {
+            gServer = new GDataServer("xpcshell@example.com", "tasksId");
+            gServer.start();
+            cal.getTimezoneService().startup({
+                onResult: function() {
+                    run_next_test();
+                    do_test_finished();
+                }
+            });
+        }
+    });
 }
 
 add_task(function* test_migrate_cache() {
@@ -876,9 +880,7 @@ add_task(function* test_basicItems() {
         }],
 
         "extendedProperties": {
-          "shared": {
-            "X-MOZ-CATEGORIES": "foo,bar"
-          },
+          "shared": { "X-MOZ-CATEGORIES": "foo,bar" },
           "private": {
             "X-MOZ-LASTACK": "2014-01-01T01:01:01Z",
             "X-MOZ-SNOOZE-TIME": "2014-01-01T02:02:02Z"
