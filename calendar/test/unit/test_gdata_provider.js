@@ -462,7 +462,7 @@ function generateID() {
 function getAllMeta(calendar) {
     let keys = {}, values = {};
     calendar.getAllMetaData({}, keys, values);
-    return new Map(keys.value.map((k,i) => [k,values.value[i]]));
+    return new Map(keys.value.map((k, i) => [k, values.value[i]]));
 }
 
 function run_test() {
@@ -759,7 +759,7 @@ add_task(function* test_reset_sync() {
         "selfLink": gServer.baseUri + "/tasks/v1/lists/MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDow/tasks/MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU",
         "position": "00000000000000130998",
         "status": "needsAction"
-      },{
+      }, {
         "kind": "tasks#task",
         "id": "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo5OTU0Mjk2MzQ",
         "etag": "\"Lck7VNWFJuXdzMtOmrYPx0KFV2s/LTQyNTY0MjUwOQ\"",
@@ -782,7 +782,7 @@ add_task(function* test_reset_sync() {
        "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
        "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
        "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
-    },{
+    }, {
        "kind": "calendar#event",
        "etag": "\"2\"",
        "id": "fepf8uf6n7n04w7feukucs9n8e",
@@ -1117,7 +1117,7 @@ add_task(function* test_recurring_exception() {
             "recurrence": [
                 "RRULE:FREQ=WEEKLY"
             ]
-        },{
+        }, {
             "kind": "calendar#event",
             "etag": "\"2\"",
             "id": "go6ijb0b46hlpbu4eeu92njevo_20060617T160000Z",
@@ -1127,7 +1127,7 @@ add_task(function* test_recurring_exception() {
             "recurringEventId": "go6ijb0b46hlpbu4eeu92njevo",
             "originalStartTime": { "dateTime": "2006-06-17T18:00:00+02:00" }
         }]
-    },{
+    }, {
         // This sync run tests an exception where the master item is not part
         // of the item stream.
         token: "2",
@@ -1176,7 +1176,7 @@ add_task(function* test_recurring_cancelled_exception() {
             "etag": "\"1\"",
             "id": "go6ijb0b46hlpbu4eeu92njevo",
             "status": "cancelled",
-        },{
+        }, {
             "kind": "calendar#event",
             "etag": "\"2\"",
             "id": "go6ijb0b46hlpbu4eeu92njevo_20060617T160000Z",
@@ -1446,7 +1446,7 @@ add_task(function* test_metadata_recurring() {
         "recurrence": [
             "RRULE:FREQ=WEEKLY"
         ]
-    },{
+    }, {
         "kind": "calendar#event",
         "etag": "\"2\"",
         "id": "go6ijb0b46hlpbu4eeu92njevo_20060610T160000Z",
@@ -1455,7 +1455,7 @@ add_task(function* test_metadata_recurring() {
         "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
         "recurringEventId": "go6ijb0b46hlpbu4eeu92njevo",
         "originalStartTime": { "dateTime": "2006-06-10T18:00:00+02:00" }
-    },{
+    }, {
         "kind": "calendar#event",
         "etag": "\"3\"",
         "id": "go6ijb0b46hlpbu4eeu92njevo_20060617T160000Z",
@@ -1826,7 +1826,7 @@ add_task(function* test_paginate() {
        "start": { "dateTime": "2006-06-10T18:00:00+02:00" },
        "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
        "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
-    },{
+    }, {
        "kind": "calendar#event",
        "etag": "\"2\"",
        "id": "fepf8uf6n7n04w7feukucs9n8e",
@@ -1850,7 +1850,7 @@ add_task(function* test_paginate() {
         "selfLink": gServer.baseUri + "/tasks/v1/lists/MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDow/tasks/MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU",
         "position": "00000000000000130998",
         "status": "needsAction"
-      },{
+      }, {
         "kind": "tasks#task",
         "id": "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo5OTU0Mjk2MzQ",
         "etag": "\"Lck7VNWFJuXdzMtOmrYPx0KFV2s/LTQyNTY0MjUwOQ\"",
@@ -1898,10 +1898,10 @@ add_task(function* test_incremental_reset() {
             "end": {"dateTime": "2006-06-10T20:00:00+02:00" },
             "iCalUID": "go6ijb0b46hlpbu4eeu92njevo@google.com"
         }]
-    },{
+    }, {
         token: "2",
         reset: true
-    },{
+    }, {
         token: "3",
         events: [{
             "kind": "calendar#event",
