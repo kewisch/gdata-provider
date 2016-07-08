@@ -390,12 +390,22 @@ GDataServer.prototype = {
         jsonData.kind = "calendar#event";
         jsonData.etag = this.nextEtag || '"' + (new Date()).getTime() + '"';
         jsonData.id = generateID();
-        if (!isImport) jsonData.htmlLink = this.baseUri + "/calendar/event?eid=" + jsonData.id;
-        if (!isImport || !jsonData.iCalUID) jsonData.iCalUID = jsonData.id + "@google.com";
-        if (!isImport || !jsonData.created) jsonData.created = cal.toRFC3339(cal.now());
-        if (!isImport || !jsonData.updated) jsonData.updated = cal.toRFC3339(cal.now());
-        if (!isImport || !jsonData.creator) jsonData.creator = this.creator;
-        if (!isImport || !jsonData.organizer) jsonData.organizer = this.creator;
+        if (!isImport) { jsonData.htmlLink = this.baseUri + "/calendar/event?eid=" + jsonData.id; }
+        if (!isImport || !jsonData.iCalUID) {
+            jsonData.iCalUID = jsonData.id + "@google.com";
+        }
+        if (!isImport || !jsonData.created) {
+            jsonData.created = cal.toRFC3339(cal.now());
+        }
+        if (!isImport || !jsonData.updated) {
+            jsonData.updated = cal.toRFC3339(cal.now());
+        }
+        if (!isImport || !jsonData.creator) {
+            jsonData.creator = this.creator;
+        }
+        if (!isImport || !jsonData.organizer) {
+            jsonData.organizer = this.creator;
+        }
         this.nextEtag = null;
         return jsonData;
     },
@@ -406,8 +416,12 @@ GDataServer.prototype = {
         jsonData.updated  = cal.toRFC3339(cal.now());
         jsonData.id = id;
         jsonData.iCalUID = (jsonData.recurringEventId || jsonData.id) + "@google.com";
-        if (!jsonData.creator) jsonData.creator = this.creator;
-        if (!jsonData.organizer) jsonData.organizer = this.creator;
+        if (!jsonData.creator) {
+            jsonData.creator = this.creator;
+        }
+        if (!jsonData.organizer) {
+            jsonData.organizer = this.creator;
+        }
 
         this.nextEtag = null;
         return jsonData;
@@ -418,8 +432,12 @@ GDataServer.prototype = {
         jsonData.etag = this.nextEtag || '"' + (new Date()).getTime() + '"';
         jsonData.id = generateID();
         jsonData.position = generateID(); // Not a real position, but we don't really use this at the moment
-        if (!jsonData.status) jsonData.status = "needsAction";
-        if (!jsonData.updated) jsonData.updated = cal.toRFC3339(cal.now());
+        if (!jsonData.status) {
+            jsonData.status = "needsAction";
+        }
+        if (!jsonData.updated) {
+            jsonData.updated = cal.toRFC3339(cal.now());
+        }
 
         this.nextEtag = null;
         return jsonData;
@@ -429,8 +447,12 @@ GDataServer.prototype = {
         jsonData.kind = "tasks#task";
         jsonData.etag = this.nextEtag || '"' + (new Date()).getTime() + '"';
         jsonData.updated  = cal.toRFC3339(cal.now());
-        if (!jsonData.status) jsonData.status = "needsAction";
-        if (!jsonData.updated) jsonData.updated = cal.toRFC3339(cal.now());
+        if (!jsonData.status) {
+            jsonData.status = "needsAction";
+        }
+        if (!jsonData.updated) {
+            jsonData.updated = cal.toRFC3339(cal.now());
+        }
 
         this.nextEtag = null;
         return jsonData;
