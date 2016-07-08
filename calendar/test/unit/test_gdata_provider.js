@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-(function load_gdata_manifest() {
+(function() {
   Components.utils.import("resource:///modules/Services.jsm");
   Services.prefs.setBoolPref("javascript.options.showInConsole", true);
   Services.prefs.setBoolPref("browser.dom.window.dump.enabled", true);
@@ -64,7 +64,7 @@ MockAlertsService.prototype = {
 function replaceAlertsService() {
     let originalAlertsServiceCID =
         MockRegistrar.register("@mozilla.org/alerts-service;1", MockAlertsService);
-    do_register_cleanup(function restoreAlertsService() {
+    do_register_cleanup(() => {
         MockRegistrar.unregister(originalAlertsServiceCID);
     });
 }
