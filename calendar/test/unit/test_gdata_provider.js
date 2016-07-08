@@ -236,6 +236,7 @@ GDataServer.prototype = {
             return nextHandler(request, response, method, parameters, body);
         } catch (e) {
             do_print("Server Error: " + e.fileName + ":" + e.lineNumber + ": " + e + "\n");
+            return null;
         }
     },
 
