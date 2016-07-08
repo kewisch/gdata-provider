@@ -913,7 +913,7 @@ add_task(function* test_basicItems() {
     let items = yield pclient.getAllItems();
     equal(items.length, 2);
 
-    let event = cal.isEvent(items[0]) ? items[0]: items[1];
+    let event = cal.isEvent(items[0]) ? items[0] : items[1];
     equal(event.id, "go6ijb0b46hlpbu4eeu92njevo@google.com");
     equal(event.getProperty("STATUS"), "CONFIRMED");
     equal(event.getProperty("URL"), gServer.baseUri + "/calendar/event?eid=eventhash");
