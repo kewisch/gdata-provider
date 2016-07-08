@@ -351,7 +351,7 @@ GDataServer.prototype = {
         } else if (body.recurringEventId) {
             // Special case for events, won't happen on tasks.  This is an
             // exception that doesn't exist yet. Allow creation in this case.
-            let [foundParentIndex, foundParent] = findKey(items, "id", body.recurringEventId);
+            let [, foundParent] = findKey(items, "id", body.recurringEventId);
             if (!matchTag || foundParent.etag == matchTag) {
                 let data = modifyFunc(body, itemId);
                 items.push(data);
@@ -367,7 +367,7 @@ GDataServer.prototype = {
     },
 
     handleDelete: function(request, response, items, itemId) {
-        let [foundIndex, foundItem] = findKey(items, "id", itemId);
+        let [foundIndex, ] = findKey(items, "id", itemId);
 
         let matchTag = request.hasHeader("If-Match") ?
                        request.getHeader("If-Match") : null;
@@ -605,8 +605,7 @@ add_task(function* test_dateToJSON() {
         return items[0].startDate;
     }
 
-    let tzProvider = cal.getTimezoneService();
-    let dt, vtimezone;
+    let dt;
 
     // no timezone
     dt = _createDateTime(cal.floating());
@@ -1305,7 +1304,7 @@ add_task(function* test_modify_invitation() {
     att.participationStatus = "ACCEPTED";
     newItem.addAttendee(att);
 
-    let modifiedItem = yield pclient.modifyItem(newItem, items[0]);
+    yield pclient.modifyItem(newItem, items[0]);
     equal(gServer.lastMethod, "PATCH");
 
     // Case #2: User is organizer
@@ -1374,11 +1373,6 @@ add_task(function* test_metadata() {
         "selfLink": gServer.baseUri + "/tasks/v1/lists/MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDow/tasks/MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU",
         "notes": "description"
     }];
-
-    let idToEtag = {
-        "go6ijb0b46hlpbu4eeu92njevo@google.com": '"1"',
-        "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU": '"2"'
-    };
 
     let client = yield gServer.getClient();
     let offline = client.wrappedJSObject.mCachedCalendar;
