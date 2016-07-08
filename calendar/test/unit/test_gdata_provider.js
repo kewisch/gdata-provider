@@ -473,7 +473,7 @@ function findKey(container, key, searchKey) {
 }
 
 function generateID() {
-    let c = "abcdefghijklmnopqrstuvwxyz0123456789"
+    let c = "abcdefghijklmnopqrstuvwxyz0123456789";
     let s = "";
     for (let i = 26; i; i--) {
       s += c[Math.floor(Math.random() * c.length)];
@@ -753,9 +753,9 @@ add_task(function* test_always_readOnly() {
     gServer.calendarListData.accessRole = "freeBusyReader";
     let client = yield gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client);
-    ok(client.readOnly)
+    ok(client.readOnly);
     client.readOnly = false;
-    ok(client.readOnly)
+    ok(client.readOnly);
 
     let items = yield pclient.getAllItems();
     equal(items.length, 1);
@@ -764,9 +764,9 @@ add_task(function* test_always_readOnly() {
 
     gServer.calendarListData.accessRole = "reader";
     client = yield gServer.getClient();
-    ok(client.readOnly)
+    ok(client.readOnly);
     client.readOnly = false;
-    ok(client.readOnly)
+    ok(client.readOnly);
     gServer.resetClient(client);
 });
 
@@ -1029,7 +1029,7 @@ add_task(function* test_addModifyDeleteItem() {
     equal(items[0].id, addedEvent.id);
     equal(items[0].organizer.id, "mailto:xpcshell@example.com");
 
-    equal(gServer.events.length, 1)
+    equal(gServer.events.length, 1);
     equal(gServer.tasks.length, 0);
 
     // Add a task
@@ -1040,7 +1040,7 @@ add_task(function* test_addModifyDeleteItem() {
     equal(items.length, 2);
     equal(items[1].id, addedTask.id);
 
-    equal(gServer.events.length, 1)
+    equal(gServer.events.length, 1);
     equal(gServer.tasks.length, 1);
 
     // Modify an event
@@ -1376,7 +1376,7 @@ add_task(function* test_metadata() {
     let idToEtag = {
         "go6ijb0b46hlpbu4eeu92njevo@google.com": '"1"',
         "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU": '"2"'
-    }
+    };
 
     let client = yield gServer.getClient();
     let offline = client.wrappedJSObject.mCachedCalendar;
@@ -1558,7 +1558,7 @@ add_task(function* test_conflict_modify() {
     let modifiedItem = yield pclient.modifyItem(newItem, item);
     item = (yield pclient.getAllItems())[0];
     equal(gServer.events[0].summary, "local change");
-    notEqual(gServer.events[0].etag, '"2"')
+    notEqual(gServer.events[0].etag, '"2"');
     equal(item.title, "local change");
     equal(modifiedItem.title, "local change");
     equal(gServer.events.length, 1);
@@ -1581,7 +1581,7 @@ add_task(function* test_conflict_modify() {
 
     item = (yield pclient.getAllItems())[0];
     equal(gServer.events[0].summary, "remote change");
-    equal(gServer.events[0].etag, '"3"')
+    equal(gServer.events[0].etag, '"3"');
     equal(item.title, "remote change");
 
     // Case #3: Modified on server, delete locally, don't overwrite conflict
@@ -1602,7 +1602,7 @@ add_task(function* test_conflict_modify() {
 
     item = (yield pclient.getAllItems())[0];
     equal(gServer.events[0].summary, "remote change");
-    equal(gServer.events[0].etag, '"4"')
+    equal(gServer.events[0].etag, '"4"');
     equal(item.title, "remote change");
 
     // Case #4: Modified on server, delete locally, overwrite conflict
@@ -1648,7 +1648,7 @@ add_task(function* test_conflict_delete() {
     let modifiedItem = yield pclient.modifyItem(newItem, item);
     item = (yield pclient.getAllItems())[0];
     equal(gServer.events[0].summary, "local change");
-    notEqual(gServer.events[0].etag, '"2"')
+    notEqual(gServer.events[0].etag, '"2"');
     equal(item.title, "local change");
     equal(modifiedItem.title, "local change");
     equal(gServer.events.length, 1);
