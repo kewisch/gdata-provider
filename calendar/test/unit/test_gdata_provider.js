@@ -230,7 +230,9 @@ GDataServer.prototype = {
             try {
                 body = JSON.parse(NetUtil.readInputStreamToString(request.bodyInputStream,
                                   request.bodyInputStream.available()));
-            } catch (e) {}
+            } catch (e) {
+                // Don't bail if json parsing failed.
+            }
 
             this.lastMethod = method;
             return nextHandler(request, response, method, parameters, body);
