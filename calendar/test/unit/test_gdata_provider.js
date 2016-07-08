@@ -173,7 +173,7 @@ GDataServer.prototype = {
     },
 
     waitForLoad: function(aCalendar) {
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
             let observer = cal.createAdapter(Components.interfaces.calIObserver, {
                 onLoad: function() {
                     let uncached = aCalendar.wrappedJSObject.mUncachedCalendar.wrappedJSObject;
@@ -201,7 +201,7 @@ GDataServer.prototype = {
         client.name = "xpcshell";
 
         // Make sure we catch the last error message in case sync fails
-        monkeyPatch(uclient, "replayChangesOn", function(protofunc, aListener) {
+        monkeyPatch(uclient, "replayChangesOn", (protofunc, aListener) => {
             protofunc({
               onResult: function(op, detail) {
                 uclient._lastStatus = op.status;
@@ -517,7 +517,7 @@ add_task(function* test_migrate_cache() {
     let unwrapped = client.wrappedJSObject;
     let migrateStorageCache = unwrapped.migrateStorageCache.bind(unwrapped);
 
-    monkeyPatch(unwrapped, "resetSync", function(protofunc) {
+    monkeyPatch(unwrapped, "resetSync", (protofunc) => {
         return Promise.resolve();
     });
 
