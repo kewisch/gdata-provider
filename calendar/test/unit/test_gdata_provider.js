@@ -367,6 +367,7 @@ GDataServer.prototype = {
     },
 
     handleDelete: function(request, response, items, itemId) {
+        // eslint-disable-next-line array-bracket-spacing
         let [foundIndex, ] = findKey(items, "id", itemId);
 
         let matchTag = request.hasHeader("If-Match") ?
