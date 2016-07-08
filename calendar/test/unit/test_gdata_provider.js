@@ -221,9 +221,9 @@ GDataServer.prototype = {
 
     router: function(nextHandler, request, response) {
         try {
-            let method = request.hasHeader("X-HTTP-Method-Override") ?
-                         request.getHeader("X-HTTP-Method-Override") :
-                         request.method;
+            let method = request.hasHeader("X-HTTP-Method-Override")
+                         ? request.getHeader("X-HTTP-Method-Override")
+                         : request.method;
             let parameters = new Map(request.queryString.split("&").map(p => p.split("=", 2)));
 
             let body;
