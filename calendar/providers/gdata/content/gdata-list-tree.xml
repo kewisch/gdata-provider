@@ -61,10 +61,12 @@
         </xul:treechildren>
       </xul:tree>
     </content>
+
     <implementation>
       <constructor><![CDATA[
         this.tree.view = this;
       ]]></constructor>
+
       <property name="mockCalendarHeader" readonly="true">
         <getter><![CDATA[
           let calmgr = cal.getCalendarManager();
@@ -76,6 +78,7 @@
           return mem;
         ]]></getter>
       </property>
+
       <property name="mockTaskHeader" readonly="true">
         <getter><![CDATA[
           let calmgr = cal.getCalendarManager();
@@ -87,6 +90,7 @@
           return mem;
         ]]></getter>
       </property>
+
       <field name="mCalendarHeaderIndex">0</field>
       <field name="mTasksHeaderIndex">0</field>
 
@@ -97,19 +101,19 @@
           return this.mCalendarList;
         ]]></getter>
         <setter><![CDATA[
-            for (let i = 0; i < val.length; i++) {
-                let calendar = val[i];
-                let spec = calendar.uri.spec;
-                if (calendar.type == "memory") {
-                    if (spec == "dummy://calendar") {
-                        this.mCalendarHeaderIndex = i;
-                    } else if (spec == "dummy://tasks") {
-                        this.mTasksHeaderIndex = i;
-                    }
-                }
-                this.addCalendar(calendar);
-            }
-            return this.mCalendarList;
+          for (let i = 0; i < val.length; i++) {
+              let calendar = val[i];
+              let spec = calendar.uri.spec;
+              if (calendar.type == "memory") {
+                  if (spec == "dummy://calendar") {
+                      this.mCalendarHeaderIndex = i;
+                  } else if (spec == "dummy://tasks") {
+                      this.mTasksHeaderIndex = i;
+                  }
+              }
+              this.addCalendar(calendar);
+          }
+          return this.mCalendarList;
         ]]></setter>
       </property>
 
@@ -157,10 +161,10 @@
       <method name="isContainerEmpty">
         <parameter name="aRow"/>
         <body><![CDATA[
-         return ((aRow == this.mCalendarHeaderIndex &&
+          return (aRow == this.mCalendarHeaderIndex &&
                   aRow + 1 == this.mTasksHeaderIndex) ||
                  (aRow == this.mTasksHeaderIndex &&
-                  aRow == this.mCalendarList.lengh));
+                  aRow == this.mCalendarList.lengh);
         ]]></body>
       </method>
 
@@ -207,6 +211,7 @@
           }
         ]]></body>
       </method>
+
       <method name="cycleCell">
         <parameter name="aRow"/>
         <parameter name="aCol"/>
