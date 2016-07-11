@@ -15,7 +15,6 @@ CuImport("resource://gre/modules/PromiseUtils.jsm", this);
 CuImport("resource://gre/modules/Task.jsm", this);
 
 CuImport("resource://calendar/modules/calUtils.jsm", this);
-CuImport("resource://calendar/modules/calIteratorUtils.jsm", this);
 CuImport("resource://calendar/modules/calProviderUtils.jsm", this);
 
 var cIE = Components.interfaces.calIErrors;
@@ -586,7 +585,9 @@ function setupRecurrence(aItem, aRecurrence, aTimezone) {
     }
 
     let hasRecurringRules = false;
-    for (let prop of cal.ical.propertyIterator(rootComp)) {
+    for (let prop = rootComp.getFirstProperty("ANY");
+         prop;
+         prop = rootComp.getNextProperty("ANY")) {
        switch (prop.propertyName) {
             case "RDATE":
             case "EXDATE":
