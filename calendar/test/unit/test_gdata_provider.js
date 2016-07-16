@@ -95,9 +95,9 @@ function GDataServer(calendarId, tasksId) {
         accessToken: "accessToken",
         refreshToken: "refreshToken",
         tokenExpires: Number.MAX_VALUE,
-        connect: function(succ, fail, ui, refresh) {
+        connect: function(success, failure, withUi, refresh) {
             this.accessToken = "accessToken";
-            succ();
+            success();
         }
     };
 }
@@ -203,10 +203,10 @@ GDataServer.prototype = {
         // Make sure we catch the last error message in case sync fails
         monkeyPatch(uclient, "replayChangesOn", (protofunc, aListener) => {
             protofunc({
-              onResult: function(op, detail) {
-                uclient._lastStatus = op.status;
+              onResult: function(operation, detail) {
+                uclient._lastStatus = operation.status;
                 uclient._lastMessage = detail;
-                aListener.onResult(op, detail);
+                aListener.onResult(operation, detail);
               }
            });
         });
@@ -224,7 +224,7 @@ GDataServer.prototype = {
             let method = request.hasHeader("X-HTTP-Method-Override")
                          ? request.getHeader("X-HTTP-Method-Override")
                          : request.method;
-            let parameters = new Map(request.queryString.split("&").map(p => p.split("=", 2)));
+            let parameters = new Map(request.queryString.split("&").map(part => part.split("=", 2)));
 
             let body;
             try {
@@ -476,12 +476,12 @@ function findKey(container, key, searchKey) {
 }
 
 function generateID() {
-    let c = "abcdefghijklmnopqrstuvwxyz0123456789";
-    let s = "";
+    let chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+    let str = "";
     for (let i = 26; i; i--) {
-      s += c[Math.floor(Math.random() * c.length)];
+      str += chars[Math.floor(Math.random() * chars.length)];
     }
-    return s;
+    return str;
 }
 
 function getAllMeta(calendar) {
@@ -610,76 +610,76 @@ add_task(function* test_dateToJSON() {
         return items[0].startDate;
     }
 
-    let dt;
+    let date;
 
     // no timezone
-    dt = _createDateTime(cal.floating());
-    deepEqual(dateToJSON(dt), { dateTime: "2015-01-30T12:00:00-00:00" });
+    date = _createDateTime(cal.floating());
+    deepEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00-00:00" });
 
     // valid non-Olson tz name
-    dt = _createDateTime("Eastern Standard Time");
-    deepEqual(dateToJSON(dt), { dateTime: "2015-01-30T12:00:00", timeZone: "America/New_York" });
+    date = _createDateTime("Eastern Standard Time");
+    deepEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00", timeZone: "America/New_York" });
 
     // valid continent/city Olson tz
-    dt = _createDateTime("America/New_York");
-    deepEqual(dateToJSON(dt), { dateTime: "2015-01-30T12:00:00", timeZone: "America/New_York" });
+    date = _createDateTime("America/New_York");
+    deepEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00", timeZone: "America/New_York" });
 
     // valid continent/region/city Olson tz
-    dt = _createDateTime("America/Argentina/Buenos_Aires");
-    deepEqual(dateToJSON(dt), { dateTime: "2015-01-30T12:00:00", timeZone: "America/Argentina/Buenos_Aires" });
+    date = _createDateTime("America/Argentina/Buenos_Aires");
+    deepEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00", timeZone: "America/Argentina/Buenos_Aires" });
 
     // ical.js and libical currently have slightly different timezone handling.
     if (Preferences.get("calendar.icaljs", false)) {
         // unknown but formal valid Olson tz. ical.js assumes floating
-        dt = _createDateTime("Unknown/Olson/Timezone");
-        deepEqual(dateToJSON(dt), { dateTime: "2015-01-30T12:00:00-00:00" });
+        date = _createDateTime("Unknown/Olson/Timezone");
+        deepEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00-00:00" });
 
         // Etc with offset. ical.js doesn't understand third party zones and uses floating
-        dt = _createDateTime("ThirdPartyZone", 5);
-        deepEqual(dateToJSON(dt), { dateTime: "2015-01-30T12:00:00-00:00" });
+        date = _createDateTime("ThirdPartyZone", 5);
+        deepEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00-00:00" });
 
         // Etc with zero offset. ical.js doesn't understand third party zones and uses floating
-        dt = _createDateTime("ThirdPartyZone", 0);
-        deepEqual(dateToJSON(dt), { dateTime: "2015-01-30T12:00:00-00:00" });
+        date = _createDateTime("ThirdPartyZone", 0);
+        deepEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00-00:00" });
     } else {
         // This causes an assertion failure.
         if (!mozinfo.debug) {
             // unknown but formal valid Olson tz
-            dt = _createDateTime("Unknown/Olson/Timezone");
-            deepEqual(dateToJSON(dt), { dateTime: "2015-01-30T12:00:00", timeZone: "Unknown/Olson/Timezone" });
+            date = _createDateTime("Unknown/Olson/Timezone");
+            deepEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00", timeZone: "Unknown/Olson/Timezone" });
         }
 
         // Etc with offset
-        dt = _createDateTime("ThirdPartyZone", 5);
-        deepEqual(dateToJSON(dt), { dateTime: "2015-01-30T12:00:00", timeZone: "Etc/GMT-5" });
+        date = _createDateTime("ThirdPartyZone", 5);
+        deepEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00", timeZone: "Etc/GMT-5" });
 
         // Etc with zero offset
-        dt = _createDateTime("ThirdPartyZone", 0);
-        deepEqual(dateToJSON(dt), { dateTime: "2015-01-30T12:00:00Z", timeZone: "UTC" });
+        date = _createDateTime("ThirdPartyZone", 0);
+        deepEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00Z", timeZone: "UTC" });
     }
 
     // This causes an assertion failure.
     if (!mozinfo.debug) {
         // invalid non-Olson tz
-        dt = _createDateTime("InvalidTimeZone");
-        notEqual(dateToJSON(dt), { dateTime: "2015-01-30T12:00:00", timeZone: "InvalidTimeZone" });
+        date = _createDateTime("InvalidTimeZone");
+        notEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00", timeZone: "InvalidTimeZone" });
     }
 
     // Zone with 0 offset but not UTC
-    dt = _createDateTime("Europe/London");
-    deepEqual(dateToJSON(dt), { dateTime: "2015-01-30T12:00:00", timeZone: "Europe/London" });
+    date = _createDateTime("Europe/London");
+    deepEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00", timeZone: "Europe/London" });
 
     // date only
-    dt.isDate = true;
-    deepEqual(dateToJSON(dt), { date: "2015-01-30" });
+    date.isDate = true;
+    deepEqual(dateToJSON(date), { date: "2015-01-30" });
 });
 
 add_task(function* test_JSONToDate() {
     function convert(aEntry, aTimezone="Europe/Berlin") {
         let tzs = cal.getTimezoneService();
         let calendarTz = tzs.getTimezone(aTimezone);
-        let dt = JSONToDate(aEntry, calendarTz);
-        return dt ? dt.icalString + " in " + dt.timezone.tzid : null;
+        let date = JSONToDate(aEntry, calendarTz);
+        return date ? date.icalString + " in " + date.timezone.tzid : null;
     }
 
     // A date, using the passed in default timezone
