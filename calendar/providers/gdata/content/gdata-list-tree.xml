@@ -164,7 +164,7 @@
           return (aRow == this.mCalendarHeaderIndex &&
                   aRow + 1 == this.mTasksHeaderIndex) ||
                  (aRow == this.mTasksHeaderIndex &&
-                  aRow == this.mCalendarList.lengh);
+                  aRow == this.mCalendarList.length);
         ]]></body>
       </method>
 
