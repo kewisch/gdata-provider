@@ -84,7 +84,7 @@ function migrateItemMetadata(aOfflineStorage, aOldItem, aNewItem, aMetadata) {
     // If an exception was turned into an EXDATE, we need to clear its metadata
     if (aOldItem.recurrenceInfo && aNewItem.recurrenceInfo) {
         let newExIds = new Set(aNewItem.recurrenceInfo.getExceptionIds({}).map(function(x) { return x.icalString; }));
-        for each (let exId in aOldItem.recurrenceInfo.getExceptionIds({})) {
+        for (let exId of aOldItem.recurrenceInfo.getExceptionIds({})) {
             if (!newExIds.has(exId.icalString)) {
                 let ex = aOldItem.recurrenceInfo.getExceptionFor(exId);
                 deleteItemMetadata(aOfflineStorage, ex);
@@ -103,7 +103,7 @@ function deleteItemMetadata(aOfflineStorage, aItem) {
     aOfflineStorage.deleteMetaData(aItem.hashId);
     if (aItem.recurrenceInfo) {
         let recInfo = aItem.recurrenceInfo;
-        for each (let exId in recInfo.getExceptionIds({})) {
+        for (let exId of recInfo.getExceptionIds({})) {
             let occ = recInfo.getExceptionFor(exId);
             aOfflineStorage.deleteMetaData(occ.hashId);
         }
@@ -475,7 +475,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
     if (aItem.recurrenceInfo) {
         itemData.recurrence = [];
         let recurrenceItems = aItem.recurrenceInfo.getRecurrenceItems({});
-        for each (let ritem in recurrenceItems) {
+        for (let ritem of recurrenceItems) {
             let prop = ritem.icalProperty;
             if (ritem instanceof Components.interfaces.calIRecurrenceDate) {
                 // EXDATES require special casing, since they might contain
@@ -520,7 +520,7 @@ function TaskToJSON(aItem, aOfflineStorage, aIsImport) {
     }
     setIf(itemData, "completed", cal.toRFC3339(aItem.completedDate));
 
-    for each (let relation in aItem.getRelations({})) {
+    for (let relation of aItem.getRelations({})) {
         if (relation.relId &&
             (!relation.relType || relation.relType == "PARENT")) {
             itemData.parent = relation.relId;
@@ -530,7 +530,7 @@ function TaskToJSON(aItem, aOfflineStorage, aIsImport) {
 
     let attachments = aItem.getAttachments({});
     if (attachments.length) itemData.links = [];
-    for each (let attach in aItem.getAttachments({})) {
+    for (let attach of aItem.getAttachments({})) {
         let attachData = {};
         attachData.link = attach.uri.spec;
         attachData.description = attach.getParameter("FILENAME");
@@ -744,7 +744,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
                 tentative: "TENTATIVE",
                 accepted: "ACCEPTED"
             };
-            for each (let attendeeEntry in aEntry.attendees) {
+            for (let attendeeEntry of aEntry.attendees) {
                 let attendee = cal.createAttendee();
                 if (attendeeEntry.email) {
                     attendee.id = "mailto:" + attendeeEntry.email;
@@ -788,7 +788,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
             }
 
             if (aEntry.reminders.overrides) {
-                for each (let reminderEntry in aEntry.reminders.overrides) {
+                for (let reminderEntry of aEntry.reminders.overrides) {
                     item.addAlarm(JSONToAlarm(reminderEntry));
                 }
             }
@@ -896,7 +896,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
         }
 
         if (aEntry.links) {
-            for each (let link in aEntry.links) {
+            for (let link of aEntry.links) {
                 let attach = cal.createAttachment();
                 attach.uri = Services.io.newURI(link.link, null, null);
                 attach.setParameter("FILENAME", link.description);
@@ -1068,7 +1068,7 @@ ItemSaver.prototype = {
             // item stream. If it can't be found there, the offline storage is asked
             // for the parent item. If it still can't be found, then we have to do
             // this at the end.
-            for each (let exc in exceptionItems) {
+            for (let exc of exceptionItems) {
                 // If we have the master item in our cache then use it. Otherwise
                 // attempt to get it from the offline storage.
                 let item;
@@ -1178,7 +1178,7 @@ ItemSaver.prototype = {
      */
     processRemainingExceptions: function() {
         return Task.spawn(function() {
-            for each (let exc in this.missingParents) {
+            for (let exc of this.missingParents) {
                 let item = (yield this.promiseOfflineStorage.getItem(exc.id))[0];
                 if (item) {
                     yield this.processException(exc, item);

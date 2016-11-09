@@ -15,7 +15,7 @@ CuImport("resource://gre/modules/Promise.jsm", this);
         let pages = Array.slice(arguments, 1);
         let wizard = document.documentElement;
         let page = wizard.getPageById(anchor);
-        for each (let id in pages) {
+        for (let id of pages) {
             page.next = id;
             page = wizard.getPageById(id);
         }
@@ -167,7 +167,7 @@ CuImport("resource://gre/modules/Promise.jsm", this);
                .then(function([tasksLists, calendarList]) {
             let existing = new Set();
             let sessionPrefix = "googleapi://" + session.id;
-            for each (let calendar in calMgr.getCalendars({})) {
+            for (let calendar of calMgr.getCalendars({})) {
                 let spec = calendar.uri.spec;
                 if (calendar.type == "gdata" && spec.substr(0, sessionPrefix.length) == sessionPrefix) {
                     let match;

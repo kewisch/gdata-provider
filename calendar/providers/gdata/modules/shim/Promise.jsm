@@ -47,7 +47,7 @@ var PromiseWalker = {
     },
 
     schedulePromise: function (aPromise) {
-        for each (let handler in aPromise._handlers) {
+        for (let handler of aPromise._handlers) {
             this.handlers.push(handler);
         }
         aPromise._handlers.length = 0;

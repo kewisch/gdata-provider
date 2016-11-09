@@ -79,7 +79,7 @@ function gdata_migration_loader() {
         // This is the migration wizard, load the calendars neeeded.
         let listbox = document.getElementById("calendars-listbox");
 
-        for each (let calendar in sortCalendarArray(getMigratableCalendars())) {
+        for (let calendar of sortCalendarArray(getMigratableCalendars())) {
             let item = listbox.appendItem(calendar.name, calendar.id);
             item.setAttribute("type", "checkbox");
             item.calendar = calendar;

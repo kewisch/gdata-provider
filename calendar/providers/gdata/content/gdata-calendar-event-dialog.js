@@ -58,14 +58,14 @@ Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
             "button-url"
         ];
 
-        for each (let id in hideForTaskIds) {
+        for (let id of hideForTaskIds) {
             let node = document.getElementById(id);
             if (node) {
                 node.hidden = isGoogleTask;
             }
         }
 
-        for each (let id in disableForTaskIds) {
+        for (let id of disableForTaskIds) {
             let node = document.getElementById(id);
             if (node) {
                 node.disabled = isGoogleTask;
@@ -96,7 +96,7 @@ Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
         }
 
         let elements = document.getElementsByAttribute("provider", "gdata");
-        for each (let elem in Array.slice(elements)) {
+        for (let elem of Array.slice(elements)) {
             elem.style.display = isGoogleCalendar ? "" : "none";
         }
 
@@ -208,7 +208,7 @@ Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
         // default alarm status, otherwise the wrong alarm will be set.
         let customItem = document.getElementById("reminder-custom-menuitem");
         if (customItem.reminders) {
-            for each (let reminder in customItem.reminders) {
+            for (let reminder of customItem.reminders) {
                 reminder.deleteProperty("X-DEFAULT-ALARM");
             }
         }

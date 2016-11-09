@@ -163,7 +163,7 @@ function MapSetForEach(cb) {
 function Map(values) {
     this.data = Object.create(null);
     if (values) {
-        for each (let [k,v] in values) {
+        for (let [k,v] of values) {
             this.data[k] = v;
         }
     }
@@ -196,7 +196,7 @@ function Set(values) {
 }
 Set.prototype = {
     has: function(v) {
-        for each (let dv in this.data) {
+        for (let dv of this.data) {
             if (v == dv) return true;
         }
         return false;
@@ -215,14 +215,14 @@ Set.prototype = {
     },
 
     forEach: function(cb) {
-        for each (let v in this.data) {
+        for (let v of this.data) {
             cb(v, v, this);
         }
     },
 
     toSource: function() { return this.data.toSource(); },
     __iterator__: function() {
-        for each (let v in this.data) {
+        for (let v of this.data) {
             yield v;
         }
     }

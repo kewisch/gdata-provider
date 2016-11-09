@@ -41,7 +41,7 @@
         let notificationbox = document.getElementById("reminder-notifications");
 
         let validated = true;
-        for each (let node in Array.slice(listbox.childNodes)) {
+        for (let node of Array.slice(listbox.childNodes)) {
             validated = validated && checkReminderRange(node.reminder);
             if (!validated) {
                 break;

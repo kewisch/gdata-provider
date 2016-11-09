@@ -34,27 +34,27 @@ function LOGitem(item) {
 
     let attendees = item.getAttendees({});
     let attendeeString = "";
-    for each (let a in attendees) {
+    for (let a of attendees) {
         attendeeString += "\n" + LOGattendee(a);
     }
 
     let rstr = "\n";
     if (item.recurrenceInfo) {
         let ritems = item.recurrenceInfo.getRecurrenceItems({});
-        for each (let ritem in ritems) {
+        for (let ritem of ritems) {
             rstr += "\t\t" + ritem.icalProperty.icalString;
         }
 
         rstr += "\tExceptions:\n";
         let exids = item.recurrenceInfo.getExceptionIds({});
-        for each (let exc in exids) {
+        for (let exc of exids) {
             rstr += "\t\t" + exc + "\n";
         }
     }
 
     let astr = "\n";
     let alarms = item.getAlarms({});
-    for each (let alarm in alarms) {
+    for (let alarm of alarms) {
         astr += "\t\t" + LOGalarm(alarm) + "\n";
     }
 

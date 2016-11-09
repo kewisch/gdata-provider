@@ -717,9 +717,9 @@ calGoogleCalendar.prototype = {
                     this.defaultReminders = [];
                 }
 
-                for each (let k in ["accessRole", "backgroundColor", "description",
-                                    "foregroundColor", "location", "primary",
-                                    "summary", "summaryOverride", "timeZone"]) {
+                for (let k of ["accessRole", "backgroundColor", "description",
+                               "foregroundColor", "location", "primary",
+                               "summary", "summaryOverride", "timeZone"]) {
                     this.setProperty("settings." + k, aData[k]);
                 }
                 this.setProperty("settings.defaultReminders", JSON.stringify(aData.defaultReminders));
