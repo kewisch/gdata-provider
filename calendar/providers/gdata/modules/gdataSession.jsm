@@ -276,18 +276,24 @@ calGoogleSession.prototype = {
                 // Use the async prompter to avoid multiple master password prompts
                 let self = this;
                 let promptlistener = {
-                    onPromptStart: function() {
-                        // Usually this function should be synchronous. The OAuth
-                        // connection itself is asynchronous, but if a master
-                        // password is prompted it will block on that.
-                        this.onPromptAuthAvailable();
-                        return true;
+                    onPromptStartAsync: function(callback) {
+                        this.onPromptAuthAvailable(callback);
                     },
-
-                    onPromptAuthAvailable: function() {
-                        self.oauth.connect(authSuccess, authFailed, true, false);
+                    onPromptAuthAvailable: function(callback) {
+                        self.oauth.connect(() => {
+                            authSuccess();
+                            if (callback) {
+                                callback.onAuthResult(true);
+                            }
+                        }, () => {
+                            authFailed();
+                            if (callback) {
+                                callback.onAuthResult(false);
+                            }
+                        }, true);
                     },
-                    onPromptCanceled: authFailed
+                    onPromptCanceled: authFailed,
+                    onPromptStart: function() {}
                 };
                 let asyncprompter = Components.classes["@mozilla.org/messenger/msgAsyncPrompter;1"]
                                               .getService(Components.interfaces.nsIMsgAsyncPrompter);
