@@ -151,7 +151,8 @@ calGoogleSession.prototype = {
                 if (!this.mRefreshToken) {
                     let pass = { value: null };
                     try {
-                        cal.auth.passwordManagerGet(sessionId, pass, sessionId, pwMgrId);
+                        let origin = "oauth:" + sessionId;
+                        cal.auth.passwordManagerGet(sessionId, pass, origin, pwMgrId);
                     } catch (e) {
                         // User might have cancelled the master password prompt, thats ok
                         if (e.result != Components.results.NS_ERROR_ABORT) {
@@ -164,10 +165,11 @@ calGoogleSession.prototype = {
             },
             set: function setRefreshToken(val) {
                 try {
-                    if (!val) {
-                        cal.auth.passwordManagerRemove(sessionId, sessionId, pwMgrId);
+                    let origin = "oauth:" + sessionId;
+                    if (val) {
+                        cal.auth.passwordManagerSave(sessionId, val, origin, pwMgrId);
                     } else {
-                        cal.auth.passwordManagerSave(sessionId, val, sessionId, pwMgrId);
+                        cal.auth.passwordManagerRemove(sessionId, origin, pwMgrId);
                     }
                 } catch (e) {
                     // User might have cancelled the master password prompt, thats ok
