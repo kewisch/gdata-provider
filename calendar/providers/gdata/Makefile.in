@@ -8,11 +8,6 @@ XPI_NO_UNIVERSAL = 1
 XPI_EM_ID = {a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
 XPI_INSTALL_EXTENSION = $(XPI_EM_ID)
 
-THUNDERBIRD_VERSION := $(shell cat $(topsrcdir)/mail/config/version.txt)
-SEAMONKEY_VERSION := $(shell cat $(topsrcdir)/suite/config/version.txt)
-LIGHTNING_VERSION := $(shell $(PYTHON) $(topsrcdir)/calendar/lightning/build/makeversion.py $(word 1,$(MOZ_PKG_VERSION) $(THUNDERBIRD_VERSION)))
-GDATA_VERSION = $(shell $(PYTHON) $(srcdir)/makeversion.py $(LIGHTNING_VERSION))
-
 DEFINES += -DLIGHTNING_VERSION=$(LIGHTNING_VERSION) \
            -DSEAMONKEY_VERSION=$(SEAMONKEY_VERSION) \
            -DTHUNDERBIRD_VERSION=$(THUNDERBIRD_VERSION) \
@@ -35,4 +30,5 @@ stage-package:
 	(cd $(FINAL_TARGET) && tar $(TAR_CREATE_FLAGS) - *) | (cd $(PKG_STAGE)/extensions/$(XPI_EM_ID) && tar -xf -)
 
 include $(topsrcdir)/config/rules.mk
+include $(topsrcdir)/calendar/lightning/versions.mk
 include $(topsrcdir)/calendar/lightning/lightning-packager.mk
