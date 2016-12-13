@@ -41,7 +41,7 @@
         let notificationbox = document.getElementById("reminder-notifications");
 
         let validated = true;
-        for (let node of Array.slice(listbox.childNodes)) {
+        for (let node of listbox.childNodes)) {
             validated = validated && checkReminderRange(node.reminder);
             if (!validated) {
                 break;
@@ -82,7 +82,7 @@
     }
 
     monkeyPatch(window, "updateReminder", function(protofunc, event) {
-        let rv = protofunc.apply(this, Array.slice(arguments, 1));
+        let rv = protofunc.apply(this, Array.from(arguments).slice(1));
         if (event.explicitOriginalTarget.localName == "listitem" ||
             event.explicitOriginalTarget.id == "reminder-remove-button" ||
             !document.commandDispatcher.focusedElement) {
@@ -95,7 +95,7 @@
     });
 
     monkeyPatch(window, "loadReminders", function(protofunc /*, ...args */) {
-        let rv = protofunc.apply(this, Array.slice(arguments, 1));
+        let rv = protofunc.apply(this, Array.from(arguments).slice(1));
         checkAllReminders();
         hideReminderRelations();
         hideSMSReminders();

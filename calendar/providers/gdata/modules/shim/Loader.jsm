@@ -248,7 +248,7 @@ if (!cal.hashColor) {
                               "#000000", "#330000", "#663300", "#663333", "#333300",
                               "#003300", "#003333", "#000066", "#330099", "#330033"];
 
-        let sum = Array.map(str || " ", function(e) { return e.charCodeAt(0); }).reduce(function(a, b) { return a + b; });
+        let sum = Array.from(str || " ", e => e.charCodeAt(0)).reduce((a, b) => a + b);
         return colorPalette[sum % colorPalette.length];
     }
 }

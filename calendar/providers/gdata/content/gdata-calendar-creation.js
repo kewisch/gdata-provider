@@ -11,8 +11,7 @@ Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 CuImport("resource://gre/modules/Promise.jsm", this);
 
 (function() {
-    function pageorder(anchor /*, ...pages */) {
-        let pages = Array.slice(arguments, 1);
+    function pageorder(anchor, ...pages) {
         let wizard = document.documentElement;
         let page = wizard.getPageById(anchor);
         for (let id of pages) {

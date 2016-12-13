@@ -190,29 +190,26 @@ calGoogleCalendar.prototype = {
         return this.mUri;
     },
 
-    createEventsURI: function (/* ...extraParts */) {
-        let extraParts = Array.slice(arguments);
+    createEventsURI: function (...extraParts) {
         let eventsURI = null;
         if (this.mCalendarName) {
             let encodedName = encodeURIComponent(this.mCalendarName);
-            let parts = ["calendars", encodedName].concat(Array.filter(extraParts, Boolean));
+            let parts = ["calendars", encodedName].concat(extraParts.filter(Boolean));
             eventsURI = API_BASE.EVENTS + parts.join("/");
         }
         return eventsURI;
     },
 
-    createUsersURI: function(/* ...extraParts */) {
-        let extraParts = Array.slice(arguments);
+    createUsersURI: function(...extraParts) {
         let parts = ["users", "me"].concat(extraParts).map(encodeURIComponent);
         return API_BASE.EVENTS + parts.join("/");
     },
 
-    createTasksURI: function(/* ...extraParts */) {
-        let extraParts = Array.slice(arguments);
+    createTasksURI: function(...extraParts) {
         let tasksURI = null;
         if (this.mTasklistName) {
             let encodedName = encodeURIComponent(this.mTasklistName);
-            let parts = ["lists", encodedName].concat(Array.filter(extraParts, Boolean));
+            let parts = ["lists", encodedName].concat(extraParts.filter(Boolean));
             tasksURI = API_BASE.TASKS + parts.join("/");
         }
         return tasksURI;

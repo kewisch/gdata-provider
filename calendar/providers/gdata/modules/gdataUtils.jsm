@@ -1327,8 +1327,7 @@ function checkResolveConflict(aOperation, aCalendar, aItem) {
  * @param ...aParams   Optional parameters to format the string
  * @return             The localized string value.
  */
-function getProviderString(aStringName /*...aParams */) {
-    let aParams = Array.slice(arguments, 1);
+function getProviderString(aStringName, ...aParams) {
     return cal.calGetString("gdata", aStringName, aParams, "gdata-provider");
 }
 
@@ -1345,7 +1344,7 @@ function monkeyPatch(obj, x, func) {
     let old = obj[x];
     obj[x] = function() {
         let parent = old.bind(obj);
-        let args = Array.slice(arguments);
+        let args = Array.from(arguments);
         args.unshift(parent);
         try {
             return func.apply(obj, args);

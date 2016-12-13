@@ -4,8 +4,8 @@
 
 (function() {
     Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
-    monkeyPatch(window, "onLoad", function(protofunc) {
-        let rv = protofunc.apply(this, Array.slice(arguments, 1));
+    monkeyPatch(window, "onLoad", function(protofunc, ...args) {
+        let rv = protofunc.apply(this, args);
         if (gCalendar.type == "gdata") {
             let accessRole = gCalendar.getProperty("settings.accessRole");
             let isReader = (accessRole == "freeBusyReader" || accessRole == "reader");
@@ -15,9 +15,9 @@
             // Disable setting read-only if the calendar is readonly anyway
             document.getElementById("read-only").disabled = isDisabled || (isEventsCalendar && isReader);
 
-            // Don't allow setting refresh interval to 30 minutes or less
+            // Don't allow setting refresh interval to less than 30 minutes
             let refInterval = document.getElementById("calendar-refreshInterval-menupopup");
-            Array.slice(refInterval.childNodes).filter(function(n) {
+            Array.from(refInterval.childNodes).filter(function(n) {
                 let nv = parseInt(n.getAttribute("value"), 10);
                 return nv < 30 && nv != 0;
             }).forEach(function(n) { refInterval.removeChild(n); });

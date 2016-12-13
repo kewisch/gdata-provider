@@ -254,7 +254,8 @@ function promisifyCalendar(aCalendar) {
                 case "getItem":
                 case "getItems":
                     return function() {
-                        return this.promiseOperation(target, name, Array.slice(arguments));
+                      let args = Array.from(arguments);
+                      return this.promiseOperation(target, name, args);
                     }.bind(this);
                 case "getAllItems":
                     return function() {
