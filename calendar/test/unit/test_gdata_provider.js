@@ -196,7 +196,7 @@ GDataServer.prototype = {
                   (this.calendarId ? "&calendar=" + encodeURIComponent(this.calendarId) : "") +
                   (this.tasksId ? "&tasks=" + encodeURIComponent(this.tasksId) : "");
         let calmgr = cal.getCalendarManager();
-        let client = calmgr.createCalendar("gdata", Services.io.newURI(uri, null, null));
+        let client = calmgr.createCalendar("gdata", Services.io.newURI(uri));
         let uclient = client.wrappedJSObject;
         client.name = "xpcshell";
 
@@ -512,7 +512,7 @@ function run_test() {
 
 add_task(function* test_migrate_cache() {
     let uriString = "googleapi://xpcshell/?calendar=xpcshell%40example.com";
-    let uri = Services.io.newURI(uriString, null, null);
+    let uri = Services.io.newURI(uriString);
     let client = cal.getCalendarManager().createCalendar("gdata", uri);
     let unwrapped = client.wrappedJSObject;
     let migrateStorageCache = unwrapped.migrateStorageCache.bind(unwrapped);
@@ -539,14 +539,14 @@ add_task(function* test_migrate_cache() {
     // Check migrate 2 -> 3 birthday calendar
     unwrapped.CACHE_DB_VERSION = 3;
     uri = "googleapi://xpcshell/?calendar=%23contacts%40group.v.calendar.google.com";
-    unwrapped.uri = Services.io.newURI(uri, null, null);
+    unwrapped.uri = Services.io.newURI(uri);
     client.setProperty("cache.version", 2);
     equal(yield migrateStorageCache(), true);
 });
 
 add_test(function test_migrate_uri() {
     function checkMigrate(fromUri, session, calendarId, tasksId) {
-        let uri = Services.io.newURI(fromUri, null, null);
+        let uri = Services.io.newURI(fromUri);
         let client = cal.getCalendarManager().createCalendar("gdata", uri);
 
         if (session) {

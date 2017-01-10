@@ -898,7 +898,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
         if (aEntry.links) {
             for (let link of aEntry.links) {
                 let attach = cal.createAttachment();
-                attach.uri = Services.io.newURI(link.link, null, null);
+                attach.uri = Services.io.newURI(link.link);
                 attach.setParameter("FILENAME", link.description);
                 attach.setParameter("X-GOOGLE-TYPE", link.type);
                 item.addAttachment(attach);

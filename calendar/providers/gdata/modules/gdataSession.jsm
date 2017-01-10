@@ -195,7 +195,7 @@ calGoogleSession.prototype = {
             }
 
             if (!found || found.capability != nIPM.DENY_ACTION) {
-                let uri = Services.io.newURI("http://google.com", null, null);
+                let uri = Services.io.newURI("http://google.com");
                 if (Services.vc.compare(Services.appinfo.platformVersion, 42) >= 0) {
                     Services.perms.remove(uri, "cookie");
                 } else {

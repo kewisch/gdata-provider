@@ -196,7 +196,7 @@ calGoogleRequest.prototype = {
                 });
                 uristring += "?" + params.join("&");
             }
-            let uri = Services.io.newURI(uristring, null, null);
+            let uri = Services.io.newURI(uristring);
             let channel;
             if ("newChannelFromURI2" in Services.io) {
                 // Lightning 4.3+

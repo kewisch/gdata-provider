@@ -71,7 +71,7 @@
         <getter><![CDATA[
           let calmgr = cal.getCalendarManager();
           let uri = "dummy://calendar";
-          let mem = calmgr.createCalendar("memory", Services.io.newURI(uri, null, null));
+          let mem = calmgr.createCalendar("memory", Services.io.newURI(uri));
           mem.setProperty("disabled", true);
           mem.name = "Calendars";
           mem.id = cal.getUUID();
@@ -83,7 +83,7 @@
         <getter><![CDATA[
           let calmgr = cal.getCalendarManager();
           let uri = "dummy://tasks";
-          let mem = calmgr.createCalendar("memory", Services.io.newURI(uri, null, null));
+          let mem = calmgr.createCalendar("memory", Services.io.newURI(uri));
           mem.setProperty("disabled", true);
           mem.name = "Task Lists";
           mem.id = cal.getUUID();

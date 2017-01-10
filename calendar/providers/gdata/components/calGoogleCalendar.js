@@ -146,7 +146,7 @@ calGoogleCalendar.prototype = {
                 let newUri = "googleapi://" + googleUser + "/" + path;
                 cal.LOG("[calGoogleCalendar] Migrating url format from " + aUri.spec + " to " + newUri);
                 this.setProperty("uri", newUri);
-                this.mUri = Services.io.newURI(newUri, null, null);
+                this.mUri = Services.io.newURI(newUri);
             }
 
             // Unit tests will use a local uri, if the magic parameter is passed.
@@ -179,7 +179,7 @@ calGoogleCalendar.prototype = {
                 cal.LOG("[calGoogleCalendar] Migrating url format from " + aUri.spec +
                         " to " + newUri);
                 this.setProperty("uri", newUri);
-                this.mUri = Services.io.newURI(newUri, null, null);
+                this.mUri = Services.io.newURI(newUri);
             }
         }
 

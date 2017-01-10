@@ -181,7 +181,7 @@ CuImport("resource://gre/modules/Promise.jsm", this);
 
             let taskcals = tasksLists.map(function(tasklist) {
                 let uri = "googleapi://" + session.id + "/?tasks=" + encodeURIComponent(tasklist.id);
-                let calendar = calMgr.createCalendar("gdata", Services.io.newURI(uri, null, null));
+                let calendar = calMgr.createCalendar("gdata", Services.io.newURI(uri));
                 calendar.id = cal.getUUID();
                 calendar.setProperty("color", cal.hashColor(tasklist.title));
                 calendar.name = tasklist.title;
@@ -192,7 +192,7 @@ CuImport("resource://gre/modules/Promise.jsm", this);
             });
             let calcals = calendarList.map(function(calendarEntry) {
                 let uri = "googleapi://" + session.id + "/?calendar=" + encodeURIComponent(calendarEntry.id);
-                let calendar = calMgr.createCalendar("gdata", Services.io.newURI(uri, null, null));
+                let calendar = calMgr.createCalendar("gdata", Services.io.newURI(uri));
                 calendar.name = calendarEntry.summary;
                 calendar.id = cal.getUUID();
                 calendar.setProperty("color", calendarEntry.backgroundColor);
