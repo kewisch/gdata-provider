@@ -20,10 +20,6 @@ EXTRA_JS_MODULES += [
     'modules/timezoneMap.jsm',
 ]
 
-EXTRA_JS_MODULES.shim = [
-    'modules/shim/Loader.jsm',
-]
-
 EXTRA_COMPONENTS += [
     'components/calGoogleCalendar.js',
     'components/calGoogleCalendar.manifest',

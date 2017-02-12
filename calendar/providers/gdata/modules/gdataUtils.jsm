@@ -2,20 +2,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-Components.utils.import("resource://gdata-provider/modules/shim/Loader.jsm").shimIt(this);
 Components.utils.import("resource://gdata-provider/modules/gdataLogging.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataRequest.jsm");
 Components.utils.import("resource://gdata-provider/modules/timezoneMap.jsm");
 
-CuImport("resource://gre/modules/Services.jsm", this);
-CuImport("resource://gre/modules/Preferences.jsm", this);
-CuImport("resource://gre/modules/Promise.jsm", this);
-CuImport("resource://gre/modules/PromiseUtils.jsm", this);
-CuImport("resource://gre/modules/Task.jsm", this);
+Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://gre/modules/Preferences.jsm");
+Components.utils.import("resource://gre/modules/Promise.jsm");
+Components.utils.import("resource://gre/modules/PromiseUtils.jsm");
+Components.utils.import("resource://gre/modules/Task.jsm");
 
-CuImport("resource://calendar/modules/calAsyncUtils.jsm", this);
-CuImport("resource://calendar/modules/calUtils.jsm", this);
-CuImport("resource://calendar/modules/calProviderUtils.jsm", this);
+Components.utils.import("resource://calendar/modules/calAsyncUtils.jsm");
+Components.utils.import("resource://calendar/modules/calUtils.jsm");
+Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
 
 var cIE = Components.interfaces.calIErrors;
 
