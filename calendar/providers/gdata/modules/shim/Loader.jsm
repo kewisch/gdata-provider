@@ -6,25 +6,16 @@ Components.utils.import("resource://calendar/modules/calUtils.jsm");
 
 var EXPORTED_SYMBOLS = ["CuImport", "shimIt"];
 
-var CuImportSubstitutions = {
-    "resource://gre/modules/Promise.jsm": "resource://gdata-provider/modules/shim/Promise.jsm",
-};
-
 /**
- * Attempt to import a module, falling back to the shim if it does not exist.
+ * Attempt to import a module, log failure if it does not exist.
  */
 function CuImport(uriSpec, globalObj) {
     try {
         Components.utils.import(uriSpec, globalObj)
     } catch (e) {
         if (e.result == Components.results.NS_ERROR_FILE_NOT_FOUND) {
-            if (uriSpec in CuImportSubstitutions) {
-                // If we have a substitution, then load it now.
-                Components.utils.import(CuImportSubstitutions[uriSpec], globalObj);
-            } else {
-                let fn = Components.stack.caller.filename;
-                Components.utils.reportError("[calGoogleCalendar] Missing: " + fn + " -> " + uriSpec);
-            }
+            let fn = Components.stack.caller.filename;
+            Components.utils.reportError("[calGoogleCalendar] Missing: " + fn + " -> " + uriSpec);
         } else {
             throw e;
         }
