@@ -4,7 +4,6 @@
 
 Components.utils.import("resource://gdata-provider/modules/shim/Loader.jsm").shimIt(this);
 Components.utils.import("resource://gdata-provider/modules/shim/Calendar.jsm");
-Components.utils.import("resource://gdata-provider/modules/shim/PromiseExtras.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataSession.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 
@@ -162,7 +161,7 @@ CuImport("resource://gre/modules/Promise.jsm", this);
             session = sessionMgr.getSessionById(newSessionItem.value, true);
         }
 
-        PromiseAll([session.getTasksList(), session.getCalendarList()])
+        Promise.all([session.getTasksList(), session.getCalendarList()])
                .then(function([tasksLists, calendarList]) {
             let existing = new Set();
             let sessionPrefix = "googleapi://" + session.id;

@@ -4,7 +4,6 @@
 
 Components.utils.import("resource://gdata-provider/modules/shim/Loader.jsm").shimIt(this);
 Components.utils.import("resource://gdata-provider/modules/shim/Calendar.jsm");
-Components.utils.import("resource://gdata-provider/modules/shim/PromiseExtras.jsm");
 
 CuImport("resource://gre/modules/Preferences.jsm", this);
 CuImport("resource://gre/modules/Promise.jsm", this);
@@ -783,7 +782,7 @@ calGoogleCalendar.prototype = {
             }.bind(this));
         }
 
-        return PromiseAll([calendarPromise, eventsPromise, tasksPromise]).then(function() {
+        return Promise.all([calendarPromise, eventsPromise, tasksPromise]).then(function() {
             this.mOfflineStorage.endBatch();
             aListener.onResult({ status: Components.results.NS_OK }, null);
         }.bind(this), function(e) {
