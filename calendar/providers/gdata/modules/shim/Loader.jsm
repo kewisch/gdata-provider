@@ -8,7 +8,6 @@ var EXPORTED_SYMBOLS = ["CuImport", "shimIt"];
 
 var CuImportSubstitutions = {
     "resource://gre/modules/Promise.jsm": "resource://gdata-provider/modules/shim/Promise.jsm",
-    "resource://gre/modules/PromiseUtils.jsm": "resource://gdata-provider/modules/shim/PromiseUtils.jsm",
 };
 
 /**
