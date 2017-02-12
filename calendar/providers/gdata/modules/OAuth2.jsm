@@ -12,33 +12,7 @@ var {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
 Cu.import("resource:///modules/Services.jsm");
 Cu.import("resource:///modules/XPCOMUtils.jsm");
 Cu.import("resource:///modules/gloda/log4moz.js");
-
-var httpRequest = (function() {
-  let scope = {};
-  try {
-    // Thunderbird 25+
-    Cu.import("resource://gre/modules/Http.jsm", scope);
-  } catch (e) {
-    try {
-      // Thunderbird 24
-      Cu.import("resource:///modules/http.jsm", scope);
-    } catch (e) {
-      // Thunderbird 7
-      Cu.import("resource://gdata-provider/modules/shim/Http.jsm", scope);
-    }
-  }
-
-  if ("httpRequest" in scope) {
-    // Thunderbird 25+ and Thunderbird 7
-    return scope.httpRequest;
-  } else {
-    // Thunderbird 24
-    return function(uri, options) {
-        return scope.doXHRequest(uri, null, options.postData, options.onLoad,
-                                 options.onError, undefined);
-    };
-  }
-})();
+Cu.import("resource://gre/modules/Http.jsm");
 
 function parseURLData(aData) {
   let result = {};
