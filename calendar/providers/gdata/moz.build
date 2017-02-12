@@ -27,7 +27,6 @@ EXTRA_JS_MODULES.shim = [
     'modules/shim/PromiseExtras.jsm',
     'modules/shim/PromiseUtils.jsm',
     'modules/shim/Task.jsm',
-    'modules/shim/Timer.jsm',
 ]
 
 EXTRA_COMPONENTS += [
