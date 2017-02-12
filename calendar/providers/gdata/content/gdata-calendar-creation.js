@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 Components.utils.import("resource://gdata-provider/modules/shim/Loader.jsm").shimIt(this);
-Components.utils.import("resource://gdata-provider/modules/shim/Calendar.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataSession.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 
@@ -216,14 +215,7 @@ CuImport("resource://gre/modules/Promise.jsm", this);
         let calendarList = document.getElementById("calendar-list");
         let calendars = calendarList.selectedCalendars.filter(function(x) { return !x.getProperty("disabled") && !x.readOnly; });
         let calMgr = cal.getCalendarManager();
-
-        if (Services.vc.compare(Services.appinfo.platformVersion, "9.0") < 0) {
-            // This version didn't allow creating calendars with an id set, we
-            // will have to hack it in.
-            calendars.forEach(gdataRegisterCalendar);
-        } else {
-            calendars.forEach(calMgr.registerCalendar, calMgr);
-        }
+        calendars.forEach(calMgr.registerCalendar, calMgr);
         return true;
     });
 

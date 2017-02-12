@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 Components.utils.import("resource://gdata-provider/modules/shim/Loader.jsm").shimIt(this);
-Components.utils.import("resource://gdata-provider/modules/shim/Calendar.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataLogging.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataRequest.jsm");
 Components.utils.import("resource://gdata-provider/modules/timezoneMap.jsm");
@@ -14,6 +13,7 @@ CuImport("resource://gre/modules/Promise.jsm", this);
 CuImport("resource://gre/modules/PromiseUtils.jsm", this);
 CuImport("resource://gre/modules/Task.jsm", this);
 
+CuImport("resource://calendar/modules/calAsyncUtils.jsm", this);
 CuImport("resource://calendar/modules/calUtils.jsm", this);
 CuImport("resource://calendar/modules/calProviderUtils.jsm", this);
 
@@ -946,7 +946,7 @@ function JSONToItem(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
 function ItemSaver(aCalendar) {
     this.calendar = aCalendar;
     this.offlineStorage = this.calendar.offlineStorage;
-    this.promiseOfflineStorage = promisifyCalendar(this.calendar.offlineStorage);
+    this.promiseOfflineStorage = cal.async.promisifyCalendar(this.calendar.offlineStorage);
     this.missingParents = [];
     this.masterItems = Object.create(null);
     this.metaData = Object.create(null);

@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 Components.utils.import("resource://gdata-provider/modules/shim/Loader.jsm").shimIt(this);
-Components.utils.import("resource://gdata-provider/modules/shim/Calendar.jsm");
 
 CuImport("resource://gre/modules/Preferences.jsm", this);
 CuImport("resource://gre/modules/Promise.jsm", this);
@@ -12,6 +11,7 @@ CuImport("resource://gre/modules/Services.jsm", this);
 CuImport("resource://gre/modules/Task.jsm", this);
 CuImport("resource://gre/modules/XPCOMUtils.jsm", this);
 
+CuImport("resource://calendar/modules/calAsyncUtils.jsm", this);
 CuImport("resource://calendar/modules/calProviderUtils.jsm", this);
 CuImport("resource://calendar/modules/calUtils.jsm", this);
 
@@ -333,12 +333,6 @@ calGoogleCalendar.prototype = {
         return this.__proto__.__proto__.setProperty.apply(this, arguments);
     },
 
-    addItemOrUseCache: calendarShim.addItemOrUseCache,
-    adoptItemOrUseCache: calendarShim.adoptItemOrUseCache,
-    modifyItemOrUseCache: calendarShim.modifyItemOrUseCache,
-    deleteItemOrUseCache: calendarShim.deleteItemOrUseCache,
-    notifyPureOperationComplete: calendarShim.notifyPureOperationComplete,
-
     addItem: function(aItem, aListener) { return this.adoptItem(aItem.clone(), aListener); },
     adoptItem: function(aItem, aListener) {
         function stackContains(part, max) {
@@ -412,7 +406,7 @@ calGoogleCalendar.prototype = {
                 // reset the wrong item. As a hack, delete the item with its
                 // original id and complete the adoptItem call with the new
                 // item. This will add the new item to the calendar.
-                let pcal = promisifyCalendar(this.offlineStorage);
+                let pcal = cal.async.promisifyCalendar(this.offlineStorage);
                 yield pcal.deleteItem(aItem);
             }
             throw new Task.Result(item);
