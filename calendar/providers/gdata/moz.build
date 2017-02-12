@@ -24,7 +24,6 @@ EXTRA_JS_MODULES.shim = [
     'modules/shim/Calendar.jsm',
     'modules/shim/Http.jsm',
     'modules/shim/Loader.jsm',
-    'modules/shim/Preferences.jsm',
     'modules/shim/Promise.jsm',
     'modules/shim/PromiseExtras.jsm',
     'modules/shim/PromiseUtils.jsm',

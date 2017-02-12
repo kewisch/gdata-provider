@@ -11,7 +11,6 @@ var CuImportSubstitutions = {
     "resource://gre/modules/PromiseUtils.jsm": "resource://gdata-provider/modules/shim/PromiseUtils.jsm",
     "resource://gre/modules/Task.jsm": "resource://gdata-provider/modules/shim/Task.jsm",
     "resource://gre/modules/Timer.jsm": "resource://gdata-provider/modules/shim/Timer.jsm",
-    "resource://gre/modules/Preferences.jsm": "resource://gdata-provider/modules/shim/Preferences.jsm",
 };
 
 /**
