@@ -186,7 +186,7 @@ calGoogleSession.prototype = {
         // google.com then we won't overwrite the rule though.
         if (Preferences.get("network.cookie.cookieBehavior") == 2) {
             let found = null;
-            for (let perm in fixIterator(Services.perms.enumerator, Components.interfaces.nsIPermission)) {
+            for (let perm of fixIterator(Services.perms.enumerator, Components.interfaces.nsIPermission)) {
                 if (perm.type == "cookie" && perm.host == "google.com") {
                     found = perm;
                     break;
