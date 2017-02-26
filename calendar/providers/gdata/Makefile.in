@@ -28,6 +28,6 @@ stage-package:
 	$(NSINSTALL) -D $(PKG_STAGE)/extensions/$(XPI_EM_ID)
 	(cd $(FINAL_TARGET) && tar $(TAR_CREATE_FLAGS) - *) | (cd $(PKG_STAGE)/extensions/$(XPI_EM_ID) && tar -xf -)
 
-include $(topsrcdir)/config/rules.mk
-include $(topsrcdir)/calendar/lightning/versions.mk
-include $(topsrcdir)/calendar/lightning/lightning-packager.mk
+include $(moztopsrcdir)/config/rules.mk
+include $(commtopsrcdir)/calendar/lightning/versions.mk
+include $(commtopsrcdir)/calendar/lightning/lightning-packager.mk
