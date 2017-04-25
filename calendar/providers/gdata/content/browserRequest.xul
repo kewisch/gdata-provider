@@ -31,5 +31,5 @@
       <description id="headerMessage"/>
     </hbox>
   </vbox>
-  <browser type="content" disablehistory="true" src="about:blank" id="requestFrame" flex="1"/>
+  <browser type="content" src="about:blank" id="requestFrame" flex="1"/>
 </window>
