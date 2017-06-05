@@ -63,7 +63,7 @@ function getMigratableCalendars() {
         return c.type == "ics" && c.uri.spec.match(re);
     }
 
-    return getCalendarManager().getCalendars({}).filter(isMigratable);
+    return cal.getCalendarManager().getCalendars({}).filter(isMigratable);
 }
 
 /**
