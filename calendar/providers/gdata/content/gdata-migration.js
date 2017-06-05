@@ -70,9 +70,6 @@ function getMigratableCalendars() {
  * Load Handler for both the wizard and the Thunderbird main window.
  */
 function gdata_migration_loader() {
-    // Only load once
-    window.removeEventListener("load", gdata_migration_loader, false);
-
     if (document.documentElement.id == "gdata-migration-wizard") {
         // This is the migration wizard, load the calendars neeeded.
         let listbox = document.getElementById("calendars-listbox");
@@ -110,4 +107,4 @@ function gdata_migration_loader() {
 
 // Add a Load handler to check for migratable calendars in the main window, or
 // to load the migration wizard if this is the migration wizard
-window.addEventListener("load", gdata_migration_loader, false);
+window.addEventListener("load", gdata_migration_loader, { capture: false, once: true });
