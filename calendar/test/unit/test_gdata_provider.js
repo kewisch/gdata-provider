@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 (function() {
-    Components.utils.import("resource:///modules/Services.jsm");
+    Components.utils.import("resource://gre/modules/Services.jsm");
     Services.prefs.setBoolPref("javascript.options.showInConsole", true);
     Services.prefs.setBoolPref("browser.dom.window.dump.enabled", true);
     Services.prefs.setBoolPref("calendar.debug.log", true);
