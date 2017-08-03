@@ -123,7 +123,7 @@ calGoogleCalendar.prototype = {
         this.mUri = aUri;
         if (aUri && aUri.schemeIs("googleapi")) {
             // new format:  googleapi://session-id/?calendar=calhash@group.calendar.google.com&tasks=taskhash
-            let [fullUser, path] = aUri.path.substr(2).split("/", 2);
+            let [fullUser, path] = aUri.pathQueryRef.substr(2).split("/", 2);
             let parameters = new Map(path.substr(1).split("&").filter(Boolean)
                              .map(function(x) { return x.split("=", 2).map(decodeURIComponent); }));
 
@@ -160,7 +160,7 @@ calGoogleCalendar.prototype = {
                                 "([^/]+)/(public|private|free-busy)-?([^/]+)?/" +
                                 "(full|basic)(.ics)?$");
 
-            let matches = aUri.path.match(re);
+            let matches = aUri.pathQueryRef.match(re);
             if (matches) {
                 this.mCalendarName = decodeURIComponent(matches[2]);
 
