@@ -373,26 +373,24 @@ calGoogleSession.prototype = {
         }
     },
 
-    asyncPaginatedRequest: function(aRequest, onFirst, onEach, onLast) {
-        return Task.spawn(function() {
-            let data = yield this.asyncItemRequest(aRequest);
+    asyncPaginatedRequest: Task.async(function*(aRequest, onFirst, onEach, onLast) {
+        let data = yield this.asyncItemRequest(aRequest);
 
-            if (onFirst) {
-                yield onFirst(data);
-            }
+        if (onFirst) {
+            yield onFirst(data);
+        }
 
-            if (onEach) {
-                yield onEach(data);
-            }
+        if (onEach) {
+            yield onEach(data);
+        }
 
-            if (data.nextPageToken) {
-                aRequest.addQueryParameter("pageToken", data.nextPageToken);
-                throw new Task.Result(yield this.asyncPaginatedRequest(aRequest, null, onEach, onLast));
-            } else if (onLast) {
-                throw new Task.Result(yield onLast(data));
-            }
-        }.bind(this));
-    },
+        if (data.nextPageToken) {
+            aRequest.addQueryParameter("pageToken", data.nextPageToken);
+            return yield this.asyncPaginatedRequest(aRequest, null, onEach, onLast);
+        } else if (onLast) {
+            return yield onLast(data);
+        }
+    }),
 
     /**
      * calIFreeBusyProvider Implementation
