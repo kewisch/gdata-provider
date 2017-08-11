@@ -5,8 +5,6 @@
 Components.utils.import("resource://gdata-provider/modules/gdataSession.jsm");
 Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 
-Components.utils.import("resource://gre/modules/Promise.jsm");
-
 (function() {
     function pageorder(anchor, ...pages) {
         let wizard = document.documentElement;

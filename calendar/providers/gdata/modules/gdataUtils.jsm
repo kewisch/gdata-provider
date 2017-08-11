@@ -8,7 +8,6 @@ Components.utils.import("resource://gdata-provider/modules/timezoneMap.jsm");
 
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://gre/modules/Preferences.jsm");
-Components.utils.import("resource://gre/modules/Promise.jsm");
 Components.utils.import("resource://gre/modules/PromiseUtils.jsm");
 Components.utils.import("resource://gre/modules/Task.jsm");
 
