@@ -406,7 +406,7 @@ calGoogleCalendar.prototype = {
                 let pcal = cal.async.promisifyCalendar(this.offlineStorage);
                 yield pcal.deleteItem(aItem);
             }
-            throw new Task.Result(item);
+            return item;
         }.bind(this)).then(function(item) {
             cal.LOG("[calGoogleCalendar] Adding " + item.title + " succeeded");
             this.observers.notify("onAddItem", [item]);
@@ -506,7 +506,7 @@ calGoogleCalendar.prototype = {
                 item = modifiedItem;
             }
 
-            throw new Task.Result(item);
+            return item;
         }.bind(this)).then(function (item) {
             cal.LOG("[calGoogleCalendar] Modifying " + aNewItem.title + " succeeded");
             this.observers.notify("onModifyItem", [item, aOldItem]);
@@ -567,7 +567,7 @@ calGoogleCalendar.prototype = {
 
             deleteItemMetadata(this.offlineStorage, aItem);
 
-            throw new Task.Result(aItem);
+            return aItem;
         }.bind(this)).then(function (item) {
             cal.LOG("[calGoogleCalendar] Deleting " + aItem.title + " succeeded");
             this.observers.notify("onDeleteItem", [item]);
