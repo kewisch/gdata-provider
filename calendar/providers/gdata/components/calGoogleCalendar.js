@@ -352,7 +352,7 @@ calGoogleCalendar.prototype = {
         let isImport = aItem.id && (aItem.id == "xpcshell-import" || stackContains("calItipUtils.jsm"));
         let request = new calGoogleRequest();
 
-        Task.spawn(function() {
+        Task.spawn(function* () {
             let itemData = ItemToJSON(aItem, this.offlineStorage, isImport);
 
             // Add the calendar to the item, for later use.
@@ -429,7 +429,7 @@ calGoogleCalendar.prototype = {
 
         // Set up the request
         let request = new calGoogleRequest();
-        Task.spawn(function() {
+        Task.spawn(function* () {
             request.type = request.MODIFY;
             request.calendar = this;
             if (cal.isEvent(aNewItem)) {
@@ -529,7 +529,7 @@ calGoogleCalendar.prototype = {
         cal.LOG("[calGoogleCalendar] Deleting item " + aItem.title + "(" + aItem.id + ")");
 
         let request = new calGoogleRequest();
-        Task.spawn(function() {
+        Task.spawn(function* () {
             request.type = request.DELETE;
             request.calendar = this;
             if (cal.isEvent(aItem)) {
