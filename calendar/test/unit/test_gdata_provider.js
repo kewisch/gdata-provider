@@ -1180,11 +1180,10 @@ add_task(function* test_recurring_exception() {
     yield gServer.waitForLoad(client);
 
     items = yield pclient.getAllItems();
-    // Disabled for bug 1393704: Failed on the next line with 0 == 1:
-    // equal(items.length, 1);
+    equal(items.length, 1);
 
-    // exIds = items[0].recurrenceInfo.getExceptionIds({});
-    // equal(exIds.length, 0);
+    exIds = items[0].recurrenceInfo.getExceptionIds({});
+    equal(exIds.length, 0);
 
     gServer.resetClient(client);
 });
