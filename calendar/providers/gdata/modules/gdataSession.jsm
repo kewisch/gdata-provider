@@ -18,6 +18,8 @@ Components.utils.import("resource:///modules/iteratorUtils.jsm");
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
 Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
 
+Components.utils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+
 var cIFBI = Components.interfaces.calIFreeBusyInterval;
 var nIPM = Components.interfaces.nsIPermissionManager;
 

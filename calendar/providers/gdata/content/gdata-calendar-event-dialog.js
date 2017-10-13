@@ -4,6 +4,9 @@
 
 Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 
+Components.utils.import("resource://calendar/modules/calUtils.jsm");
+Components.utils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+
 (function() {
 
     // Older versions of Lightning don't have this variable.

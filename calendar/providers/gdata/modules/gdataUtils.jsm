@@ -14,6 +14,8 @@ Components.utils.import("resource://calendar/modules/calAsyncUtils.jsm");
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
 Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
 
+Components.utils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+
 var cIE = Components.interfaces.calIErrors;
 
 var FOUR_WEEKS_IN_MINUTES = 40320;
