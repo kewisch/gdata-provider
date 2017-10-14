@@ -25,3 +25,26 @@ if (!cal.dtz) {
         dateTimeToJsDate: (...args) => cal.dateTimeToJsDate(...args)
     };
 }
+
+if (!cal.item) {
+    cal.item = {
+        ItemDiff: cal.itemDiff,
+        isItemSupported: (...args) => cal.isItemSupported(...args),
+        isEventCalendar: (...args) => cal.isEventCalendar(...args),
+        isTaskCalendar: (...args) => cal.isTaskCalendar(...args),
+        isEvent: (...args) => cal.isEvent(...args),
+        isToDo: (...args) => cal.isToDo(...args),
+        checkIfInRange: (...args) => cal.checkIfInRange(...args),
+        setItemProperty: (...args) => cal.setItemProperty(...args),
+        getEventDefaultTransparency: (...args) => cal.getEventDefaultTransparency(...args),
+        compareContent: (...args) => cal.compareItemContent(...args),
+        shiftOffset: (...args) => cal.shiftItem(...args),
+        moveToDate: (...args) => cal.moveItem(...args),
+        serialize: (...args) => cal.getSerializedItem(...args),
+        get productId() { return cal.calGetProductId(); },
+        get productVersion() { return cal.calGetProductVersion(); },
+        setStaticProps: (...args) => cal.calSetProdidVersion(...args),
+        findWindow: (...args) => cal.findItemWindow(...args),
+        setToAllDay: (...args) => cal.setItemToAllDay(...args)
+    };
+}
