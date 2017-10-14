@@ -81,11 +81,11 @@ Components.utils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 
         if (gEndTime) {
             if (isGoogleTask) {
-                let floating = cal.floating();
+                let floating = cal.dtz.floating;
                 if (gEndTimezone != floating) {
                   gOldEndTimezone = gEndTimezone;
                 }
-                gEndTimezone = cal.floating();
+                gEndTimezone = cal.dtz.floating;
                 gEndTime = gEndTime.getInTimezone(gEndTimezone);
                 gEndTime.isDate = true;
             } else {

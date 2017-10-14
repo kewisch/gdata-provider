@@ -398,10 +398,10 @@ GDataServer.prototype = {
             jsonData.iCalUID = jsonData.id + "@google.com";
         }
         if (!isImport || !jsonData.created) {
-            jsonData.created = cal.toRFC3339(cal.now());
+            jsonData.created = cal.toRFC3339(cal.dtz.now());
         }
         if (!isImport || !jsonData.updated) {
-            jsonData.updated = cal.toRFC3339(cal.now());
+            jsonData.updated = cal.toRFC3339(cal.dtz.now());
         }
         if (!isImport || !jsonData.creator) {
             jsonData.creator = this.creator;
@@ -416,7 +416,7 @@ GDataServer.prototype = {
     processModifyEvent: function(jsonData, id) {
         jsonData.kind = "calendar#event";
         jsonData.etag = this.nextEtag || '"' + (new Date()).getTime() + '"';
-        jsonData.updated = cal.toRFC3339(cal.now());
+        jsonData.updated = cal.toRFC3339(cal.dtz.now());
         jsonData.id = id;
         jsonData.iCalUID = (jsonData.recurringEventId || jsonData.id) + "@google.com";
         if (!jsonData.creator) {
@@ -439,7 +439,7 @@ GDataServer.prototype = {
             jsonData.status = "needsAction";
         }
         if (!jsonData.updated) {
-            jsonData.updated = cal.toRFC3339(cal.now());
+            jsonData.updated = cal.toRFC3339(cal.dtz.now());
         }
 
         this.nextEtag = null;
@@ -449,12 +449,12 @@ GDataServer.prototype = {
     processModifyTask: function(jsonData) {
         jsonData.kind = "tasks#task";
         jsonData.etag = this.nextEtag || '"' + (new Date()).getTime() + '"';
-        jsonData.updated = cal.toRFC3339(cal.now());
+        jsonData.updated = cal.toRFC3339(cal.dtz.now());
         if (!jsonData.status) {
             jsonData.status = "needsAction";
         }
         if (!jsonData.updated) {
-            jsonData.updated = cal.toRFC3339(cal.now());
+            jsonData.updated = cal.toRFC3339(cal.dtz.now());
         }
 
         this.nextEtag = null;
@@ -613,7 +613,7 @@ add_task(function* test_dateToJSON() {
     let date;
 
     // no timezone
-    date = _createDateTime(cal.floating());
+    date = _createDateTime(cal.dtz.floating);
     deepEqual(dateToJSON(date), { dateTime: "2015-01-30T12:00:00-00:00" });
 
     // valid non-Olson tz name

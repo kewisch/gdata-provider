@@ -216,7 +216,7 @@ calGoogleCalendar.prototype = {
         let lastUpdated = this.getProperty("lastUpdated." + aWhich);
         if (lastUpdated) {
             updatedMin = cal.createDateTime(lastUpdated);
-            let lastWeek = cal.now();
+            let lastWeek = cal.dtz.now();
             lastWeek.day -= 7;
             if (updatedMin.compare(lastWeek) <= 0) {
                 cal.LOG("[calGoogleCalendar] Last updated time for " + aWhich +

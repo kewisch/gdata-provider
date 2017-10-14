@@ -41,7 +41,7 @@ function getGoogleId(aItem, aOfflineStorage) {
                getItemMetadata(aOfflineStorage, aItem.parentItem);
     let baseId = meta ? meta.path : aItem.id.replace("@google.com", "");
     if (aItem.recurrenceId) {
-        let recSuffix = "_" + aItem.recurrenceId.getInTimezone(cal.UTC()).icalString;
+        let recSuffix = "_" + aItem.recurrenceId.getInTimezone(cal.dtz.UTC).icalString;
         if (!baseId.endsWith(recSuffix)) {
             baseId += recSuffix;
         }
@@ -480,7 +480,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
                 // EXDATES require special casing, since they might contain
                 // a TZID. To avoid the need for conversion of TZID strings,
                 // convert to UTC before serialization.
-                prop.valueAsDatetime = ritem.date.getInTimezone(cal.UTC());
+                prop.valueAsDatetime = ritem.date.getInTimezone(cal.dtz.UTC);
             }
             itemData.recurrence.push(prop.icalString.trim());
         }
@@ -513,7 +513,7 @@ function TaskToJSON(aItem, aOfflineStorage, aIsImport) {
     itemData.status = (aItem.isCompleted ? "completed" : "needsAction");
 
     if (aItem.dueDate) {
-        let dueDate = aItem.dueDate.getInTimezone(cal.UTC());
+        let dueDate = aItem.dueDate.getInTimezone(cal.dtz.UTC);
         dueDate.isDate = false;
         itemData.due = cal.toRFC3339(dueDate);
     }
@@ -679,7 +679,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
 
     let tzs = cal.getTimezoneService();
     let calendarZoneName = aCalendar.getProperty("settings.timeZone");
-    let calendarZone = calendarZoneName ? tzs.getTimezone(calendarZoneName) : cal.calendarDefaultTimezone();
+    let calendarZone = calendarZoneName ? tzs.getTimezone(calendarZoneName) : cal.dtz.defaultTimezone;
 
     try {
         item.id = aEntry.iCalUID || ((aEntry.recurringEventId || aEntry.id) + "@google.com");
@@ -699,7 +699,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
         item.privacy = (aEntry.visibility ? aEntry.visibility.toUpperCase() : null);
 
         item.setProperty("URL", aEntry.htmlLink && aCalendar.uri.schemeIs("https") ? aEntry.htmlLink.replace(/^http:/, "https:") : aEntry.htmlLink);
-        item.setProperty("CREATED", (aEntry.created ? cal.fromRFC3339(aEntry.created, calendarZone).getInTimezone(cal.UTC()) : null));
+        item.setProperty("CREATED", (aEntry.created ? cal.fromRFC3339(aEntry.created, calendarZone).getInTimezone(cal.dtz.UTC) : null));
         item.setProperty("DESCRIPTION", aEntry.description);
         item.setProperty("LOCATION", aEntry.location);
         item.setProperty("TRANSP", (aEntry.transparency ? aEntry.transparency.toUpperCase() : null));
@@ -827,7 +827,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
 
         // updated (This must be set last!)
         if (aEntry.updated) {
-            let updated = cal.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.UTC());
+            let updated = cal.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC);
             item.setProperty("DTSTAMP", updated);
             item.setProperty("LAST-MODIFIED", updated);
         }
@@ -859,7 +859,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
 
     let tzs = cal.getTimezoneService();
     let calendarZoneName = aCalendar.getProperty("settings.timeZone");
-    let calendarZone = calendarZoneName ? tzs.getTimezone(calendarZoneName) : cal.calendarDefaultTimezone();
+    let calendarZone = calendarZoneName ? tzs.getTimezone(calendarZoneName) : cal.dtz.defaultTimezone;
 
     try {
         item.id = aEntry.id;
@@ -873,9 +873,9 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
 
         // Google Tasks don't have a due time, but still use 0:00 UTC. They
         // should really be using floating time.
-        item.dueDate = cal.fromRFC3339(aEntry.due, cal.floating())
+        item.dueDate = cal.fromRFC3339(aEntry.due, cal.dtz.floating)
         if (item.dueDate) {
-            item.dueDate.timezone = cal.floating();
+            item.dueDate.timezone = cal.dtz.floating;
             item.dueDate.isDate = true;
         }
         item.completedDate = cal.fromRFC3339(aEntry.completed, calendarZone);
@@ -905,8 +905,8 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
         }
 
         // updated (This must be set last!)
-        item.setProperty("DTSTAMP", cal.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.UTC()));
-        item.setProperty("LAST-MODIFIED", cal.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.UTC()));
+        item.setProperty("DTSTAMP", cal.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC));
+        item.setProperty("LAST-MODIFIED", cal.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC));
     } catch (e) {
         cal.ERROR("[calGoogleCalendar] Error parsing JSON tasks stream: " + stringException(e));
         throw e;

@@ -422,10 +422,10 @@ calGoogleSession.prototype = {
         }
 
         if (aRangeStart) {
-            aRangeStart = aRangeStart.getInTimezone(cal.UTC());
+            aRangeStart = aRangeStart.getInTimezone(cal.dtz.UTC);
         }
         if (aRangeEnd) {
-            aRangeEnd = aRangeEnd.getInTimezone(cal.UTC());
+            aRangeEnd = aRangeEnd.getInTimezone(cal.dtz.UTC);
         }
 
         let rfcRangeStart = cal.toRFC3339(aRangeStart);
@@ -456,7 +456,7 @@ calGoogleSession.prototype = {
                     cal.LOG("[calGoogleCalendar] Could not request freebusy for " + strippedCalId + ": " + reason);
                     failSync(Components.results.NS_ERROR_FAILURE, reason);
                 } else {
-                    let utcZone = cal.UTC();
+                    let utcZone = cal.dtz.UTC;
                     cal.LOG("[calGoogleCalendar] Found " + calData.busy.length + " busy slots within range for " + strippedCalId);
                     let busyRanges = calData.busy.map(function(entry) {
                         let start = cal.fromRFC3339(entry.start, utcZone);
