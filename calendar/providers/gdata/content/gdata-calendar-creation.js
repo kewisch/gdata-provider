@@ -178,7 +178,7 @@ Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
                 let uri = "googleapi://" + session.id + "/?tasks=" + encodeURIComponent(tasklist.id);
                 let calendar = calMgr.createCalendar("gdata", Services.io.newURI(uri));
                 calendar.id = cal.getUUID();
-                calendar.setProperty("color", cal.hashColor(tasklist.title));
+                calendar.setProperty("color", cal.view.hashColor(tasklist.title));
                 calendar.name = tasklist.title;
                 if (existing.has("tasks=" + tasklist.id)) {
                     calendar.readOnly = true;
