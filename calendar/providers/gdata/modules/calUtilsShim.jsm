@@ -48,3 +48,19 @@ if (!cal.item) {
         setToAllDay: (...args) => cal.setItemToAllDay(...args)
     };
 }
+
+if (!cal.view || !cal.view.hashColor) {
+    cal.view = Object.assign(cal.view || {}, {
+        isMouseOverBox: (...args) => cal.isMouseOverBox(...args),
+        radioGroupSelectItem: (...args) => cal.calRadioGroupSelectItem(...args),
+        applyAttributeToMenuChildren: (...args) => cal.applyAttributeToMenuChildren(...args),
+        removeChildElementsByAttribute: (...args) => cal.removeChildElementsByAttribute(...args),
+        getParentNodeOrThis: (...args) => cal.getParentNodeOrThis(...args),
+        getParentNodeOrThisByAttribute: (...args) => cal.getParentNodeOrThisByAttribute(...args),
+        formatStringForCSSRule: (...args) => cal.formatStringForCSSRule(...args),
+        getCompositeCalendar: (...args) => cal.getCompositeCalendar(...args),
+        hashColor: (...args) => cal.hashColor(...args),
+        getContrastingTextColor: (...args) => cal.getContrastingTextColor(...args),
+        /* cal.view.compareItems stays the same, just a different import */
+    });
+}
