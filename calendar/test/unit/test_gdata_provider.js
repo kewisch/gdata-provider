@@ -911,7 +911,7 @@ add_task(function* test_basicItems() {
     let items = yield pclient.getAllItems();
     equal(items.length, 2);
 
-    let event = cal.isEvent(items[0]) ? items[0] : items[1];
+    let event = cal.item.isEvent(items[0]) ? items[0] : items[1];
     equal(event.id, "go6ijb0b46hlpbu4eeu92njevo@google.com");
     equal(event.getProperty("STATUS"), "CONFIRMED");
     equal(event.getProperty("URL"), gServer.baseUri + "/calendar/event?eid=eventhash");
@@ -945,7 +945,7 @@ add_task(function* test_basicItems() {
     equal(event.alarmLastAck.icalString, "20140101T010101Z");
     equal(event.getProperty("X-MOZ-SNOOZE-TIME"), "20140101T020202Z");
 
-    let task = cal.isToDo(items[0]) ? items[0] : items[1];
+    let task = cal.item.isToDo(items[0]) ? items[0] : items[1];
     equal(task.id, "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU");
     equal(task.title, "New Task");
     equal(task.getProperty("LAST-MODIFIED").icalString, "20140908T163027Z");
@@ -1377,8 +1377,8 @@ add_task(function* test_metadata() {
     let items = yield pclient.getAllItems();
     let meta = getAllMeta(offline);
     let [event, task] = items;
-    ok(cal.isEvent(event));
-    ok(cal.isToDo(task));
+    ok(cal.item.isEvent(event));
+    ok(cal.item.isToDo(task));
     equal(meta.size, 2);
     equal(meta.get(event.hashId), ['"1"', "go6ijb0b46hlpbu4eeu92njevo", false].join("\u001A"));
     equal(meta.get(task.hashId), ['"2"', "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU", false].join("\u001A"));
@@ -1392,8 +1392,8 @@ add_task(function* test_metadata() {
     items = yield pclient.getAllItems();
     meta = getAllMeta(offline);
     [event, task] = items;
-    ok(cal.isEvent(event));
-    ok(cal.isToDo(task));
+    ok(cal.item.isEvent(event));
+    ok(cal.item.isToDo(task));
     equal(meta.size, 2);
     equal(meta.get(event.hashId), ['"3"', "go6ijb0b46hlpbu4eeu92njevo", false].join("\u001A"));
     equal(meta.get(task.hashId), ['"2"', "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU", false].join("\u001A"));

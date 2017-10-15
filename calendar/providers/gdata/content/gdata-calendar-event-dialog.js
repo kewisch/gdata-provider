@@ -18,8 +18,8 @@ Components.utils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
         let rv = protofunc.apply(this, args);
         let calendar = getCurrentCalendar();
         let isGoogleCalendar = (calendar.type == "gdata");
-        let isTask = cal.isToDo(window.calendarItem);
-        let isEvent = cal.isEvent(window.calendarItem);
+        let isTask = cal.item.isToDo(window.calendarItem);
+        let isEvent = cal.item.isEvent(window.calendarItem);
         let isGoogleTask = isGoogleCalendar && isTask;
         let isGoogleEvent = isGoogleCalendar && isEvent;
 
@@ -132,7 +132,7 @@ Components.utils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
     monkeyPatch(window, "updateCategoryMenulist", function(protofunc, ...args) {
         let rv;
         let calendar = getCurrentCalendar();
-        if (calendar.type == "gdata" && cal.isToDo(window.calendarItem)) {
+        if (calendar.type == "gdata" && cal.item.isToDo(window.calendarItem)) {
             let unwrappedCal = calendar.getProperty("cache.uncachedCalendar").wrappedJSObject;
             unwrappedCal.mProperties['capabilities.categories.maxCount'] = 0;
             rv = protofunc.apply(this, args);

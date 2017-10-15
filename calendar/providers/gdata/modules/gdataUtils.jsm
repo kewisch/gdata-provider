@@ -548,9 +548,9 @@ function TaskToJSON(aItem, aOfflineStorage, aIsImport) {
  * @return              A JS Object representing the item.
  */
 function ItemToJSON(aItem, aOfflineStorage, aIsImport) {
-    if (cal.isEvent(aItem)) {
+    if (cal.item.isEvent(aItem)) {
         return EventToJSON(aItem, aOfflineStorage, aIsImport);
-    } else if (cal.isToDo(aItem)) {
+    } else if (cal.item.isToDo(aItem)) {
         return TaskToJSON(aItem, aOfflineStorage, aIsImport);
     } else {
         cal.ERROR("[calGoogleCalendar] Invalid item type: " + aItem.icalString);

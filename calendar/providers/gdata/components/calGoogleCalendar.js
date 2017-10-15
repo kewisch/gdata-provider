@@ -359,7 +359,7 @@ calGoogleCalendar.prototype = {
 
             request.type = request.ADD;
             request.calendar = this;
-            if (cal.isEvent(aItem)) {
+            if (cal.item.isEvent(aItem)) {
                 if (isImport) {
                     cal.LOG("[calGoogleCalendar] Adding invitation event " + aItem.title);
                     request.uri = this.createEventsURI("events", "import");
@@ -371,7 +371,7 @@ calGoogleCalendar.prototype = {
                 if (Preferences.get("calendar.google.sendEventNotifications", false)) {
                     request.addQueryParameter("sendNotifications", "true");
                 }
-            } else if (cal.isToDo(aItem)) {
+            } else if (cal.item.isToDo(aItem)) {
                 cal.LOG("[calGoogleCalendar] Adding task " + aItem.title);
                 request.uri = this.createTasksURI("tasks");
                 // Tasks sent with an id will cause a bad request
@@ -431,7 +431,7 @@ calGoogleCalendar.prototype = {
         (async () => {
             request.type = request.MODIFY;
             request.calendar = this;
-            if (cal.isEvent(aNewItem)) {
+            if (cal.item.isEvent(aNewItem)) {
                 let googleId = getGoogleId(aNewItem, this.offlineStorage);
                 request.uri = this.createEventsURI("events", googleId);
 
@@ -445,7 +445,7 @@ calGoogleCalendar.prototype = {
                 if (Preferences.get("calendar.google.sendEventNotifications", false)) {
                     request.addQueryParameter("sendNotifications", "true");
                 }
-            } else if (cal.isToDo(aNewItem)) {
+            } else if (cal.item.isToDo(aNewItem)) {
                 request.uri = this.createTasksURI("tasks", aNewItem.id);
             }
 
@@ -531,12 +531,12 @@ calGoogleCalendar.prototype = {
         (async () => {
             request.type = request.DELETE;
             request.calendar = this;
-            if (cal.isEvent(aItem)) {
+            if (cal.item.isEvent(aItem)) {
                 request.uri = this.createEventsURI("events", getGoogleId(aItem, this.offlineStorage));
                 if (Preferences.get("calendar.google.sendEventNotifications", false)) {
                     request.addQueryParameter("sendNotifications", "true");
                 }
-            } else if (cal.isToDo(aItem)) {
+            } else if (cal.item.isToDo(aItem)) {
                 request.uri = this.createTasksURI("tasks", aItem.id);
             }
 
