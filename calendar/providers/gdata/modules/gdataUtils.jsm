@@ -9,7 +9,6 @@ Components.utils.import("resource://gdata-provider/modules/timezoneMap.jsm");
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://gre/modules/Preferences.jsm");
 Components.utils.import("resource://gre/modules/PromiseUtils.jsm");
-Components.utils.import("resource://gre/modules/Task.jsm");
 
 Components.utils.import("resource://calendar/modules/calAsyncUtils.jsm");
 Components.utils.import("resource://calendar/modules/calUtils.jsm");
@@ -981,7 +980,7 @@ ItemSaver.prototype = {
      * @param aData         The JS Object from the list response.
      * @return              A promise resolved when completed.
      */
-    parseTaskStream: Task.async(function*(aData) {
+    parseTaskStream: async function(aData) {
         if (!aData.items || !aData.items.length) {
             cal.LOG("[calGoogleCalendar] No tasks have been changed on " + this.calendar.name);
         } else {
@@ -998,15 +997,15 @@ ItemSaver.prototype = {
                 let item = JSONToTask(entry, this.calendar, null, null, metaData);
                 this.metaData[item.hashId] = metaData;
 
-                yield this.commitItem(item);
+                await this.commitItem(item);
 
-                if (yield spinEventLoop()) {
+                if (await spinEventLoop()) {
                     this.activity.addProgress(cur - committedUnits);
                     committedUnits = cur;
                 }
             }
         }
-    }),
+    },
 
     /**
      * Parse the response from Google's list command into events.
@@ -1014,7 +1013,7 @@ ItemSaver.prototype = {
      * @param aData         The JS Object from the list response.
      * @return              A promise resolved when completed.
      */
-    parseEventStream: Task.async(function*(aData) {
+    parseEventStream: async function(aData) {
         if (aData.timeZone) {
             cal.LOG("[calGoogleCalendar] Timezone for " + this.calendar.name + " is " + aData.timeZone);
             this.calendar.setProperty("settings.timeZone", aData.timeZone);
@@ -1050,10 +1049,10 @@ ItemSaver.prototype = {
                 exceptionItems.push(item);
             } else {
                 this.masterItems[item.id] = item;
-                yield this.commitItem(item);
+                await this.commitItem(item);
             }
 
-            if (yield spinEventLoop()) {
+            if (await spinEventLoop()) {
                 this.activity.addProgress(cur - committedUnits);
                 committedUnits = cur;
             }
@@ -1070,7 +1069,7 @@ ItemSaver.prototype = {
             if (exc.id in this.masterItems) {
                 item = this.masterItems[exc.id];
             } else {
-                item = (yield this.promiseOfflineStorage.getItem(exc.id))[0];
+                item = (await this.promiseOfflineStorage.getItem(exc.id))[0];
             }
 
             // If an item was found, we can process this exception. Otherwise
@@ -1079,14 +1078,14 @@ ItemSaver.prototype = {
                 if (!item.isMutable) {
                     item = item.clone();
                 }
-                yield this.processException(exc, item);
+                await this.processException(exc, item);
             } else {
                 this.missingParents.push(exc);
             }
 
-            yield this.commitException(exc);
+            await this.commitException(exc);
         }
-    }),
+    },
 
     /**
      * Handle the exception for the given item by committing it to the
@@ -1135,22 +1134,22 @@ ItemSaver.prototype = {
      * @param item      The item to process.
      * @return          A promise resolved when the process is completed.
      */
-    commitItem: Task.async(function*(item) {
+    commitItem: async function(item) {
         // This is a normal item. If it was canceled, then it should be
         // deleted, otherwise it should be either added or modified. The
         // relaxed mode of the destination calendar takes care of the latter
         // two cases.
         if (item.status == "CANCELLED") {
-            yield this.promiseOfflineStorage.deleteItem(item);
+            await this.promiseOfflineStorage.deleteItem(item);
         } else {
-            yield this.promiseOfflineStorage.modifyItem(item, null);
+            await this.promiseOfflineStorage.modifyItem(item, null);
         }
 
         if (item.hashId in this.metaData) {
             // Make sure the metadata is up to date for the next request
             saveItemMetadata(this.offlineStorage, item.hashId, this.metaData[item.hashId]);
         }
-    }),
+    },
 
     /**
      * Complete the item saving, this will take care of all steps required
@@ -1168,11 +1167,11 @@ ItemSaver.prototype = {
      *
      * @return          A promise resolved on completion
      */
-    processRemainingExceptions: Task.async(function*() {
+    processRemainingExceptions: async function() {
         for (let exc of this.missingParents) {
-            let item = (yield this.promiseOfflineStorage.getItem(exc.id))[0];
+            let item = (await this.promiseOfflineStorage.getItem(exc.id))[0];
             if (item) {
-                yield this.processException(exc, item);
+                await this.processException(exc, item);
             } else if (exc.status != "CANCELLED") {
                 // If the item could not be found, it could be that the
                 // user is invited to an instance of a recurring event.
@@ -1194,10 +1193,10 @@ ItemSaver.prototype = {
                     .createInstance(Components.interfaces.calIRecurrenceDate);
                 rdate.date = exc.recurrenceId;
                 item.recurrenceInfo.appendRecurrenceItem(rdate);
-                yield this.commitItem(item);
+                await this.commitItem(item);
             }
         }
-    })
+    }
 };
 
 /**
@@ -1277,7 +1276,7 @@ ActivityShell.prototype = {
  * @param aItem             The item that was passed to the server
  * @return                  A promise resolved when the conflict has been resolved
  */
-var checkResolveConflict = Task.async(function*(aOperation, aCalendar, aItem) {
+async function checkResolveConflict(aOperation, aCalendar, aItem) {
     cal.LOG("[calGoogleCalendar] A conflict occurred for " + aItem.title);
 
     let method = (aOperation.type == aOperation.DELETE ? "delete" : "modify");
@@ -1288,7 +1287,7 @@ var checkResolveConflict = Task.async(function*(aOperation, aCalendar, aItem) {
         cal.LOG("[calGoogleCalendar] Resending " + method + " and ignoring ETag");
         aOperation.addRequestHeader("If-Match", "*");
         try {
-            return yield aCalendar.session.asyncItemRequest(aOperation);
+            return await aCalendar.session.asyncItemRequest(aOperation);
         } catch (e) {
             if (e.result == calGoogleRequest.RESOURCE_GONE &&
                 aOperation.type == aOperation.DELETE) {
@@ -1306,7 +1305,7 @@ var checkResolveConflict = Task.async(function*(aOperation, aCalendar, aItem) {
         aCalendar.superCalendar.refresh();
         throw Components.Exception(null, cIE.OPERATION_CANCELLED);
     }
-});
+}
 
 /**
  * Get a string from the gdata properties file

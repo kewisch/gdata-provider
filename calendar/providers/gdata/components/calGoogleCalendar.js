@@ -5,7 +5,6 @@
 Components.utils.import("resource://gre/modules/Preferences.jsm");
 Components.utils.import("resource://gre/modules/PromiseUtils.jsm");
 Components.utils.import("resource://gre/modules/Services.jsm");
-Components.utils.import("resource://gre/modules/Task.jsm");
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 Components.utils.import("resource://calendar/modules/calAsyncUtils.jsm");
@@ -351,7 +350,7 @@ calGoogleCalendar.prototype = {
         let isImport = aItem.id && (aItem.id == "xpcshell-import" || stackContains("calItipUtils.jsm"));
         let request = new calGoogleRequest();
 
-        Task.spawn(function* () {
+        (async () => {
             let itemData = ItemToJSON(aItem, this.offlineStorage, isImport);
 
             // Add the calendar to the item, for later use.
@@ -385,7 +384,7 @@ calGoogleCalendar.prototype = {
 
             request.setUploadData("application/json; charset=UTF-8",
                                   JSON.stringify(itemData));
-            let data = yield this.session.asyncItemRequest(request);
+            let data = await this.session.asyncItemRequest(request);
 
             // All we need to do now is parse the item and complete the
             // operation. The cache layer will take care of adding the item
@@ -404,10 +403,10 @@ calGoogleCalendar.prototype = {
                 // original id and complete the adoptItem call with the new
                 // item. This will add the new item to the calendar.
                 let pcal = cal.async.promisifyCalendar(this.offlineStorage);
-                yield pcal.deleteItem(aItem);
+                await pcal.deleteItem(aItem);
             }
             return item;
-        }.bind(this)).then(function(item) {
+        })().then(function(item) {
             cal.LOG("[calGoogleCalendar] Adding " + item.title + " succeeded");
             this.observers.notify("onAddItem", [item]);
             this.notifyOperationComplete(aListener, Components.results.NS_OK,
@@ -428,7 +427,7 @@ calGoogleCalendar.prototype = {
 
         // Set up the request
         let request = new calGoogleRequest();
-        Task.spawn(function* () {
+        (async () => {
             request.type = request.MODIFY;
             request.calendar = this;
             if (cal.isEvent(aNewItem)) {
@@ -469,11 +468,11 @@ calGoogleCalendar.prototype = {
 
             let data;
             try {
-                data = yield this.session.asyncItemRequest(request);
+                data = await this.session.asyncItemRequest(request);
             } catch (e) {
                 if (e.result == calGoogleRequest.CONFLICT_MODIFY ||
                     e.result == calGoogleRequest.CONFLICT_DELETED) {
-                    data = yield checkResolveConflict(request, this, aNewItem);
+                    data = await checkResolveConflict(request, this, aNewItem);
                 } else {
                     throw e;
                 }
@@ -507,7 +506,7 @@ calGoogleCalendar.prototype = {
             }
 
             return item;
-        }.bind(this)).then(function (item) {
+        })().then(function (item) {
             cal.LOG("[calGoogleCalendar] Modifying " + aNewItem.title + " succeeded");
             this.observers.notify("onModifyItem", [item, aOldItem]);
             this.notifyOperationComplete(aListener, Components.results.NS_OK,
@@ -528,7 +527,7 @@ calGoogleCalendar.prototype = {
         cal.LOG("[calGoogleCalendar] Deleting item " + aItem.title + "(" + aItem.id + ")");
 
         let request = new calGoogleRequest();
-        Task.spawn(function* () {
+        (async () => {
             request.type = request.DELETE;
             request.calendar = this;
             if (cal.isEvent(aItem)) {
@@ -555,11 +554,11 @@ calGoogleCalendar.prototype = {
             }
 
             try {
-                yield this.session.asyncItemRequest(request);
+                await this.session.asyncItemRequest(request);
             } catch (e) {
                 if (e.result == calGoogleRequest.CONFLICT_MODIFY ||
                     e.result == calGoogleRequest.CONFLICT_DELETED) {
-                    yield checkResolveConflict(request, this, aItem);
+                    await checkResolveConflict(request, this, aItem);
                  } else {
                     throw e;
                  }
@@ -568,7 +567,7 @@ calGoogleCalendar.prototype = {
             deleteItemMetadata(this.offlineStorage, aItem);
 
             return aItem;
-        }.bind(this)).then(function (item) {
+        })().then(function (item) {
             cal.LOG("[calGoogleCalendar] Deleting " + aItem.title + " succeeded");
             this.observers.notify("onDeleteItem", [item]);
             this.notifyOperationComplete(aListener, Components.results.NS_OK,

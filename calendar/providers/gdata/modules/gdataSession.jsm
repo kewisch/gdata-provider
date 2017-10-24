@@ -11,7 +11,6 @@ Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 Components.utils.import("resource://gre/modules/Preferences.jsm");
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://gre/modules/PromiseUtils.jsm");
-Components.utils.import("resource://gre/modules/Task.jsm");
 Components.utils.import("resource://gre/modules/Timer.jsm");
 
 Components.utils.import("resource:///modules/iteratorUtils.jsm");
@@ -372,24 +371,24 @@ calGoogleSession.prototype = {
         }
     },
 
-    asyncPaginatedRequest: Task.async(function*(aRequest, onFirst, onEach, onLast) {
-        let data = yield this.asyncItemRequest(aRequest);
+    asyncPaginatedRequest: async function(aRequest, onFirst, onEach, onLast) {
+        let data = await this.asyncItemRequest(aRequest);
 
         if (onFirst) {
-            yield onFirst(data);
+            await onFirst(data);
         }
 
         if (onEach) {
-            yield onEach(data);
+            await onEach(data);
         }
 
         if (data.nextPageToken) {
             aRequest.addQueryParameter("pageToken", data.nextPageToken);
-            return yield this.asyncPaginatedRequest(aRequest, null, onEach, onLast);
+            return await this.asyncPaginatedRequest(aRequest, null, onEach, onLast);
         } else if (onLast) {
-            return yield onLast(data);
+            return await onLast(data);
         }
-    }),
+    },
 
     /**
      * calIFreeBusyProvider Implementation
