@@ -133,7 +133,7 @@ calGoogleSession.prototype = {
         this.oauth.extraAuthParams = [
           ["login_hint", sessionId],
           // Use application locale for login dialog
-          ["hl", Preferences.get("general.useragent.locale", "en-US")]
+          ["hl", Services.locale.getRequestedLocale()]
         ];
         this.oauth.requestWindowURI = "chrome://gdata-provider/content/browserRequest.xul";
         this.oauth.requestWindowFeatures = "chrome,private,centerscreen,width=430,height=600";
