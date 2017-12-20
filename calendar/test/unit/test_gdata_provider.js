@@ -64,7 +64,7 @@ MockAlertsService.prototype = {
 function replaceAlertsService() {
     let originalAlertsServiceCID =
         MockRegistrar.register("@mozilla.org/alerts-service;1", MockAlertsService);
-    do_register_cleanup(() => {
+    registerCleanupFunction(() => {
         MockRegistrar.unregister(originalAlertsServiceCID);
     });
 }
@@ -109,7 +109,7 @@ GDataServer.prototype = {
 
     start: function() {
         this.server.start(-1);
-        do_register_cleanup(() => this.server.stop(() => {}));
+        registerCleanupFunction(() => this.server.stop(() => {}));
     },
 
     resetClient: function(client) {
@@ -237,7 +237,7 @@ GDataServer.prototype = {
             this.lastMethod = method;
             return nextHandler(request, response, method, parameters, body);
         } catch (e) {
-            do_print("Server Error: " + e.fileName + ":" + e.lineNumber + ": " + e + "\n");
+            info("Server Error: " + e.fileName + ":" + e.lineNumber + ": " + e + "\n");
             return null;
         }
     },
@@ -714,7 +714,7 @@ add_task(function* test_JSONToDate() {
     equal(convert({ dateTime: "2015-01-02T03:04:05+01:00" }), "20150102T030405 in Europe/Berlin");
 
     // An offset that doesn't match the calendar timezone, will use the first timezone in that offset
-    do_print("The following warning is expected: 2015-01-02T03:04:05+04:00 does not match timezone offset for Europe/Berlin");
+    info("The following warning is expected: 2015-01-02T03:04:05+04:00 does not match timezone offset for Europe/Berlin");
     equal(convert({ dateTime: "2015-01-02T03:04:05+05:00" }), "20150102T030405 in Antarctica/Mawson");
 });
 
