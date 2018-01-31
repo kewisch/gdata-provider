@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 (function() {
-    Components.utils.import("resource://gre/modules/Services.jsm");
+    ChromeUtils.import("resource://gre/modules/Services.jsm");
     Services.prefs.setBoolPref("javascript.options.showInConsole", true);
     Services.prefs.setBoolPref("browser.dom.window.dump.enabled", true);
     Services.prefs.setBoolPref("calendar.debug.log", true);
@@ -17,16 +17,16 @@
     Components.manager.autoRegister(bindir);
 })();
 
-Components.utils.import("resource://testing-common/httpd.js");
-Components.utils.import("resource://gre/modules/NetUtil.jsm");
-Components.utils.import("resource://gre/modules/Preferences.jsm");
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+ChromeUtils.import("resource://testing-common/httpd.js");
+ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
+ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-Components.utils.import("resource://gdata-provider/modules/gdataSession.jsm");
-Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
-Components.utils.import("resource://calendar/modules/calAsyncUtils.jsm");
-Components.utils.import("resource://calendar/modules/calProviderUtils.jsm");
-Components.utils.import("resource://testing-common/MockRegistrar.jsm");
+ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
+ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+ChromeUtils.import("resource://calendar/modules/calAsyncUtils.jsm");
+ChromeUtils.import("resource://calendar/modules/calProviderUtils.jsm");
+ChromeUtils.import("resource://testing-common/MockRegistrar.jsm");
 
 var gServer;
 

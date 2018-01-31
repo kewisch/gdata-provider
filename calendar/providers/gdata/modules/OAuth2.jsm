@@ -9,10 +9,10 @@ var EXPORTED_SYMBOLS = ["OAuth2"];
 
 var {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
 
-Cu.import("resource://gre/modules/Services.jsm");
-Cu.import("resource://gre/modules/XPCOMUtils.jsm");
-Cu.import("resource:///modules/gloda/log4moz.js");
-Cu.import("resource://gre/modules/Http.jsm");
+ChromeUtils.import("resource://gre/modules/Services.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+ChromeUtils.import("resource:///modules/gloda/log4moz.js");
+ChromeUtils.import("resource://gre/modules/Http.jsm");
 
 function parseURLData(aData) {
   let result = {};

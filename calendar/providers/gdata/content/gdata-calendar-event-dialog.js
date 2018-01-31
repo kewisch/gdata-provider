@@ -2,10 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 
-Components.utils.import("resource://calendar/modules/calUtils.jsm");
-Components.utils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
+ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 
 (function() {
 

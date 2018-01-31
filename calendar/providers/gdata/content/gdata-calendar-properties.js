@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 (function() {
-    Components.utils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+    ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
     monkeyPatch(window, "onLoad", function(protofunc, ...args) {
         let rv = protofunc.apply(this, args);
         if (gCalendar.type == "gdata") {
