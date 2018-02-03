@@ -106,7 +106,7 @@ calGoogleSession.prototype = {
             this.mLastNotified = now;
             let title = getProviderString("extensions.{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}.name");
             let quotaString = getProviderString("quotaExceeded", this.id);
-            Services.prompt.alert(cal.getCalendarWindow(), title, quotaString);
+            Services.prompt.alert(cal.window.getCalendarWindow(), title, quotaString);
         } else {
             cal.LOG("[calGoogleCalendar] Throttling quota notification, last was " + (now - this.mLastNotified) + " ms ago");
         }
@@ -119,7 +119,7 @@ calGoogleSession.prototype = {
             this.mLastNotified = now;
             let title = getProviderString("extensions.{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}.name");
             let outdatedString = getProviderString("providerOutdated");
-            Services.prompt.alert(cal.getCalendarWindow(), title, outdatedString);
+            Services.prompt.alert(cal.window.getCalendarWindow(), title, outdatedString);
         } else {
             cal.LOG("[calGoogleCalendar] Throttling outdated notification, last was " + (now - this.mLastNotified) + " ms ago");
         }
@@ -302,7 +302,7 @@ calGoogleSession.prototype = {
                 // possibly hang. If we postpone until the window is loaded,
                 // all is well.
                 setTimeout(function postpone() {
-                    let win = cal.getCalendarWindow();
+                    let win = cal.window.getCalendarWindow();
                     if (!win || win.document.readyState != "complete") {
                         setTimeout(postpone, 400);
                     } else {
