@@ -64,3 +64,11 @@ if (!cal.view || !cal.view.hashColor) {
         /* cal.view.compareItems stays the same, just a different import */
     });
 }
+
+if (typeof cal.window == "undefined") {
+    cal.window = {
+        getCalendarWindow: function() {
+            return cal.getCalendarWindow();
+        }
+    };
+}
