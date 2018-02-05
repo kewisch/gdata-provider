@@ -129,8 +129,9 @@ OAuth2.prototype = {
                     },
 
                     _checkForRedirect: function(aURL) {
-                      if (aURL.indexOf(this._parent.completionURI) != 0)
+                      if (!aURL.startsWith(this._parent.completionURI)) {
                         return;
+                      }
 
                       this._parent.finishAuthorizationRequest();
                       this._parent.onAuthorizationReceived(aURL);
