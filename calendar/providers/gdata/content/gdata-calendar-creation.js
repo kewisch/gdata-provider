@@ -30,7 +30,6 @@ ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
     function selectProvider(type) {
         let isGdata = (type == "gdata");
         let curi = document.getElementById("calendar-uri");
-        let wizard = document.documentElement;
 
         curi.parentNode.style.visibility = (isGdata ? "hidden" : "visible");
         document.getElementById("cache").parentNode.style.visibility = (isGdata ? "hidden" : "visible");
@@ -59,7 +58,7 @@ ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
     this.gdataSelectProvider = selectProvider;
 
     if (typeof tmpCalendarCreation == "undefined") {
-        monkeyPatch(window, "onSelectProvider", function(protofunc, type) {
+        monkeyPatch(window, "onSelectProvider", (protofunc, type) => {
             selectProvider(type);
             return protofunc(type);
         });
@@ -69,7 +68,7 @@ ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
         // handler, which causes our provider to fail. Given the exchange
         // provider is currently not maintained and we want them to work
         // together, here is a workaround.
-        monkeyPatch(tmpCalendarCreation, "doRadioExchangeCalendar", function(protofunc, target) {
+        monkeyPatch(tmpCalendarCreation, "doRadioExchangeCalendar", (protofunc, target) => {
             // We need to run our function first, otherwise resetting the
             // pageorder will overwrite what the exchange provider does.
             selectProvider(target.value);
@@ -86,12 +85,12 @@ ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
         });
     }
 
-    monkeyPatch(window, "prepareCreateCalendar", function(protofunc) {
-        let type = document.getElementById('calendar-format').selectedItem.value;
+    monkeyPatch(window, "prepareCreateCalendar", (protofunc) => {
+        let type = document.getElementById("calendar-format").selectedItem.value;
         return (type == "gdata" ? true : protofunc());
     });
 
-    monkeyPatch(window, "checkRequired", function(protofunc) {
+    monkeyPatch(window, "checkRequired", (protofunc) => {
         let wizard = document.documentElement;
         let currentPageId = wizard.currentPage && wizard.currentPage.pageid;
 
@@ -100,32 +99,33 @@ ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
             let sessionName = document.getElementById("gdata-session-name");
             let sessionNameIsValid = document.getAnonymousElementByAttribute(sessionName, "anonid", "input").validity.valid;
             // TODO for some reason the validity doesn't work on windows. Here is a hack:
+            // eslint-disable-next-line no-useless-escape
             sessionNameIsValid = !!sessionName.value.match(/^[^\/]+@[^\/]+\.[^\/]+$/);
             wizard.canAdvance = sessionGroup.value || (sessionName.value && sessionNameIsValid);
         } else if (currentPageId == "gdata-calendars") {
             let calendarList = document.getElementById("calendar-list");
-            let calendars = calendarList.selectedCalendars.filter(function(x) { return !x.getProperty("disabled") && !x.readOnly; });
+            let calendars = calendarList.selectedCalendars.filter(calendar => !calendar.getProperty("disabled") && !calendar.readOnly);
             wizard.canAdvance = !!calendars.length;
         } else {
             protofunc();
         }
     });
 
-    this.gdataSessionShow = trycatch(function() {
+    this.gdataSessionShow = trycatch(() => {
         let sessionMgr = getGoogleSessionManager();
         let sessionContainer = document.getElementById("gdata-session-group");
         let newSessionItem = document.getElementById("session-new");
         let calendars = cal.getCalendarManager().getCalendars({});
-        let sessions = new Set(calendars.map(function(calendar) {
-          return sessionMgr.getSessionByCalendar(calendar, true);
+        let sessions = new Set(calendars.map((calendar) => {
+            return sessionMgr.getSessionByCalendar(calendar, true);
         }));
 
         while (sessionContainer.firstChild.id != "session-new") {
-            sessionContainer.removeChild(sessionContainer.firstChild);
+            sessionContainer.firstChild.remove();
         }
 
         // forEach is needed for backwards compatibility.
-        sessions.forEach(function(session) {
+        sessions.forEach((session) => {
             if (!session) {
                 return;
             }
@@ -144,7 +144,7 @@ ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
         }
     });
 
-    this.gdataCalendarsShow = trycatch(function() {
+    this.gdataCalendarsShow = trycatch(() => {
         let calMgr = cal.getCalendarManager();
         let sessionMgr = getGoogleSessionManager();
         let sessionContainer = document.getElementById("gdata-session-group");
@@ -157,8 +157,7 @@ ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
             session = sessionMgr.getSessionById(newSessionItem.value, true);
         }
 
-        Promise.all([session.getTasksList(), session.getCalendarList()])
-               .then(function([tasksLists, calendarList]) {
+        Promise.all([session.getTasksList(), session.getCalendarList()]).then(([tasksLists, calendarList]) => {
             let existing = new Set();
             let sessionPrefix = "googleapi://" + session.id;
             for (let calendar of calMgr.getCalendars({})) {
@@ -174,7 +173,7 @@ ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
                 }
             }
 
-            let taskcals = tasksLists.map(function(tasklist) {
+            let taskcals = tasksLists.map((tasklist) => {
                 let uri = "googleapi://" + session.id + "/?tasks=" + encodeURIComponent(tasklist.id);
                 let calendar = calMgr.createCalendar("gdata", Services.io.newURI(uri));
                 calendar.id = cal.getUUID();
@@ -185,7 +184,7 @@ ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
                 }
                 return calendar;
             });
-            let calcals = calendarList.map(function(calendarEntry) {
+            let calcals = calendarList.map((calendarEntry) => {
                 let uri = "googleapi://" + session.id + "/?calendar=" + encodeURIComponent(calendarEntry.id);
                 let calendar = calMgr.createCalendar("gdata", Services.io.newURI(uri));
                 calendar.name = calendarEntry.summary;
@@ -203,25 +202,25 @@ ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
                             .concat(taskcals);
 
             calendarListWidget.calendars = calendars;
-        }.bind(this), function(e) {
+        }, (e) => {
             Components.utils.reportError(e);
-        }.bind(this));
+        });
     });
 
-    this.gdataCalendarsAdvance = trycatch(function() {
+    this.gdataCalendarsAdvance = trycatch(() => {
         let calendarList = document.getElementById("calendar-list");
-        let calendars = calendarList.selectedCalendars.filter(function(x) { return !x.getProperty("disabled") && !x.readOnly; });
+        let calendars = calendarList.selectedCalendars.filter(calendar => !calendar.getProperty("disabled") && !calendar.readOnly);
         let calMgr = cal.getCalendarManager();
         calendars.forEach(calMgr.registerCalendar, calMgr);
         return true;
     });
 
-    this.gdataFocusNewSession = trycatch(function() {
+    this.gdataFocusNewSession = trycatch(() => {
         let sessionContainer = document.getElementById("gdata-session-group");
         sessionContainer.value = "";
     });
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", () => {
         // Older versions of Lightning don't set the onselect attribute at all.
         let calendarFormat = document.getElementById("calendar-format");
         if (!calendarFormat.hasAttribute("onselect")) {

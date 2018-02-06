@@ -110,7 +110,7 @@ calGoogleRequest.prototype = {
         }
     },
 
-    cancel: function cGR_cancel(aStatus) {
+    cancel: function(aStatus) {
         if (this.isPending) {
             if (this.mLoader) {
                 this.mLoader.request.cancel(aStatus);
@@ -126,13 +126,13 @@ calGoogleRequest.prototype = {
      */
     get type() { return this.method; },
 
-    set type(v) {
+    set type(val) {
         let valid = [this.GET, this.ADD, this.MODIFY, this.PATCH, this.DELETE];
-        if (!valid.includes(v)) {
-            throw new Components.Exception("Invalid request type: " + v,
+        if (!valid.includes(val)) {
+            throw new Components.Exception("Invalid request type: " + val,
                                             Components.results.NS_ERROR_ILLEGAL_VALUE);
         }
-        return (this.method = v);
+        return (this.method = val);
     },
 
     /**
@@ -142,12 +142,12 @@ calGoogleRequest.prototype = {
      * @param aContentType The Content type of the Data.
      * @param aData        The Data to upload.
      */
-    setUploadData: function cGR_setUploadData(aContentType, aData) {
+    setUploadData: function(aContentType, aData) {
         this.mUploadContent = aContentType;
         this.mUploadData = aData;
     },
 
-    addQueryParameter: function cGR_addQueryParameter(aKey, aValue) {
+    addQueryParameter: function(aKey, aValue) {
         if (aValue) {
             this.mQueryParameters.set(aKey, aValue);
         } else {
@@ -155,7 +155,7 @@ calGoogleRequest.prototype = {
         }
     },
 
-    addRequestHeader: function cGR_addRequestHeader(aKey, aValue) {
+    addRequestHeader: function(aKey, aValue) {
         if (aValue) {
             this.mRequestHeaders.set(aKey, aValue);
         } else {
@@ -171,7 +171,7 @@ calGoogleRequest.prototype = {
      * @param aSession  The session object this request should be made with.
      *                  This parameter is optional.
      */
-    commit: function cGR_commit(aSession) {
+    commit: function(aSession) {
         if (!this.mDeferred) {
             this.mDeferred = PromiseUtils.defer();
         }
@@ -189,8 +189,8 @@ calGoogleRequest.prototype = {
                 let params = [];
 
                 // Using forEach is needed for backwards compatibility
-                this.mQueryParameters.forEach(function(v, k) {
-                    params.push(k + "=" + encodeURIComponent(v));
+                this.mQueryParameters.forEach((val, key) => {
+                    params.push(key + "=" + encodeURIComponent(val));
                 });
                 uristring += "?" + params.join("&");
             }
@@ -235,7 +235,7 @@ calGoogleRequest.prototype = {
      * @param aMessage  The Error message. If this is null, an error Message
      *                  from calGoogleRequest will be used.
      */
-    fail: function cGR_fail(aCode, aMessage) {
+    fail: function(aCode, aMessage) {
         let ex = new Components.Exception(aMessage, aCode);
         this.mLoader = null;
         this.mStatus = aCode;
@@ -249,7 +249,7 @@ calGoogleRequest.prototype = {
      *
      * @param aResult   The result Text of this request.
      */
-    succeed: function cGR_succeed(aResult) {
+    succeed: function(aResult) {
         this.mLoader = null;
         this.mStatus = Components.results.NS_OK;
         this.mDeferred.resolve(aResult);
@@ -262,14 +262,14 @@ calGoogleRequest.prototype = {
      *
      * @param aChannel    The Channel to be prepared.
      */
-    prepareChannel: function cGR_prepareChannel(aChannel) {
+    prepareChannel: function(aChannel) {
         // No caching
         aChannel.loadFlags |= Components.interfaces.nsIRequest.LOAD_BYPASS_CACHE;
 
         // Set upload Data
         if (this.mUploadData) {
-            let converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].
-                            createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+            let converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
+                                      .createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
             converter.charset = "UTF-8";
 
             let stream = converter.convertToInputStream(this.mUploadData);
@@ -286,7 +286,6 @@ calGoogleRequest.prototype = {
         // get around some proxies. This will default to true.
         if (Preferences.get("calendar.google.useHTTPMethodOverride", true) &&
             (this.method == "PUT" || this.method == "DELETE")) {
-
             aChannel.requestMethod = "POST";
             aChannel.setRequestHeader("X-HTTP-Method-Override",
                                       this.method,
@@ -308,8 +307,8 @@ calGoogleRequest.prototype = {
         }
 
         // Using forEach is needed for backwards compatibility
-        this.mRequestHeaders.forEach(function(v, k) {
-            aChannel.setRequestHeader(k, v, false);
+        this.mRequestHeaders.forEach((val, key) => {
+            aChannel.setRequestHeader(key, val, false);
         });
 
         // Add Authorization
@@ -333,10 +332,7 @@ calGoogleRequest.prototype = {
     /**
      * @see nsIChannelEventSink
      */
-    asyncOnChannelRedirect: function cGR_onChannelRedirect(aOldChannel,
-                                                           aNewChannel,
-                                                           aFlags,
-                                                           aCallback) {
+    asyncOnChannelRedirect: function(aOldChannel, aNewChannel, aFlags, aCallback) {
         // all we need to do to the new channel is the basic preparation
         this.prepareChannel(aNewChannel);
         aCallback.onRedirectVerifyCallback(Components.results.NS_OK);
@@ -345,11 +341,7 @@ calGoogleRequest.prototype = {
     /**
      * @see nsIStreamLoaderObserver
      */
-    onStreamComplete: function cGR_onStreamComplete(aLoader,
-                                                    aContext,
-                                                    aStatus,
-                                                    aResultLength,
-                                                    aResult) {
+    onStreamComplete: function(aLoader, aContext, aStatus, aResultLength, aResult) {
         if (!aResult || !Components.isSuccessCode(aStatus)) {
             this.fail(aStatus, aResult);
             return;
@@ -397,8 +389,8 @@ calGoogleRequest.prototype = {
         this.requestDate.nativeTime = serverDate.getTime() * 1000;
 
         cal.LOG("[calGoogleCalendar] Request " + this.method + " " +
-                httpChannel.URI.spec + " responded with HTTP "
-                + httpChannel.responseStatus);
+                httpChannel.URI.spec + " responded with HTTP " +
+                httpChannel.responseStatus);
 
         // Handle all (documented) error codes
         switch (httpChannel.responseStatus) {
@@ -438,7 +430,7 @@ calGoogleRequest.prototype = {
                         // once.
                         this.mSession.invalidate();
                         if (this.reauthenticate) {
-                            cal.LOG("[calGoogleRequest] The access token is not authorized, trying to refresh token.")
+                            cal.LOG("[calGoogleRequest] The access token is not authorized, trying to refresh token.");
                             this.reauthenticate = false;
                             this.mSession.asyncItemRequest(this);
                         } else {
@@ -515,7 +507,7 @@ calGoogleRequest.prototype = {
                 }
             }
             // Otherwise fall through
-            default:
+            default: {
                 // The following codes are caught here:
                 //  500 INTERNAL SERVER ERROR: Internal error. This is the
                 //                             default code that is used for
@@ -531,6 +523,7 @@ calGoogleRequest.prototype = {
 
                 this.fail(Components.results.NS_ERROR_NOT_AVAILABLE, msg);
                 break;
+            }
         }
     }
 };

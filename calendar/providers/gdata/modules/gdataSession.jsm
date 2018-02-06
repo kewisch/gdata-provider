@@ -41,19 +41,25 @@ var calGoogleSessionManager = {
     getSessionByCalendar: function(aCalendar, aCreate) {
         let id = null;
         let uri = aCalendar.uri;
-        let host = (function() { try { return uri.host; } catch (e) {} })();
+        let host = (function() {
+            try {
+                return uri.host;
+            } catch (e) {
+                return null;
+            }
+        })();
         const protocols = ["http", "https", "webcal", "webcals"];
 
         if (aCalendar.type != "gdata") {
-            return;
+            return null;
         }
 
         if (uri.schemeIs("googleapi")) {
-            let [fullUser, path] = uri.pathQueryRef.substr(2).split("/", 2);
-            id = fullUser || cal.getUUID();
-        } else if (host == "www.google.com" && uri.pathQueryRef.startsWith("/calendar/feeds") && protocols.some(function(s) { return uri.schemeIs(s); })) {
+            let parts = uri.pathQueryRef.substr(2).split("/", 2);
+            id = parts[0] || cal.getUUID();
+        } else if (host == "www.google.com" && uri.pathQueryRef.startsWith("/calendar/feeds") && protocols.some(scheme => uri.schemeIs(scheme))) {
             let googleCalendarName = aCalendar.getProperty("googleCalendarName");
-            let googleUser = Preferences.get("calendar.google.calPrefs." + googleCalendarName  + ".googleUser");
+            let googleUser = Preferences.get("calendar.google.calPrefs." + googleCalendarName + ".googleUser");
             id = googleUser || googleCalendarName || cal.getUUID();
         }
 
@@ -101,7 +107,6 @@ calGoogleSession.prototype = {
 
     notifyQuotaExceeded: function() {
         let now = new Date();
-        let tt = (now - this.mLastNotified);
         if (!this.mLastNotified || (now - this.mLastNotified) > NOTIFY_TIMEOUT) {
             this.mLastNotified = now;
             let title = getProviderString("extensions.{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}.name");
@@ -114,7 +119,6 @@ calGoogleSession.prototype = {
 
     notifyOutdated: function() {
         let now = new Date();
-        let tt = (now - this.mLastNotified);
         if (!this.mLastNotified || (now - this.mLastNotified) > NOTIFY_TIMEOUT) {
             this.mLastNotified = now;
             let title = getProviderString("extensions.{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}.name");
@@ -125,7 +129,7 @@ calGoogleSession.prototype = {
         }
     },
 
-    setupOAuth: function setupOAuth() {
+    setupOAuth: function() {
         let sessionId = this.mId;
         let authDescr = getProviderString("requestWindowDescription", sessionId);
         let authTitle = getProviderString("requestWindowTitle", sessionId);
@@ -146,7 +150,7 @@ calGoogleSession.prototype = {
         // the password manager
         let pwMgrId = "Google Calendar OAuth Token";
         Object.defineProperty(this.oauth, "refreshToken", {
-            get: function getRefreshToken() {
+            get: function() {
                 if (!this.mRefreshToken) {
                     let pass = { value: null };
                     try {
@@ -162,7 +166,7 @@ calGoogleSession.prototype = {
                 }
                 return this.mRefreshToken;
             },
-            set: function setRefreshToken(val) {
+            set: function(val) {
                 try {
                     let origin = "oauth:" + sessionId;
                     if (val) {
@@ -213,7 +217,7 @@ calGoogleSession.prototype = {
     /**
      * Resets the access token, it will be re-retrieved on the next request.
      */
-    invalidate: function cGS_invalidate() {
+    invalidate: function() {
         cal.LOG("[calGoogleSession] Invalidating session, will reauthenticate on next request");
         this.oauth.accessToken = null;
     },
@@ -231,7 +235,6 @@ calGoogleSession.prototype = {
             // Start logging in
             cal.LOG("[calGoogleCalendar] Logging in session " + this.mId);
             let accessToken = this.accessToken;
-            let refreshToken = this.refreshToken;
 
             let authSuccess = function() {
                 cal.LOG("[calGoogleCalendar] Successfully acquired a new" +
@@ -315,13 +318,13 @@ calGoogleSession.prototype = {
             cal.LOG("[calGoogleCalendar] Error Logging In: " + e);
             deferred.reject(e);
         }
-        return deferred.promise.then(function(accessToken) {
+        return deferred.promise.then((accessToken) => {
             this.mLoginPromise = null;
             return accessToken;
-        }.bind(this), function(e) {
+        }, (e) => {
             this.mLoginPromise = null;
             throw e;
-        }.bind(this));
+        });
     },
 
     /**
@@ -331,7 +334,7 @@ calGoogleSession.prototype = {
      * @param aRequest          The Request Object. This is an instance of
      *                          calGoogleRequest.
      */
-    asyncItemRequest: function cGS_asyncItemRequest(aRequest) {
+    asyncItemRequest: function(aRequest) {
         let tokenExpiresIn = Math.floor((this.oauth.tokenExpires - (new Date()).getTime()) / 1000);
         if (tokenExpiresIn < 0 && !this.mLoginPromise) {
             cal.LOG("[calGoogleSession] Token expired " + (-tokenExpiresIn) + " seconds ago, resetting");
@@ -344,7 +347,7 @@ calGoogleSession.prototype = {
             if (tokenExpiresIn < 30 && !this.mLoginPromise) {
                 cal.LOG("[calGoogleSession] Token will expire in " + tokenExpiresIn + " seconds, refreshing");
                 this.mLoginPromise = this.login();
-                this.mLoginPromise.then(function() {
+                this.mLoginPromise.then(() => {
                     cal.LOG("[calGoogleSession] Premature token refresh completed");
                 });
             }
@@ -352,9 +355,9 @@ calGoogleSession.prototype = {
         } else if (this.mLoginPromise) {
             // We are logging in and have no token, queue the request
             cal.LOG("[calGoogleSession] Adding item " + aRequest.uri + " to queue");
-            return this.mLoginPromise.then(function() {
+            return this.mLoginPromise.then(() => {
                 return aRequest.commit(this);
-            }.bind(this), function(e) {
+            }, (e) => {
                 // If the user cancelled the login dialog, then disable the
                 // calendar until the next startup or manual enable.
                 if (aRequest.calendar && e.message == "cancelled") {
@@ -365,7 +368,7 @@ calGoogleSession.prototype = {
                 }
 
                 throw e;
-            }.bind(this));
+            });
         } else {
             // Not logging in and no token, get the login promise and retry.
             this.mLoginPromise = this.login();
@@ -384,36 +387,37 @@ calGoogleSession.prototype = {
             await onEach(data);
         }
 
+        // In bug 1410672 it turns out this doesn't work without return await
+        /* eslint-disable no-return-await */
         if (data.nextPageToken) {
             aRequest.addQueryParameter("pageToken", data.nextPageToken);
             return await this.asyncPaginatedRequest(aRequest, null, onEach, onLast);
         } else if (onLast) {
             return await onLast(data);
         }
+        /* eslint-enable no-return-await */
+
+        return null;
     },
 
     /**
      * calIFreeBusyProvider Implementation
      */
-    getFreeBusyIntervals: function cGS_getFreeBusyIntervals(aCalId,
-                                                            aRangeStart,
-                                                            aRangeEnd,
-                                                            aBusyTypes,
-                                                            aListener) {
-        let completeSync = function(aIntervals) {
+    getFreeBusyIntervals: function(aCalId, aRangeStart, aRangeEnd, aBusyTypes, aListener) {
+        let completeSync = (aIntervals) => {
             cal.LOG("[calGoogleCalendar] Freebusy query for " + aCalId +
                     "suceeded, returning " + aIntervals.length + " intervals");
             aListener.onResult({ status: Components.results.NS_OK }, aIntervals);
-        }.bind(this);
+        };
 
-        let failSync = function(aStatus, aMessage) {
+        let failSync = (aStatus, aMessage) => {
             cal.LOG("[calGoogleCalendar] Freebusy query for " + aCalId +
                     " failed (" + aStatus + "): " + aMessage);
 
             // Usually we would notify with a result, but this causes trouble
             // with Lightning 3.9 and older.
             aListener.onResult({ status: aStatus }, null);
-        }.bind(this);
+        };
 
         if (!aCalId.includes("@") || !aCalId.includes(".") ||
             !aCalId.toLowerCase().startsWith("mailto:")) {
@@ -434,9 +438,9 @@ calGoogleSession.prototype = {
         let strippedCalId = aCalId.substr(7);
 
         let requestData = {
-          timeMin: rfcRangeStart,
-          timeMax: rfcRangeEnd,
-          items: [ { id: strippedCalId } ]
+            timeMin: rfcRangeStart,
+            timeMax: rfcRangeEnd,
+            items: [{ id: strippedCalId }]
         };
 
         let request = new calGoogleRequest();
@@ -448,7 +452,7 @@ calGoogleSession.prototype = {
                               JSON.stringify(requestData));
 
         // Request Parameters
-        this.asyncItemRequest(request).then(function(aData) {
+        this.asyncItemRequest(request).then((aData) => {
             if ("calendars" in aData && strippedCalId in aData.calendars) {
                 let calData = aData.calendars[strippedCalId];
                 let reason = calData.errors && calData.errors[0] && calData.errors[0].reason;
@@ -458,7 +462,7 @@ calGoogleSession.prototype = {
                 } else {
                     let utcZone = cal.dtz.UTC;
                     cal.LOG("[calGoogleCalendar] Found " + calData.busy.length + " busy slots within range for " + strippedCalId);
-                    let busyRanges = calData.busy.map(function(entry) {
+                    let busyRanges = calData.busy.map((entry) => {
                         let start = cal.fromRFC3339(entry.start, utcZone);
                         let end = cal.fromRFC3339(entry.end, utcZone);
                         let interval = new cal.FreeBusyInterval(aCalId, cIFBI.BUSY, start, end);
@@ -471,10 +475,10 @@ calGoogleSession.prototype = {
                 cal.ERROR("[calGoogleCalendar] Invalid freebusy response: " + aData.toSource());
                 failSync(Components.results.NS_ERROR_FAILURE, (aData && aData.toSource()));
             }
-        }.bind(this), function(e) {
+        }, (e) => {
             cal.ERROR("[calGoogleCalendar] Failed freebusy request: " + e);
             return failSync(request.status, null);
-        }.bind(this));
+        });
 
         return request;
     },
@@ -485,11 +489,11 @@ calGoogleSession.prototype = {
         calendarRequest.uri = API_BASE.EVENTS + "users/me/calendarList";
 
         let items = [];
-        return this.asyncPaginatedRequest(calendarRequest, null, function(data) {
-            Array.prototype.push.apply(items, data.items);
-        }.bind(this), function() {
+        return this.asyncPaginatedRequest(calendarRequest, null, (data) => {
+            items.push(...data.items);
+        }, () => {
             return items;
-        }.bind(this));
+        });
     },
 
     getTasksList: function() {
@@ -497,11 +501,11 @@ calGoogleSession.prototype = {
         tasksRequest.type = tasksRequest.GET;
         tasksRequest.uri = API_BASE.TASKS + "users/@me/lists";
         let items = [];
-        return this.asyncPaginatedRequest(tasksRequest, null, function(data) {
-            Array.prototype.push.apply(items, data.items);
-        }.bind(this), function() {
+        return this.asyncPaginatedRequest(tasksRequest, null, (data) => {
+            items.push(...data.items);
+        }, () => {
             return items;
-        }.bind(this));
+        });
     }
 };
 
@@ -515,6 +519,7 @@ calGoogleSession.prototype = {
 //
 // Do you really want all of this to be your fault? Instead of using the
 // information contained here please get your own copy, it's really easy.
+/* eslint-disable */
 (zqdx=>{zqdx["\x65\x76\x61\x6C"](zqdx["\x41\x72\x72\x61\x79"]["\x70\x72\x6F\x74"+
 "\x6F\x74\x79\x70\x65"]["\x6D\x61\x70"]["\x63\x61\x6C\x6C"]("uijt/PBVUI`CBTF`VS"+
 "J>#iuuqt;00bddpvout/hpphmf/dpn0p0#<uijt/PBVUI`TDPQF>#iuuqt;00xxx/hpphmfbqjt/dp"+
@@ -525,3 +530,4 @@ calGoogleSession.prototype = {
 "\x43\x6F\x64\x65\x41\x74"](0)-1),this)[""+"\x6A\x6F\x69\x6E"](""))})["\x63\x61"+
 "\x6C\x6C"]((this),Components["\x75\x74\x69\x6c\x73"]["\x67\x65\x74\x47\x6c\x6f"+
 "\x62\x61\x6c\x46\x6f\x72\x4f\x62\x6a\x65\x63\x74"](this));
+/* eslint-enable */

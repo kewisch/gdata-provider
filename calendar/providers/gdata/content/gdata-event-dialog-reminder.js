@@ -19,8 +19,8 @@
     notification.setAttribute("type", "critical");
     notification.setAttribute("hideclose", "true");
 
-    function calculateAlarmOffset(item, reminder) {
-        let offset = cal.alarms.calculateAlarmOffset(item, reminder);
+    function calculateAlarmOffset(alarmitem, reminder) {
+        let offset = cal.alarms.calculateAlarmOffset(alarmitem, reminder);
         // bug 1196455: The offset calcuated for absolute alarms is flipped
         if (Services.vc.compare(Services.appinfo.platformVersion, "43.0") < 0) {
             if (reminder.related == reminder.ALARM_RELATED_ABSOLUTE) {
@@ -87,15 +87,15 @@
             event.explicitOriginalTarget.id == "reminder-remove-button" ||
             !document.commandDispatcher.focusedElement) {
             // Same hack from the original dialog
-            return;
+            return undefined;
         }
 
         checkAllReminders();
         return rv;
     });
 
-    monkeyPatch(window, "loadReminders", function(protofunc /*, ...args */) {
-        let rv = protofunc.apply(this, Array.from(arguments).slice(1));
+    monkeyPatch(window, "loadReminders", function(protofunc, ...args) {
+        let rv = protofunc.apply(this, args);
         checkAllReminders();
         hideReminderRelations();
         hideSMSReminders();

@@ -95,9 +95,11 @@ function LOGalarm(aAlarm) {
 
     let enumerator = aAlarm.propertyEnumerator;
     let xpropstr = "";
-    while (enumerator && enumerator.hasMoreElements()) {
-        let el = enumerator.getNext();
-        xpropstr += "\n\t\t\t" + el.key + ":" + el.value;
+    if (enumerator) {
+        while (enumerator.hasMoreElements()) {
+            let elem = enumerator.getNext();
+            xpropstr += "\n\t\t\t" + elem.key + ":" + elem.value;
+        }
     }
 
     return ("\n\t\tAction: " + aAlarm.action +

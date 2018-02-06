@@ -64,30 +64,30 @@
 
     <implementation>
       <constructor><![CDATA[
-        this.tree.view = this;
+          this.tree.view = this;
       ]]></constructor>
 
       <property name="mockCalendarHeader" readonly="true">
         <getter><![CDATA[
-          let calmgr = cal.getCalendarManager();
-          let uri = "dummy://calendar";
-          let mem = calmgr.createCalendar("memory", Services.io.newURI(uri));
-          mem.setProperty("disabled", true);
-          mem.name = "Calendars";
-          mem.id = cal.getUUID();
-          return mem;
+            let calmgr = cal.getCalendarManager();
+            let uri = "dummy://calendar";
+            let mem = calmgr.createCalendar("memory", Services.io.newURI(uri));
+            mem.setProperty("disabled", true);
+            mem.name = "Calendars";
+            mem.id = cal.getUUID();
+            return mem;
         ]]></getter>
       </property>
 
       <property name="mockTaskHeader" readonly="true">
         <getter><![CDATA[
-          let calmgr = cal.getCalendarManager();
-          let uri = "dummy://tasks";
-          let mem = calmgr.createCalendar("memory", Services.io.newURI(uri));
-          mem.setProperty("disabled", true);
-          mem.name = "Task Lists";
-          mem.id = cal.getUUID();
-          return mem;
+            let calmgr = cal.getCalendarManager();
+            let uri = "dummy://tasks";
+            let mem = calmgr.createCalendar("memory", Services.io.newURI(uri));
+            mem.setProperty("disabled", true);
+            mem.name = "Task Lists";
+            mem.id = cal.getUUID();
+            return mem;
         ]]></getter>
       </property>
 
@@ -98,43 +98,43 @@
 
       <property name="calendars">
         <getter><![CDATA[
-          return this.mCalendarList;
+            return this.mCalendarList;
         ]]></getter>
         <setter><![CDATA[
-          for (let i = 0; i < val.length; i++) {
-              let calendar = val[i];
-              let spec = calendar.uri.spec;
-              if (calendar.type == "memory") {
-                  if (spec == "dummy://calendar") {
-                      this.mCalendarHeaderIndex = i;
-                  } else if (spec == "dummy://tasks") {
-                      this.mTasksHeaderIndex = i;
-                  }
-              }
-              this.addCalendar(calendar);
-          }
-          return this.mCalendarList;
+            for (let i = 0; i < val.length; i++) {
+                let calendar = val[i];
+                let spec = calendar.uri.spec;
+                if (calendar.type == "memory") {
+                    if (spec == "dummy://calendar") {
+                        this.mCalendarHeaderIndex = i;
+                    } else if (spec == "dummy://tasks") {
+                        this.mTasksHeaderIndex = i;
+                    }
+                }
+                this.addCalendar(calendar);
+            }
+            return this.mCalendarList;
         ]]></setter>
       </property>
 
       <method name="removeCalendar">
         <parameter name="aCalendar"/>
         <body><![CDATA[
-          let index = this.findIndexById(aCalendar.id);
-          if (index < this.mCalendarHeaderIndex) {
-            this.mCalendarHeaderIndex--;
-          }
-          if (index < this.mTasksHeaderIndex) {
-            this.mTasksHeaderIndex--;
-          }
-          return this.__proto__.__proto__.removeCalendar.call(this, aCalendar);
+            let index = this.findIndexById(aCalendar.id);
+            if (index < this.mCalendarHeaderIndex) {
+                this.mCalendarHeaderIndex--;
+            }
+            if (index < this.mTasksHeaderIndex) {
+                this.mTasksHeaderIndex--;
+            }
+            return this.__proto__.__proto__.removeCalendar.call(this, aCalendar);
         ]]></body>
       </method>
 
       <method name="clear">
         <body><![CDATA[
-          let calendars = this.mCalendarList.concat([]);
-          calendars.forEach(this.removeCalendar, this);
+            let calendars = this.mCalendarList.concat([]);
+            calendars.forEach(this.removeCalendar, this);
         ]]></body>
       </method>
 
@@ -142,58 +142,58 @@
         <parameter name="aRow"/>
         <parameter name="aProps"/>
         <body><![CDATA[
-          let props = this.__proto__.__proto__.getRowProperties.call(this, aRow, aProps);
-          let calendar = this.getCalendar(aRow);
+            let props = this.__proto__.__proto__.getRowProperties.call(this, aRow, aProps);
+            let calendar = this.getCalendar(aRow);
 
-          if (calendar.readOnly) {
-              if (aProps) {
-                  // Compatibility with old tree props code
-                  aProps.AppendElement(cal.getAtomFromService("checked"));
-              } else {
-                  props += " checked";
-              }
-          }
+            if (calendar.readOnly) {
+                if (aProps) {
+                    // Compatibility with old tree props code
+                    aProps.AppendElement(cal.getAtomFromService("checked"));
+                } else {
+                    props += " checked";
+                }
+            }
 
-          return props;
+            return props;
         ]]></body>
       </method>
 
       <method name="isContainerEmpty">
         <parameter name="aRow"/>
         <body><![CDATA[
-          return (aRow == this.mCalendarHeaderIndex &&
-                  aRow + 1 == this.mTasksHeaderIndex) ||
-                 (aRow == this.mTasksHeaderIndex &&
-                  aRow == this.mCalendarList.length);
+            return (aRow == this.mCalendarHeaderIndex &&
+                    aRow + 1 == this.mTasksHeaderIndex) ||
+                   (aRow == this.mTasksHeaderIndex &&
+                    aRow == this.mCalendarList.length);
         ]]></body>
       </method>
 
       <method name="isContainer">
         <parameter name="aRow"/>
         <body><![CDATA[
-          let calendar = this.getCalendar(aRow);
-          return (calendar.type == "memory" && calendar.uri.schemeIs("dummy"));
+            let calendar = this.getCalendar(aRow);
+            return (calendar.type == "memory" && calendar.uri.schemeIs("dummy"));
         ]]></body>
       </method>
 
       <method name="isContainerOpen">
         <parameter name="aRow"/>
         <body><![CDATA[
-          return true;
+            return true;
         ]]></body>
       </method>
 
       <method name="getParentIndex">
         <parameter name="aRow"/>
         <body><![CDATA[
-          let calendar = this.getCalendar(aRow);
-          if (calendar.uri.path.includes("?calendar")) {
-              return this.mCalendarHeaderIndex;
-          } else if (calendar.uri.path.includes("?tasks")) {
-              return this.mTasksHeaderIndex;
-          } else {
-              return -1;
-          }
+            let calendar = this.getCalendar(aRow);
+            if (calendar.uri.path.includes("?calendar")) {
+                return this.mCalendarHeaderIndex;
+            } else if (calendar.uri.path.includes("?tasks")) {
+                return this.mTasksHeaderIndex;
+            } else {
+                return -1;
+            }
         ]]></body>
       </method>
 
@@ -201,14 +201,14 @@
         <parameter name="aRow"/>
         <parameter name="aAfterIndex"/>
         <body><![CDATA[
-          if (aRow == this.mCalendarHeaderIndex) {
-              return aAfterIndex < this.mTasksHeaderIndex;
-          } else if (aRow == this.mTasksHeaderIndex) {
-              return false;
-          } else {
-              return aAfterIndex != this.mCalendarHeaderIndex - 1 &&
-                     aAfterIndex != this.mTasksHeaderIndex - 1;
-          }
+            if (aRow == this.mCalendarHeaderIndex) {
+                return aAfterIndex < this.mTasksHeaderIndex;
+            } else if (aRow == this.mTasksHeaderIndex) {
+                return false;
+            } else {
+                return aAfterIndex != this.mCalendarHeaderIndex - 1 &&
+                       aAfterIndex != this.mTasksHeaderIndex - 1;
+            }
         ]]></body>
       </method>
 
@@ -216,21 +216,21 @@
         <parameter name="aRow"/>
         <parameter name="aCol"/>
         <body><![CDATA[
-          let calendar = this.getCalendar(aRow);
-          let composite = this.compositeCalendar;
-          if (composite.getCalendarById(calendar.id)) {
-              composite.removeCalendar(calendar);
-          } else {
-              composite.addCalendar(calendar);
-          }
-          this.treebox.invalidateRow(aRow);
+            let calendar = this.getCalendar(aRow);
+            let composite = this.compositeCalendar;
+            if (composite.getCalendarById(calendar.id)) {
+                composite.removeCalendar(calendar);
+            } else {
+                composite.addCalendar(calendar);
+            }
+            this.treebox.invalidateRow(aRow);
         ]]></body>
       </method>
 
       <method name="getLevel">
         <parameter name="aRow"/>
         <body><![CDATA[
-          return this.isContainer(aRow) ? 0 : 1;
+            return this.isContainer(aRow) ? 0 : 1;
         ]]></body>
       </method>
     </implementation>

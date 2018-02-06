@@ -17,7 +17,6 @@ ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm");
 ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
 ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 
-var cICL = Components.interfaces.calIChangeLog;
 var cIOL = Components.interfaces.calIOperationListener;
 
 var MIN_REFRESH_INTERVAL = 30;
@@ -60,9 +59,9 @@ calGoogleCalendar.prototype = {
     mCalendarName: null,
     mThrottle: null,
     mThrottleLimits: {
-      "calendarList": 3600 * 1000,
-      "events": 30 * 1000,
-      "tasks": 30 * 1000
+        calendarList: 3600 * 1000,
+        events: 30 * 1000,
+        tasks: 30 * 1000
     },
 
     /* Public Members */
@@ -123,8 +122,9 @@ calGoogleCalendar.prototype = {
         if (aUri && aUri.schemeIs("googleapi")) {
             // new format:  googleapi://session-id/?calendar=calhash@group.calendar.google.com&tasks=taskhash
             let [fullUser, path] = aUri.pathQueryRef.substr(2).split("/", 2);
-            let parameters = new Map(path.substr(1).split("&").filter(Boolean)
-                             .map(function(x) { return x.split("=", 2).map(decodeURIComponent); }));
+            let keyvalues = path.substr(1).split("&").filter(Boolean);
+            let pairs = keyvalues.map(keyvalue => keyvalue.split("=", 2).map(decodeURIComponent));
+            let parameters = new Map(pairs);
 
             if (parameters.size == 0) {
                 this.mCalendarName = fullUser;
@@ -152,7 +152,7 @@ calGoogleCalendar.prototype = {
                 API_BASE.EVENTS = "http://localhost:" + port + "/calendar/v3/";
                 API_BASE.TASKS = "http://localhost:" + port + "/tasks/v1/";
             }
-        } else if (aUri && protocols.some(function(scheme) { return aUri.schemeIs(scheme); })) {
+        } else if (aUri && protocols.some(scheme => aUri.schemeIs(scheme))) {
             // Parse google url, catch private cookies, public calendars,
             // basic and full types, bogus ics file extensions, invalid hostnames
             let re = new RegExp("/calendar/(feeds|ical)/" +
@@ -186,7 +186,7 @@ calGoogleCalendar.prototype = {
         return this.mUri;
     },
 
-    createEventsURI: function (...extraParts) {
+    createEventsURI: function(...extraParts) {
         let eventsURI = null;
         if (this.mCalendarName) {
             let encodedName = encodeURIComponent(this.mCalendarName);
@@ -211,7 +211,7 @@ calGoogleCalendar.prototype = {
         return tasksURI;
     },
 
-    getUpdatedMin: function getUpdatedMin(aWhich) {
+    getUpdatedMin: function(aWhich) {
         let updatedMin = null;
         let lastUpdated = this.getProperty("lastUpdated." + aWhich);
         if (lastUpdated) {
@@ -268,17 +268,18 @@ calGoogleCalendar.prototype = {
                 return ["DEFAULT", "PUBLIC", "PRIVATE"];
             case "capabilities.alarms.maxCount":
                 return 5;
-            case "capabilities.alarms.actionValues":
+            case "capabilities.alarms.actionValues": {
                 let actionValues = ["DISPLAY", "EMAIL"];
                 if (Preferences.get("calendar.google.enableSMSReminders", false)) {
                     actionValues.push("SMS");
                 }
                 return actionValues;
+            }
             case "capabilities.tasks.supported":
                 return !!this.mTasklistName;
             case "capabilities.events.supported":
                 return !!this.mCalendarName;
-            case "readOnly":
+            case "readOnly": {
                 // If this calendar displays events, make it readonly if we are
                 // not the owner or have write access.
                 let accessRole = this.getProperty("settings.accessRole");
@@ -288,6 +289,7 @@ calGoogleCalendar.prototype = {
                 }
                 // Otherwise fall through
                 break;
+            }
             case "organizerId":
                 return "mailto:" + this.mCalendarName;
             case "itip.transport":
@@ -322,7 +324,7 @@ calGoogleCalendar.prototype = {
                             MIN_REFRESH_INTERVAL + " minutes would cause the quota " +
                             "to be reached too fast.");
                     this.superCalendar.setProperty("refreshInterval", 2 * MIN_REFRESH_INTERVAL);
-                    return;
+                    return undefined;
                 }
                 break;
         }
@@ -332,8 +334,7 @@ calGoogleCalendar.prototype = {
 
     addItem: function(aItem, aListener) { return this.adoptItem(aItem.clone(), aListener); },
     adoptItem: function(aItem, aListener) {
-        function stackContains(part, max) {
-            if (max === undefined) max = 8;
+        function stackContains(part, max=8) {
             let stack = Components.stack.caller;
             while (stack && --max) {
                 if (stack.filename && stack.filename.endsWith(part)) {
@@ -407,24 +408,24 @@ calGoogleCalendar.prototype = {
                 await pcal.deleteItem(aItem);
             }
             return item;
-        })().then(function(item) {
+        })().then((item) => {
             cal.LOG("[calGoogleCalendar] Adding " + item.title + " succeeded");
             this.observers.notify("onAddItem", [item]);
             this.notifyOperationComplete(aListener, Components.results.NS_OK,
                                          cIOL.ADD, item.id, item);
-        }.bind(this), function(e) {
+        }, (e) => {
             let code = e.result || Components.results.NS_ERROR_FAILURE;
             cal.ERROR("[calGoogleCalendar] Adding Item " + aItem.title +
                       " failed:" + code + ": " + e.message);
             this.notifyPureOperationComplete(aListener, code, cIOL.ADD, aItem.id, e.message);
-        }.bind(this));
+        });
         return request;
     },
 
     modifyItem: function(aNewItem, aOldItem, aListener) {
         cal.LOG("[calGoogleCalendar] Modifying item " + aNewItem.title + " (" +
-                (aNewItem.recurrenceId ? aNewItem.recurrenceId.icalString :
-                "master item") + ")");
+                (aNewItem.recurrenceId ? aNewItem.recurrenceId.icalString
+                                       : "master item") + ")");
 
         // Set up the request
         let request = new calGoogleRequest();
@@ -507,20 +508,19 @@ calGoogleCalendar.prototype = {
             }
 
             return item;
-        })().then(function (item) {
+        })().then((item) => {
             cal.LOG("[calGoogleCalendar] Modifying " + aNewItem.title + " succeeded");
             this.observers.notify("onModifyItem", [item, aOldItem]);
             this.notifyOperationComplete(aListener, Components.results.NS_OK,
                                          cIOL.MODIFY, item.id, item);
-
-        }.bind(this), function(e) {
+        }, (e) => {
             let code = e.result || Components.results.NS_ERROR_FAILURE;
             if (code != Components.interfaces.calIErrors.OPERATION_CANCELLED) {
                 cal.ERROR("[calGoogleCalendar] Modifying item " + aNewItem.title +
                           " failed:" + code + ": " + e.message);
             }
             this.notifyPureOperationComplete(aListener, code, cIOL.MODIFY, aNewItem.id, e.message);
-        }.bind(this));
+        });
         return request;
     },
 
@@ -560,36 +560,36 @@ calGoogleCalendar.prototype = {
                 if (e.result == calGoogleRequest.CONFLICT_MODIFY ||
                     e.result == calGoogleRequest.CONFLICT_DELETED) {
                     await checkResolveConflict(request, this, aItem);
-                 } else {
+                } else {
                     throw e;
-                 }
+                }
             }
 
             deleteItemMetadata(this.offlineStorage, aItem);
 
             return aItem;
-        })().then(function (item) {
+        })().then((item) => {
             cal.LOG("[calGoogleCalendar] Deleting " + aItem.title + " succeeded");
             this.observers.notify("onDeleteItem", [item]);
             this.notifyOperationComplete(aListener, Components.results.NS_OK,
                                          cIOL.DELETE, item.id, item);
-        }.bind(this), function(e) {
+        }, (e) => {
             let code = e.result || Components.results.NS_ERROR_FAILURE;
             if (code != Components.interfaces.calIErrors.OPERATION_CANCELLED) {
                 cal.ERROR("[calGoogleCalendar] Deleting item " + aItem.title +
                           " failed:" + code + ": " + e.message);
             }
             this.notifyPureOperationComplete(aListener, code, cIOL.DELETE, aItem.id, e.message);
-        }.bind(this));
+        });
         return request;
     },
 
     getItem: function(aId, aListener) {
-        this.mOfflineStorage.getItem.apply(this.mOfflineStorage, arguments);
+        this.mOfflineStorage.getItem(...arguments);
     },
 
     getItems: function(aFilter, aCount, aRangeStart, aRangeEnd, aListener) {
-        this.mOfflineStorage.getItems.apply(this.mOfflineStorage, arguments);
+        this.mOfflineStorage.getItems(...arguments);
     },
 
     refresh: function() {
@@ -625,10 +625,10 @@ calGoogleCalendar.prototype = {
 
         // Migration all done. Reset if requested.
         if (needsReset) {
-            return this.resetSync().then(function() {
+            return this.resetSync().then(() => {
                 this.setProperty("cache.version", this.CACHE_DB_VERSION);
                 return needsReset;
-            }.bind(this));
+            });
         } else {
             this.setProperty("cache.version", this.CACHE_DB_VERSION);
             return Promise.resolve(needsReset);
@@ -646,28 +646,29 @@ calGoogleCalendar.prototype = {
     },
 
     resetLog: function() {
-        this.resetSync().then(function() {
+        this.resetSync().then(() => {
             this.mObservers.notify("onLoad", [this]);
-        }.bind(this));
+        });
     },
 
     resetSync: function() {
-        let deferred = PromiseUtils.defer();
-        cal.LOG("[calGoogleCalendar] Resetting last updated counter for " + this.name);
-        this.setProperty("syncToken.events", "");
-        this.setProperty("lastUpdated.tasks", "");
-        this.mThrottle = Object.create(null);
-        this.mOfflineStorage.QueryInterface(Components.interfaces.calICalendarProvider)
-                            .deleteCalendar(this.mOfflineStorage, {
-            onDeleteCalendar: function(aCalendar, aStatus, aDetail) {
-                if (Components.isSuccessCode(aStatus)) {
-                    deferred.resolve();
-                } else {
-                    deferred.reject(aDetail);
+        return new Promise((resolve, reject) => {
+            cal.LOG("[calGoogleCalendar] Resetting last updated counter for " + this.name);
+            this.setProperty("syncToken.events", "");
+            this.setProperty("lastUpdated.tasks", "");
+            this.mThrottle = Object.create(null);
+            let listener = {
+                onDeleteCalendar: function(aCalendar, aStatus, aDetail) {
+                    if (Components.isSuccessCode(aStatus)) {
+                        resolve();
+                    } else {
+                        reject(aDetail);
+                    }
                 }
-            }
-       });
-       return deferred.promise;
+            };
+            this.mOfflineStorage.QueryInterface(Components.interfaces.calICalendarProvider)
+                                .deleteCalendar(this.mOfflineStorage, listener);
+        });
     },
 
     replayChangesOn: function(aListener) {
@@ -696,21 +697,25 @@ calGoogleCalendar.prototype = {
             let calendarRequest = new calGoogleRequest();
             calendarRequest.calendar = this;
             calendarRequest.type = calendarRequest.GET;
-            calendarRequest.uri = this.createUsersURI("calendarList", this.mCalendarName)
-            calendarPromise = this.session.asyncItemRequest(calendarRequest).then(function(aData) {
+            calendarRequest.uri = this.createUsersURI("calendarList", this.mCalendarName);
+            calendarPromise = this.session.asyncItemRequest(calendarRequest).then((aData) => {
                 if (aData.defaultReminders) {
-                    this.defaultReminders = aData.defaultReminders.map(function(x) { return JSONToAlarm(x, true); });
+                    this.defaultReminders = aData.defaultReminders.map(reminder => JSONToAlarm(reminder, true));
                 } else {
                     this.defaultReminders = [];
                 }
 
-                for (let k of ["accessRole", "backgroundColor", "description",
-                               "foregroundColor", "location", "primary",
-                               "summary", "summaryOverride", "timeZone"]) {
+                let settings = [
+                    "accessRole", "backgroundColor", "description",
+                    "foregroundColor", "location", "primary", "summary",
+                    "summaryOverride", "timeZone"
+                ];
+
+                for (let k of settings) {
                     this.setProperty("settings." + k, aData[k]);
                 }
                 this.setProperty("settings.defaultReminders", JSON.stringify(aData.defaultReminders));
-            }.bind(this));
+            });
         }
 
         // Set up a request for the events
@@ -727,19 +732,19 @@ calGoogleCalendar.prototype = {
         }
         if (eventsRequest.uri && this.checkThrottle("events")) {
             let saver = new ItemSaver(this);
-            eventsPromise = this.session.asyncPaginatedRequest(eventsRequest, null, function(aData) {
+            eventsPromise = this.session.asyncPaginatedRequest(eventsRequest, null, (aData) => {
                 // On each request...
                 return saver.parseItemStream(aData);
-            }.bind(this), function(aData) {
+            }, (aData) => {
                 // On last request...
-                return saver.complete().then(function() {
+                return saver.complete().then(() => {
                     if (aData.nextSyncToken) {
                         cal.LOG("[calGoogleCalendar] New sync token for " +
                                 this.name + "(events) is now: " + aData.nextSyncToken);
                         this.setProperty("syncToken.events", aData.nextSyncToken);
                     }
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         }
 
         // Set up a request for tasks
@@ -756,46 +761,46 @@ calGoogleCalendar.prototype = {
         }
         if (tasksRequest.uri && this.checkThrottle("tasks")) {
             let saver = new ItemSaver(this);
-            let lastUpdated = null;
-            tasksPromise = this.session.asyncPaginatedRequest(tasksRequest, function(aData) {
+            let newLastUpdated = null;
+            tasksPromise = this.session.asyncPaginatedRequest(tasksRequest, (aData) => {
                 // On the first request...
-                lastUpdated = tasksRequest.requestDate.icalString;
-            }.bind(this), function(aData) {
+                newLastUpdated = tasksRequest.requestDate.icalString;
+            }, (aData) => {
                 // On each request...
                 return saver.parseItemStream(aData);
-            }.bind(this), function(aData) {
+            }, (aData) => {
                 // On last request...
-                return saver.complete().then(function() {
+                return saver.complete().then(() => {
                     cal.LOG("[calGoogleCalendar] Last sync date for " + this.name +
                             "(tasks) is now: " + tasksRequest.requestDate.toString());
-                    this.setProperty("lastUpdated.tasks", lastUpdated);
-                }.bind(this));
-            }.bind(this));
+                    this.setProperty("newLastUpdated.tasks", newLastUpdated);
+                });
+            });
         }
 
-        return Promise.all([calendarPromise, eventsPromise, tasksPromise]).then(function() {
+        return Promise.all([calendarPromise, eventsPromise, tasksPromise]).then(() => {
             this.mOfflineStorage.endBatch();
             aListener.onResult({ status: Components.results.NS_OK }, null);
-        }.bind(this), function(e) {
+        }, (e) => {
             this.mOfflineStorage.endBatch();
             let code = e.result || Components.results.NS_ERROR_FAILURE;
             if (code == calGoogleRequest.RESOURCE_GONE) {
                 cal.LOG("[calGoogleCalendar] Server did not accept " +
                         "incremental update, resetting calendar and " +
                         "starting over.");
-                this.resetSync().then(function() {
+                this.resetSync().then(() => {
                     this.replayChangesOn(aListener);
-                }.bind(this), function(e) {
+                }, (err) => {
                     cal.ERROR("[calGoogleCalendar] Error resetting calendar:\n" +
-                            stringException(e));
-                    aListener.onResult({ status: e.result }, e.message);
-                }.bind(this));
+                              stringException(err));
+                    aListener.onResult({ status: err.result }, err.message);
+                });
             } else {
                 cal.LOG("[calGoogleCalendar] Error syncing:\n" + code + ":" +
                         stringException(e));
                 aListener.onResult({ status: code }, e.message);
             }
-        }.bind(this));
+        });
     },
 
     /**
@@ -806,4 +811,4 @@ calGoogleCalendar.prototype = {
     canNotify: function(aMethod, aItem) { return true; }
 };
 
-var NSGetFactory = XPCOMUtils.generateNSGetFactory([calGoogleCalendar]);
+var NSGetFactory = XPCOMUtils.generateNSGetFactory([calGoogleCalendar]); /* exported NSGetFactory */

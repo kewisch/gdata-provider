@@ -5,9 +5,7 @@
 /**
  * Provides OAuth 2.0 authentication
  */
-var EXPORTED_SYMBOLS = ["OAuth2"];
-
-var {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
+var EXPORTED_SYMBOLS = ["OAuth2"]; /* exported OAuth2 */
 
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
@@ -15,12 +13,12 @@ ChromeUtils.import("resource:///modules/gloda/log4moz.js");
 ChromeUtils.import("resource://gre/modules/Http.jsm");
 
 function parseURLData(aData) {
-  let result = {};
-  aData.split(/[?#]/, 2)[1].split("&").forEach(function (aParam) {
-    let [key, value] = aParam.split("=");
-    result[key] = value;
-  });
-  return result;
+    let result = {};
+    aData.split(/[?#]/, 2)[1].split("&").forEach((aParam) => {
+        let [key, value] = aParam.split("=");
+        result[key] = value;
+    });
+    return result;
 }
 
 function OAuth2(aBaseURI, aScope, aAppKey, aAppSecret) {
@@ -54,7 +52,7 @@ OAuth2.prototype = {
     tokenExpires: 0,
     connecting: false,
 
-    connect: function connect(aSuccess, aFailure, aWithUI, aRefresh) {
+    connect: function(aSuccess, aFailure, aWithUI, aRefresh) {
         if (this.connecting) {
             return;
         }
@@ -77,7 +75,7 @@ OAuth2.prototype = {
         }
     },
 
-    requestAuthorization: function requestAuthorization() {
+    requestAuthorization: function() {
         let params = [
             ["response_type", this.responseType],
             ["client_id", this.consumerKey],
@@ -92,7 +90,7 @@ OAuth2.prototype = {
         Array.prototype.push.apply(params, this.extraAuthParams);
 
         // Now map the parameters to a string
-        params = params.map(function([k, v]) { return k + "=" + encodeURIComponent(v); }).join("&");
+        params = params.map(([k, v]) => k + "=" + encodeURIComponent(v)).join("&");
 
         this._browserRequest = {
             account: this,
@@ -109,7 +107,7 @@ OAuth2.prototype = {
                 this.account.onAuthorizationFailed(Components.results.NS_ERROR_ABORT, '{ "error": "cancelled"}');
             },
 
-            loaded: function (aWindow, aWebProgress) {
+            loaded: function(aWindow, aWebProgress) {
                 if (!this._active) {
                     return;
                 }
@@ -119,56 +117,59 @@ OAuth2.prototype = {
                     webProgress: aWebProgress,
                     _parent: this.account,
 
-                    QueryInterface: XPCOMUtils.generateQI([Ci.nsIWebProgressListener,
-                                                           Ci.nsISupportsWeakReference]),
+                    QueryInterface: XPCOMUtils.generateQI([
+                        Components.interfaces.nsIWebProgressListener,
+                        Components.interfaces.nsISupportsWeakReference
+                    ]),
 
                     _cleanUp: function() {
-                      this.webProgress.removeProgressListener(this);
-                      this.window.close();
-                      delete this.window;
+                        this.webProgress.removeProgressListener(this);
+                        this.window.close();
+                        delete this.window;
                     },
 
                     _checkForRedirect: function(aURL) {
-                      if (!aURL.startsWith(this._parent.completionURI)) {
-                        return;
-                      }
+                        if (!aURL.startsWith(this._parent.completionURI)) {
+                            return;
+                        }
 
-                      this._parent.finishAuthorizationRequest();
-                      this._parent.onAuthorizationReceived(aURL);
+                        this._parent.finishAuthorizationRequest();
+                        this._parent.onAuthorizationReceived(aURL);
                     },
 
-                    onStateChange: function(aWebProgress, aRequest, aStateFlags, aStatus) {
-                      const wpl = Ci.nsIWebProgressListener;
-                      if (aStateFlags & (wpl.STATE_STOP)) {
-                        try {
-                            let httpchannel = aRequest.QueryInterface(Components.interfaces.nsIHttpChannel);
+                    onStateChange: function(aChangedWebProgress, aRequest, aStateFlags, aStatus) {
+                        const wpl = Components.interfaces.nsIWebProgressListener;
+                        if (aStateFlags & (wpl.STATE_STOP)) {
+                            try {
+                                let httpchannel = aRequest.QueryInterface(Components.interfaces.nsIHttpChannel);
 
-                            let responseCategory = Math.floor(httpchannel.responseStatus / 100);
+                                let responseCategory = Math.floor(httpchannel.responseStatus / 100);
 
-                            if (responseCategory != 2 && responseCategory != 3) {
-                                this._parent.finishAuthorizationRequest();
-                                this._parent.onAuthorizationFailed(null, '{ "error": "http_' + httpchannel.responseStatus + '" }');
-                            }
-                        } catch (e) {
-                            // Throw the case where it's a http channel.
-                            if (e.result != Components.results.NS_ERROR_NO_INTERFACE) {
-                                throw e;
+                                if (responseCategory != 2 && responseCategory != 3) {
+                                    this._parent.finishAuthorizationRequest();
+                                    this._parent.onAuthorizationFailed(null, '{ "error": "http_' + httpchannel.responseStatus + '" }');
+                                }
+                            } catch (e) {
+                                // Throw the case where it's a http channel.
+                                if (e.result != Components.results.NS_ERROR_NO_INTERFACE) {
+                                    throw e;
+                                }
                             }
                         }
-                      }
 
-                      if (aStateFlags & (wpl.STATE_START | wpl.STATE_IS_NETWORK))
-                        this._checkForRedirect(aRequest.name);
+                        if (aStateFlags & (wpl.STATE_START | wpl.STATE_IS_NETWORK)) {
+                            this._checkForRedirect(aRequest.name);
+                        }
                     },
-                    onLocationChange: function(aWebProgress, aRequest, aLocation) {
-                      this._checkForRedirect(aLocation.spec);
+                    onLocationChange: function(aChangedWebProgress, aRequest, aLocation) {
+                        this._checkForRedirect(aLocation.spec);
                     },
                     onProgressChange: function() {},
                     onStatusChange: function() {},
                     onSecurityChange: function() {},
                 };
                 aWebProgress.addProgressListener(this._listener,
-                                                 Ci.nsIWebProgress.NOTIFY_ALL);
+                                                 Components.interfaces.nsIWebProgress.NOTIFY_ALL);
                 aWindow.document.title = this.account.requestWindowTitle;
             }
         };
@@ -203,7 +204,7 @@ OAuth2.prototype = {
         this.connectFailureCallback(aData);
     },
 
-    requestAccessToken: function requestAccessToken(aCode, aType) {
+    requestAccessToken: function(aCode, aType) {
         let params = [
             ["client_id", this.consumerKey],
             ["client_secret", this.consumerSecret],
@@ -218,14 +219,14 @@ OAuth2.prototype = {
         }
 
         let options = {
-          postData: params,
-          onLoad: this.onAccessTokenReceived.bind(this),
-          onError: this.onAccessTokenFailed.bind(this)
-        }
+            postData: params,
+            onLoad: this.onAccessTokenReceived.bind(this),
+            onError: this.onAccessTokenFailed.bind(this)
+        };
         httpRequest(this.tokenURI, options);
     },
 
-    onAccessTokenFailed: function onAccessTokenFailed(aError, aData) {
+    onAccessTokenFailed: function(aError, aData) {
         if (aError != "offline") {
             this.refreshToken = null;
         }
@@ -233,7 +234,7 @@ OAuth2.prototype = {
         this.connectFailureCallback(aData);
     },
 
-    onAccessTokenReceived: function onRequestTokenReceived(aData) {
+    onAccessTokenReceived: function(aData) {
         let result = JSON.parse(aData);
 
         this.accessToken = result.access_token;

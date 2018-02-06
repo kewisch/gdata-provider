@@ -17,10 +17,10 @@
 
             // Don't allow setting refresh interval to less than 30 minutes
             let refInterval = document.getElementById("calendar-refreshInterval-menupopup");
-            Array.from(refInterval.childNodes).filter(function(n) {
-                let nv = parseInt(n.getAttribute("value"), 10);
-                return nv < 30 && nv != 0;
-            }).forEach(function(n) { refInterval.removeChild(n); });
+            Array.from(refInterval.childNodes).filter((node) => {
+                let nodeval = parseInt(node.getAttribute("value"), 10);
+                return nodeval < 30 && nodeval != 0;
+            }).forEach((node) => { refInterval.removeChild(node); });
 
             // Old Lightning doesn't hide the cache label
             let oldCacheLabel = document.getElementById("cache");

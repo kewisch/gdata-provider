@@ -5,6 +5,8 @@
 ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Preferences.jsm");
 
+/* exported migrateSelectedCalendars */
+
 /**
  * Migrate the calendar selected in the wizard from ics to gdata.
  */
@@ -55,12 +57,12 @@ function migrateSelectedCalendars() {
  * @return An array of calendars that are migratable
  */
 function getMigratableCalendars() {
-    function isMigratable(c) {
+    function isMigratable(calendar) {
         let re = new RegExp("^http[s]?://www\\.google\\.com/calendar/ical/" +
                             "[^/]+/(private(-[^/]+)?|public)/" +
                             "(full|full-noattendees|composite|" +
                             "attendees-only|free-busy|basic)(\\.ics)?$");
-        return c.type == "ics" && c.uri.spec.match(re);
+        return calendar.type == "ics" && calendar.uri.spec.match(re);
     }
 
     return cal.getCalendarManager().getCalendars({}).filter(isMigratable);
@@ -83,25 +85,22 @@ function gdata_migration_loader() {
         // Set up the "always check" field
         document.getElementById("showagain-checkbox").checked =
             Preferences.get("calendar.google.migrate", true);
-    } else {
+    } else if (Preferences.get("calendar.google.migrate", true) &&
+               getMigratableCalendars().length > 0) {
         // This is not the migration wizard, so it must be a main window. Check
-        // if the migration wizard needs to be shown.
-        if (Preferences.get("calendar.google.migrate", true)) {
-            // Check if there are calendars that are worth migrating.
-            if (getMigratableCalendars().length > 0) {
-                // Do this after load, so the calendar window appears before the
-                // wizard is opened.
+        // if the migration wizard needs to be shown and calendars are worth
+        // migrating.
 
-                // XXX Waiting a second gives the views enough time to display
-                // right, at least on my system. The viewloaded event is quite
-                // view specific, so there is no good non-hacked way to do this.
-                setTimeout(function() {
-                    window.openDialog("chrome://gdata-provider/content/gdata-migration-wizard.xul",
-                                      "GdataMigrationWizard",
-                                      "chrome,titlebar,modal,alwaysRaised");
-                }, 1000);
-            }
-        }
+        // Do this after load, so the calendar window appears before the
+        // wizard is opened.
+        // XXX Waiting a second gives the views enough time to display
+        // right, at least on my system. The viewloaded event is quite
+        // view specific, so there is no good non-hacked way to do this.
+        setTimeout(() => {
+            window.openDialog("chrome://gdata-provider/content/gdata-migration-wizard.xul",
+                              "GdataMigrationWizard",
+                              "chrome,titlebar,modal,alwaysRaised");
+        }, 1000);
     }
 }
 
