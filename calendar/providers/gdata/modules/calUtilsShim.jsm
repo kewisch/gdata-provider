@@ -72,3 +72,10 @@ if (typeof cal.window == "undefined") {
         }
     };
 }
+
+if (typeof cal.category == "undefined") {
+    cal.category = {
+        stringToArray: function(aStr) { return cal.categoriesStringToArray(aStr); },
+        arrayToString: function(aArr) { return cal.categoriesArrayToString(aArr); }
+    };
+}
