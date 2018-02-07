@@ -335,7 +335,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
 
     // Google does not support categories natively, but allows us to store data
     // as an "extendedProperty", so we do here
-    let categories = cal.categoriesArrayToString(aItem.getCategories({}));
+    let categories = cal.category.arrayToString(aItem.getCategories({}));
     addExtendedProperty("X-MOZ-CATEGORIES", categories);
 
     // Only parse attendees if they are enabled, due to bug 407961
@@ -822,7 +822,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
         // Google does not support categories natively, but allows us to store
         // data as an "extendedProperty", and here it's going to be retrieved
         // again
-        let categories = cal.categoriesStringToArray(sharedProps["X-MOZ-CATEGORIES"]);
+        let categories = cal.category.stringToArray(sharedProps["X-MOZ-CATEGORIES"]);
         item.setCategories(categories.length, categories);
 
         // updated (This must be set last!)
