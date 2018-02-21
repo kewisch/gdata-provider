@@ -439,7 +439,7 @@ calGoogleCalendar.prototype = {
                 // Updating invitations often causes a forbidden error becase
                 // some parts are not writable. Using PATCH ignores anything
                 // that isn't allowed.
-                if (cal.isInvitation(aNewItem)) {
+                if (cal.itip.isInvitation(aNewItem)) {
                     request.type = request.PATCH;
                 }
 

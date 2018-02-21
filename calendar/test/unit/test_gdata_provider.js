@@ -1287,7 +1287,7 @@ add_task(function* test_modify_invitation() {
     equal(items.length, 1);
 
     let item = items[0];
-    let att = cal.getInvitedAttendee(item);
+    let att = cal.itip.getInvitedAttendee(item);
     let newItem = item.clone();
 
     notEqual(att, null);
