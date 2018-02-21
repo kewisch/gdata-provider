@@ -79,3 +79,11 @@ if (typeof cal.category == "undefined") {
         arrayToString: function(aArr) { return cal.categoriesArrayToString(aArr); }
     };
 }
+
+if (typeof cal.itip == "undefined") {
+    ChromeUtils.import("resource://calendar/modules/calItipUtils.jsm");
+}
+
+if (typeof cal.itip.isInvitation == "undefined") {
+    cal.itip.isInvitation = function(aItem) { return cal.isInvitation(aItem); };
+}
