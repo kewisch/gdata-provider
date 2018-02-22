@@ -97,3 +97,15 @@ if (typeof cal.l10n == "undefined") {
         }
     };
 }
+
+if (typeof cal.provider == "undefined") {
+    cal.provider = {
+        BaseClass: cal.ProviderBase,
+        prepHttpChannel: (...args) => cal.prepHttpChannel(...args),
+        sendHttpRequest: (...args) => cal.sendHttpRequest(...args),
+        createStreamLoader: (...args) => cal.createStreamLoader(...args),
+        InterfaceRequestor_getInterface: (...args) => cal.InterfaceRequestor_getInterface(...args),
+        convertByteArray: (...args) => cal.convertByteArray(...args),
+        promptOverwrite: (...args) => cal.promptOverwrite(...args)
+    };
+}

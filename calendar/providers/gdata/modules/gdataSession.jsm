@@ -16,7 +16,6 @@ ChromeUtils.import("resource://gre/modules/Timer.jsm");
 ChromeUtils.import("resource:///modules/iteratorUtils.jsm");
 
 ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
-ChromeUtils.import("resource://calendar/modules/calProviderUtils.jsm");
 
 ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 
