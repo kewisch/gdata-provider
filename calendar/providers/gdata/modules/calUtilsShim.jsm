@@ -22,7 +22,9 @@ if (!cal.dtz) {
         endDateProp: (...args) => cal.calGetEndDateProp(...args),
         sameDay: (...args) => cal.sameDay(...args),
         jsDateToDateTime: (...args) => cal.jsDateToDateTime(...args),
-        dateTimeToJsDate: (...args) => cal.dateTimeToJsDate(...args)
+        dateTimeToJsDate: (...args) => cal.dateTimeToJsDate(...args),
+        fromRFC3339: (...args) => cal.fromRFC3339(...args),
+        toRFC3339: (...args) => cal.toRFC3339(...args)
     };
 }
 
