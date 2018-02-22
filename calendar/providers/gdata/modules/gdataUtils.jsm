@@ -1325,7 +1325,7 @@ async function checkResolveConflict(aOperation, aCalendar, aItem) {
  * @return             The localized string value.
  */
 function getProviderString(aStringName, ...aParams) {
-    return cal.calGetString("gdata", aStringName, aParams, "gdata-provider");
+    return cal.l10n.getAnyString("gdata-provider", "gdata", aStringName, aParams);
 }
 
 /**

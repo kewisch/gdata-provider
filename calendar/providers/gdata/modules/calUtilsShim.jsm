@@ -87,3 +87,11 @@ if (typeof cal.itip == "undefined") {
 if (typeof cal.itip.isInvitation == "undefined") {
     cal.itip.isInvitation = function(aItem) { return cal.isInvitation(aItem); };
 }
+
+if (typeof cal.l10n == "undefined") {
+    cal.l10n = {
+        getAnyString: function(aComponent, aBundle, aString, aParams) {
+            return cal.calGetString(aBundle, aString, aParams, aComponent);
+        }
+    };
+}
