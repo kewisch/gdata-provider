@@ -756,7 +756,7 @@ calGoogleCalendar.prototype = {
         tasksRequest.addQueryParameter("maxResults", maxResults);
         let lastUpdated = this.getUpdatedMin("tasks");
         if (lastUpdated) {
-            tasksRequest.addQueryParameter("updatedMin", cal.toRFC3339(lastUpdated));
+            tasksRequest.addQueryParameter("updatedMin", cal.dtz.toRFC3339(lastUpdated));
             tasksRequest.addQueryParameter("showDeleted", "true");
         }
         if (tasksRequest.uri && this.checkThrottle("tasks")) {

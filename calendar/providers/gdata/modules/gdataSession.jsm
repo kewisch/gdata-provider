@@ -432,8 +432,8 @@ calGoogleSession.prototype = {
             aRangeEnd = aRangeEnd.getInTimezone(cal.dtz.UTC);
         }
 
-        let rfcRangeStart = cal.toRFC3339(aRangeStart);
-        let rfcRangeEnd = cal.toRFC3339(aRangeEnd);
+        let rfcRangeStart = cal.dtz.toRFC3339(aRangeStart);
+        let rfcRangeEnd = cal.dtz.toRFC3339(aRangeEnd);
         /* 7 is the length of "mailto:", we've asserted this above */
         let strippedCalId = aCalId.substr(7);
 
@@ -463,8 +463,8 @@ calGoogleSession.prototype = {
                     let utcZone = cal.dtz.UTC;
                     cal.LOG("[calGoogleCalendar] Found " + calData.busy.length + " busy slots within range for " + strippedCalId);
                     let busyRanges = calData.busy.map((entry) => {
-                        let start = cal.fromRFC3339(entry.start, utcZone);
-                        let end = cal.fromRFC3339(entry.end, utcZone);
+                        let start = cal.dtz.fromRFC3339(entry.start, utcZone);
+                        let end = cal.dtz.fromRFC3339(entry.end, utcZone);
                         let interval = new cal.FreeBusyInterval(aCalId, cIFBI.BUSY, start, end);
                         LOGinterval(interval);
                         return interval;

@@ -137,7 +137,7 @@ function getItemMetadata(aOfflineStorage, aItem) {
 function dateToJSON(aDate) {
     let jsonData = {};
     let tzid = aDate.timezone.tzid;
-    jsonData[aDate.isDate ? "date" : "dateTime"] = cal.toRFC3339(aDate);
+    jsonData[aDate.isDate ? "date" : "dateTime"] = cal.dtz.toRFC3339(aDate);
     if (!aDate.isDate && tzid != "floating") {
         if (tzid in windowsTimezoneMap) {
             // A Windows timezone, likely an outlook invitation.
@@ -206,7 +206,7 @@ function JSONToDate(aEntry, aTimezone) {
 }
 
 /**
- * Like cal.fromRFC3339(), but assumes that the passed timezone is the timezone
+ * Like cal.dtz.fromRFC3339(), but assumes that the passed timezone is the timezone
  * for the date. A quick check is done to make sure the offset matches the
  * timezone.
  *
@@ -246,7 +246,7 @@ function fromRFC3339FixedZone(aStr, aTimezone) {
             // original fromRFC3339, which goes through the timezone list and
             // finds the first matching zone.
             cal.WARN("[calGoogleCalendar] " + aStr + " does not match timezone offset for " + aTimezone.tzid);
-            dateTime = cal.fromRFC3339(aStr, aTimezone);
+            dateTime = cal.dtz.fromRFC3339(aStr, aTimezone);
         }
     }
 
@@ -259,14 +259,14 @@ fromRFC3339FixedZone.regex = new RegExp(
 );
 
 /**
- * Like cal.toRFC3339, but include milliseconds. Google timestamps require
+ * Like cal.dtz.toRFC3339, but include milliseconds. Google timestamps require
  * this.
  *
  * @param date      The calIDateTime to convert.
  * @return          The RFC3339 string stamp.
  */
 function toRFC3339Fraction(date) {
-    let str = cal.toRFC3339(date);
+    let str = cal.dtz.toRFC3339(date);
     return str ? str.replace(/(Z?)$/, ".000$1") : null;
 }
 
@@ -432,7 +432,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
     }
 
     // gd:extendedProperty (alarmLastAck)
-    addExtendedProperty("X-MOZ-LASTACK", cal.toRFC3339(aItem.alarmLastAck), true);
+    addExtendedProperty("X-MOZ-LASTACK", cal.dtz.toRFC3339(aItem.alarmLastAck), true);
 
     // XXX While Google now supports multiple alarms and alarm values, we still
     // need to fix bug 353492 first so we can better take care of finding out
@@ -446,7 +446,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
         icalSnoozeTime = cal.createDateTime();
         icalSnoozeTime.icalString = itemSnoozeTime;
     }
-    addExtendedProperty("X-MOZ-SNOOZE-TIME", cal.toRFC3339(icalSnoozeTime), true);
+    addExtendedProperty("X-MOZ-SNOOZE-TIME", cal.dtz.toRFC3339(icalSnoozeTime), true);
 
     // gd:extendedProperty (snooze recurring alarms)
     let snoozeValue = "";
@@ -519,9 +519,9 @@ function TaskToJSON(aItem, aOfflineStorage, aIsImport) {
     if (aItem.dueDate) {
         let dueDate = aItem.dueDate.getInTimezone(cal.dtz.UTC);
         dueDate.isDate = false;
-        itemData.due = cal.toRFC3339(dueDate);
+        itemData.due = cal.dtz.toRFC3339(dueDate);
     }
-    setIf(itemData, "completed", cal.toRFC3339(aItem.completedDate));
+    setIf(itemData, "completed", cal.dtz.toRFC3339(aItem.completedDate));
 
     for (let relation of aItem.getRelations({})) {
         if (relation.relId &&
@@ -707,7 +707,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
         item.privacy = (aEntry.visibility ? aEntry.visibility.toUpperCase() : null);
 
         item.setProperty("URL", aEntry.htmlLink && aCalendar.uri.schemeIs("https") ? aEntry.htmlLink.replace(/^http:/, "https:") : aEntry.htmlLink);
-        item.setProperty("CREATED", (aEntry.created ? cal.fromRFC3339(aEntry.created, calendarZone).getInTimezone(cal.dtz.UTC) : null));
+        item.setProperty("CREATED", (aEntry.created ? cal.dtz.fromRFC3339(aEntry.created, calendarZone).getInTimezone(cal.dtz.UTC) : null));
         item.setProperty("DESCRIPTION", aEntry.description);
         item.setProperty("LOCATION", aEntry.location);
         item.setProperty("TRANSP", (aEntry.transparency ? aEntry.transparency.toUpperCase() : null));
@@ -802,10 +802,10 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
         }
 
         // extendedProperty (alarmLastAck)
-        item.alarmLastAck = cal.fromRFC3339(privateProps["X-MOZ-LASTACK"], calendarZone);
+        item.alarmLastAck = cal.dtz.fromRFC3339(privateProps["X-MOZ-LASTACK"], calendarZone);
 
         // extendedProperty (snooze time)
-        let dtSnoozeTime = cal.fromRFC3339(privateProps["X-MOZ-SNOOZE-TIME"], calendarZone);
+        let dtSnoozeTime = cal.dtz.fromRFC3339(privateProps["X-MOZ-SNOOZE-TIME"], calendarZone);
         let snoozeProperty = (dtSnoozeTime ? dtSnoozeTime.icalString : null);
         item.setProperty("X-MOZ-SNOOZE-TIME", snoozeProperty);
 
@@ -835,7 +835,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
 
         // updated (This must be set last!)
         if (aEntry.updated) {
-            let updated = cal.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC);
+            let updated = cal.dtz.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC);
             item.setProperty("DTSTAMP", updated);
             item.setProperty("LAST-MODIFIED", updated);
         }
@@ -881,12 +881,12 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
 
         // Google Tasks don't have a due time, but still use 0:00 UTC. They
         // should really be using floating time.
-        item.dueDate = cal.fromRFC3339(aEntry.due, cal.dtz.floating);
+        item.dueDate = cal.dtz.fromRFC3339(aEntry.due, cal.dtz.floating);
         if (item.dueDate) {
             item.dueDate.timezone = cal.dtz.floating;
             item.dueDate.isDate = true;
         }
-        item.completedDate = cal.fromRFC3339(aEntry.completed, calendarZone);
+        item.completedDate = cal.dtz.fromRFC3339(aEntry.completed, calendarZone);
         if (aEntry.deleted) {
             item.status = "CANCELLED";
         } else if (aEntry.status == "needsAction") {
@@ -913,8 +913,8 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
         }
 
         // updated (This must be set last!)
-        item.setProperty("DTSTAMP", cal.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC));
-        item.setProperty("LAST-MODIFIED", cal.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC));
+        item.setProperty("DTSTAMP", cal.dtz.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC));
+        item.setProperty("LAST-MODIFIED", cal.dtz.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC));
     } catch (e) {
         cal.ERROR("[calGoogleCalendar] Error parsing JSON tasks stream: " + stringException(e));
         throw e;
