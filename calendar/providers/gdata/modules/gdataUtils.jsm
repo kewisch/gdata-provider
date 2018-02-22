@@ -1289,7 +1289,7 @@ async function checkResolveConflict(aOperation, aCalendar, aItem) {
     cal.LOG("[calGoogleCalendar] A conflict occurred for " + aItem.title);
 
     let method = (aOperation.type == aOperation.DELETE ? "delete" : "modify");
-    let overwrite = cal.promptOverwrite(method, aItem);
+    let overwrite = cal.provider.promptOverwrite(method, aItem);
     if (overwrite) {
         // The user has decided to overwrite the server version. Send again
         // overwriting the server version with If-Match: *

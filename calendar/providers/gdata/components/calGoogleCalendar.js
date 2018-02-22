@@ -40,7 +40,7 @@ var calGoogleCalendarInterfaces = [
     Components.interfaces.calIChangeLog
 ];
 calGoogleCalendar.prototype = {
-    __proto__: cal.ProviderBase.prototype,
+    __proto__: cal.provider.BaseClass.prototype,
 
     classID: calGoogleCalendarClassID,
     QueryInterface: XPCOMUtils.generateQI(calGoogleCalendarInterfaces),

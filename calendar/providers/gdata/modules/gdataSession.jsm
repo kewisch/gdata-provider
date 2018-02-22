@@ -464,7 +464,7 @@ calGoogleSession.prototype = {
                     let busyRanges = calData.busy.map((entry) => {
                         let start = cal.dtz.fromRFC3339(entry.start, utcZone);
                         let end = cal.dtz.fromRFC3339(entry.end, utcZone);
-                        let interval = new cal.FreeBusyInterval(aCalId, cIFBI.BUSY, start, end);
+                        let interval = new cal.provider.FreeBusyInterval(aCalId, cIFBI.BUSY, start, end);
                         LOGinterval(interval);
                         return interval;
                     });

@@ -217,9 +217,9 @@ calGoogleRequest.prototype = {
             channel = channel.QueryInterface(Components.interfaces.nsIHttpChannel);
             channel.redirectionLimit = 3;
 
-            this.mLoader = cal.createStreamLoader();
+            this.mLoader = cal.provider.createStreamLoader();
             channel.notificationCallbacks = this;
-            cal.sendHttpRequest(this.mLoader, channel, this);
+            cal.provider.sendHttpRequest(this.mLoader, channel, this);
         } catch (e) {
             // Let the response function handle the error that happens here
             this.fail(e.result, e.message);
@@ -327,7 +327,7 @@ calGoogleRequest.prototype = {
      * @see nsIInterfaceRequestor
      * @see calProviderUtils.jsm
      */
-    getInterface: cal.InterfaceRequestor_getInterface,
+    getInterface: cal.provider.InterfaceRequestor_getInterface,
 
     /**
      * @see nsIChannelEventSink
@@ -350,7 +350,7 @@ calGoogleRequest.prototype = {
         let httpChannel = aLoader.request.QueryInterface(Components.interfaces.nsIHttpChannel);
 
         // Convert the stream, falling back to utf-8 in case its not given.
-        let result = cal.convertByteArray(aResult, aResultLength, httpChannel.contentCharset);
+        let result = cal.provider.convertByteArray(aResult, aResultLength, httpChannel.contentCharset);
         if (result === null) {
             this.fail(Components.results.NS_ERROR_FAILURE,
                       "Could not convert bytestream to Unicode: " + e);

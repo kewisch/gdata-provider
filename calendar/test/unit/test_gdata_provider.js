@@ -34,8 +34,8 @@ var MockConflictPrompt = {
     overwrite: false,
     register: function() {
         if (!this._origFunc) {
-            this._origFunc = cal.promptOverwrite;
-            cal.promptOverwrite = (aMode, aItem) => {
+            this._origFunc = cal.provider.promptOverwrite;
+            cal.provider.promptOverwrite = (aMode, aItem) => {
                 return this.overwrite;
             };
         }
@@ -43,7 +43,7 @@ var MockConflictPrompt = {
 
     unregister: function() {
         if (this._origFunc) {
-            cal.promptOverwrite = this._origFunc;
+            cal.provider.promptOverwrite = this._origFunc;
             this._origFunc = null;
         }
     }
