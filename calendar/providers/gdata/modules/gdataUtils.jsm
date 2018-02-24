@@ -10,7 +10,6 @@ ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/Preferences.jsm");
 ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 
-ChromeUtils.import("resource://calendar/modules/calAsyncUtils.jsm");
 ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 
 ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");

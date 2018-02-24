@@ -24,7 +24,6 @@ ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
 ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
-ChromeUtils.import("resource://calendar/modules/calAsyncUtils.jsm");
 ChromeUtils.import("resource://testing-common/MockRegistrar.jsm");
 
 var gServer;
