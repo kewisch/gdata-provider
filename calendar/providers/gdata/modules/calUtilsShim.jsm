@@ -5,8 +5,10 @@
 ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 
 // Load these modules, which will inject into calUtils.jsm on old versions, and
-// just load an unused symbol on newer versions.
-ChromeUtils.import("resource://calendar/modules/calAsyncUtils.jsm");
+// silently fail on newer versions.
+try {
+    ChromeUtils.import("resource://calendar/modules/calAsyncUtils.jsm");
+} catch (e) {}
 
 this.EXPORTED_SYMBOLS = ["cal"];
 
