@@ -37,6 +37,5 @@
     <em:contributor>Mark James (http://www.famfamfam.com/lab/icons/silk/)</em:contributor>
     <em:homepageURL>https://addons.mozilla.org/thunderbird/addon/4631</em:homepageURL>
     <em:iconURL>chrome://gdata-provider/content/gcal.png</em:iconURL>
-    <em:unpack>true</em:unpack>
   </Description>
 </RDF>
