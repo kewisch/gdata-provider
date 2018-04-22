@@ -60,8 +60,6 @@ if (!cal.item) {
 if (!cal.view || !cal.view.hashColor) {
     cal.view = Object.assign(cal.view || {}, {
         isMouseOverBox: (...args) => cal.isMouseOverBox(...args),
-        radioGroupSelectItem: (...args) => cal.calRadioGroupSelectItem(...args),
-        applyAttributeToMenuChildren: (...args) => cal.applyAttributeToMenuChildren(...args),
         removeChildElementsByAttribute: (...args) => cal.removeChildElementsByAttribute(...args),
         getParentNodeOrThis: (...args) => cal.getParentNodeOrThis(...args),
         getParentNodeOrThisByAttribute: (...args) => cal.getParentNodeOrThisByAttribute(...args),
