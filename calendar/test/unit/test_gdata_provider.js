@@ -54,7 +54,6 @@ MockAlertsService.prototype = {
     showAlertNotification: function() {
     },
     QueryInterface: XPCOMUtils.generateQI([
-        Ci.nsISupports,
         Ci.nsIAlertsService
     ])
 };
