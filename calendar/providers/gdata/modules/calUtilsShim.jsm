@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
+ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 // Load these modules, which will inject into calUtils.jsm on old versions, and
 // silently fail on newer versions.
@@ -112,4 +113,8 @@ if (typeof cal.provider == "undefined") {
         convertByteArray: (...args) => cal.convertByteArray(...args),
         promptOverwrite: (...args) => cal.promptOverwrite(...args)
     };
+}
+
+if (typeof cal.generateQI == "undefined") {
+    cal.generateQI = XPCOMUtils.generateQI.bind(XPCOMUtils);
 }
