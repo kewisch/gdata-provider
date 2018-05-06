@@ -3,7 +3,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!DOCTYPE overlay SYSTEM "chrome://calendar/locale/calendar.dtd">
+<!DOCTYPE bindings SYSTEM "chrome://calendar/locale/calendar.dtd">
 
 <bindings id="gdata-list-tree-bindings"
           xmlns="http://www.mozilla.org/xbl"
