@@ -117,9 +117,9 @@ OAuth2.prototype = {
                     webProgress: aWebProgress,
                     _parent: this.account,
 
-                    QueryInterface: XPCOMUtils.generateQI([
-                        Components.interfaces.nsIWebProgressListener,
-                        Components.interfaces.nsISupportsWeakReference
+                    QueryInterface: cal.generateQI([
+                        Ci.nsIWebProgressListener,
+                        Ci.nsISupportsWeakReference
                     ]),
 
                     _cleanUp: function() {

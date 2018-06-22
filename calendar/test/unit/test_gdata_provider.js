@@ -53,7 +53,7 @@ function MockAlertsService() {}
 MockAlertsService.prototype = {
     showAlertNotification: function() {
     },
-    QueryInterface: XPCOMUtils.generateQI([
+    QueryInterface: ChromeUtils.generateQI([
         Ci.nsIAlertsService
     ])
 };

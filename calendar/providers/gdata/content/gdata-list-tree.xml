@@ -94,7 +94,7 @@
       <field name="mCalendarHeaderIndex">0</field>
       <field name="mTasksHeaderIndex">0</field>
 
-      <field name="QueryInterface">XPCOMUtils.generateQI([Components.interfaces.nsITreeView])</field>
+      <field name="QueryInterface">ChromeUtils.generateQI([Ci.nsITreeView])</field>
 
       <property name="calendars">
         <getter><![CDATA[

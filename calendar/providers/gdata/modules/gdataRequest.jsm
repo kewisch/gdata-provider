@@ -88,11 +88,11 @@ calGoogleRequest.prototype = {
     reauthenticate: true,
     requestDate: null,
 
-    QueryInterface: XPCOMUtils.generateQI([
-        Components.interfaces.calIOperation,
-        Components.interfaces.nsIStreamLoaderObserver,
-        Components.interfaces.nsIInterfaceRequestor,
-        Components.interfaces.nsIChannelEventSink
+    QueryInterface: cal.generateQI([
+        Ci.calIOperation,
+        Ci.nsIStreamLoaderObserver,
+        Ci.nsIInterfaceRequestor,
+        Ci.nsIChannelEventSink
     ]),
 
     /**

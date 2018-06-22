@@ -15,9 +15,9 @@ var reporterListener = {
         return (this.securityButton = document.getElementById("security-button"));
     },
 
-    QueryInterface: XPCOMUtils.generateQI([
-        Components.interfaces.nsIWebProgressListener,
-        Components.interfaces.nsISupportsWeakReference,
+    QueryInterface: cal.generateQI([
+        Ci.nsIWebProgressListener,
+        Ci.nsISupportsWeakReference,
     ]),
 
     onStateChange: function(aWebProgress, aRequest, aStateFlags, aStatus) {
