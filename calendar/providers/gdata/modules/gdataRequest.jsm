@@ -350,7 +350,7 @@ calGoogleRequest.prototype = {
         let httpChannel = aLoader.request.QueryInterface(Components.interfaces.nsIHttpChannel);
 
         // Convert the stream, falling back to utf-8 in case its not given.
-        let result = new TextDecoder(httpChannel.contentCharset).decode(aResult);
+        let result = new TextDecoder(httpChannel.contentCharset || "utf-8").decode(Uint8Array.from(aResult));
         if (result === null) {
             this.fail(Components.results.NS_ERROR_FAILURE,
                       "Could not convert bytestream to Unicode: " + e);
