@@ -8,11 +8,6 @@ ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 
 (function() {
-    // Older versions of Lightning don't have this variable.
-    if (!("gOldEndTimezone" in window)) {
-        window.gOldEndTimezone = null;
-    }
-
     monkeyPatch(window, "updateCalendar", function(protofunc, ...args) {
         let rv = protofunc.apply(this, args);
         let calendar = getCurrentCalendar();
@@ -22,6 +17,8 @@ ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
         let isGoogleTask = isGoogleCalendar && isTask;
         let isGoogleEvent = isGoogleCalendar && isEvent;
 
+        sendMessage({ command: "gdataIsTask", isGoogleTask: isGoogleTask });
+
         let hideForTaskIds = [
             "event-grid-location-row",
 
@@ -29,8 +26,8 @@ ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
             "timezone-endtime",
             "link-image-bottom",
 
-            "event-grid-attendee-row",
-            "event-grid-attendee-row-2",
+            "event-grid-tab-attendees",
+            "event-grid-tabpanel-attendees",
 
             "todo-status-none-menuitem",
             "todo-status-inprogress-menuitem",
@@ -43,34 +40,13 @@ ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
             "event-grid-recurrence-separator",
 
             "event-grid-alarm-row",
-            "event-grid-alarm-separator",
-
-            "status-privacy",
-            "status-priority"
-        ];
-
-        let disableForTaskIds = [
-            "options-attachments-menu",
-            "options-attendess-menuitem",
-            "options-privacy-menu",
-            "options-priority-menu",
-            "options-freebusy-menu",
-            "button-attendees",
-            "button-privacy",
-            "button-url"
+            "event-grid-alarm-separator"
         ];
 
         for (let id of hideForTaskIds) {
             let node = document.getElementById(id);
             if (node) {
                 node.hidden = isGoogleTask;
-            }
-        }
-
-        for (let id of disableForTaskIds) {
-            let node = document.getElementById(id);
-            if (node) {
-                node.disabled = isGoogleTask;
             }
         }
 
@@ -110,23 +86,22 @@ ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 
         document.getElementById("gdata-reminder-default-menuitem").style.display = hasDefaultReminders ? "" : "none";
 
-        // Older versions of Lightning don't update the category menulist.
-        if (!document.getElementById("item-categories-panel")) {
-            let categoriesLabel = document.getElementById("event-grid-category-color-row").firstChild;
-            let calendarLabel = document.getElementById("item-categories").nextSibling;
-            if (!categoriesLabel.origLabel) {
-                categoriesLabel.origLabel = categoriesLabel.value;
-            }
-
-            setBooleanAttribute("item-categories", "hidden", isGoogleTask);
-            setBooleanAttribute(calendarLabel, "hidden", isGoogleTask);
-
-            if (isGoogleTask) {
-                categoriesLabel.value = calendarLabel.value;
-            } else {
-                categoriesLabel.value = categoriesLabel.origLabel;
-            }
+        // Remove categories for Google Tasks
+        let categoriesLabel = document.getElementById("event-grid-category-color-row").firstChild;
+        let calendarLabel = document.getElementById("item-categories").nextSibling;
+        if (!categoriesLabel.origLabel) {
+            categoriesLabel.origLabel = categoriesLabel.value;
         }
+
+        setBooleanAttribute("item-categories", "hidden", isGoogleTask);
+        setBooleanAttribute(calendarLabel, "hidden", isGoogleTask);
+
+        if (isGoogleTask) {
+            categoriesLabel.value = calendarLabel.value;
+        } else {
+            categoriesLabel.value = categoriesLabel.origLabel;
+        }
+
         return rv;
     });
 
@@ -170,7 +145,7 @@ ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
             return null;
         } else {
             item.deleteProperty("X-DEFAULT-ALARM");
-            return protofunc.apply(this, args);
+            return protofunc.call(this, item, ...args);
         }
     });
 

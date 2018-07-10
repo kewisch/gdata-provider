@@ -7,25 +7,30 @@
 gdata-provider.jar:
 % content gdata-provider %content/
 % resource gdata-provider .
-% overlay chrome://calendar/content/calendarCreation.xul chrome://gdata-provider/content/gdata-calendar-creation.xul
-% overlay chrome://messenger/content/messenger.xul chrome://gdata-provider/content/gdata-migration-overlay.xul  application={3550f703-e582-4d05-9a08-453d09bdfdc6}
-% overlay chrome://calendar/content/calendar-event-dialog.xul chrome://gdata-provider/content/gdata-calendar-event-dialog.xul
+% overlay chrome://calendar/content/calendar-event-dialog.xul chrome://gdata-provider/content/gdata-event-dialog.xul
 % overlay chrome://calendar/content/calendar-event-dialog-reminder.xul chrome://gdata-provider/content/gdata-event-dialog-reminder.xul
 % overlay chrome://calendar/content/calendar-properties-dialog.xul chrome://gdata-provider/content/gdata-calendar-properties.xul
+% overlay chrome://calendar/content/calendarCreation.xul chrome://gdata-provider/content/gdata-calendar-creation.xul
+% overlay chrome://lightning/content/lightning-item-iframe.xul chrome://gdata-provider/content/gdata-lightning-item-iframe.xul
+% overlay chrome://lightning/content/lightning-item-toolbar.xul chrome://gdata-provider/content/gdata-lightning-item-toolbar.xul
+% overlay chrome://messenger/content/messenger.xul chrome://gdata-provider/content/gdata-migration-overlay.xul
+% overlay chrome://messenger/content/messenger.xul chrome://gdata-provider/content/gdata-event-dialog.xul
 % style chrome://calendar/content/calendar-event-dialog.xul chrome://gdata-provider/skin/gdata-event-dialog-reminder.css
-% style chrome://messenger/content/messenger.xul chrome://gdata-provider/skin/gdata-event-dialog-reminder.css   application={3550f703-e582-4d05-9a08-453d09bdfdc6}
-% style chrome://messenger/content/messenger.xul chrome://gdata-provider/skin/gdata-event-dialog-reminder.css   application=postbox@postbox-inc.com
+% style chrome://messenger/content/messenger.xul chrome://gdata-provider/skin/gdata-event-dialog-reminder.css
     content/browserRequest.xul                   (content/browserRequest.xul)
     content/browserRequest.js                    (content/browserRequest.js)
     content/gdata-calendar-creation.xul          (content/gdata-calendar-creation.xul)
     content/gdata-calendar-creation.js           (content/gdata-calendar-creation.js)
-    content/gdata-calendar-event-dialog.xul      (content/gdata-calendar-event-dialog.xul)
-    content/gdata-calendar-event-dialog.js       (content/gdata-calendar-event-dialog.js)
+    content/gdata-event-dialog.xul               (content/gdata-event-dialog.xul)
+    content/gdata-event-dialog.js                (content/gdata-event-dialog.js)
     content/gdata-calendar-properties.xul        (content/gdata-calendar-properties.xul)
     content/gdata-calendar-properties.js         (content/gdata-calendar-properties.js)
     content/gdata-event-dialog-reminder.xul      (content/gdata-event-dialog-reminder.xul)
     content/gdata-event-dialog-reminder.js       (content/gdata-event-dialog-reminder.js)
     content/gdata-list-tree.xml                  (content/gdata-list-tree.xml)
+    content/gdata-lightning-item-iframe.xul      (content/gdata-lightning-item-iframe.xul)
+    content/gdata-lightning-item-iframe.js       (content/gdata-lightning-item-iframe.js)
+    content/gdata-lightning-item-toolbar.xul     (content/gdata-lightning-item-toolbar.xul)
     content/gdata-migration.js                   (content/gdata-migration.js)
     content/gdata-migration-overlay.xul          (content/gdata-migration-overlay.xul)
     content/gdata-migration-wizard.xul           (content/gdata-migration-wizard.xul)

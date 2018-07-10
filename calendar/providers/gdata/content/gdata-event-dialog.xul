@@ -21,29 +21,10 @@
               oncommand="editPrivacy(this)"/>
   </menupopup>
 
-  <menupopup id="event-privacy-menupopup">
-    <menuitem id="gdata-event-privacy-default-menuitem"
-              name="event-privacy-group"
-              insertbefore="event-privacy-public-menuitem,event-privacy-private-menuitem"
-              label="&gdata.privacy.default.label;"
-              type="radio"
-              provider="gdata"
-              privacy="DEFAULT"
-              oncommand="editPrivacy(this)"/>
-  </menupopup>
-
   <statusbarpanel id="status-privacy">
     <hbox id="gdata-status-privacy-default-box"
           insertbefore="status-privacy-public-box,status-privacy-private-box"
           privacy="DEFAULT"
           provider="gdata"/>
   </statusbarpanel>
-
-  <menupopup id="item-alarm-menupopup">
-    <menuitem id="gdata-reminder-default-menuitem"
-              insertbefore="reminder-none-separator"
-              label="&gdata.reminder.default;"
-              provider="gdata"
-              value="default"/>
-  </menupopup>
 </overlay>
