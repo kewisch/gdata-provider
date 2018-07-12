@@ -6,3 +6,7 @@
   list-style-image: url(chrome://gdata-provider/skin/reminder-action-sms.png);
   -moz-image-region: auto;
 }
+
+#reminder-notifications > notification[type="critical"] {
+  background-color: #d70022;
+}
