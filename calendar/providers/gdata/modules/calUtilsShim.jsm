@@ -5,11 +5,14 @@
 ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-// Load these modules, which will inject into calUtils.jsm on old versions, and
-// silently fail on newer versions.
-try {
+// calAsyncUtils and calAlarmUtils should no longer be injected directly, so first check if it is
+// already on the cal object through newer calUtils.jsm
+if (typeof cal.async == "undefined") {
     ChromeUtils.import("resource://calendar/modules/calAsyncUtils.jsm");
-} catch (e) {}
+}
+if (typeof cal.alarms == "undefined") {
+    ChromeUtils.import("resource://calendar/modules/calAlarmUtils.jsm");
+}
 
 this.EXPORTED_SYMBOLS = ["cal"];
 

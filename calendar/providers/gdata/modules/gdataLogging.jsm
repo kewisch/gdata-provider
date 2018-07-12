@@ -116,12 +116,13 @@ function LOGalarm(aAlarm) {
 
 function LOGinterval(aInterval) {
     const fbtypes = Components.interfaces.calIFreeBusyInterval;
+    let type;
     if (aInterval.freeBusyType == fbtypes.FREE) {
         type = "FREE";
     } else if (aInterval.freeBusyType == fbtypes.BUSY) {
         type = "BUSY";
     } else {
-        type = aInterval.freeBusyType + "(UNKNOWN)";
+        type = aInterval.freeBusyType + " (UNKNOWN)";
     }
 
     cal.LOG("[calGoogleCalendar] Interval from " +
