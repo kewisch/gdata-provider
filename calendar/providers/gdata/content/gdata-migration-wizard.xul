@@ -24,6 +24,6 @@
   <script type="application/javascript" src="chrome://calendar/content/calendar-ui-utils.js"/>
 
   <description>&gdata.migration.description;</description>
-  <listbox id="calendars-listbox" flex="1"/>
+  <vbox id="calendars-listbox" flex="1"/>
   <checkbox id="showagain-checkbox" label="&gdata.migration.showagain.label;"/>
 </dialog>

@@ -77,9 +77,11 @@ function gdata_migration_loader() {
         let listbox = document.getElementById("calendars-listbox");
 
         for (let calendar of sortCalendarArray(getMigratableCalendars())) {
-            let item = listbox.appendItem(calendar.name, calendar.id);
-            item.setAttribute("type", "checkbox");
+            let item = document.createElement("checkbox");
+            item.setAttribute("label", calendar.name);
+            item.setAttribute("value", calendar.id);
             item.calendar = calendar;
+            listbox.appendChild(item);
         }
 
         // Set up the "always check" field
