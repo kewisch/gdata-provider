@@ -8,7 +8,7 @@ window.addEventListener("load", () => {
         gdataOnLoad();
     } else {
         // onLoad has not yet been called, so we can piggyback on that function.
-        monkeyPatch(window, "onLoad", function(protofunc, ...args) {
+        monkeyPatch(window, "onLoad", (protofunc, ...args) => {
             let rv = protofunc(...args);
             gdataOnLoad();
             return rv;
@@ -25,11 +25,11 @@ function gdataOnLoad() {
 
         // Disable setting read-only if the calendar is readonly anyway
         document.getElementById("read-only").disabled = isDisabled || (isEventsCalendar && isReader);
-       // Don't allow setting refresh interval to less than 30 minutes
-       let refInterval = document.getElementById("calendar-refreshInterval-menupopup");
-       Array.from(refInterval.childNodes).filter((node) => {
-           let nodeval = parseInt(node.getAttribute("value"), 10);
-           return nodeval < 30 && nodeval != 0;
-       }).forEach((node) => { refInterval.removeChild(node); });
-   }
+        // Don't allow setting refresh interval to less than 30 minutes
+        let refInterval = document.getElementById("calendar-refreshInterval-menupopup");
+        Array.from(refInterval.childNodes).filter((node) => {
+            let nodeval = parseInt(node.getAttribute("value"), 10);
+            return nodeval < 30 && nodeval != 0;
+        }).forEach((node) => { refInterval.removeChild(node); });
+    }
 }
