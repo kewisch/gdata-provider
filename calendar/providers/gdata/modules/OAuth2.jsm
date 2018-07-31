@@ -12,6 +12,10 @@ ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource:///modules/gloda/log4moz.js");
 ChromeUtils.import("resource://gre/modules/Http.jsm");
 
+ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
+
+ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+
 function parseURLData(aData) {
     let result = {};
     aData.split(/[?#]/, 2)[1].split("&").forEach((aParam) => {

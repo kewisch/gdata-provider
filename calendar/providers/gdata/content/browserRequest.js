@@ -4,6 +4,10 @@
 
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
+ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
+
+ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+
 /* exported cancelRequest, loadRequestedUrl, reportUserClosed */
 
 var wpl = Components.interfaces.nsIWebProgressListener;
