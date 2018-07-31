@@ -15,7 +15,6 @@
         acceptKey="&gdata.migration.upgrade.accesskey;"
         ondialogaccept="migrateSelectedCalendars(); return true;"
         ondialogcancel="window.close()"
-        onload="gdata_migration_loader()"
         width="300"
         height="300"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">

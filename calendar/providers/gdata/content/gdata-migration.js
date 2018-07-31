@@ -19,13 +19,7 @@ function migrateSelectedCalendars() {
         if (item.checked) {
             // Migrate the calendar to a gdata calendar
             let newCal = calmgr.createCalendar("gdata", item.calendar.uri);
-            if (calmgr.removeCalendar) {
-                // Lightning 4.0+
-                calmgr.removeCalendar(item.calendar);
-            } else {
-                calmgr.unregisterCalendar(item.calendar);
-                calmgr.deleteCalendar(item.calendar);
-            }
+            calmgr.removeCalendar(item.calendar);
 
             // Copy some properties to the new calendar
             newCal.name = item.calendar.name;
@@ -58,7 +52,7 @@ function migrateSelectedCalendars() {
  */
 function getMigratableCalendars() {
     function isMigratable(calendar) {
-        let re = new RegExp("^http[s]?://www\\.google\\.com/calendar/ical/" +
+        let re = new RegExp("^http[s]?://(www|calendar)\\.google\\.com/calendar/ical/" +
                             "[^/]+/(private(-[^/]+)?|public)/" +
                             "(full|full-noattendees|composite|" +
                             "attendees-only|free-busy|basic)(\\.ics)?$");
