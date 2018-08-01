@@ -1,0 +1,23 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+#filter substitution
+{
+  "manifest_version": 2,
+  "name": "Provider for Google Calendar",
+  "description": "Allows bidirectional access to Google Calendar",
+  "version": "@GDATA_VERSION@",
+  "author": "Philipp Kewisch",
+  "homepage_url": "https://addons.mozilla.org/thunderbird/addon/4631",
+  "legacy": true,
+  "applications": {
+    "gecko": {
+      "id": "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      "strict_min_version": "@THUNDERBIRD_VERSION@"
+    }
+  },
+  "icons": {
+    "32": "chrome://gdata-provider/content/gcal.png"
+  }
+}

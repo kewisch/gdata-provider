@@ -2,32 +2,27 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-XPI_PKGNAME = gdata-provider-$(GDATA_VERSION).$(AB_CD).$(MOZ_PKG_PLATFORM)
-XPI_VERSION = $(GDATA_VERSION)
+XPI_NAME = gdata-provider
+XPI_PKGNAME = gdata-provider.$(AB_CD)
 XPI_EM_ID = {a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
 XPI_INSTALL_EXTENSION = $(XPI_EM_ID)
 
-DEFINES += -DLIGHTNING_VERSION=$(LIGHTNING_VERSION) \
-           -DSEAMONKEY_VERSION=$(SEAMONKEY_VERSION) \
+ifdef MOZ_SUITE
+LIGHTNING_VERSION := $(shell $(PYTHON) $(commtopsrcdir)/calendar/lightning/build/makeversion.py $(THUNDERBIRD_VERSION))
+else
+LIGHTNING_VERSION := $(shell $(PYTHON) $(commtopsrcdir)/calendar/lightning/build/makeversion.py $(word 1,$(MOZ_PKG_VERSION) $(THUNDERBIRD_VERSION)))
+endif
+
+GDATA_VERSION := $(shell $(PYTHON) $(commtopsrcdir)/calendar/providers/gdata/makeversion.py $(LIGHTNING_VERSION))
+THUNDERBIRD_VERSION := $(shell cat $(commtopsrcdir)/mail/config/version.txt)
+SEAMONKEY_VERSION := $(shell cat $(commtopsrcdir)/suite/config/version.txt)
+
+DEFINES += -DSEAMONKEY_VERSION=$(SEAMONKEY_VERSION) \
            -DTHUNDERBIRD_VERSION=$(THUNDERBIRD_VERSION) \
-           -DCOMM_BUILD=$(COMM_BUILD) \
            -DGDATA_VERSION=$(GDATA_VERSION) \
            $(NULL)
 
-ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
-# If the macbundle dist dir was already created, sync the gdata provider here to avoid
-# the need to make -C objdir/mail/app each time
-tools repackage::
-	[ -d $(DIST)/$(MOZ_MACBUNDLE_NAME) ] && rsync -a $(FINAL_TARGET)/ $(DIST)/$(MOZ_MACBUNDLE_NAME)/Contents/Resources/extensions/$(XPI_EM_ID) || true
-endif
-
-# stage the extension for use in packaged tests
-PKG_STAGE = $(DIST)/test-stage
+include $(commtopsrcdir)/calendar/lightning/lightning-packager.mk
 
 stage-package:
-	$(NSINSTALL) -D $(PKG_STAGE)/extensions/$(XPI_EM_ID)
-	(cd $(FINAL_TARGET) && tar $(TAR_CREATE_FLAGS) - *) | (cd $(PKG_STAGE)/extensions/$(XPI_EM_ID) && tar -xf -)
-
-include $(moztopsrcdir)/config/rules.mk
-include $(commtopsrcdir)/calendar/lightning/versions.mk
-include $(commtopsrcdir)/calendar/lightning/lightning-packager.mk
+	$(PYTHON) -u $(MOZILLA_DIR)/build/upload.py $(DIST)/xpi-stage/$(XPI_PKGNAME).xpi

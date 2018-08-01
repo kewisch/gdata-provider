@@ -9,12 +9,20 @@
     Services.prefs.setBoolPref("calendar.debug.log", true);
     Services.prefs.setBoolPref("calendar.debug.log.verbose", true);
 
-    let bindir = Services.dirsvc.get("CurProcD", Components.interfaces.nsIFile);
-    bindir.append("extensions");
-    bindir.append("{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}");
-    bindir.append("chrome.manifest");
-    dump("Loading" + bindir.path + "\n");
-    Components.manager.autoRegister(bindir);
+    let xpiFile;
+    let env = Cc["@mozilla.org/process/environment;1"].getService(Ci.nsIEnvironment);
+    if (env.exists("MOZ_FETCHES_DIR")) {
+        xpiFile = new FileUtils.File(env.get("MOZ_FETCHES_DIR"));
+        xpiFile.append("gdata-provider.en-US.xpi");
+    } else {
+        xpiFile = Services.dirsvc.get("CurProcD", Components.interfaces.nsIFile);
+        xpiFile.append("extensions");
+        xpiFile.append("{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}");
+    }
+
+    dump("Loading " + xpiFile.path + "\n");
+    let manager = Cc["@mozilla.org/component-manager-extra;1"].getService(Ci.nsIComponentManagerExtra);
+    manager.addLegacyExtensionManifestLocation(xpiFile);
 })();
 
 ChromeUtils.import("resource://testing-common/httpd.js");
@@ -507,7 +515,7 @@ function run_test() {
     });
 }
 
-add_task(function* test_migrate_cache() {
+add_task(async function test_migrate_cache() {
     let uriString = "googleapi://xpcshell/?calendar=xpcshell%40example.com";
     let uri = Services.io.newURI(uriString);
     let client = cal.getCalendarManager().createCalendar("gdata", uri);
@@ -519,26 +527,26 @@ add_task(function* test_migrate_cache() {
     });
 
     // No version, should not reset
-    equal(yield migrateStorageCache(), false);
+    equal(await migrateStorageCache(), false);
     equal(client.getProperty("cache.version"), 3);
 
     // Check migrate 1 -> 2
     unwrapped.CACHE_DB_VERSION = 2;
     client.setProperty("cache.version", 1);
-    equal(yield migrateStorageCache(), true);
+    equal(await migrateStorageCache(), true);
     equal(client.getProperty("cache.version"), 2);
 
     // Check migrate 2 -> 3 normal calendar
     unwrapped.CACHE_DB_VERSION = 3;
     client.setProperty("cache.version", 2);
-    equal(yield migrateStorageCache(), false);
+    equal(await migrateStorageCache(), false);
 
     // Check migrate 2 -> 3 birthday calendar
     unwrapped.CACHE_DB_VERSION = 3;
     uri = "googleapi://xpcshell/?calendar=%23contacts%40group.v.calendar.google.com";
     unwrapped.uri = Services.io.newURI(uri);
     client.setProperty("cache.version", 2);
-    equal(yield migrateStorageCache(), true);
+    equal(await migrateStorageCache(), true);
 });
 
 add_test(function test_migrate_uri() {
@@ -572,7 +580,7 @@ add_test(function test_migrate_uri() {
     run_next_test();
 });
 
-add_task(function* test_dateToJSON() {
+add_task(async function test_dateToJSON() {
     function _createDateTime(tzid, offset=0) {
         let offsetFrom = offset <= 0 ? "-0" + (offset - 1) : "+0" + (offset - 1) + "00";
         let offsetTo = "+0" + offset + "00";
@@ -671,7 +679,7 @@ add_task(function* test_dateToJSON() {
     deepEqual(dateToJSON(date), { date: "2015-01-30" });
 });
 
-add_task(function* test_JSONToDate() {
+add_task(async function test_JSONToDate() {
     function convert(aEntry, aTimezone="Europe/Berlin") {
         let tzs = cal.getTimezoneService();
         let calendarTz = tzs.getTimezone(aTimezone);
@@ -715,9 +723,9 @@ add_task(function* test_JSONToDate() {
     equal(convert({ dateTime: "2015-01-02T03:04:05+05:00" }), "20150102T030405 in Antarctica/Mawson");
 });
 
-add_task(function* test_organizerCN() {
+add_task(async function test_organizerCN() {
     gServer.events = [];
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     equal(client.getProperty("organizerCN"), null);
     gServer.resetClient(client);
 
@@ -734,12 +742,12 @@ add_task(function* test_organizerCN() {
         end: { dateTime: "2006-06-10T20:00:00+02:00" },
         iCalUID: "go6ijb0b46hlpbu4eeu92njevo@google.com"
     }];
-    client = yield gServer.getClient();
+    client = await gServer.getClient();
     equal(client.getProperty("organizerCN"), gServer.creator.displayName);
     gServer.resetClient(client);
 });
 
-add_task(function* test_always_readOnly() {
+add_task(async function test_always_readOnly() {
     gServer.events = [{
         kind: "calendar#event",
         etag: "\"2299601498276000\"",
@@ -754,26 +762,26 @@ add_task(function* test_always_readOnly() {
         iCalUID: "go6ijb0b46hlpbu4eeu92njevo@google.com"
     }];
     gServer.calendarListData.accessRole = "freeBusyReader";
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client);
     ok(client.readOnly);
     client.readOnly = false;
     ok(client.readOnly);
 
-    let items = yield pclient.getAllItems();
+    let items = await pclient.getAllItems();
     equal(items.length, 1);
     notEqual(items[0].title, "New Event");
     gServer.resetClient(client);
 
     gServer.calendarListData.accessRole = "reader";
-    client = yield gServer.getClient();
+    client = await gServer.getClient();
     ok(client.readOnly);
     client.readOnly = false;
     ok(client.readOnly);
     gServer.resetClient(client);
 });
 
-add_task(function* test_reset_sync() {
+add_task(async function test_reset_sync() {
     gServer.tasks = [{
         kind: "tasks#task",
         id: "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU",
@@ -818,18 +826,18 @@ add_task(function* test_reset_sync() {
         end: { dateTime: "2006-06-10T20:00:00+02:00" },
         iCalUID: "fepf8uf6n7n04w7feukucs9n8e@google.com"
     }];
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let uncached = client.wrappedJSObject.mUncachedCalendar.wrappedJSObject;
     let pclient = cal.async.promisifyCalendar(client);
 
-    let items = yield pclient.getAllItems();
+    let items = await pclient.getAllItems();
     equal(items.length, 4);
 
     notEqual(client.getProperty("syncToken.events"), "");
     notEqual(client.getProperty("lastUpdated.tasks"), "");
 
-    yield uncached.resetSync();
-    items = yield pclient.getAllItems();
+    await uncached.resetSync();
+    items = await pclient.getAllItems();
     equal(items.length, 0);
 
     equal(client.getProperty("syncToken.events"), "");
@@ -838,7 +846,7 @@ add_task(function* test_reset_sync() {
     gServer.resetClient(client);
 });
 
-add_task(function* test_basicItems() {
+add_task(async function test_basicItems() {
     gServer.events = [{
         kind: "calendar#event",
         etag: "\"2299601498276000\"",
@@ -902,10 +910,10 @@ add_task(function* test_basicItems() {
         }]
     }];
 
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client);
 
-    let items = yield pclient.getAllItems();
+    let items = await pclient.getAllItems();
     equal(items.length, 2);
 
     let event = cal.item.isEvent(items[0]) ? items[0] : items[1];
@@ -964,8 +972,8 @@ add_task(function* test_basicItems() {
     gServer.resetClient(client);
 });
 
-add_task(function* test_addModifyDeleteItem() {
-    let client = yield gServer.getClient();
+add_task(async function test_addModifyDeleteItem() {
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
     equal(gServer.events.length, 0);
     equal(gServer.tasks.length, 0);
@@ -1015,11 +1023,11 @@ add_task(function* test_addModifyDeleteItem() {
     ].join("\r\n"));
 
     // Add an event
-    let addedEvent = yield pclient.adoptItem(event);
+    let addedEvent = await pclient.adoptItem(event);
     notEqual(addedEvent.id, null);
     equal(addedEvent.organizer.id, "mailto:xpcshell@example.com");
 
-    let items = yield pclient.getAllItems();
+    let items = await pclient.getAllItems();
     equal(items.length, 1);
     equal(items[0].id, addedEvent.id);
     equal(items[0].organizer.id, "mailto:xpcshell@example.com");
@@ -1028,10 +1036,10 @@ add_task(function* test_addModifyDeleteItem() {
     equal(gServer.tasks.length, 0);
 
     // Add a task
-    let addedTask = yield pclient.adoptItem(task);
+    let addedTask = await pclient.adoptItem(task);
     notEqual(addedTask.id, null);
 
-    items = yield pclient.getAllItems();
+    items = await pclient.getAllItems();
     equal(items.length, 2);
     equal(items[1].id, addedTask.id);
 
@@ -1042,10 +1050,10 @@ add_task(function* test_addModifyDeleteItem() {
     let newEvent = items[0].clone();
     newEvent.title = "changed";
 
-    let modifiedEvent = yield pclient.modifyItem(newEvent, items[0]);
+    let modifiedEvent = await pclient.modifyItem(newEvent, items[0]);
     equal(modifiedEvent.title, "changed");
     notEqual(modifiedEvent.getProperty("LAST-MODIFIED"), addedEvent.getProperty("LAST-MODIFIED"));
-    items = yield pclient.getAllItems();
+    items = await pclient.getAllItems();
     equal(items.length, 2);
     equal(items[0].title, "changed");
     equal(items[0].id, addedEvent.id);
@@ -1057,10 +1065,10 @@ add_task(function* test_addModifyDeleteItem() {
     let newTask = items[1].clone();
     newTask.title = "changed";
 
-    let modifiedTask = yield pclient.modifyItem(newTask, items[1]);
+    let modifiedTask = await pclient.modifyItem(newTask, items[1]);
     equal(modifiedTask.title, "changed");
     notEqual(modifiedTask.getProperty("LAST-MODIFIED"), addedTask.getProperty("LAST-MODIFIED"));
-    items = yield pclient.getAllItems();
+    items = await pclient.getAllItems();
     equal(items.length, 2);
     equal(items[1].title, "changed");
     equal(items[1].id, addedTask.id);
@@ -1069,15 +1077,15 @@ add_task(function* test_addModifyDeleteItem() {
     equal(gServer.tasks.length, 1);
 
     // Delete an event
-    yield pclient.deleteItem(modifiedEvent);
-    items = yield pclient.getAllItems();
+    await pclient.deleteItem(modifiedEvent);
+    items = await pclient.getAllItems();
     equal(items.length, 1);
     equal(gServer.events.length, 0);
     equal(gServer.tasks.length, 1);
 
     // Delete a task
-    yield pclient.deleteItem(modifiedTask);
-    items = yield pclient.getAllItems();
+    await pclient.deleteItem(modifiedTask);
+    items = await pclient.getAllItems();
     equal(items.length, 0);
     equal(gServer.events.length, 0);
     equal(gServer.tasks.length, 0);
@@ -1085,8 +1093,8 @@ add_task(function* test_addModifyDeleteItem() {
     gServer.resetClient(client);
 });
 
-add_task(function* test_recurring_event() {
-    let client = yield gServer.getClient();
+add_task(async function test_recurring_event() {
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
 
     let event = cal.createEvent([
@@ -1098,7 +1106,7 @@ add_task(function* test_recurring_event() {
         "END:VEVENT"
     ].join("\r\n"));
 
-    event = yield pclient.addItem(event);
+    event = await pclient.addItem(event);
     equal(gServer.events.length, 1);
     equal(gServer.events[0].recurrence.length, 1);
     equal(gServer.events[0].recurrence[0], "RRULE:FREQ=WEEKLY");
@@ -1108,7 +1116,7 @@ add_task(function* test_recurring_event() {
     changedOcc.title = "changed";
     event.recurrenceInfo.modifyException(occ, true);
 
-    event = yield pclient.modifyItem(changedOcc, occ);
+    event = await pclient.modifyItem(changedOcc, occ);
     occ = event.recurrenceInfo.getNextOccurrence(event.startDate);
     equal(occ.title, "changed");
     equal(gServer.events.length, 2);
@@ -1116,7 +1124,7 @@ add_task(function* test_recurring_event() {
     gServer.resetClient(client);
 });
 
-add_task(function* test_recurring_exception() {
+add_task(async function test_recurring_exception() {
     gServer.syncs = [{
         token: "1",
         events: [{
@@ -1161,10 +1169,10 @@ add_task(function* test_recurring_exception() {
         }]
     }];
 
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
 
-    let items = yield pclient.getAllItems();
+    let items = await pclient.getAllItems();
     equal(items.length, 1);
 
     let exIds = items[0].recurrenceInfo.getExceptionIds({});
@@ -1174,9 +1182,9 @@ add_task(function* test_recurring_exception() {
     equal(ex.title, "New Event changed");
 
     client.refresh();
-    yield gServer.waitForLoad(client);
+    await gServer.waitForLoad(client);
 
-    items = yield pclient.getAllItems();
+    items = await pclient.getAllItems();
     equal(items.length, 1);
 
     exIds = items[0].recurrenceInfo.getExceptionIds({});
@@ -1185,7 +1193,7 @@ add_task(function* test_recurring_exception() {
     gServer.resetClient(client);
 });
 
-add_task(function* test_recurring_cancelled_exception() {
+add_task(async function test_recurring_cancelled_exception() {
     gServer.syncs = [{
         token: "1",
         events: [{
@@ -1203,18 +1211,18 @@ add_task(function* test_recurring_cancelled_exception() {
         }]
     }];
 
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
 
-    let items = yield pclient.getAllItems();
+    let items = await pclient.getAllItems();
     equal(items.length, 0);
 
     gServer.resetClient(client);
 });
 
-add_task(function* test_import_invitation() {
+add_task(async function test_import_invitation() {
     Preferences.set("calendar.google.enableAttendees", true);
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
     let event = cal.createEvent([
         "BEGIN:VEVENT",
@@ -1235,14 +1243,14 @@ add_task(function* test_import_invitation() {
         "END:VEVENT"
     ].join("\r\n"));
 
-    let addedItem = yield pclient.adoptItem(event);
+    let addedItem = await pclient.adoptItem(event);
     equal(gServer.events.length, 1);
     equal(addedItem.icalString, event.icalString);
     gServer.resetClient(client);
     Preferences.set("calendar.google.enableAttendees", false);
 });
 
-add_task(function* test_modify_invitation() {
+add_task(async function test_modify_invitation() {
     Preferences.set("calendar.google.enableAttendees", true);
     let organizer = {
         displayName: "organizer name",
@@ -1277,10 +1285,10 @@ add_task(function* test_modify_invitation() {
     }];
 
     // Case #1: User is attendee
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
 
-    let items = yield pclient.getAllItems();
+    let items = await pclient.getAllItems();
     equal(items.length, 1);
 
     let item = items[0];
@@ -1296,7 +1304,7 @@ add_task(function* test_modify_invitation() {
     att.participationStatus = "ACCEPTED";
     newItem.addAttendee(att);
 
-    yield pclient.modifyItem(newItem, items[0]);
+    await pclient.modifyItem(newItem, items[0]);
     equal(gServer.lastMethod, "PATCH");
 
     // Case #2: User is organizer
@@ -1317,10 +1325,10 @@ add_task(function* test_modify_invitation() {
     gServer.events[0].creator = gServer.creator;
     gServer.events[0].attendees = [organizer, attendee];
 
-    client = yield gServer.getClient();
+    client = await gServer.getClient();
     pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
 
-    items = yield pclient.getAllItems();
+    items = await pclient.getAllItems();
     equal(items.length, 1);
 
     item = items[0];
@@ -1336,13 +1344,13 @@ add_task(function* test_modify_invitation() {
     org.participationStatus = "TENTATIVE";
     newItem.addAttendee(org);
 
-    modifiedItem = yield pclient.modifyItem(newItem, items[0]);
+    modifiedItem = await pclient.modifyItem(newItem, items[0]);
     equal(gServer.lastMethod, "PUT");
 
     gServer.resetClient(client);
 });
 
-add_task(function* test_metadata() {
+add_task(async function test_metadata() {
     gServer.events = [{
         kind: "calendar#event",
         etag: "\"1\"",
@@ -1366,12 +1374,12 @@ add_task(function* test_metadata() {
         notes: "description"
     }];
 
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let offline = client.wrappedJSObject.mCachedCalendar;
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
 
     // Check initial metadata
-    let items = yield pclient.getAllItems();
+    let items = await pclient.getAllItems();
     let meta = getAllMeta(offline);
     let [event, task] = items;
     ok(cal.item.isEvent(event));
@@ -1384,9 +1392,9 @@ add_task(function* test_metadata() {
     gServer.nextEtag = '"3"';
     let newEvent = event.clone();
     newEvent.title = "changed";
-    yield pclient.modifyItem(newEvent, event);
+    await pclient.modifyItem(newEvent, event);
 
-    items = yield pclient.getAllItems();
+    items = await pclient.getAllItems();
     meta = getAllMeta(offline);
     [event, task] = items;
     ok(cal.item.isEvent(event));
@@ -1399,9 +1407,9 @@ add_task(function* test_metadata() {
     gServer.nextEtag = '"4"';
     let newTask = task.clone();
     newTask.title = "changed";
-    yield pclient.modifyItem(newTask, task);
+    await pclient.modifyItem(newTask, task);
 
-    items = yield pclient.getAllItems();
+    items = await pclient.getAllItems();
     meta = getAllMeta(offline);
     [event, task] = items;
     equal(meta.size, 2);
@@ -1409,19 +1417,19 @@ add_task(function* test_metadata() {
     equal(meta.get(task.hashId), ['"4"', "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU", false].join("\u001A"));
 
     // Delete an event
-    yield pclient.deleteItem(event);
+    await pclient.deleteItem(event);
     meta = getAllMeta(offline);
     equal(meta.size, 1);
     equal(meta.get(task.hashId), ['"4"', "MTEyMDE2MDE5NzE0NjYzMDk4ODI6MDo0MDI1NDg2NjU", false].join("\u001A"));
 
     // Delete a task
-    yield pclient.deleteItem(task);
+    await pclient.deleteItem(task);
     meta = getAllMeta(offline);
     equal(meta.size, 0);
 
     // Add an event
     gServer.nextEtag = '"6"';
-    newEvent = yield pclient.addItem(event);
+    newEvent = await pclient.addItem(event);
     meta = getAllMeta(offline);
     equal(meta.size, 1);
     equal(gServer.events.length, 1);
@@ -1429,7 +1437,7 @@ add_task(function* test_metadata() {
 
     // Add a task
     gServer.nextEtag = '"7"';
-    newTask = yield pclient.addItem(task);
+    newTask = await pclient.addItem(task);
     meta = getAllMeta(offline);
     equal(meta.size, 2);
     equal(gServer.events.length, 1);
@@ -1440,7 +1448,7 @@ add_task(function* test_metadata() {
     gServer.resetClient(client);
 });
 
-add_task(function* test_metadata_recurring() {
+add_task(async function test_metadata_recurring() {
     gServer.events = [{
         kind: "calendar#event",
         etag: "\"1\"",
@@ -1476,10 +1484,10 @@ add_task(function* test_metadata_recurring() {
         originalStartTime: { dateTime: "2006-06-17T18:00:00+02:00" }
     }];
 
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let offline = client.wrappedJSObject.mCachedCalendar;
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
-    let items = yield pclient.getAllItems();
+    let items = await pclient.getAllItems();
 
     let meta = getAllMeta(offline);
     equal(meta.size, 3);
@@ -1495,7 +1503,7 @@ add_task(function* test_metadata_recurring() {
     let newEx = ex.clone();
     newEx.title = "New Event changed again";
     gServer.nextEtag = '"4"';
-    yield pclient.modifyItem(newEx, ex);
+    await pclient.modifyItem(newEx, ex);
     meta = getAllMeta(offline);
     equal(meta.size, 3);
     equal(meta.get(newEx.hashId), ['"4"', "go6ijb0b46hlpbu4eeu92njevo_20060610T160000Z", false].join("\u001A"));
@@ -1503,20 +1511,20 @@ add_task(function* test_metadata_recurring() {
     // Deleting an exception should delete the metadata, as it turns into an EXDATE
     let newItem = items[0].clone();
     newItem.recurrenceInfo.removeOccurrenceAt(exIds[0]);
-    yield pclient.modifyItem(newItem, items[0]);
+    await pclient.modifyItem(newItem, items[0]);
 
     meta = getAllMeta(offline);
     equal(meta.size, 2);
 
     // Deleting the master item should remove all metadata entries
-    yield pclient.deleteItem(items[0]);
+    await pclient.deleteItem(items[0]);
     meta = getAllMeta(offline);
     equal(meta.size, 0);
 
     gServer.resetClient(client);
 });
 
-add_task(function* test_conflict_modify() {
+add_task(async function test_conflict_modify() {
     // TODO task/event conflicts are handled in the same way so I'm going to
     // skip adding tests for tasks here, but it probably wouldn't hurt to
     // create them at some point.
@@ -1533,9 +1541,9 @@ add_task(function* test_conflict_modify() {
         end: { dateTime: "2006-06-10T20:00:00+02:00" },
         iCalUID: "go6ijb0b46hlpbu4eeu92njevo@google.com"
     }];
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
-    let item = (yield pclient.getAllItems())[0];
+    let item = (await pclient.getAllItems())[0];
 
     // Case #1: Modified on server, modify locally, overwrite conflict
     MockConflictPrompt.overwrite = true;
@@ -1543,8 +1551,8 @@ add_task(function* test_conflict_modify() {
     newItem.title = "local change";
     gServer.events[0].etag = '"2"';
     gServer.events[0].summary = "remote change";
-    let modifiedItem = yield pclient.modifyItem(newItem, item);
-    item = (yield pclient.getAllItems())[0];
+    let modifiedItem = await pclient.modifyItem(newItem, item);
+    item = (await pclient.getAllItems())[0];
     equal(gServer.events[0].summary, "local change");
     notEqual(gServer.events[0].etag, '"2"');
     equal(item.title, "local change");
@@ -1556,7 +1564,7 @@ add_task(function* test_conflict_modify() {
     gServer.events[0].etag = '"3"';
     gServer.events[0].summary = "remote change";
     try {
-        modifiedItem = yield pclient.modifyItem(newItem, item);
+        modifiedItem = await pclient.modifyItem(newItem, item);
         do_throw("Expected modifyItem to be cancelled");
     } catch (e) {
         // Swallow cancelling the request
@@ -1565,9 +1573,9 @@ add_task(function* test_conflict_modify() {
         }
     }
 
-    yield gServer.waitForLoad(client);
+    await gServer.waitForLoad(client);
 
-    item = (yield pclient.getAllItems())[0];
+    item = (await pclient.getAllItems())[0];
     equal(gServer.events[0].summary, "remote change");
     equal(gServer.events[0].etag, '"3"');
     equal(item.title, "remote change");
@@ -1577,7 +1585,7 @@ add_task(function* test_conflict_modify() {
     gServer.events[0].etag = '"4"';
     gServer.events[0].summary = "remote change";
     try {
-        yield pclient.deleteItem(item);
+        await pclient.deleteItem(item);
         do_throw("Expected deleteItem to be cancelled");
     } catch (e) {
         // Swallow cancelling the request
@@ -1586,9 +1594,9 @@ add_task(function* test_conflict_modify() {
         }
     }
 
-    yield gServer.waitForLoad(client);
+    await gServer.waitForLoad(client);
 
-    item = (yield pclient.getAllItems())[0];
+    item = (await pclient.getAllItems())[0];
     equal(gServer.events[0].summary, "remote change");
     equal(gServer.events[0].etag, '"4"');
     equal(item.title, "remote change");
@@ -1597,14 +1605,14 @@ add_task(function* test_conflict_modify() {
     MockConflictPrompt.overwrite = true;
     gServer.events[0].etag = '"5"';
     gServer.events[0].summary = "remote change";
-    yield pclient.deleteItem(item);
-    item = (yield pclient.getAllItems())[0];
+    await pclient.deleteItem(item);
+    item = (await pclient.getAllItems())[0];
     equal(gServer.events.length, 0);
 
     gServer.resetClient(client);
 });
 
-add_task(function* test_conflict_delete() {
+add_task(async function test_conflict_delete() {
     // TODO task/event conflicts are handled in the same way so I'm going to
     // skip adding tests for tasks here, but it probably wouldn't hurt to
     // create them at some point.
@@ -1624,17 +1632,17 @@ add_task(function* test_conflict_delete() {
 
     // Load intial event to server
     gServer.events = [coreEvent];
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
-    let item = (yield pclient.getAllItems())[0];
+    let item = (await pclient.getAllItems())[0];
 
     // Case #1: Deleted on server, modify locally, overwrite conflict
     MockConflictPrompt.overwrite = true;
     gServer.events = [];
     let newItem = item.clone();
     newItem.title = "local change";
-    let modifiedItem = yield pclient.modifyItem(newItem, item);
-    item = (yield pclient.getAllItems())[0];
+    let modifiedItem = await pclient.modifyItem(newItem, item);
+    item = (await pclient.getAllItems())[0];
     equal(gServer.events[0].summary, "local change");
     notEqual(gServer.events[0].etag, '"2"');
     equal(item.title, "local change");
@@ -1645,7 +1653,7 @@ add_task(function* test_conflict_delete() {
     MockConflictPrompt.overwrite = false;
     gServer.events = [];
     try {
-        modifiedItem = yield pclient.modifyItem(newItem, item);
+        modifiedItem = await pclient.modifyItem(newItem, item);
         do_throw("Expected modifyItem to be cancelled");
     } catch (e) {
         // Swallow cancelling the request
@@ -1657,24 +1665,24 @@ add_task(function* test_conflict_delete() {
     coreEvent.status = "cancelled";
     gServer.events = [coreEvent];
 
-    yield gServer.waitForLoad(client);
+    await gServer.waitForLoad(client);
 
-    let items = yield pclient.getAllItems();
+    let items = await pclient.getAllItems();
     equal(items.length, 0);
     equal(gServer.events.length, 1);
 
     // Put the event back in the calendar for the next run
     delete gServer.events[0].status;
     client.refresh();
-    yield gServer.waitForLoad(client);
-    items = yield pclient.getAllItems();
+    await gServer.waitForLoad(client);
+    items = await pclient.getAllItems();
     equal(items.length, 1);
 
     // Case #3: Deleted on server, delete locally, don't overwrite conflict
     MockConflictPrompt.overwrite = false;
     gServer.events = [];
     try {
-        yield pclient.deleteItem(item);
+        await pclient.deleteItem(item);
         do_throw("Expected deleteItem to be cancelled");
     } catch (e) {
         // Swallow cancelling the request
@@ -1685,29 +1693,29 @@ add_task(function* test_conflict_delete() {
     // The next synchronize should cause the event to be deleted locally.
     coreEvent.status = "cancelled";
     gServer.events = [coreEvent];
-    yield gServer.waitForLoad(client);
+    await gServer.waitForLoad(client);
 
-    items = yield pclient.getAllItems();
+    items = await pclient.getAllItems();
     equal(items.length, 0);
 
     // Put the event back in the calendar for the next run
     delete gServer.events[0].status;
     client.refresh();
-    yield gServer.waitForLoad(client);
-    items = yield pclient.getAllItems();
+    await gServer.waitForLoad(client);
+    items = await pclient.getAllItems();
     equal(items.length, 1);
 
     // Case #4: Deleted on server, delete locally, overwrite conflict
     MockConflictPrompt.overwrite = true;
     gServer.events = [];
-    yield pclient.deleteItem(item);
-    items = yield pclient.getAllItems();
+    await pclient.deleteItem(item);
+    items = await pclient.getAllItems();
     equal(items.length, 0);
 
     gServer.resetClient(client);
 });
 
-add_task(function* test_default_alarms() {
+add_task(async function test_default_alarms() {
     let defaultReminders = [
         { method: "popup", minutes: 10 },
         { method: "email", minutes: 20 },
@@ -1730,11 +1738,11 @@ add_task(function* test_default_alarms() {
     }];
 
     // Case #1: read default alarms from event stream
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
     equal(client.getProperty("settings.defaultReminders"), JSON.stringify(defaultReminders));
 
-    let item = (yield pclient.getAllItems())[0];
+    let item = (await pclient.getAllItems())[0];
     let alarms = item.getAlarms({});
 
     equal(alarms.length, 2);
@@ -1759,7 +1767,7 @@ add_task(function* test_default_alarms() {
         "END:VEVENT"
     ].join("\r\n"));
 
-    yield pclient.addItem(event);
+    await pclient.addItem(event);
     ok(gServer.events[1].reminders.useDefault);
     equal(gServer.events[1].reminders.overrides.length, 0);
 
@@ -1783,7 +1791,7 @@ add_task(function* test_default_alarms() {
         "END:VEVENT"
     ].join("\r\n"));
 
-    yield pclient.addItem(event);
+    await pclient.addItem(event);
     ok(gServer.events[2].reminders.useDefault);
     equal(gServer.events[2].reminders.overrides.length, 1);
     equal(gServer.events[2].reminders.overrides[0].minutes, 5);
@@ -1793,7 +1801,7 @@ add_task(function* test_default_alarms() {
     // Case #4a: Empty default alarms
     gServer.calendarListData.defaultReminders = [];
     gServer.eventsData.defaultReminders = [];
-    client = yield gServer.getClient();
+    client = await gServer.getClient();
     pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
 
     event = cal.createEvent([
@@ -1805,7 +1813,7 @@ add_task(function* test_default_alarms() {
         "END:VEVENT"
     ].join("\r\n"));
 
-    yield pclient.addItem(event);
+    await pclient.addItem(event);
     ok(gServer.events[0].reminders.useDefault);
     equal(gServer.events[0].reminders.overrides, undefined);
 
@@ -1814,16 +1822,16 @@ add_task(function* test_default_alarms() {
 
     // Case #4b: Read an item with empty default alarms
     gServer.events = events;
-    client = yield gServer.getClient();
+    client = await gServer.getClient();
     pclient = cal.async.promisifyCalendar(client.wrappedJSObject);
 
-    item = (yield pclient.getAllItems())[0];
+    item = (await pclient.getAllItems())[0];
     equal(item.getProperty("X-DEFAULT-ALARM"), "TRUE");
 
     gServer.resetClient(client);
 });
 
-add_task(function* test_paginate() {
+add_task(async function test_paginate() {
     gServer.events = [{
         kind: "calendar#event",
         etag: "\"1\"",
@@ -1872,7 +1880,7 @@ add_task(function* test_paginate() {
 
     Preferences.set("calendar.google.maxResultsPerRequest", 1);
 
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client);
 
     // Make sure all pages were requested
@@ -1881,7 +1889,7 @@ add_task(function* test_paginate() {
 
     // ...and we have all items. Not checking props
     // because the other tests do this sufficiently.
-    let items = yield pclient.getAllItems();
+    let items = await pclient.getAllItems();
     equal(items.length, 4);
 
     equal(client.getProperty("syncToken.events"), "next-sync-token");
@@ -1890,7 +1898,7 @@ add_task(function* test_paginate() {
     gServer.resetClient(client);
 });
 
-add_task(function* test_incremental_reset() {
+add_task(async function test_incremental_reset() {
     gServer.syncs = [{
         token: "1",
         events: [{
@@ -1925,17 +1933,17 @@ add_task(function* test_incremental_reset() {
             iCalUID: "fepf8uf6n7n04w7feukucs9n8e@google.com"
         }]
     }];
-    let client = yield gServer.getClient();
+    let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client);
 
-    let items = yield pclient.getAllItems();
+    let items = await pclient.getAllItems();
     equal(items.length, 1);
     equal(items[0].title, "New Event");
 
     client.refresh();
-    yield gServer.waitForLoad(client);
+    await gServer.waitForLoad(client);
 
-    items = yield pclient.getAllItems();
+    items = await pclient.getAllItems();
     equal(items.length, 1);
     equal(items[0].title, "New Event 2");
 
