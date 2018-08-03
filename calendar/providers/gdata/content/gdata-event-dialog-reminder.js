@@ -4,6 +4,9 @@
 
 (function() {
     const FOUR_WEEKS_BEFORE = -2419200;
+    ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
+
+    ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
     ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 
     // NOTE: This function exits early if its not a gdata calendar
