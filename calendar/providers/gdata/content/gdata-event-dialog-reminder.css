@@ -3,8 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 .reminder-icon[value="SMS"] {
-  list-style-image: url(chrome://gdata-provider/skin/reminder-action-sms.png);
-  -moz-image-region: auto;
+  list-style-image: url(chrome://gdata-provider/skin/reminder-action-sms.svg);
 }
 
 #reminder-notifications > notification[type="critical"] {

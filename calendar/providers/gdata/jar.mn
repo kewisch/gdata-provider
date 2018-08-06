@@ -36,7 +36,7 @@ gdata-provider.jar:
     content/gdata-migration-wizard.xul           (content/gdata-migration-wizard.xul)
     content/gcal.png                             (content/gcal.png)
 % skin gdata-provider classic/1.0 %skin/
-    skin/reminder-action-sms.png                 (content/reminder-action-sms.png)
+    skin/reminder-action-sms.svg                 (content/reminder-action-sms.svg)
     skin/gdata-event-dialog-reminder.css         (content/gdata-event-dialog-reminder.css)
     skin/gdata-bindings.css                      (content/gdata-bindings.css)
     skin/browserRequest.css                      (content/browserRequest.css)
