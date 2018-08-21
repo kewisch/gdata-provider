@@ -8,13 +8,10 @@
 var EXPORTED_SYMBOLS = ["OAuth2"]; /* exported OAuth2 */
 
 ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource:///modules/gloda/log4moz.js");
-ChromeUtils.import("resource://gre/modules/Http.jsm");
+const { Log4Moz } = ChromeUtils.import("resource:///modules/gloda/log4moz.js", null);
+const { httpRequest } = ChromeUtils.import("resource://gre/modules/Http.jsm", null);
 
-ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
-
-ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm", null);
 
 function parseURLData(aData) {
     let result = {};

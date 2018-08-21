@@ -2,17 +2,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm");
-ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm");
-ChromeUtils.import("resource://gdata-provider/modules/timezoneMap.jsm");
+const {
+    LOGitem,
+    LOGverbose,
+    stringException
+} = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm", null);
+const { calGoogleRequest } = ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm", null);
+const { windowsTimezoneMap } = ChromeUtils.import("resource://gdata-provider/modules/timezoneMap.jsm", null);
 
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/Preferences.jsm");
 ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 
-ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
-
-ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm", null);
 
 var cIE = Components.interfaces.calIErrors;
 

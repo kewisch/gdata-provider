@@ -25,13 +25,16 @@
     manager.addLegacyExtensionManifestLocation(xpiFile);
 })();
 
-ChromeUtils.import("resource://testing-common/httpd.js");
+const { HttpServer } = ChromeUtils.import("resource://testing-common/httpd.js", null);
 ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
 ChromeUtils.import("resource://gre/modules/Preferences.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
-ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+const { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm", null);
+const {
+    dateToJSON,
+    JSONToDate,
+    monkeyPatch
+} = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm", null);
 ChromeUtils.import("resource://testing-common/MockRegistrar.jsm");
 
 var gServer;

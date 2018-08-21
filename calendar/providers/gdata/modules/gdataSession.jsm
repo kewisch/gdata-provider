@@ -3,21 +3,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 ChromeUtils.import("resource://gdata-provider/modules/OAuth2.jsm");
-ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
-ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm");
-ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm");
+const { getProviderString } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm", null);
+const { LOGinterval } = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm", null);
+const {
+    calGoogleRequest,
+    API_BASE
+} = ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm", null);
 
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Preferences.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Timer.jsm");
+const { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm", null);
 
-ChromeUtils.import("resource:///modules/iteratorUtils.jsm");
+const { fixIterator } = ChromeUtils.import("resource:///modules/iteratorUtils.jsm", null);
 
-ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
-
-ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm", null);
 
 var cIFBI = Components.interfaces.calIFreeBusyInterval;
 var nIPM = Components.interfaces.nsIPermissionManager;

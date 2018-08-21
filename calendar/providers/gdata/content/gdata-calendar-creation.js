@@ -2,11 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
-
-ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
-ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
-ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm", null);
+const { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm", null);
+const { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm", null);
 
 (function() {
     function pageorder(anchor, ...pages) {

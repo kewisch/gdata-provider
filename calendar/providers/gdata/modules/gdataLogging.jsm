@@ -4,7 +4,7 @@
 
 var EXPORTED_SYMBOLS = ["LOGitem", "LOGverbose", "LOGinterval", "stringException"];
 
-ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
+const { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm", null);
 ChromeUtils.import("resource://gre/modules/Preferences.jsm");
 
 function LOGverbose(aStr) {

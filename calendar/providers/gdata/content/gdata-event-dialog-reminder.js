@@ -4,10 +4,8 @@
 
 (function() {
     const FOUR_WEEKS_BEFORE = -2419200;
-    ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
-
-    ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
-    ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+    const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm", null);
+    const { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm", null);
 
     // NOTE: This function exits early if its not a gdata calendar
     let item = window.arguments[0].item;

@@ -3,17 +3,29 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 ChromeUtils.import("resource://gre/modules/Preferences.jsm");
-ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 ChromeUtils.import("resource://gre/modules/Services.jsm");
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
-
-ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
-ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm");
-ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm");
-ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
-ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm", null);
+const { stringException } = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm", null);
+const {
+    calGoogleRequest,
+    getCorrectedDate,
+    API_BASE
+} = ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm", null);
+const { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm", null);
+const {
+    ItemToJSON,
+    JSONToItem,
+    ItemSaver,
+    checkResolveConflict,
+    getGoogleId,
+    getItemMetadata,
+    saveItemMetadata,
+    deleteItemMetadata,
+    migrateItemMetadata,
+    JSONToAlarm
+} = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm", null);
 
 var cIOL = Components.interfaces.calIOperationListener;
 
