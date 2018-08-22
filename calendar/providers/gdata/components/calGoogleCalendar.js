@@ -55,7 +55,7 @@ calGoogleCalendar.prototype = {
 
     classID: calGoogleCalendarClassID,
     QueryInterface: cal.generateQI(calGoogleCalendarInterfaces),
-    classInfo: XPCOMUtils.generateCI({
+    classInfo: cal.generateCI({
         classDescription: "Google Calendar Provider",
         contractID: "@mozilla.org/calendar/calendar;1?type=gdata",
         classID: calGoogleCalendarClassID,
