@@ -231,5 +231,10 @@ const { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gd
         if (!("updateStyleSheetForViews" in window)) {
             window.updateStyleSheetForViews = function() {};
         }
+
+        if (document.getElementById("gdata-session").pageIndex == -1) {
+            let wizard = document.documentElement;
+            wizard._initPages();
+        }
     });
 }).call(window);
