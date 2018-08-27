@@ -456,12 +456,10 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
         // from the event. This should change when we have multiple alarms
         // support.
         let snoozeObj = {};
-        let enumerator = aItem.propertyEnumerator;
-        while (enumerator.hasMoreElements()) {
-            let prop = enumerator.getNext().QueryInterface(Components.interfaces.nsIProperty);
-            if (prop.name.substr(0, 18) == "X-MOZ-SNOOZE-TIME-") {
+        for (let [name, value] of aItem.properties) {
+            if (name.substr(0, 18) == "X-MOZ-SNOOZE-TIME-") {
                 // We have a snooze time for a recurring event, add it to our object
-                snoozeObj[prop.name.substr(18)] = prop.value;
+                snoozeObj[name.substr(18)] = value;
             }
         }
         if (Object.keys(snoozeObj).length > 0) {
