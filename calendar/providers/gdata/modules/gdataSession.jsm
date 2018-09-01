@@ -177,8 +177,10 @@ calGoogleSession.prototype = {
                         cal.auth.passwordManagerRemove(sessionId, origin, pwMgrId);
                     }
                 } catch (e) {
-                    // User might have cancelled the master password prompt, thats ok
-                    if (e.result != Components.results.NS_ERROR_ABORT) {
+                    // User might have cancelled the master password prompt, or password saving
+                    // could be disabled. That is ok, throw for everything else.
+                    if (e.result != Components.results.NS_ERROR_ABORT &&
+                        e.result != Components.results.NS_ERROR_NOT_AVAILABLE) {
                         throw e;
                     }
                 }
