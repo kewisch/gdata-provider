@@ -29,3 +29,15 @@ window.addEventListener("message", (aEvent) => {
         }
     }
 });
+
+
+const gdataStatusPrivacyHbox = document.createElement("hbox");
+gdataStatusPrivacyHbox.setAttribute("id", "gdata-status-privacy-default-box");
+gdataStatusPrivacyHbox.setAttribute("privacy", "DEFAULT");
+gdataStatusPrivacyHbox.setAttribute("provider", "gdata");
+
+const statusPrivacy = document.getElementById("status-privacy");
+statusPrivacy.insertBefore(
+    gdataStatusPrivacyHbox,
+    document.getElementById("status-privacy-public-box")
+);

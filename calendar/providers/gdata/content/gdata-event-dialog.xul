@@ -21,10 +21,5 @@
               oncommand="editPrivacy(this)"/>
   </menupopup>
 
-  <statusbarpanel id="status-privacy">
-    <hbox id="gdata-status-privacy-default-box"
-          insertbefore="status-privacy-public-box,status-privacy-private-box"
-          privacy="DEFAULT"
-          provider="gdata"/>
-  </statusbarpanel>
+  <hbox id="status-privacy" class="statusbarpanel" />
 </overlay>
