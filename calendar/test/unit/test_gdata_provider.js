@@ -15,7 +15,7 @@
         xpiFile = new FileUtils.File(env.get("MOZ_FETCHES_DIR"));
         xpiFile.append("gdata-provider.en-US.xpi");
     } else {
-        xpiFile = Services.dirsvc.get("CurProcD", Components.interfaces.nsIFile);
+        xpiFile = Services.dirsvc.get("CurProcD", Ci.nsIFile);
         xpiFile.append("extensions");
         xpiFile.append("{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}");
     }
@@ -182,7 +182,7 @@ GDataServer.prototype = {
 
     waitForLoad: function(aCalendar) {
         return new Promise((resolve, reject) => {
-            let observer = cal.createAdapter(Components.interfaces.calIObserver, {
+            let observer = cal.createAdapter(Ci.calIObserver, {
                 onLoad: function() {
                     let uncached = aCalendar.wrappedJSObject.mUncachedCalendar.wrappedJSObject;
                     aCalendar.removeObserver(observer);
@@ -611,8 +611,7 @@ add_task(async function test_dateToJSON() {
             "END:VEVENT",
             "END:VCALENDAR"].join("\r\n");
 
-        let parser = Components.classes["@mozilla.org/calendar/ics-parser;1"]
-                               .createInstance(Components.interfaces.calIIcsParser);
+        let parser = Cc["@mozilla.org/calendar/ics-parser;1"].createInstance(Ci.calIIcsParser);
         parser.parseString(ics);
         let items = parser.getItems({});
         return items[0].startDate;
@@ -1571,7 +1570,7 @@ add_task(async function test_conflict_modify() {
         do_throw("Expected modifyItem to be cancelled");
     } catch (e) {
         // Swallow cancelling the request
-        if (e != Components.interfaces.calIErrors.OPERATION_CANCELLED) {
+        if (e != Ci.calIErrors.OPERATION_CANCELLED) {
             throw e;
         }
     }
@@ -1592,7 +1591,7 @@ add_task(async function test_conflict_modify() {
         do_throw("Expected deleteItem to be cancelled");
     } catch (e) {
         // Swallow cancelling the request
-        if (e != Components.interfaces.calIErrors.OPERATION_CANCELLED) {
+        if (e != Ci.calIErrors.OPERATION_CANCELLED) {
             throw e;
         }
     }
@@ -1660,7 +1659,7 @@ add_task(async function test_conflict_delete() {
         do_throw("Expected modifyItem to be cancelled");
     } catch (e) {
         // Swallow cancelling the request
-        if (e != Components.interfaces.calIErrors.OPERATION_CANCELLED) {
+        if (e != Ci.calIErrors.OPERATION_CANCELLED) {
             throw e;
         }
     }
@@ -1689,7 +1688,7 @@ add_task(async function test_conflict_delete() {
         do_throw("Expected deleteItem to be cancelled");
     } catch (e) {
         // Swallow cancelling the request
-        if (e != Components.interfaces.calIErrors.OPERATION_CANCELLED) {
+        if (e != Ci.calIErrors.OPERATION_CANCELLED) {
             throw e;
         }
     }

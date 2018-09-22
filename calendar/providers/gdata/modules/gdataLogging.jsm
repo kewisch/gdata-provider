@@ -4,6 +4,12 @@
 
 var EXPORTED_SYMBOLS = ["LOGitem", "LOGverbose", "LOGinterval", "stringException"];
 
+// Backwards compatibility with Thunderbird <60.
+if (!("Cc" in this)) {
+    // eslint-disable-next-line mozilla/no-define-cc-etc, no-unused-vars
+    const { interfaces: Ci } = Components;
+}
+
 const { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm", null);
 ChromeUtils.import("resource://gre/modules/Preferences.jsm");
 
@@ -111,7 +117,7 @@ function LOGalarm(aAlarm) {
 }
 
 function LOGinterval(aInterval) {
-    const fbtypes = Components.interfaces.calIFreeBusyInterval;
+    const fbtypes = Ci.calIFreeBusyInterval;
     let type;
     if (aInterval.freeBusyType == fbtypes.FREE) {
         type = "FREE";

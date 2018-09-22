@@ -2,6 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+// Backwards compatibility with Thunderbird <60.
+if (!("Cc" in this)) {
+    // eslint-disable-next-line mozilla/no-define-cc-etc, no-unused-vars
+    const { classes: Cc, interfaces: Ci, results: Cr } = Components;
+}
+
 ChromeUtils.import("resource://gdata-provider/modules/OAuth2.jsm");
 const { getProviderString } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm", null);
 const { LOGinterval } = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm", null);
@@ -19,8 +25,8 @@ const { fixIterator } = ChromeUtils.import("resource:///modules/iteratorUtils.js
 
 const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm", null);
 
-var cIFBI = Components.interfaces.calIFreeBusyInterval;
-var nIPM = Components.interfaces.nsIPermissionManager;
+var cIFBI = Ci.calIFreeBusyInterval;
+var nIPM = Ci.nsIPermissionManager;
 
 var NOTIFY_TIMEOUT = 60 * 1000;
 
@@ -160,7 +166,7 @@ calGoogleSession.prototype = {
                         cal.auth.passwordManagerGet(sessionId, pass, origin, pwMgrId);
                     } catch (e) {
                         // User might have cancelled the master password prompt, thats ok
-                        if (e.result != Components.results.NS_ERROR_ABORT) {
+                        if (e.result != Cr.NS_ERROR_ABORT) {
                             throw e;
                         }
                     }
@@ -179,8 +185,8 @@ calGoogleSession.prototype = {
                 } catch (e) {
                     // User might have cancelled the master password prompt, or password saving
                     // could be disabled. That is ok, throw for everything else.
-                    if (e.result != Components.results.NS_ERROR_ABORT &&
-                        e.result != Components.results.NS_ERROR_NOT_AVAILABLE) {
+                    if (e.result != Cr.NS_ERROR_ABORT &&
+                        e.result != Cr.NS_ERROR_NOT_AVAILABLE) {
                         throw e;
                     }
                 }
@@ -194,7 +200,7 @@ calGoogleSession.prototype = {
         // google.com then we won't overwrite the rule though.
         if (Preferences.get("network.cookie.cookieBehavior") == 2) {
             let found = null;
-            for (let perm of fixIterator(Services.perms.enumerator, Components.interfaces.nsIPermission)) {
+            for (let perm of fixIterator(Services.perms.enumerator, Ci.nsIPermission)) {
                 if (perm.type == "cookie" && perm.host == "google.com") {
                     found = perm;
                     break;
@@ -300,8 +306,8 @@ calGoogleSession.prototype = {
                     onPromptCanceled: authFailed,
                     onPromptStart: function() {}
                 };
-                let asyncprompter = Components.classes["@mozilla.org/messenger/msgAsyncPrompter;1"]
-                                              .getService(Components.interfaces.nsIMsgAsyncPrompter);
+                let asyncprompter = Cc["@mozilla.org/messenger/msgAsyncPrompter;1"]
+                                      .getService(Ci.nsIMsgAsyncPrompter);
                 asyncprompter.queueAsyncAuthPrompt("googleapi://" + this.id, false, promptlistener);
             }.bind(this);
 
@@ -373,8 +379,7 @@ calGoogleSession.prototype = {
                 if (aRequest.calendar && e.message == "cancelled") {
                     aRequest.calendar.setProperty("disabled", true);
                     aRequest.calendar.setProperty("auto-enabled", true);
-                    aRequest.calendar.setProperty("currentStatus",
-                                    Components.results.NS_ERROR_FAILURE);
+                    aRequest.calendar.setProperty("currentStatus", Cr.NS_ERROR_FAILURE);
                 }
 
                 throw e;
@@ -417,7 +422,7 @@ calGoogleSession.prototype = {
         let completeSync = (aIntervals) => {
             cal.LOG("[calGoogleCalendar] Freebusy query for " + aCalId +
                     "suceeded, returning " + aIntervals.length + " intervals");
-            aListener.onResult({ status: Components.results.NS_OK }, aIntervals);
+            aListener.onResult({ status: Cr.NS_OK }, aIntervals);
         };
 
         let failSync = (aStatus, aMessage) => {
@@ -432,7 +437,7 @@ calGoogleSession.prototype = {
         if (!aCalId.includes("@") || !aCalId.includes(".") ||
             !aCalId.toLowerCase().startsWith("mailto:")) {
             // No valid email, screw it
-            return failSync(Components.results.NS_ERROR_FAILURE, null);
+            return failSync(Cr.NS_ERROR_FAILURE, null);
         }
 
         if (aRangeStart) {
@@ -468,7 +473,7 @@ calGoogleSession.prototype = {
                 let reason = calData.errors && calData.errors[0] && calData.errors[0].reason;
                 if (reason) {
                     cal.LOG("[calGoogleCalendar] Could not request freebusy for " + strippedCalId + ": " + reason);
-                    failSync(Components.results.NS_ERROR_FAILURE, reason);
+                    failSync(Cr.NS_ERROR_FAILURE, reason);
                 } else {
                     let utcZone = cal.dtz.UTC;
                     cal.LOG("[calGoogleCalendar] Found " + calData.busy.length + " busy slots within range for " + strippedCalId);
@@ -483,7 +488,7 @@ calGoogleSession.prototype = {
                 }
             } else {
                 cal.ERROR("[calGoogleCalendar] Invalid freebusy response: " + aData.toSource());
-                failSync(Components.results.NS_ERROR_FAILURE, (aData && aData.toSource()));
+                failSync(Cr.NS_ERROR_FAILURE, (aData && aData.toSource()));
             }
         }, (e) => {
             cal.ERROR("[calGoogleCalendar] Failed freebusy request: " + e);

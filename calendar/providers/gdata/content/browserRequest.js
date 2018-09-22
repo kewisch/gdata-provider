@@ -2,11 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+// Backwards compatibility with Thunderbird <60.
+if (!("Cc" in this)) {
+    // eslint-disable-next-line mozilla/no-define-cc-etc, no-unused-vars
+    const { interfaces: Ci } = Components;
+}
+
 var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm", null);
 
 /* exported cancelRequest, loadRequestedUrl, reportUserClosed */
 
-var wpl = Components.interfaces.nsIWebProgressListener;
+var wpl = Ci.nsIWebProgressListener;
 
 var reporterListener = {
     _isBusy: false,
@@ -85,8 +91,7 @@ function loadRequestedUrl() {
     }
 
     let browser = document.getElementById("requestFrame");
-    browser.addProgressListener(reporterListener,
-                                Components.interfaces.nsIWebProgress.NOTIFY_ALL);
+    browser.addProgressListener(reporterListener, Ci.nsIWebProgress.NOTIFY_ALL);
     let url = request.url;
     if (url != "") {
         browser.setAttribute("src", url);
