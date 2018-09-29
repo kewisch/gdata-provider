@@ -34,7 +34,7 @@ var reporterListener = {
     onStatusChange: function(aWebProgress, aRequest, aStatus, aMessage) {
     },
 
-    onSecurityChange: function(aWebProgress, aRequest, aState) {
+    onSecurityChange: function(aWebProgress, aRequest, aOldState, aState, aContentBlockingLogJSON) {
         const wpl_security_bits = wpl.STATE_IS_SECURE |
                                     wpl.STATE_IS_BROKEN |
                                     wpl.STATE_IS_INSECURE |
