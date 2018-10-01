@@ -35,6 +35,10 @@ var reporterListener = {
     },
 
     onSecurityChange: function(aWebProgress, aRequest, aOldState, aState, aContentBlockingLogJSON) {
+        // Before mozilla64 this function had three parameters, aState being the third one.
+        // From mozilla64 the function has five parameters.
+        // Once support for versions below 64 is dropped, this workaround can be removed.
+        let state = typeof aState === "undefined" ? aOldState : aState;
         const wpl_security_bits = wpl.STATE_IS_SECURE |
                                     wpl.STATE_IS_BROKEN |
                                     wpl.STATE_IS_INSECURE |
@@ -44,7 +48,7 @@ var reporterListener = {
         let browser = document.getElementById("requestFrame");
         let level;
 
-        switch (aState & wpl_security_bits) {
+        switch (state & wpl_security_bits) {
             case wpl.STATE_IS_SECURE | wpl.STATE_SECURE_HIGH:
                 level = "high";
                 break;
