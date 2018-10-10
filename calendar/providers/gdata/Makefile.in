@@ -7,6 +7,9 @@ XPI_PKGNAME = gdata-provider.$(AB_CD)
 XPI_EM_ID = {a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
 XPI_INSTALL_EXTENSION = $(XPI_EM_ID)
 
+THUNDERBIRD_VERSION := $(shell cat $(commtopsrcdir)/mail/config/version.txt)
+SEAMONKEY_VERSION := $(shell cat $(commtopsrcdir)/suite/config/version.txt)
+
 ifdef MOZ_SUITE
 LIGHTNING_VERSION := $(shell $(PYTHON) $(commtopsrcdir)/calendar/lightning/build/makeversion.py $(THUNDERBIRD_VERSION))
 else
@@ -14,8 +17,7 @@ LIGHTNING_VERSION := $(shell $(PYTHON) $(commtopsrcdir)/calendar/lightning/build
 endif
 
 GDATA_VERSION := $(shell $(PYTHON) $(commtopsrcdir)/calendar/providers/gdata/makeversion.py $(LIGHTNING_VERSION))
-THUNDERBIRD_VERSION := $(shell cat $(commtopsrcdir)/mail/config/version.txt)
-SEAMONKEY_VERSION := $(shell cat $(commtopsrcdir)/suite/config/version.txt)
+
 
 DEFINES += -DSEAMONKEY_VERSION=$(SEAMONKEY_VERSION) \
            -DTHUNDERBIRD_VERSION=$(THUNDERBIRD_VERSION) \
