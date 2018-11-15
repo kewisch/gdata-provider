@@ -15,7 +15,7 @@
     }
 
     let label = getProviderString("reminderOutOfRange");
-    let notification = createXULElement("notification");
+    let notification = createXULElement("xbl-notification");
     notification.setAttribute("label", label);
     notification.setAttribute("type", "critical");
     notification.setAttribute("hideclose", "true");
