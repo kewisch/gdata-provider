@@ -26,17 +26,17 @@
                 pageid="gdata-session"
                 onpageshow="gdataSessionShow(); checkRequired()"
                 description="&wizard.description;">
-       <description>&gdata.wizard.session.description;</description>
-       <radiogroup id="gdata-session-group" onselect="checkRequired()">
-         <hbox id="session-new">
-           <radio value=""/>
-           <textbox id="gdata-session-name"
-                    type="email"
-                    onfocus="gdataFocusNewSession()"
-                    oninput="gdataFocusNewSession(); checkRequired();"
-                    flex="1"/>
-         </hbox>
-       </radiogroup>
+      <description>&gdata.wizard.session.description;</description>
+      <radiogroup id="gdata-session-group" onselect="checkRequired()">
+        <hbox id="session-new">
+          <radio value=""/>
+          <textbox id="gdata-session-name"
+                   type="email"
+                   onfocus="gdataFocusNewSession()"
+                   oninput="gdataFocusNewSession(); checkRequired();"
+                   flex="1"/>
+        </hbox>
+      </radiogroup>
     </wizardpage>
     <wizardpage id="gdata-calendars"
                 pageid="gdata-calendars"
