@@ -70,7 +70,10 @@ var reporterListener = {
             this.securityButton.removeAttribute("level");
         }
         this.securityButton.setAttribute("tooltiptext", browser.securityUI.tooltipText);
-    }
+    },
+
+    onContentBlockingEvent: function(aWebProgress, aRequest, aEvent) {
+    },
 };
 
 function cancelRequest() {
