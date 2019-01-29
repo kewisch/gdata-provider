@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 (function() {
-    ChromeUtils.import("resource://gre/modules/Services.jsm");
+    const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
     Services.prefs.setBoolPref("javascript.options.showInConsole", true);
     Services.prefs.setBoolPref("browser.dom.window.dump.enabled", true);
     Services.prefs.setBoolPref("calendar.debug.log", true);
@@ -25,17 +25,17 @@
     manager.addLegacyExtensionManifestLocation(xpiFile);
 })();
 
-const { HttpServer } = ChromeUtils.import("resource://testing-common/httpd.js", null);
-ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
-ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+const { HttpServer } = ChromeUtils.import("resource://testing-common/httpd.js");
+const { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
+const { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
 
-const { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm", null);
+const { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
 const {
     dateToJSON,
     JSONToDate,
     monkeyPatch
-} = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm", null);
-ChromeUtils.import("resource://testing-common/MockRegistrar.jsm");
+} = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+const { MockRegistrar } = ChromeUtils.import("resource://testing-common/MockRegistrar.jsm");
 
 var gServer;
 

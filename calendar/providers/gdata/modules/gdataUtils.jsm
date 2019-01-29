@@ -12,15 +12,15 @@ const {
     LOGitem,
     LOGverbose,
     stringException
-} = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm", null);
-const { calGoogleRequest } = ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm", null);
-const { windowsTimezoneMap } = ChromeUtils.import("resource://gdata-provider/modules/timezoneMap.jsm", null);
+} = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm");
+const { calGoogleRequest } = ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm");
+const { windowsTimezoneMap } = ChromeUtils.import("resource://gdata-provider/modules/timezoneMap.jsm");
 
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/Preferences.jsm");
-ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
+const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+const { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+const { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 
-const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm", null);
+const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 
 var FOUR_WEEKS_IN_MINUTES = 40320;
 

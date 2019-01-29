@@ -8,11 +8,11 @@ if (!("Cc" in this)) {
     const { classes: Cc, interfaces: Ci, results: Cr } = Components;
 }
 
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+const { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
+const { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
 
-const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm", null);
+const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 
 var API_BASE = {
     EVENTS: "https://www.googleapis.com/calendar/v3/",

@@ -8,22 +8,22 @@ if (!("Cc" in this)) {
     const { classes: Cc, interfaces: Ci, results: Cr } = Components;
 }
 
-ChromeUtils.import("resource://gdata-provider/modules/OAuth2.jsm");
-const { getProviderString } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm", null);
-const { LOGinterval } = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm", null);
+const { OAuth2 } = ChromeUtils.import("resource://gdata-provider/modules/OAuth2.jsm");
+const { getProviderString } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+const { LOGinterval } = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm");
 const {
     calGoogleRequest,
     API_BASE
-} = ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm", null);
+} = ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm");
 
-ChromeUtils.import("resource://gre/modules/Preferences.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
-const { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm", null);
+const { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+const { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
+const { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm");
 
-const { fixIterator } = ChromeUtils.import("resource:///modules/iteratorUtils.jsm", null);
+const { fixIterator } = ChromeUtils.import("resource:///modules/iteratorUtils.jsm");
 
-const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm", null);
+const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 
 var cIFBI = Ci.calIFreeBusyInterval;
 var nIPM = Ci.nsIPermissionManager;

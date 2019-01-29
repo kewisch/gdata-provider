@@ -8,7 +8,7 @@ if (!("Cc" in this)) {
     const { interfaces: Ci } = Components;
 }
 
-var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm", null);
+var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 
 /* exported cancelRequest, loadRequestedUrl, reportUserClosed */
 
