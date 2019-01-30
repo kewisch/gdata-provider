@@ -13,11 +13,11 @@ if (!("Cc" in this)) {
     const { interfaces: Ci, results: Cr } = Components;
 }
 
-const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-const { Log4Moz } = ChromeUtils.import("resource:///modules/gloda/log4moz.js");
-const { httpRequest } = ChromeUtils.import("resource://gre/modules/Http.jsm");
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var { Log4Moz } = ChromeUtils.import("resource:///modules/gloda/log4moz.js");
+var { httpRequest } = ChromeUtils.import("resource://gre/modules/Http.jsm");
 
-const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 
 function parseURLData(aData) {
     let result = {};

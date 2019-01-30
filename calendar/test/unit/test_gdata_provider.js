@@ -25,17 +25,17 @@
     manager.addLegacyExtensionManifestLocation(xpiFile);
 })();
 
-const { HttpServer } = ChromeUtils.import("resource://testing-common/httpd.js");
-const { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
-const { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+var { HttpServer } = ChromeUtils.import("resource://testing-common/httpd.js");
+var { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
+var { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
 
-const { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
-const {
+var { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
+var {
     dateToJSON,
     JSONToDate,
     monkeyPatch
 } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
-const { MockRegistrar } = ChromeUtils.import("resource://testing-common/MockRegistrar.jsm");
+var { MockRegistrar } = ChromeUtils.import("resource://testing-common/MockRegistrar.jsm");
 
 var gServer;
 

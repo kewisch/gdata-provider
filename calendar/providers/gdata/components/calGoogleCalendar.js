@@ -2,9 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-const { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
-const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-const { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+var { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 // Backwards compatibility with Thunderbird <60.
 if (!("Cc" in this)) {
@@ -13,14 +13,14 @@ if (!("Cc" in this)) {
 }
 
 var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
-const { stringException } = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm");
-const {
+var { stringException } = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm");
+var {
     calGoogleRequest,
     getCorrectedDate,
     API_BASE
 } = ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm");
-const { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
-const {
+var { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
+var {
     ItemToJSON,
     JSONToItem,
     ItemSaver,

@@ -9,8 +9,8 @@ if (!("Cc" in this)) {
 }
 
 var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
-const { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
-const { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+var { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
+var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 
 (function() {
     function pageorder(anchor, ...pages) {

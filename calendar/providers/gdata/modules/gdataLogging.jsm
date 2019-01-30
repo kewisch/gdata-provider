@@ -10,8 +10,8 @@ if (!("Cc" in this)) {
     const { interfaces: Ci } = Components;
 }
 
-const { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
-const { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
+var { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
 
 function LOGverbose(aStr) {
     if (Preferences.get("calendar.debug.log.verbose", false)) {

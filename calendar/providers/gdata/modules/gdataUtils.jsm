@@ -8,19 +8,19 @@ if (!("Cc" in this)) {
     const { classes: Cc, interfaces: Ci, results: Cr, utils: Cu } = Components;
 }
 
-const {
+var {
     LOGitem,
     LOGverbose,
     stringException
 } = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm");
-const { calGoogleRequest } = ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm");
-const { windowsTimezoneMap } = ChromeUtils.import("resource://gdata-provider/modules/timezoneMap.jsm");
+var { calGoogleRequest } = ChromeUtils.import("resource://gdata-provider/modules/gdataRequest.jsm");
+var { windowsTimezoneMap } = ChromeUtils.import("resource://gdata-provider/modules/timezoneMap.jsm");
 
-const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-const { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
-const { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 
-const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 
 var FOUR_WEEKS_IN_MINUTES = 40320;
 
