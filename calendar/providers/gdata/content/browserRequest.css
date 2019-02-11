@@ -9,8 +9,7 @@
   background-repeat: no-repeat;
 }
 
-#security-button[level="high"],
-#security-button[level="low"] {
+#security-button[level="high"] {
   background-image: url("chrome://messenger/skin/icons/secure.png");
 }
 

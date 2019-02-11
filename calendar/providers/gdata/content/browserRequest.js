@@ -43,20 +43,13 @@ var reporterListener = {
     onSecurityChange: function(aWebProgress, aRequest, aState) {
         const wpl_security_bits = wpl.STATE_IS_SECURE |
                                     wpl.STATE_IS_BROKEN |
-                                    wpl.STATE_IS_INSECURE |
-                                    wpl.STATE_SECURE_HIGH |
-                                    wpl.STATE_SECURE_MED |
-                                    wpl.STATE_SECURE_LOW;
+                                    wpl.STATE_IS_INSECURE;
         let browser = document.getElementById("requestFrame");
         let level;
 
         switch (aState & wpl_security_bits) {
-            case wpl.STATE_IS_SECURE | wpl.STATE_SECURE_HIGH:
+            case wpl.STATE_IS_SECURE:
                 level = "high";
-                break;
-            case wpl.STATE_IS_SECURE | wpl.STATE_SECURE_MED:
-            case wpl.STATE_IS_SECURE | wpl.STATE_SECURE_LOW:
-                level = "low";
                 break;
             case wpl.STATE_IS_BROKEN:
                 level = "broken";
