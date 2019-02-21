@@ -198,7 +198,7 @@ calGoogleRequest.prototype = {
             let uri = Services.io.newURI(uristring);
             let channel;
             if ("newChannelFromURI2" in Services.io) {
-                // Lightning 4.3+
+                // Before mozilla67, Lightning 6.8 and below.
                 channel = Services.io.newChannelFromURI2(uri,
                                                          null,
                                                          Services.scriptSecurityManager.getSystemPrincipal(),
@@ -206,8 +206,13 @@ calGoogleRequest.prototype = {
                                                          Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
                                                          Ci.nsIContentPolicy.TYPE_OTHER);
             } else {
-                // Lightning 4.2 and older
-                channel = Services.io.newChannelFromURI(uri);
+                // mozilla67 and later, Lightning 6.9.
+                channel = Services.io.newChannelFromURI(uri,
+                                                        null,
+                                                        Services.scriptSecurityManager.getSystemPrincipal(),
+                                                        null,
+                                                        Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
+                                                        Ci.nsIContentPolicy.TYPE_OTHER);
             }
 
             cal.LOG("[calGoogleRequest] Requesting " + this.method + " " +
