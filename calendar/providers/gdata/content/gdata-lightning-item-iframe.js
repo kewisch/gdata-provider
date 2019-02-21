@@ -50,7 +50,8 @@ var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim
         }
 
         let duedate = document.getElementById("todo-duedate");
-        let duetime = document.getAnonymousElementByAttribute(duedate, "anonid", "time-picker");
+        let duetime = duedate._timepicker || // From Lightning 6.9 onwards
+            document.getAnonymousElementByAttribute(duedate, "anonid", "time-picker");
         duetime.style.display = isGoogleTask ? "none" : "";
 
         if (gEndTime) {
