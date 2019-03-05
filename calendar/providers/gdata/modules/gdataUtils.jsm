@@ -17,7 +17,6 @@ var { calGoogleRequest } = ChromeUtils.import("resource://gdata-provider/modules
 var { windowsTimezoneMap } = ChromeUtils.import("resource://gdata-provider/modules/timezoneMap.jsm");
 
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-var { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
 var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 
 var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
@@ -345,7 +344,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
     addExtendedProperty("X-MOZ-CATEGORIES", categories);
 
     // Only parse attendees if they are enabled, due to bug 407961
-    if (Preferences.get("calendar.google.enableAttendees", false)) {
+    if (Services.prefs.getBoolPref("calendar.google.enableAttendees", false)) {
         let createAttendee = function(attendee) {
             const statusMap = {
                 "NEEDS-ACTION": "needsAction",
@@ -1357,7 +1356,7 @@ function monkeyPatch(obj, x, func) {
  */
 function spinEventLoop() {
     let diff = new Date() - spinEventLoop.lastSpin;
-    if (diff < Preferences.get("calendar.threading.latency", 250)) {
+    if (diff < Services.prefs.getIntPref("calendar.threading.latency", 250)) {
         return Promise.resolve(false);
     }
     spinEventLoop.lastSpin = new Date();

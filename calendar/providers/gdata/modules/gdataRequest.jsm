@@ -10,7 +10,6 @@ if (!("Cc" in this)) {
 
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
-var { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
 
 var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 
@@ -290,7 +289,7 @@ calGoogleRequest.prototype = {
 
         // Depending on the preference, we will use X-HTTP-Method-Override to
         // get around some proxies. This will default to true.
-        if (Preferences.get("calendar.google.useHTTPMethodOverride", true) &&
+        if (Services.prefs.getBoolPref("calendar.google.useHTTPMethodOverride", true) &&
             (this.method == "PUT" || this.method == "DELETE")) {
             aChannel.requestMethod = "POST";
             aChannel.setRequestHeader("X-HTTP-Method-Override",

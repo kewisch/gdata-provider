@@ -11,10 +11,10 @@ if (!("Cc" in this)) {
 }
 
 var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
-var { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 function LOGverbose(aStr) {
-    if (Preferences.get("calendar.debug.log.verbose", false)) {
+    if (Services.prefs.getBoolPref("calendar.debug.log.verbose", false)) {
         cal.LOG(aStr);
     }
 }

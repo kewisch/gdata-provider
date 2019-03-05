@@ -66,7 +66,7 @@
      * and Government. hide the menuitem if SMS reminders are not supported
      */
     function hideSMSReminders() {
-        if (!Preferences.get("calendar.google.enableSMSReminders", false)) {
+        if (!Services.prefs.getBoolPref("calendar.google.enableSMSReminders", false)) {
             document.getElementById("reminder-action-SMS").hidden = true;
         }
     }

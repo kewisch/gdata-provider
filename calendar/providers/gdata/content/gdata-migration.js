@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
-var { Preferences } = ChromeUtils.import("resource://gre/modules/Preferences.jsm");
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 /* exported migrateSelectedCalendars */
 
@@ -41,8 +41,8 @@ function migrateSelectedCalendars() {
     }
 
     // Only bring up the dialog on the next startup if the user wants us to.
-    Preferences.set("calendar.google.migrate",
-                    document.getElementById("showagain-checkbox").checked);
+    Services.prefs.setBoolPref("calendar.google.migrate",
+                               document.getElementById("showagain-checkbox").checked);
 }
 
 /**
@@ -80,8 +80,8 @@ function gdata_migration_loader() {
 
         // Set up the "always check" field
         document.getElementById("showagain-checkbox").checked =
-            Preferences.get("calendar.google.migrate", true);
-    } else if (Preferences.get("calendar.google.migrate", true) &&
+            Services.prefs.getBoolPref("calendar.google.migrate", true);
+    } else if (Services.prefs.getBoolPref("calendar.google.migrate", true) &&
                getMigratableCalendars().length > 0) {
         // This is not the migration wizard, so it must be a main window. Check
         // if the migration wizard needs to be shown and calendars are worth
