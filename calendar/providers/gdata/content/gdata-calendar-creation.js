@@ -2,12 +2,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/* import-globals-from ../../../lightning/content/lightning-calendar-creation.js */
+
 // Backwards compatibility with Thunderbird <60.
 if (!("Cc" in this)) {
     // eslint-disable-next-line mozilla/no-define-cc-etc, no-unused-vars
     const { utils: Cu } = Components;
 }
 
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
 var { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
 var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
@@ -75,6 +78,8 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
         // handler, which causes our provider to fail. Given the exchange
         // provider is currently not maintained and we want them to work
         // together, here is a workaround.
+
+        // eslint-disable-next-line no-undef
         monkeyPatch(tmpCalendarCreation, "doRadioExchangeCalendar", (protofunc, target) => {
             // We need to run our function first, otherwise resetting the
             // pageorder will overwrite what the exchange provider does.

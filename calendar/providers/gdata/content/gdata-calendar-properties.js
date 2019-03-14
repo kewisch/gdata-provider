@@ -2,6 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/* import-globals-from ../../../lightning/content/lightning-calendar-properties.js */
+
+var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+
 window.addEventListener("load", () => {
     if (document.getElementById("calendar-uri").value) {
         // Calendar's load function needs to be called first, and that seems to have happened.

@@ -2,10 +2,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/* import-globals-from ../../../base/content/dialogs/calendar-event-dialog-reminder.js */
+
 (function() {
     const FOUR_WEEKS_BEFORE = -2419200;
     const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
-    const { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+    const {
+        monkeyPatch,
+        getProviderString,
+    } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 
     // NOTE: This function exits early if its not a gdata calendar
     let item = window.arguments[0].item;

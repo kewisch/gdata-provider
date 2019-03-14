@@ -583,8 +583,8 @@ function setupRecurrence(aItem, aRecurrence, aTimezone) {
     }
 
     let rootComp;
+    let vevent = "BEGIN:VEVENT\r\n" + aRecurrence.join("\r\n") + "\r\nEND:VEVENT";
     try {
-        let vevent = "BEGIN:VEVENT\r\n" + aRecurrence.join("\r\n") + "\r\nEND:VEVENT";
         rootComp = cal.getIcsService().parseICS(vevent, null);
     } catch (e) {
         cal.ERROR("[calGoogleCalendar] Unable to parse recurrence item: " + vevent);

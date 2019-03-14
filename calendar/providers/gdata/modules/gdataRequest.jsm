@@ -358,7 +358,7 @@ calGoogleRequest.prototype = {
         let result = new TextDecoder(httpChannel.contentCharset || "utf-8").decode(Uint8Array.from(aResult));
         if (result === null) {
             this.fail(Cr.NS_ERROR_FAILURE,
-                      "Could not convert bytestream to Unicode: " + e);
+                      "Could not convert bytestream to Unicode");
             return;
         }
 
