@@ -13,7 +13,7 @@
 <?xml-stylesheet href="chrome://gdata-provider/skin/gdata-bindings.css" type="text/css"?>
 
 <overlay id="gdataCalendarCreation"
-         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml">
   <script type="application/javascript" src="chrome://gdata-provider/content/gdata-calendar-creation.js"/>
   <radiogroup id="calendar-format">
     <radio value="gdata" label="&gdata-provider.label;"/>

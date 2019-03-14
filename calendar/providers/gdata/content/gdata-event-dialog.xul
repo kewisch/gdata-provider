@@ -6,7 +6,7 @@
 <!DOCTYPE overlay SYSTEM "chrome://gdata-provider/locale/gdata.dtd">
 
 <overlay id="gdata-calendar-event-dialog"
-         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml">
   <script type="application/javascript" src="chrome://gdata-provider/content/gdata-event-dialog.js"/>
 
   <!-- Privacy items -->
