@@ -69,7 +69,7 @@ function getMigratableCalendars() {
  */
 function gdata_migration_loader() {
     if (document.documentElement.id == "gdata-migration-wizard") {
-        // This is the migration wizard, load the calendars neeeded.
+        // This is the migration wizard, load the calendars needed.
         let listbox = document.getElementById("calendars-listbox");
 
         for (let calendar of sortCalendarArray(getMigratableCalendars())) {

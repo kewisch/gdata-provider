@@ -33,7 +33,7 @@ var EXPORTED_SYMBOLS = [
 ];
 
 /**
- * Retrives the Google ID associated with this event. This is either a simple
+ * Retrieves the Google ID associated with this event. This is either a simple
  * id or the id in combination with the recurrence id.
  *
  * @param aItem             The Item to get the id for.
@@ -445,7 +445,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
     let itemSnoozeTime = aItem.getProperty("X-MOZ-SNOOZE-TIME");
     let icalSnoozeTime = null;
     if (itemSnoozeTime) {
-        // The propery is saved as a string, translate back to calIDateTime.
+        // The property is saved as a string, translate back to calIDateTime.
         icalSnoozeTime = cal.createDateTime();
         icalSnoozeTime.icalString = itemSnoozeTime;
     }

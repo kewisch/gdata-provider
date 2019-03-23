@@ -450,7 +450,7 @@ calGoogleCalendar.prototype = {
                 let googleId = getGoogleId(aNewItem, this.offlineStorage);
                 request.uri = this.createEventsURI("events", googleId);
 
-                // Updating invitations often causes a forbidden error becase
+                // Updating invitations often causes a forbidden error because
                 // some parts are not writable. Using PATCH ignores anything
                 // that isn't allowed.
                 if (cal.itip.isInvitation(aNewItem)) {

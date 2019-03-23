@@ -44,7 +44,7 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
         curi.parentNode.style.visibility = (isGdata ? "hidden" : "visible");
         document.getElementById("cache").parentNode.style.visibility = (isGdata ? "hidden" : "visible");
 
-        // Move the next step descrition to the right place
+        // Move the next step description to the right place
         let locationRows = document.querySelector("#calendar-wizard > [pageid='locationPage'] > grid > rows");
         let nextStepDescr = document.getElementById("gdata-nextstep-description");
         locationRows.appendChild(nextStepDescr);

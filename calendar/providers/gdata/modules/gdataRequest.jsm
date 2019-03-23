@@ -121,7 +121,7 @@ calGoogleRequest.prototype = {
 
     /**
      * attribute type
-     * The type of this reqest. Must be one of
+     * The type of this request. Must be one of
      * GET, ADD, MODIFY, DELETE
      */
     get type() { return this.method; },

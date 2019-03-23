@@ -1631,7 +1631,7 @@ add_task(async function test_conflict_delete() {
         iCalUID: "go6ijb0b46hlpbu4eeu92njevo@google.com"
     };
 
-    // Load intial event to server
+    // Load initial event to server
     gServer.events = [coreEvent];
     let client = await gServer.getClient();
     let pclient = cal.async.promisifyCalendar(client.wrappedJSObject);

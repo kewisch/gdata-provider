@@ -166,7 +166,7 @@ calGoogleSession.prototype = {
                         let origin = "oauth:" + sessionId;
                         cal.auth.passwordManagerGet(sessionId, pass, origin, pwMgrId);
                     } catch (e) {
-                        // User might have cancelled the master password prompt, thats ok
+                        // User might have cancelled the master password prompt, that's ok
                         if (e.result != Cr.NS_ERROR_ABORT) {
                             throw e;
                         }
