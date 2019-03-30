@@ -422,7 +422,7 @@ calGoogleSession.prototype = {
     getFreeBusyIntervals: function(aCalId, aRangeStart, aRangeEnd, aBusyTypes, aListener) {
         let completeSync = (aIntervals) => {
             cal.LOG("[calGoogleCalendar] Freebusy query for " + aCalId +
-                    "suceeded, returning " + aIntervals.length + " intervals");
+                    "succeeded, returning " + aIntervals.length + " intervals");
             aListener.onResult({ status: Cr.NS_OK }, aIntervals);
         };
 
