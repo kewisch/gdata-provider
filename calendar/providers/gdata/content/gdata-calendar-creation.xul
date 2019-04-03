@@ -24,7 +24,6 @@
 
     <wizardpage id="gdata-session"
                 pageid="gdata-session"
-                onpageshow="gdataSessionShow(); checkRequired()"
                 description="&wizard.description;">
       <description>&gdata.wizard.session.description;</description>
       <radiogroup id="gdata-session-group" onselect="checkRequired()">
@@ -40,8 +39,6 @@
     </wizardpage>
     <wizardpage id="gdata-calendars"
                 pageid="gdata-calendars"
-                onpageshow="gdataCalendarsShow(); checkRequired()"
-                onpageadvanced="return gdataCalendarsAdvance()"
                 description="&wizard.description;">
       <description>&gdata.wizard.calendars.description;</description>
       <calendar-list-tree type="gdata" id="calendar-list" flex="1"

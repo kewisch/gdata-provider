@@ -224,7 +224,6 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
         let calendars = calendarList.selectedCalendars.filter(calendar => !calendar.getProperty("disabled") && !calendar.readOnly);
         let calMgr = cal.getCalendarManager();
         calendars.forEach(calMgr.registerCalendar, calMgr);
-        return true;
     });
 
     this.gdataFocusNewSession = trycatch(() => {
@@ -248,4 +247,16 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
             wizard._initPages();
         }
     });
+
+    let gdataSessionPage = document.getElementById("gdata-session");
+    gdataSessionPage.addEventListener("pageshow", () => {
+        this.gdataSessionShow();
+        checkRequired();
+    });
+    let gdataCalendarsPage = document.getElementById("gdata-calendars");
+    gdataCalendarsPage.addEventListener("pageshow", () => {
+        this.gdataCalendarsShow();
+        checkRequired();
+    });
+    gdataCalendarsPage.addEventListener("pageadvanced", this.gdataCalendarsAdvance);
 }).call(window);
