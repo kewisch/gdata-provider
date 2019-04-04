@@ -7,7 +7,7 @@
 var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
-/* exported migrateSelectedCalendars */
+document.addEventListener("dialogaccept", migrateSelectedCalendars);
 
 /**
  * Migrate the calendar selected in the wizard from ics to gdata.

@@ -13,8 +13,6 @@
         buttons="accept,cancel"
         acceptLabel="&gdata.migration.upgrade.label;"
         acceptKey="&gdata.migration.upgrade.accesskey;"
-        ondialogaccept="migrateSelectedCalendars(); return true;"
-        ondialogcancel="window.close()"
         width="300"
         height="300"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml">
