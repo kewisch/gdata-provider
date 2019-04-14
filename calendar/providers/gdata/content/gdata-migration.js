@@ -7,12 +7,10 @@
 var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
-document.addEventListener("dialogaccept", migrateSelectedCalendars);
-
 /**
  * Migrate the calendar selected in the wizard from ics to gdata.
  */
-function migrateSelectedCalendars() {
+document.addEventListener("dialogaccept", () => {
     let listbox = document.getElementById("calendars-listbox");
     let calmgr = cal.getCalendarManager();
 
@@ -45,7 +43,7 @@ function migrateSelectedCalendars() {
     // Only bring up the dialog on the next startup if the user wants us to.
     Services.prefs.setBoolPref("calendar.google.migrate",
                                document.getElementById("showagain-checkbox").checked);
-}
+});
 
 /**
  * Get all calendars that are ics and point to a google calendar
