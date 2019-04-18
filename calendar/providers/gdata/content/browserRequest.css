@@ -22,7 +22,7 @@
   background-position: 4px 3px;
 }
 
-@media (min-resolution: 2ddpx) {
+@media (min-resolution: 2dppx) {
   #security-button[loading="true"] {
     background-image: url("chrome://global/skin/icons/loading@2x.png");
   }
@@ -39,7 +39,7 @@
 
 #addressbox {
     font-weight: bold;
-    font-size: normal;
+    font-size: medium;
     -moz-appearance: textfield;
     overflow: hidden;
     margin: 5px 5px;
