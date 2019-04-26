@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/* global MozElements */
+
 /* import-globals-from ../../../base/content/dialogs/calendar-event-dialog-reminder.js */
 
 (function() {
@@ -11,6 +13,14 @@
         monkeyPatch,
         getProviderString,
     } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
+    const { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+
+    XPCOMUtils.defineLazyGetter(this, "notificationbox", () => {
+        return new MozElements.NotificationBox(element => {
+            element.setAttribute("flex", "1");
+            document.getElementById("reminder-notifications").append(element);
+        });
+    });
 
     // NOTE: This function exits early if its not a gdata calendar
     let item = window.arguments[0].item;
@@ -20,10 +30,6 @@
     }
 
     let label = getProviderString("reminderOutOfRange");
-    let notification = document.createXULElement("xbl-notification");
-    notification.setAttribute("label", label);
-    notification.setAttribute("type", "critical");
-    notification.setAttribute("hideclose", "true");
 
     function checkReminderRange(reminder) {
         let offset = cal.alarms.calculateAlarmOffset(item, reminder);
@@ -33,7 +39,6 @@
 
     function checkAllReminders() {
         let listbox = document.getElementById("reminder-listbox");
-        let notificationbox = document.getElementById("reminder-notifications");
 
         let validated = true;
         for (let node of listbox.childNodes) {
@@ -47,13 +52,16 @@
         acceptButton.disabled = !validated;
 
         if (validated) {
-            try {
-                notificationbox.removeNotification(notification);
-            } catch (e) {
-                // Ok to swallow if it hasn't been added yet.
-            }
+            this.notificationbox.removeAllNotifications();
         } else {
-            notificationbox.appendChild(notification);
+            let notification = this.notificationbox.appendNotification(
+                label,
+                "reminderNotification",
+                null,
+                this.notificationbox.PRIORITY_CRITICAL_HIGH);
+
+            let closeButton = notification.messageDetails.nextSibling;
+            closeButton.setAttribute("hidden", "true");
         }
     }
 

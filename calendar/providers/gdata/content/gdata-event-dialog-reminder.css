@@ -5,7 +5,3 @@
 .reminder-icon[value="SMS"] {
   list-style-image: url(chrome://gdata-provider/skin/reminder-action-sms.svg);
 }
-
-#reminder-notifications > xbl-notification[type="critical"] {
-  background-color: #d70022;
-}

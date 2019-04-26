@@ -3,6 +3,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
+<?xml-stylesheet type="text/css" href="chrome://messenger/content/notification.css"?>
 <?xml-stylesheet type="text/css" href="chrome://gdata-provider/skin/gdata-event-dialog-reminder.css"?>
 
 <!DOCTYPE overlay SYSTEM "chrome://gdata-provider/locale/gdata.dtd">
