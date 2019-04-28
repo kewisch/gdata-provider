@@ -7,7 +7,7 @@
 
 <overlay id="gdata-lightning-item-iframe"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml">
-  <script type="application/javascript" src="chrome://gdata-provider/content/gdata-lightning-item-iframe.js"/>
+  <script src="chrome://gdata-provider/content/gdata-lightning-item-iframe.js"/>
 
   <menupopup id="item-alarm-menupopup">
     <menuitem id="gdata-reminder-default-menuitem"

@@ -16,9 +16,9 @@
         width="300"
         height="300"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml">
-  <script type="application/javascript" src="chrome://gdata-provider/content/gdata-migration.js"/>
-  <script type="application/javascript" src="chrome://calendar/content/calendar-views.js"/>
-  <script type="application/javascript" src="chrome://calendar/content/calendar-ui-utils.js"/>
+  <script src="chrome://gdata-provider/content/gdata-migration.js"/>
+  <script src="chrome://calendar/content/calendar-views.js"/>
+  <script src="chrome://calendar/content/calendar-ui-utils.js"/>
 
   <description>&gdata.migration.description;</description>
   <vbox id="calendars-listbox" flex="1"/>

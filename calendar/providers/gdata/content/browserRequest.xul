@@ -18,7 +18,7 @@
         height="500"
         orient="vertical">
 
-  <script type="application/javascript" src="chrome://gdata-provider/content/browserRequest.js"/>
+  <script src="chrome://gdata-provider/content/browserRequest.js"/>
 
   <keyset id="mainKeyset">
     <key id="key_close" key="w" modifiers="accel" oncommand="cancelRequest()"/>

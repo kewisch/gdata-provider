@@ -5,5 +5,5 @@
 
 <overlay id="gdata-calendar-properties"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml">
-  <script type="application/javascript" src="chrome://gdata-provider/content/gdata-calendar-properties.js"/>
+  <script src="chrome://gdata-provider/content/gdata-calendar-properties.js"/>
 </overlay>
