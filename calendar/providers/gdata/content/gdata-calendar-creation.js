@@ -142,7 +142,7 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
                 return;
             }
 
-            let radio = document.createElement("radio");
+            let radio = document.createXULElement("radio");
             radio.setAttribute("value", session.id);
             radio.setAttribute("label", session.id);
             sessionContainer.insertBefore(radio, newSessionItem);

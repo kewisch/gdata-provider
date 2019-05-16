@@ -31,7 +31,7 @@ window.addEventListener("message", (aEvent) => {
 });
 
 
-const gdataStatusPrivacyHbox = document.createElement("hbox");
+const gdataStatusPrivacyHbox = document.createXULElement("hbox");
 gdataStatusPrivacyHbox.setAttribute("id", "gdata-status-privacy-default-box");
 gdataStatusPrivacyHbox.setAttribute("privacy", "DEFAULT");
 gdataStatusPrivacyHbox.setAttribute("provider", "gdata");

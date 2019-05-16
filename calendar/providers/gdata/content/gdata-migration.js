@@ -71,7 +71,7 @@ function gdata_migration_loader() {
         let listbox = document.getElementById("calendars-listbox");
 
         for (let calendar of sortCalendarArray(getMigratableCalendars())) {
-            let item = document.createElement("checkbox");
+            let item = document.createXULElement("checkbox");
             item.setAttribute("label", calendar.name);
             item.setAttribute("value", calendar.id);
             item.calendar = calendar;
