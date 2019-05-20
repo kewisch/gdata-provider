@@ -14,7 +14,11 @@
 
 <overlay id="gdataCalendarCreation"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml">
+
+  <script src="chrome://gdata-provider/content/calendar-list-tree.js"/>
+  <script src="chrome://gdata-provider/content/gdata-list-tree.js"/>
   <script src="chrome://gdata-provider/content/gdata-calendar-creation.js"/>
+
   <radiogroup id="calendar-format">
     <radio value="gdata" label="&gdata-provider.label;"/>
   </radiogroup>
@@ -41,9 +45,9 @@
                 pageid="gdata-calendars"
                 description="&wizard.description;">
       <description>&gdata.wizard.calendars.description;</description>
-      <calendar-list-tree type="gdata" id="calendar-list" flex="1"
-                          onselect="checkRequired();" hideheader="true"
-                          onclick="checkRequired()"/>
+      <tree is="calendar-list-tree-gdata" id="calendar-list"
+            onselect="checkRequired();"
+            onclick="checkRequired()"/>
     </wizardpage>
   </wizard>
 </overlay>
