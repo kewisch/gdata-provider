@@ -17,7 +17,7 @@
         height="300"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml">
   <script src="chrome://gdata-provider/content/gdata-migration.js"/>
-  <script src="chrome://calendar/content/calendar-views.js"/>
+  <script src="chrome://calendar/content/calendar-views-utils.js"/>
   <script src="chrome://calendar/content/calendar-ui-utils.js"/>
 
   <description>&gdata.migration.description;</description>
