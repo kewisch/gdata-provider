@@ -4,10 +4,11 @@
 
 "use strict";
 
-/* globals cal Services customElements MozXULElement */
+/* global Services, customElements, MozXULElement */
 
 // Wrap in a block to prevent leaking to window scope.
 {
+    var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
     /**
      * The calendar list used when adding a new calendar from a Google account. It appears in the
      * new calendar dialog. The list of calendars is subdivided into "Calendars" and "Task Lists".
