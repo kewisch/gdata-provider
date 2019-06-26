@@ -238,10 +238,6 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
             calendarFormat.setAttribute("onselect", "gdataSelectProvider(this.value)");
         }
 
-        if (!("updateStyleSheetForViews" in window)) {
-            window.updateStyleSheetForViews = function() {};
-        }
-
         if (document.getElementById("gdata-session").pageIndex == -1) {
             let wizard = document.documentElement;
             wizard._initPages();
