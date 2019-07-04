@@ -13,10 +13,10 @@ SEAMONKEY_VERSION := $(shell cat $(commtopsrcdir)/suite/config/version.txt)
 ifdef MOZ_SUITE
 LIGHTNING_VERSION := $(shell $(PYTHON) $(commtopsrcdir)/calendar/lightning/build/makeversion.py $(THUNDERBIRD_VERSION))
 else
-LIGHTNING_VERSION := $(shell $(PYTHON) $(commtopsrcdir)/calendar/lightning/build/makeversion.py $(word 1,$(MOZ_PKG_VERSION) $(THUNDERBIRD_VERSION)))
+LIGHTNING_VERSION := $(THUNDERBIRD_VERSION_DISPLAY)
 endif
 
-GDATA_VERSION := $(shell $(PYTHON) $(commtopsrcdir)/calendar/providers/gdata/makeversion.py $(LIGHTNING_VERSION))
+GDATA_VERSION := $(THUNDERBIRD_VERSION_DISPLAY)
 
 
 DEFINES += -DSEAMONKEY_VERSION=$(SEAMONKEY_VERSION) \
