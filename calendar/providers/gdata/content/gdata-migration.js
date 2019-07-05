@@ -10,40 +10,42 @@ var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 /**
  * Migrate the calendar selected in the wizard from ics to gdata.
  */
-document.addEventListener("dialogaccept", () => {
-    let listbox = document.getElementById("calendars-listbox");
-    let calmgr = cal.getCalendarManager();
+if (document.documentElement.id == "gdata-migration-wizard") {
+    document.addEventListener("dialogaccept", () => {
+        let listbox = document.getElementById("calendars-listbox");
+        let calmgr = cal.getCalendarManager();
 
-    for (let i = 0; i < listbox.childNodes.length; i++) {
-        let item = listbox.childNodes[i];
-        if (item.checked) {
-            // Migrate the calendar to a gdata calendar
-            let newCal = calmgr.createCalendar("gdata", item.calendar.uri);
-            calmgr.removeCalendar(item.calendar);
+        for (let i = 0; i < listbox.childNodes.length; i++) {
+            let item = listbox.childNodes[i];
+            if (item.checked) {
+                // Migrate the calendar to a gdata calendar
+                let newCal = calmgr.createCalendar("gdata", item.calendar.uri);
+                calmgr.removeCalendar(item.calendar);
 
-            // Copy some properties to the new calendar
-            newCal.name = item.calendar.name;
-            newCal.setProperty("color",
-                               item.calendar.getProperty("color"));
-            newCal.setProperty("disabled",
-                               item.calendar.getProperty("disabled"));
-            newCal.setProperty("cache.enabled",
-                               item.calendar.getProperty("cache.enabled"));
-            newCal.setProperty("suppressAlarms",
-                               item.calendar.getProperty("suppressAlarms"));
-            newCal.setProperty("calendar-main-in-composite",
-                               item.calendar.getProperty("calendar-main-in-composite"));
-            newCal.setProperty("calendar-main-default",
-                               item.calendar.getProperty("calendar-main-default"));
+                // Copy some properties to the new calendar
+                newCal.name = item.calendar.name;
+                newCal.setProperty("color",
+                                   item.calendar.getProperty("color"));
+                newCal.setProperty("disabled",
+                                   item.calendar.getProperty("disabled"));
+                newCal.setProperty("cache.enabled",
+                                   item.calendar.getProperty("cache.enabled"));
+                newCal.setProperty("suppressAlarms",
+                                   item.calendar.getProperty("suppressAlarms"));
+                newCal.setProperty("calendar-main-in-composite",
+                                   item.calendar.getProperty("calendar-main-in-composite"));
+                newCal.setProperty("calendar-main-default",
+                                   item.calendar.getProperty("calendar-main-default"));
 
-            calmgr.registerCalendar(newCal);
+                calmgr.registerCalendar(newCal);
+            }
         }
-    }
 
-    // Only bring up the dialog on the next startup if the user wants us to.
-    Services.prefs.setBoolPref("calendar.google.migrate",
-                               document.getElementById("showagain-checkbox").checked);
-});
+        // Only bring up the dialog on the next startup if the user wants us to.
+        Services.prefs.setBoolPref("calendar.google.migrate",
+                                   document.getElementById("showagain-checkbox").checked);
+    });
+}
 
 /**
  * Get all calendars that are ics and point to a google calendar
