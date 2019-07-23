@@ -9,7 +9,6 @@
 ]>
 
 <?xml-stylesheet href="chrome://calendar/skin/calendar-management.css" type="text/css"?>
-<?xml-stylesheet href="chrome://calendar/content/widgets/calendar-widget-bindings.css" type="text/css"?>
 <?xml-stylesheet href="chrome://gdata-provider/skin/gdata-bindings.css" type="text/css"?>
 
 <overlay id="gdataCalendarCreation"
