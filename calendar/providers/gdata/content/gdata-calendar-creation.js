@@ -116,8 +116,7 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
             wizard.canAdvance = sessionGroup.value || (sessionName.value && sessionNameIsValid);
         } else if (currentPageId == "gdata-calendars") {
             let calendarList = document.getElementById("calendar-list");
-            let calendars = calendarList.selectedCalendars.filter(calendar => !calendar.getProperty("disabled") && !calendar.readOnly);
-            wizard.canAdvance = !!calendars.length;
+            wizard.canAdvance = !!calendarList.querySelector(".calendar-selected[checked]:not([readonly])");
         } else {
             protofunc();
         }
@@ -160,8 +159,14 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
         let calMgr = cal.getCalendarManager();
         let sessionMgr = getGoogleSessionManager();
         let sessionContainer = document.getElementById("gdata-session-group");
-        let calendarListWidget = document.getElementById("calendar-list");
-        calendarListWidget.clear();
+
+        let calendarList = document.getElementById("calendar-list");
+        while (calendarList.lastElementChild) {
+            calendarList.lastElementChild.remove();
+        }
+        let loadingItem = document.createXULElement("richlistitem");
+        loadingItem.setAttribute("loading", "true");
+        calendarList.appendChild(loadingItem);
 
         let session = sessionContainer.selectedItem.gdataSession;
         if (!session) {
@@ -169,7 +174,7 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
             session = sessionMgr.getSessionById(newSessionItem.value, true);
         }
 
-        Promise.all([session.getTasksList(), session.getCalendarList()]).then(([tasksLists, calendarList]) => {
+        Promise.all([session.getTasksList(), session.getCalendarList()]).then(([tasksLists, calendars]) => {
             let existing = new Set();
             let sessionPrefix = "googleapi://" + session.id;
             for (let calendar of calMgr.getCalendars({})) {
@@ -196,7 +201,7 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
                 }
                 return calendar;
             });
-            let calcals = calendarList.map((calendarEntry) => {
+            let calcals = calendars.map((calendarEntry) => {
                 let uri = "googleapi://" + session.id + "/?calendar=" + encodeURIComponent(calendarEntry.id);
                 let calendar = calMgr.createCalendar("gdata", Services.io.newURI(uri));
                 calendar.name = calendarEntry.summary;
@@ -208,12 +213,56 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
                 return calendar;
             });
 
-            let calendars = [calendarListWidget.mockCalendarHeader]
-                            .concat(calcals)
-                            .concat([calendarListWidget.mockTaskHeader])
-                            .concat(taskcals);
+            loadingItem.remove();
+            let strings = Services.strings.createBundle("chrome://gdata-provider/locale/gdata.properties");
 
-            calendarListWidget.calendars = calendars;
+            let header = document.createXULElement("richlistitem");
+            let headerLabel = document.createXULElement("label");
+            headerLabel.classList.add("header-label");
+            headerLabel.value = strings.GetStringFromName("calendarsHeader");
+            header.appendChild(headerLabel);
+            calendarList.appendChild(header);
+
+            for (let calendar of calcals) {
+                addCalendarItem(calendar);
+            }
+
+            header = document.createXULElement("richlistitem");
+            headerLabel = document.createXULElement("label");
+            headerLabel.classList.add("header-label");
+            headerLabel.value = strings.GetStringFromName("taskListsHeader");
+            header.appendChild(headerLabel);
+            calendarList.appendChild(header);
+
+            for (let calendar of taskcals) {
+                addCalendarItem(calendar);
+            }
+
+            function addCalendarItem(calendar) {
+                let item = document.createXULElement("richlistitem");
+                item.calendar = calendar;
+                item.setAttribute("calendar-id", calendar.id);
+
+                let checkbox = document.createXULElement("checkbox");
+                checkbox.classList.add("calendar-selected");
+                if (calendar.readOnly) {
+                    checkbox.checked = true;
+                    checkbox.setAttribute("readonly", "true");
+                }
+                item.appendChild(checkbox);
+
+                let image = document.createXULElement("image");
+                image.classList.add("calendar-color");
+                item.appendChild(image);
+                image.style.backgroundColor = calendar.getProperty("color");
+
+                let label = document.createXULElement("label");
+                label.classList.add("calendar-name");
+                label.value = calendar.name;
+                item.appendChild(label);
+
+                calendarList.appendChild(item);
+            }
         }, (e) => {
             Cu.reportError(e);
         });
@@ -221,9 +270,14 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
 
     this.gdataCalendarsAdvance = trycatch(() => {
         let calendarList = document.getElementById("calendar-list");
-        let calendars = calendarList.selectedCalendars.filter(calendar => !calendar.getProperty("disabled") && !calendar.readOnly);
+
         let calMgr = cal.getCalendarManager();
-        calendars.forEach(calMgr.registerCalendar, calMgr);
+        for (let item of calendarList.children) {
+            let checkbox = item.querySelector(".calendar-selected[checked]:not([readonly])");
+            if (checkbox) {
+                calMgr.registerCalendar(item.calendar);
+            }
+        }
     });
 
     this.gdataFocusNewSession = trycatch(() => {

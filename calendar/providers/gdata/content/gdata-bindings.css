@@ -2,17 +2,22 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-.calendar-list-tree > treechildren::-moz-tree-image(checkbox-treecol, disabled) {
-    list-style-image: none !important;
+#calendar-list richlistitem[loading="true"] {
+  -moz-box-flex: 1;
+  background: url("chrome://global/skin/icons/loading.png") center 33% / 16px no-repeat;
 }
 
-.calendar-list-tree > treechildren::-moz-tree-cell(color-treecol, disabled) {
-    background-color: transparent !important;
+@media (min-resolution: 1.1dppx) {
+  #calendar-list richlistitem[loading="true"] {
+    background-image: url("chrome://global/skin/icons/loading@2x.png");
+  }
 }
 
-.calendar-list-tree > treechildren::-moz-tree-image(status-treecol, readonly) {
-    list-style-image: none;
+#calendar-list richlistitem[selected] {
+  color: unset;
+  background-color: unset;
 }
-.calendar-list-tree > treechildren::-moz-tree-cell-text(readonly) {
-    opacity: 0.4;
+
+#calendar-list .header-label {
+  font-weight: bold;
 }
