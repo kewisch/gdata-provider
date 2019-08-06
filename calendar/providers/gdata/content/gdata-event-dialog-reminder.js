@@ -8,7 +8,7 @@
 
 (function() {
     const FOUR_WEEKS_BEFORE = -2419200;
-    const { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+    const { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
     const {
         monkeyPatch,
         getProviderString,

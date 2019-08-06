@@ -11,7 +11,7 @@ if (!("Cc" in this)) {
 }
 
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 var { getGoogleSessionManager } = ChromeUtils.import("resource://gdata-provider/modules/gdataSession.jsm");
 var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 

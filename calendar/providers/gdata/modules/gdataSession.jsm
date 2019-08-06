@@ -24,7 +24,7 @@ var { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm");
 
 var { fixIterator } = ChromeUtils.import("resource:///modules/iteratorUtils.jsm");
 
-var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 
 var cIFBI = Ci.calIFreeBusyInterval;
 var nIPM = Ci.nsIPermissionManager;

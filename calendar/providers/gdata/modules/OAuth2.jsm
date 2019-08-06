@@ -17,7 +17,7 @@ var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { Log4Moz } = ChromeUtils.import("resource:///modules/gloda/log4moz.js");
 var { httpRequest } = ChromeUtils.import("resource://gre/modules/Http.jsm");
 
-var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 
 function parseURLData(aData) {
     let result = {};

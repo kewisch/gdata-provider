@@ -13,7 +13,6 @@ DIRS += [
 ]
 
 EXTRA_JS_MODULES += [
-    'modules/calUtilsShim.jsm',
     'modules/gdataLogging.jsm',
     'modules/gdataRequest.jsm',
     'modules/gdataSession.jsm',

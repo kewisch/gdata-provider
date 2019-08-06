@@ -7,7 +7,7 @@
 
 var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 
-var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 
 (function() {
     monkeyPatch(window, "updateCalendar", function(protofunc, ...args) {

@@ -11,7 +11,7 @@ if (!("Cc" in this)) {
     const { classes: Cc, interfaces: Ci, results: Cr } = Components;
 }
 
-var { cal } = ChromeUtils.import("resource://gdata-provider/modules/calUtilsShim.jsm");
+var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 var { stringException } = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm");
 var {
     calGoogleRequest,
