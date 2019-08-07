@@ -17,32 +17,32 @@ gdata-provider.jar:
 % overlay chrome://messenger/content/messenger.xul chrome://gdata-provider/content/gdata-event-dialog.xul
 % style chrome://calendar/content/calendar-event-dialog.xul chrome://gdata-provider/skin/gdata-event-dialog-reminder.css
 % style chrome://messenger/content/messenger.xul chrome://gdata-provider/skin/gdata-event-dialog-reminder.css
-    content/browserRequest.xul                   (content/browserRequest.xul)
     content/browserRequest.js                    (content/browserRequest.js)
-    content/gdata-calendar-creation.xul          (content/gdata-calendar-creation.xul)
+    content/browserRequest.xul                   (content/browserRequest.xul)
+    content/gcal.png                             (content/gcal.png)
     content/gdata-calendar-creation.js           (content/gdata-calendar-creation.js)
-    content/gdata-event-dialog.xul               (content/gdata-event-dialog.xul)
-    content/gdata-event-dialog.js                (content/gdata-event-dialog.js)
-    content/gdata-calendar-properties.xul        (content/gdata-calendar-properties.xul)
+    content/gdata-calendar-creation.xul          (content/gdata-calendar-creation.xul)
     content/gdata-calendar-properties.js         (content/gdata-calendar-properties.js)
-    content/gdata-event-dialog-reminder.xul      (content/gdata-event-dialog-reminder.xul)
+    content/gdata-calendar-properties.xul        (content/gdata-calendar-properties.xul)
     content/gdata-event-dialog-reminder.js       (content/gdata-event-dialog-reminder.js)
-    content/gdata-lightning-item-iframe.xul      (content/gdata-lightning-item-iframe.xul)
+    content/gdata-event-dialog-reminder.xul      (content/gdata-event-dialog-reminder.xul)
+    content/gdata-event-dialog.js                (content/gdata-event-dialog.js)
+    content/gdata-event-dialog.xul               (content/gdata-event-dialog.xul)
     content/gdata-lightning-item-iframe.js       (content/gdata-lightning-item-iframe.js)
+    content/gdata-lightning-item-iframe.xul      (content/gdata-lightning-item-iframe.xul)
     content/gdata-lightning-item-toolbar.xul     (content/gdata-lightning-item-toolbar.xul)
-    content/gdata-migration.js                   (content/gdata-migration.js)
     content/gdata-migration-overlay.xul          (content/gdata-migration-overlay.xul)
     content/gdata-migration-wizard.xul           (content/gdata-migration-wizard.xul)
-    content/gcal.png                             (content/gcal.png)
+    content/gdata-migration.js                   (content/gdata-migration.js)
 % skin gdata-provider classic/1.0 %skin/
-    skin/reminder-action-sms.svg                 (content/reminder-action-sms.svg)
-    skin/gdata-event-dialog-reminder.css         (content/gdata-event-dialog-reminder.css)
-    skin/gdata-bindings.css                      (content/gdata-bindings.css)
     skin/browserRequest.css                      (content/browserRequest.css)
+    skin/gdata-bindings.css                      (content/gdata-bindings.css)
+    skin/gdata-event-dialog-reminder.css         (content/gdata-event-dialog-reminder.css)
+    skin/reminder-action-sms.svg                 (content/reminder-action-sms.svg)
 
 
 gdata-provider-@AB_CD@.jar:
 relativesrcdir comm/calendar/locales:
-% locale gdata-provider @AB_CD@ %locale/@AB_CD@/
-    locale/@AB_CD@/gdata.properties              (%chrome/calendar/providers/gdata/gdata.properties)
-    locale/@AB_CD@/gdata.dtd                     (%chrome/calendar/providers/gdata/gdata.dtd)
+% locale gdata-provider @AB_CD@ %
+    gdata.dtd                                    (%chrome/calendar/providers/gdata/gdata.dtd)
+    gdata.properties                             (%chrome/calendar/providers/gdata/gdata.properties)
