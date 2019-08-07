@@ -3,14 +3,18 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-XPI_NAME = 'gdata-provider'
-export('XPI_NAME')
+version_parts = CONFIG['MOZ_APP_VERSION'].split('.')
+major_version = version_parts[0]
+DEFINES['THUNDERBIRD_MAXVERSION'] = major_version + '.*'
+
+if CONFIG['MOZ_ARTIFACT_BUILDS']:
+    XPI_NAME = 'gdata-provider'
+    export('XPI_NAME')
+else:
+    DIST_SUBDIR = 'extensions/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}'
+    export('DIST_SUBDIR')
 
 FINAL_TARGET_PP_FILES += ['manifest.json']
-
-DIRS += [
-    'locales',
-]
 
 EXTRA_JS_MODULES += [
     'modules/gdataLogging.jsm',

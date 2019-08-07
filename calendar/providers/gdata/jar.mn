@@ -39,3 +39,10 @@ gdata-provider.jar:
     skin/gdata-event-dialog-reminder.css         (content/gdata-event-dialog-reminder.css)
     skin/gdata-bindings.css                      (content/gdata-bindings.css)
     skin/browserRequest.css                      (content/browserRequest.css)
+
+
+gdata-provider-@AB_CD@.jar:
+relativesrcdir comm/calendar/locales:
+% locale gdata-provider @AB_CD@ %locale/@AB_CD@/
+    locale/@AB_CD@/gdata.properties              (%chrome/calendar/providers/gdata/gdata.properties)
+    locale/@AB_CD@/gdata.dtd                     (%chrome/calendar/providers/gdata/gdata.dtd)

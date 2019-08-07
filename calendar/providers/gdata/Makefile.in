@@ -2,29 +2,26 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-XPI_NAME = gdata-provider
-XPI_PKGNAME = gdata-provider.$(AB_CD)
-XPI_EM_ID = {a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
-XPI_INSTALL_EXTENSION = $(XPI_EM_ID)
+XPI_PKGNAME = gdata-provider
 
-THUNDERBIRD_VERSION := $(shell cat $(commtopsrcdir)/mail/config/version.txt)
-SEAMONKEY_VERSION := $(shell cat $(commtopsrcdir)/suite/config/version.txt)
+final_parent = $(ABS_DIST)/bin/extensions
+ifdef MOZ_ARTIFACT_BUILDS
+final_dest = $(final_parent)/{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}
 
-ifdef MOZ_SUITE
-LIGHTNING_VERSION := $(shell $(PYTHON) $(commtopsrcdir)/calendar/lightning/build/makeversion.py $(THUNDERBIRD_VERSION))
+tools::
+	$(RM) -r $(final_dest)
+ifeq ($(OS_ARCH),WINNT)
+	$(NSINSTALL) -D $(final_dest)
+	$(call copy_dir,$(FINAL_TARGET),$(final_dest))
 else
-LIGHTNING_VERSION := $(THUNDERBIRD_VERSION_DISPLAY)
+	$(NSINSTALL) -D $(final_parent)
+	ln -s $(ABS_DIST)/xpi-stage/gdata-provider $(final_dest)
 endif
-
-GDATA_VERSION := $(THUNDERBIRD_VERSION_DISPLAY)
-
-
-DEFINES += -DSEAMONKEY_VERSION=$(SEAMONKEY_VERSION) \
-           -DTHUNDERBIRD_VERSION=$(THUNDERBIRD_VERSION) \
-           -DGDATA_VERSION=$(GDATA_VERSION) \
-           $(NULL)
-
-include $(commtopsrcdir)/calendar/lightning/lightning-packager.mk
+endif # MOZ_ARTIFACT_BUILDS
 
 stage-package:
+ifdef MOZ_ARTIFACT_BUILDS
 	$(PYTHON) -u $(MOZILLA_DIR)/build/upload.py $(DIST)/xpi-stage/$(XPI_PKGNAME).xpi
+else
+	$(PYTHON) -u $(MOZILLA_DIR)/build/upload.py $(final_parent)/$(XPI_PKGNAME).xpi
+endif

@@ -13,7 +13,7 @@
     let env = Cc["@mozilla.org/process/environment;1"].getService(Ci.nsIEnvironment);
     if (env.exists("MOZ_FETCHES_DIR")) {
         xpiFile = new FileUtils.File(env.get("MOZ_FETCHES_DIR"));
-        xpiFile.append("gdata-provider.en-US.xpi");
+        xpiFile.append("gdata-provider.xpi");
     } else {
         xpiFile = Services.dirsvc.get("CurProcD", Ci.nsIFile);
         xpiFile.append("extensions");

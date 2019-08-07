@@ -7,14 +7,15 @@
   "manifest_version": 2,
   "name": "Provider for Google Calendar",
   "description": "Allows bidirectional access to Google Calendar",
-  "version": "@GDATA_VERSION@",
+  "version": "@THUNDERBIRD_VERSION_DISPLAY@",
   "author": "Philipp Kewisch",
   "homepage_url": "https://addons.mozilla.org/thunderbird/addon/4631",
   "legacy": true,
   "applications": {
     "gecko": {
       "id": "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
-      "strict_min_version": "@THUNDERBIRD_VERSION@"
+      "strict_min_version": "@THUNDERBIRD_VERSION@",
+      "strict_max_version": "@THUNDERBIRD_MAXVERSION@"
     }
   },
   "icons": {
