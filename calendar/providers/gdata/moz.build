@@ -5,7 +5,8 @@
 
 version_parts = CONFIG['MOZ_APP_VERSION'].split('.')
 major_version = version_parts[0]
-DEFINES['THUNDERBIRD_MAXVERSION'] = major_version + '.*'
+DEFINES['MOZ_APP_VERSION'] = CONFIG['MOZ_APP_VERSION']
+DEFINES['MOZ_APP_MAXVERSION'] = major_version + '.*'
 
 if CONFIG['MOZ_ARTIFACT_BUILDS']:
     XPI_NAME = 'gdata-provider'

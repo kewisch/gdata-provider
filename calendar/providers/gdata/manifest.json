@@ -14,8 +14,8 @@
   "applications": {
     "gecko": {
       "id": "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
-      "strict_min_version": "@THUNDERBIRD_VERSION@",
-      "strict_max_version": "@THUNDERBIRD_MAXVERSION@"
+      "strict_min_version": "@MOZ_APP_VERSION@",
+      "strict_max_version": "@MOZ_APP_MAXVERSION@"
     }
   },
   "icons": {
