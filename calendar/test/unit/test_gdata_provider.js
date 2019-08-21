@@ -12,7 +12,11 @@
     let xpiFile;
     let env = Cc["@mozilla.org/process/environment;1"].getService(Ci.nsIEnvironment);
     if (env.exists("MOZ_FETCHES_DIR")) {
-        xpiFile = new FileUtils.File(env.get("MOZ_FETCHES_DIR"));
+        let path = env.get("MOZ_FETCHES_DIR");
+        if (AppConstants.platform == "win") {
+            path = path.replace(/\//g, "\\");
+        }
+        xpiFile = new FileUtils.File(path);
         xpiFile.append("gdata-provider.xpi");
     } else {
         xpiFile = Services.dirsvc.get("CurProcD", Ci.nsIFile);
