@@ -156,8 +156,8 @@ function dateToJSON(aDate) {
     if (tzid in windowsTimezoneMap) {
       // A Windows timezone, likely an outlook invitation.
       jsonData.timeZone = windowsTimezoneMap[tzid];
+      // eslint-disable-next-line no-useless-escape
     } else if (tzid.match(/^[^\/ ]+(\/[^\/ ]+){1,2}$/)) {
-      // eslint-disable-line no-useless-escape
       // An Olson timezone id
       jsonData.timeZone = aDate.timezone.tzid;
     } else {
