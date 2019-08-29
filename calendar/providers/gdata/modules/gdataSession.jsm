@@ -272,7 +272,7 @@ calGoogleSession.prototype = {
       let accessToken = this.accessToken;
 
       let authSuccess = function() {
-        cal.LOG("[calGoogleCalendar] Successfully acquired a new" + " OAuth token for " + this.mId);
+        cal.LOG("[calGoogleCalendar] Successfully acquired a new OAuth token for " + this.mId);
         deferred.resolve(this.accessToken);
       }.bind(this);
 

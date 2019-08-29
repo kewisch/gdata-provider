@@ -374,7 +374,7 @@ calGoogleRequest.prototype = {
         objData = { status: "No Content" };
       }
     } catch (e) {
-      cal.ERROR("[calGoogleCalendar] Could not parse API response as " + "JSON: " + result);
+      cal.ERROR("[calGoogleCalendar] Could not parse API response as JSON: " + result);
       this.fail(Cr.NS_ERROR_FAILURE, result);
     }
 
