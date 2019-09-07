@@ -4,6 +4,9 @@
 
 (function() {
   const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+  const { AppConstants } = ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
+  const { FileUtils } = ChromeUtils.import("resource://gre/modules/FileUtils.jsm");
+
   Services.prefs.setBoolPref("javascript.options.showInConsole", true);
   Services.prefs.setBoolPref("browser.dom.window.dump.enabled", true);
   Services.prefs.setBoolPref("calendar.debug.log", true);
@@ -33,6 +36,9 @@
 
 var { HttpServer } = ChromeUtils.import("resource://testing-common/httpd.js");
 var { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+
+var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 
 var { getGoogleSessionManager } = ChromeUtils.import(
   "resource://gdata-provider/modules/gdataSession.jsm"
@@ -1492,7 +1498,7 @@ add_task(async function test_modify_invitation() {
   org.participationStatus = "TENTATIVE";
   newItem.addAttendee(org);
 
-  modifiedItem = await pclient.modifyItem(newItem, items[0]);
+  await pclient.modifyItem(newItem, items[0]);
   equal(gServer.lastMethod, "PUT");
 
   gServer.resetClient(client);

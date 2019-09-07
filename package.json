@@ -1,0 +1,30 @@
+{
+  "name": "gdata-provider",
+  "description": "Provider for Google Calendar",
+  "version": "1.0.0",
+  "private": true,
+  "author": "Philipp Kewisch <mozilla@kewis.ch>",
+  "license": "MPL-2.0",
+  "directories": {
+    "test": "test"
+  },
+  "homepage": "https://github.com/kewisch/gdata-provider#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kewisch/gdata-provider.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kewisch/gdata-provider/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "6.2.2",
+    "eslint-config-prettier": "6.1.0",
+    "eslint-plugin-fetch-options": "0.0.5",
+    "eslint-plugin-html": "6.0.0",
+    "eslint-plugin-mozilla": "2.1.0",
+    "eslint-plugin-no-unsanitized": "3.0.2",
+    "eslint-plugin-prettier": "3.1.0",
+    "prettier": "1.17.0"
+  }
+}

@@ -4,8 +4,6 @@
 
 /* global MozElements */
 
-/* import-globals-from ../../../base/content/dialogs/calendar-event-dialog-reminder.js */
-
 (function() {
   const FOUR_WEEKS_BEFORE = -2419200;
   const { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
@@ -13,6 +11,7 @@
     "resource://gdata-provider/modules/gdataUtils.jsm"
   );
   const { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+  const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
   XPCOMUtils.defineLazyGetter(this, "notificationbox", () => {
     return new MozElements.NotificationBox(element => {

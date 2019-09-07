@@ -2,8 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* import-globals-from ../../../lightning/content/lightning-item-iframe.js */
-/* import-globals-from ../../../base/content/dialogs/calendar-dialog-utils.js */
+/* global gEndTimezone:true, gOldEndTimezone:true, gEndTime:true,
+          updateDateTime, getCurrentCalendar, sendMessage, setBooleanAttribute, removeChildren */
 
 var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 
@@ -180,6 +180,7 @@ var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
       reminderList.value = "default";
 
       // remember the selected index
+      // eslint-disable-next-line no-undef
       gLastAlarmSelection = reminderList.selectedIndex;
     } else {
       rv = protofunc.call(this, reminders, ...args);
