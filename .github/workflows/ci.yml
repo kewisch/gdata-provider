@@ -1,0 +1,51 @@
+name: "Provider for Google Calendar"
+on: [push,pull_request]
+
+jobs:
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v1
+
+      - name: "ESLint"
+        uses: gimenete/eslint-action@1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v1
+
+      - name: "Build"
+        run: make dist
+
+      - name: "Upload"
+        uses: actions/upload-artifact@master
+        with:
+          name: gdata-provider.xpi
+          path: dist/gdata-provider.xpi
+
+  test:
+    name: "Tests"
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v1
+
+      - name: "Download Build Artifact"
+        uses: actions/download-artifact@master
+        with:
+          name: gdata-provider.xpi
+          path: dist
+
+      - name: "Run Tests"
+        uses: kewisch/action-thunderbird-tests@v1
+        with:
+          channel: nightly
+          xpcshell: test/xpcshell/xpcshell.ini

@@ -1,0 +1,42 @@
+Provider for Google Calendar
+============================
+
+![Build Status](https://github.com/kewisch/gdata-provider/workflows/Provider%20for%20Google%20Calendar/badge.svg)
+
+These are the sources for the [Provider for Google Calendar](https://addons.thunderbird.net/thunderbird/addon/provider-for-google-calendar/).
+
+Development
+-----------
+
+The Provider for Google Calendar uses an xpcshell test originally from the Thunderbird test harness.
+
+To run the tests locally you can use:
+
+```bash
+$ make test
+```
+
+You should also run the linter:
+
+```bash
+$ make lint
+```
+
+Note that the tests will fail if something is up with the Thunderbird test harness, so best
+[check treeherder](https://treeherder.mozilla.org/#/jobs?repo=comm-central) first.
+
+This may also affect your pull request checks, as the test are also running via Github Actions CI
+
+
+Report Issues
+-------------
+First of all, make sure you are using the version of the Provider for Google Calendar that matches
+your Thunderbird. If there is no such version available, please take the next lower release number.
+
+For debugging, please enable calendar.debug.log and calendar.debug.log.verbose in the advanced
+config editor (`Options > Advanced > General > Config Editor`) and check the logs in the error console
+(`Tools > Error Console`) for what is happening when your error occurs.
+
+If you have a support question, please visit [the support forum](https://groups.google.com/forum/#!forum/provider-for-google-calendar).
+
+If you would like to file a development issue, please use the Github issue tracker.

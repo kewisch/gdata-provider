@@ -2,30 +2,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/* global __LOCATION__ */
+
 (function() {
   const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-  const { AppConstants } = ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-  const { FileUtils } = ChromeUtils.import("resource://gre/modules/FileUtils.jsm");
 
   Services.prefs.setBoolPref("javascript.options.showInConsole", true);
   Services.prefs.setBoolPref("browser.dom.window.dump.enabled", true);
   Services.prefs.setBoolPref("calendar.debug.log", true);
   Services.prefs.setBoolPref("calendar.debug.log.verbose", true);
 
-  let xpiFile;
-  let env = Cc["@mozilla.org/process/environment;1"].getService(Ci.nsIEnvironment);
-  if (env.exists("MOZ_FETCHES_DIR")) {
-    let path = env.get("MOZ_FETCHES_DIR");
-    if (AppConstants.platform == "win") {
-      path = path.replace(/\//g, "\\");
-    }
-    xpiFile = new FileUtils.File(path);
-    xpiFile.append("gdata-provider.xpi");
-  } else {
-    xpiFile = Services.dirsvc.get("CurProcD", Ci.nsIFile);
-    xpiFile.append("extensions");
-    xpiFile.append("{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}");
-  }
+  let xpiFile = __LOCATION__.parent.parent.parent;
+  xpiFile.append("dist");
+  xpiFile.append("gdata-provider.xpi");
 
   dump("Loading " + xpiFile.path + "\n");
   let manager = Cc["@mozilla.org/component-manager-extra;1"].getService(
