@@ -11,9 +11,10 @@ dist: force
 
 force: ;
 
-test:
+test: force
 	GITHUB_WORKSPACE=$(ROOT_DIR) \
 		GITHUB_REPOSITORY=kewisch/gdata-provider \
+		GITHUB_SHA=$(git rev-parse HEAD) \
 		INPUT_CHANNEL=nightly \
 		INPUT_LIGHTNING=true \
 		INPUT_XPCSHELL=test/xpcshell/xpcshell.ini \

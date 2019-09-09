@@ -18,6 +18,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "action-thunderbird-tests": "github:kewisch/action-thunderbird-tests#master",
     "eslint": "6.2.2",
     "eslint-config-prettier": "6.1.0",
     "eslint-plugin-fetch-options": "0.0.5",
