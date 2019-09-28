@@ -37,6 +37,6 @@ For debugging, please enable calendar.debug.log and calendar.debug.log.verbose i
 config editor (`Options > Advanced > General > Config Editor`) and check the logs in the error console
 (`Tools > Error Console`) for what is happening when your error occurs.
 
-If you have a support question, please visit [the support forum](https://groups.google.com/forum/#!forum/provider-for-google-calendar).
+Please check the [FAQ](https://github.com/kewisch/gdata-provider/wiki/FAQ) to see if your question may already be answered. If you have a support question, please visit [the support forum](https://groups.google.com/forum/#!forum/provider-for-google-calendar).
 
 If you would like to file a development issue, please use the Github issue tracker.
