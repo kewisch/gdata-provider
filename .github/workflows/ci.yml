@@ -47,5 +47,6 @@ jobs:
       - name: "Run Tests"
         uses: kewisch/action-thunderbird-tests@v1
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           channel: nightly
           xpcshell: test/xpcshell/xpcshell.ini
