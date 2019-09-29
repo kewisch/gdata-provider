@@ -10,10 +10,13 @@
 
 <?xml-stylesheet href="chrome://calendar-common/skin/widgets/calendar-widgets.css" type="text/css"?>
 <?xml-stylesheet href="chrome://gdata-provider/skin/gdata-bindings.css" type="text/css"?>
+<?xml-stylesheet href="chrome://messenger/skin/input-fields.css" type="text/css"?>
 
 <overlay id="gdataCalendarCreation"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml">
 
+  <script src="chrome://global/content/globalOverlay.js"/>
+  <script src="chrome://global/content/editMenuOverlay.js"/>
   <script src="chrome://gdata-provider/content/gdata-calendar-creation.js"/>
 
   <radiogroup id="calendar-format">
@@ -28,13 +31,13 @@
                 description="&wizard.description;">
       <description>&gdata.wizard.session.description;</description>
       <radiogroup id="gdata-session-group" onselect="checkRequired()">
-        <hbox id="session-new">
+        <hbox id="session-new" class="input-container">
           <radio value=""/>
-          <textbox id="gdata-session-name"
-                   type="email"
-                   onfocus="gdataFocusNewSession()"
-                   oninput="gdataFocusNewSession(); checkRequired();"
-                   flex="1"/>
+          <html:input id="gdata-session-name"
+                      type="email"
+                      onfocus="gdataFocusNewSession()"
+                      oninput="gdataFocusNewSession(); checkRequired();"
+                      class="input-inline"/>
         </hbox>
       </radiogroup>
     </wizardpage>
