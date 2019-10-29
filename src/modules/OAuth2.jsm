@@ -26,7 +26,7 @@ function parseURLData(aData) {
     .split("&")
     .forEach(aParam => {
       let [key, value] = aParam.split("=");
-      result[key] = value;
+      result[key] = decodeURIComponent(value);
     });
   return result;
 }
