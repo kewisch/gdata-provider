@@ -299,7 +299,6 @@ calGoogleCalendar.prototype = {
       case "cache.always":
         return true;
       case "capabilities.timezones.floating.supported":
-      case "capabilities.attachments.supported":
       case "capabilities.priority.supported":
         return false;
       case "capabilities.privacy.values":

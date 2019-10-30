@@ -2146,3 +2146,70 @@ add_task(async function test_incremental_reset() {
 
   gServer.resetClient(client);
 });
+
+add_task(async function test_attachments() {
+  gServer.events = [
+    {
+      kind: "calendar#event",
+      etag: '"1"',
+      id: "go6ijb0b46hlpbu4eeu92njevo",
+      created: "2006-06-08T21:04:52.000Z",
+      updated: "2006-06-08T21:05:49.138Z",
+      summary: "With Attachment",
+      creator: gServer.creator,
+      organizer: gServer.creator,
+      start: { dateTime: "2006-06-10T18:00:00+02:00" },
+      end: { dateTime: "2006-06-10T20:00:00+02:00" },
+      iCalUID: "go6ijb0b46hlpbu4eeu92njevo@google.com",
+      reminders: { useDefault: true },
+      attachments: [
+        {
+          fileId: 123,
+          fileUrl: "https://example.com/file",
+          iconLink: "https://example.com/unused",
+          mimeType: "application/octet-stream",
+          title: "Binary attachment",
+        },
+        {
+          fileId: 234,
+          fileUrl: "https://example.com/file2",
+          iconLink: "https://example.com/unused",
+          mimeType: "text/plain",
+          title: "Plain text attachment",
+        },
+      ],
+    },
+  ];
+
+  let client = await gServer.getClient();
+  let pclient = cal.async.promisifyCalendar(client);
+
+  let items = await pclient.getAllItems();
+  equal(items.length, 1);
+  let item = items[0];
+
+  let attachments = item.getAttachments({});
+  equal(attachments.length, 2);
+
+  let processed = new Set();
+
+  for (let attach of attachments) {
+    let id = attach.getParameter("MANAGED-ID");
+
+    if (processed.has(id)) {
+      ok(false, `ID ${id} has already been processed`);
+    } else if (id == 123) {
+      equal(attach.uri.spec, "https://example.com/file");
+      equal(attach.formatType, "application/octet-stream");
+      equal(attach.getParameter("FILENAME"), "Binary attachment");
+    } else if (id == 234) {
+      equal(attach.uri.spec, "https://example.com/file2");
+      equal(attach.formatType, "text/plain");
+      equal(attach.getParameter("FILENAME"), "Plain text attachment");
+    } else {
+      ok(false, "Invalid attachment id " + id);
+    }
+
+    processed.add(id);
+  }
+});

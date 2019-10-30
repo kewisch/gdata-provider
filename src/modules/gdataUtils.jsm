@@ -866,6 +866,20 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
     let categories = cal.category.stringToArray(sharedProps["X-MOZ-CATEGORIES"]);
     item.setCategories(categories.length, categories);
 
+    // Attachments
+    if (aEntry.attachments) {
+      for (let attachEntry of aEntry.attachments) {
+        let attachItem = cal.createAttachment();
+        attachItem.uri = Services.io.newURI(attachEntry.fileUrl);
+        attachItem.formatType = attachEntry.mimeType;
+
+        attachItem.setParameter("MANAGED-ID", attachEntry.fileId);
+        attachItem.setParameter("FILENAME", attachEntry.title);
+
+        item.addAttachment(attachItem);
+      }
+    }
+
     // updated (This must be set last!)
     if (aEntry.updated) {
       let updated = cal.dtz.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC);
