@@ -16,6 +16,12 @@
   "bugs": {
     "url": "https://github.com/kewisch/gdata-provider/issues"
   },
+  "scripts": {
+    "test": "action-thunderbird-tests test/xpcshell/xpcshell.ini",
+    "build": "rm dist/gdata-provider.xpi; (cd src && zip -9r ../dist/gdata-provider.xpi *)",
+    "clean": "rm dist/gdata-provider.xpi",
+    "lint": "eslint . || true"
+  },
   "dependencies": {},
   "devDependencies": {
     "action-thunderbird-tests": "github:kewisch/action-thunderbird-tests#master",

@@ -10,16 +10,22 @@ Development
 
 The Provider for Google Calendar uses an xpcshell test originally from the Thunderbird test harness.
 
-To run the tests locally you can use:
+To run the tests locally you can use this command. Note that the tests use the dist xpi, so you'll need to build first.
 
 ```bash
-$ make test
+$ npm test
 ```
 
 You should also run the linter:
 
 ```bash
-$ make lint
+$ npm run lint
+```
+
+You can then run the build step to package the xpi in `dist/gdata-provider.xpi`
+
+```bash
+$ npm run build 
 ```
 
 Note that the tests will fail if something is up with the Thunderbird test harness, so best
