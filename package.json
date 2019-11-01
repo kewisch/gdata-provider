@@ -1,7 +1,7 @@
 {
   "name": "gdata-provider",
   "description": "Provider for Google Calendar",
-  "version": "1.0.0",
+  "version": "71.0.0a1",
   "private": true,
   "author": "Philipp Kewisch <mozilla@kewis.ch>",
   "license": "MPL-2.0",
@@ -20,11 +20,15 @@
     "test": "action-thunderbird-tests test/xpcshell/xpcshell.ini",
     "build": "rm dist/gdata-provider.xpi; (cd src && zip -9r ../dist/gdata-provider.xpi *)",
     "clean": "rm dist/gdata-provider.xpi",
+    "bump": "bumper() { bump package.json \"$1\"; bump src/manifest.json \"$1\"; }; bumper",
+    "tag": "git tag v$(jq -r '.version' src/manifest.json)",
     "lint": "eslint . || true"
   },
   "dependencies": {},
   "devDependencies": {
     "action-thunderbird-tests": "github:kewisch/action-thunderbird-tests#master",
+    "bump-file": "^2.0.0",
+    "conventional-changelog-cli": "^2.0.25",
     "eslint": "6.2.2",
     "eslint-config-prettier": "6.1.0",
     "eslint-plugin-fetch-options": "0.0.5",
