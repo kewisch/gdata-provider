@@ -16,7 +16,8 @@ To run the tests locally you can use this command. Note that the tests use the d
 $ npm test
 ```
 
-You should also run the linter:
+You should also run the linters. This will run eslint and check your commit messages. Please format
+your messages according to [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary):
 
 ```bash
 $ npm run lint
