@@ -14,6 +14,6 @@
     }
   },
   "icons": {
-    "256": "chrome/gdata-provider/content/gcal.png"
+    "256": "chrome/content/gcal.png"
   }
 }
