@@ -328,8 +328,8 @@ calGoogleSession.prototype = {
                   callback.onAuthResult(true);
                 }
               },
-              () => {
-                authFailed();
+              (aData) => {
+                authFailed(aData);
                 if (callback) {
                   callback.onAuthResult(false);
                 }
