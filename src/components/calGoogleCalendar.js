@@ -5,12 +5,6 @@
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-// Backwards compatibility with Thunderbird <60.
-if (!("Cc" in this)) {
-  // eslint-disable-next-line mozilla/no-define-cc-etc, no-unused-vars
-  const { classes: Cc, interfaces: Ci, results: Cr } = Components;
-}
-
 var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 var { stringException } = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm");
 var { calGoogleRequest, getCorrectedDate, API_BASE } = ChromeUtils.import(

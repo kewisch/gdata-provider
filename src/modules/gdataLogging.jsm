@@ -4,12 +4,6 @@
 
 var EXPORTED_SYMBOLS = ["LOGitem", "LOGverbose", "LOGinterval", "stringException"];
 
-// Backwards compatibility with Thunderbird <60.
-if (!("Cc" in this)) {
-  // eslint-disable-next-line mozilla/no-define-cc-etc, no-unused-vars
-  const { interfaces: Ci } = Components;
-}
-
 var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
