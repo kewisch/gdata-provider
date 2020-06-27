@@ -7,12 +7,6 @@
  */
 var EXPORTED_SYMBOLS = ["OAuth2"]; /* exported OAuth2 */
 
-// Backwards compatibility with Thunderbird <60.
-if (!("Cc" in this)) {
-  // eslint-disable-next-line mozilla/no-define-cc-etc, no-unused-vars
-  const { interfaces: Ci, results: Cr } = Components;
-}
-
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { Log4Moz } = ChromeUtils.import("resource:///modules/gloda/log4moz.js");
 var { httpRequest } = ChromeUtils.import("resource://gre/modules/Http.jsm");

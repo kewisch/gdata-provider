@@ -4,12 +4,6 @@
 
 /* global checkRequired */
 
-// Backwards compatibility with Thunderbird <60.
-if (!("Cc" in this)) {
-  // eslint-disable-next-line mozilla/no-define-cc-etc, no-unused-vars
-  const { utils: Cu } = Components;
-}
-
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
 var { getGoogleSessionManager } = ChromeUtils.import(
@@ -147,10 +141,9 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
       sessionContainer.firstChild.remove();
     }
 
-    // forEach is needed for backwards compatibility.
-    sessions.forEach(session => {
+    for (let session of sessions) {
       if (!session) {
-        return;
+        continue;
       }
 
       let radio = document.createXULElement("radio");
@@ -158,7 +151,7 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
       radio.setAttribute("label", session.id);
       sessionContainer.insertBefore(radio, newSessionItem);
       radio.gdataSession = session;
-    });
+    }
 
     sessionContainer.value = sessionContainer.firstChild.value;
     if (sessionContainer.value == "") {
@@ -304,12 +297,6 @@ var { monkeyPatch } = ChromeUtils.import("resource://gdata-provider/modules/gdat
   });
 
   document.addEventListener("DOMContentLoaded", () => {
-    // Older versions of Lightning don't set the onselect attribute at all.
-    let calendarFormat = document.getElementById("calendar-format");
-    if (!calendarFormat.hasAttribute("onselect")) {
-      calendarFormat.setAttribute("onselect", "gdataSelectProvider(this.value)");
-    }
-
     if (document.getElementById("gdata-session").pageIndex == -1) {
       let wizard = document.documentElement;
       wizard._initPages();

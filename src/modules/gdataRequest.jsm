@@ -2,12 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-// Backwards compatibility with Thunderbird <60.
-if (!("Cc" in this)) {
-  // eslint-disable-next-line mozilla/no-define-cc-etc, no-unused-vars
-  const { classes: Cc, interfaces: Ci, results: Cr } = Components;
-}
-
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 
@@ -188,35 +182,20 @@ calGoogleRequest.prototype = {
       if (this.mQueryParameters.size > 0) {
         let params = [];
 
-        // Using forEach is needed for backwards compatibility
-        this.mQueryParameters.forEach((val, key) => {
+        for (let [key, val] of this.mQueryParameters.entries()) {
           params.push(key + "=" + encodeURIComponent(val));
-        });
+        }
         uristring += "?" + params.join("&");
       }
       let uri = Services.io.newURI(uristring);
-      let channel;
-      if ("newChannelFromURI2" in Services.io) {
-        // Before mozilla67, Lightning 6.8 and below.
-        channel = Services.io.newChannelFromURI2(
-          uri,
-          null,
-          Services.scriptSecurityManager.getSystemPrincipal(),
-          null,
-          Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-          Ci.nsIContentPolicy.TYPE_OTHER
-        );
-      } else {
-        // mozilla67 and later, Lightning 6.9.
-        channel = Services.io.newChannelFromURI(
-          uri,
-          null,
-          Services.scriptSecurityManager.getSystemPrincipal(),
-          null,
-          Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-          Ci.nsIContentPolicy.TYPE_OTHER
-        );
-      }
+      let channel = Services.io.newChannelFromURI(
+        uri,
+        null,
+        Services.scriptSecurityManager.getSystemPrincipal(),
+        null,
+        Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
+        Ci.nsIContentPolicy.TYPE_OTHER
+      );
 
       cal.LOG("[calGoogleRequest] Requesting " + this.method + " " + channel.URI.spec);
 
@@ -317,10 +296,9 @@ calGoogleRequest.prototype = {
       cal.LOG("[calGoogleCalendar] Sending request headers: " + this.mRequestHeaders.toSource());
     }
 
-    // Using forEach is needed for backwards compatibility
-    this.mRequestHeaders.forEach((val, key) => {
+    for (let [key, val] of this.mRequestHeaders.entries()) {
       aChannel.setRequestHeader(key, val, false);
-    });
+    }
 
     // Add Authorization
     let token = this.mSession.accessToken;

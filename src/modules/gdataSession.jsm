@@ -4,12 +4,6 @@
 
 /* globals OAUTH_BASE_URI, OAUTH_SCOPE, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET */
 
-// Backwards compatibility with Thunderbird <60.
-if (!("Cc" in this)) {
-  // eslint-disable-next-line mozilla/no-define-cc-etc, no-unused-vars
-  const { classes: Cc, interfaces: Ci, results: Cr } = Components;
-}
-
 var { OAuth2 } = ChromeUtils.import("resource://gdata-provider/modules/OAuth2.jsm");
 var { getProviderString } = ChromeUtils.import("resource://gdata-provider/modules/gdataUtils.jsm");
 var { LOGinterval } = ChromeUtils.import("resource://gdata-provider/modules/gdataLogging.jsm");
