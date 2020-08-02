@@ -1,1 +1,3 @@
 node_modules
+*.xpi
+web-ext-artifacts
