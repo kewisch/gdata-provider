@@ -12,8 +12,14 @@ module.exports = {
   "env": {
     "es6": true,
   },
+  "parser": "babel-eslint",
+
   "parserOptions": {
-    "ecmaVersion": 10
+    "ecmaVersion": 11
+  },
+
+  "globals": {
+    "messenger": true
   },
 
   "extends": [
@@ -237,7 +243,8 @@ module.exports = {
     "mozilla/var-only-at-top-level": 1,
 
     // Disallow global and local variables that aren't used, but allow unused function arguments.
-    "no-unused-vars": [2, { vars: "all", args: "none", varsIgnorePattern: "EXPORTED_SYMBOLS" }],
+    //"no-unused-vars": [2, { vars: "all", args: "none", varsIgnorePattern: "EXPORTED_SYMBOLS" }],
+    "no-unused-vars": 0,
 
     "mozilla/mark-test-function-used": 1,
 
