@@ -159,7 +159,7 @@ OAuth2.prototype = {
                 }
               } catch (e) {
                 // Throw the case where it's a http channel.
-                if (e.result != Cr.NS_ERROR_NO_INTERFACE) {
+                if (e.result != Cr.NS_ERROR_NO_INTERFACE && e.result != Cr.NS_ERROR_NOT_AVAILABLE) {
                   throw e;
                 }
               }
@@ -182,7 +182,8 @@ OAuth2.prototype = {
     };
 
     this.wrappedJSObject = this._browserRequest;
-    Services.ww.openWindow(null, this.requestWindowURI, null, this.requestWindowFeatures, this);
+    let parent = Services.wm.getMostRecentWindow("mail:3pane");
+    Services.ww.openWindow(parent, this.requestWindowURI, null, this.requestWindowFeatures, this);
   },
   finishAuthorizationRequest: function() {
     if (!("_browserRequest" in this)) {
