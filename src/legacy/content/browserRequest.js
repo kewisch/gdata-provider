@@ -4,6 +4,10 @@
 
 var wpl = Ci.nsIWebProgressListener;
 
+// Suppresses an error from LoginManagerPrompter where PopupNotifications is not defined. Taking it
+// from the main window.
+window.PopupNotifications = window.opener?.PopupNotifications;
+
 var reporterListener = {
   _isBusy: false,
   get securityButton() {
