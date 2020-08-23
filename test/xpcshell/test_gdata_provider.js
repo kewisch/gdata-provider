@@ -2,40 +2,37 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* global __LOCATION__ */
+/* global __LOCATION__, cal, monkeyPatch */
 
-(function() {
-  const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-  Services.prefs.setBoolPref("javascript.options.showInConsole", true);
-  Services.prefs.setBoolPref("browser.dom.window.dump.enabled", true);
-  Services.prefs.setBoolPref("calendar.debug.log", true);
-  Services.prefs.setBoolPref("calendar.debug.log.verbose", true);
-
-  let xpiFile = __LOCATION__.parent.parent.parent;
-  xpiFile.append("dist");
-  xpiFile.append("gdata-provider.xpi");
-
-  dump("Loading " + xpiFile.path + "\n");
-  let manager = Cc["@mozilla.org/component-manager-extra;1"].getService(
-    Ci.nsIComponentManagerExtra
-  );
-  manager.addLegacyExtensionManifestLocation(xpiFile);
-})();
+/* Alas, tests are currently broken. Something must have changed in terms of how cached calendars
+ * are loaded and updated. There is a mad mix of promises and callback code, and code that just
+ * ignores async effects in Lightning. This works ok when the app runs and will keep running, but
+ * the xpcshell test here doesn't cope well with that. I tried to debug this a while back for a
+ * different case and eventually gave up. The test failure you will see is e.g. executeAsync
+ * failing. This is triggered by xpcshell head code that spins the event loop until it is empty.
+ * There is some cached calendar code that will run async that keeps running afterwards. By the time
+ * it does run, the storage calendar is already shut down.
+ *
+ * I'm going to retry this after I have time for some cleanup in the calendar code, which will
+ * hopefully make things more predictable.
+ */
 
 var { HttpServer } = ChromeUtils.import("resource://testing-common/httpd.js");
 var { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
-var { cal } = ChromeUtils.import("resource://calendar/modules/calUtils.jsm");
+Services.prefs.setBoolPref("javascript.options.showInConsole", true);
+Services.prefs.setBoolPref("browser.dom.window.dump.enabled", true);
+Services.prefs.setBoolPref("calendar.debug.log", true);
+Services.prefs.setBoolPref("calendar.debug.log.verbose", true);
 
-var { getGoogleSessionManager } = ChromeUtils.import(
-  "resource://gdata-provider/modules/gdataSession.jsm"
+var { AddonTestUtils } = ChromeUtils.import("resource://testing-common/AddonTestUtils.jsm");
+AddonTestUtils.maybeInit(this);
+
+var { ExtensionTestUtils } = ChromeUtils.import(
+  "resource://testing-common/ExtensionXPCShellUtils.jsm"
 );
-var { dateToJSON, JSONToDate, monkeyPatch } = ChromeUtils.import(
-  "resource://gdata-provider/modules/gdataUtils.jsm"
-);
-var { MockRegistrar } = ChromeUtils.import("resource://testing-common/MockRegistrar.jsm");
+ExtensionTestUtils.init(this);
 
 var gServer;
 
@@ -67,6 +64,8 @@ MockAlertsService.prototype = {
 };
 
 function replaceAlertsService() {
+  let { MockRegistrar } = ChromeUtils.import("resource://testing-common/MockRegistrar.jsm");
+
   let originalAlertsServiceCID = MockRegistrar.register(
     "@mozilla.org/alerts-service;1",
     MockAlertsService
@@ -104,6 +103,10 @@ function GDataServer(calendarId, tasksId) {
   );
 
   this.resetRequest();
+
+  let { getGoogleSessionManager } = ChromeUtils.import(
+    "resource://gdata-provider/legacy/modules/gdataSession.jsm"
+  );
 
   let sessionMgr = getGoogleSessionManager();
   this.session = sessionMgr.getSessionById("xpcshell", true);
@@ -531,23 +534,42 @@ function getAllMeta(calendar) {
 }
 
 function run_test() {
+  do_test_pending();
+  run_test_async()
+    .then(run_next_test)
+    .finally(do_test_finished);
+}
+
+let gExtension = null;
+
+async function run_test_async() {
   replaceAlertsService();
 
   // TODO: make do_calendar_startup to work with this test and replace the startup code here
   do_get_profile();
-  do_test_pending();
-  cal.getCalendarManager().startup({
-    onResult: function() {
-      gServer = new GDataServer("xpcshell@example.com", "tasksId");
-      gServer.start();
-      cal.getTimezoneService().startup({
-        onResult: function() {
-          run_next_test();
-          do_test_finished();
-        },
-      });
-    },
-  });
+
+  await new Promise(resolve => cal.getCalendarManager().startup({ onResult: resolve }));
+  await new Promise(resolve => cal.getTimezoneService().startup({ onResult: resolve }));
+
+  Services.prefs.setBoolPref("xpinstall.signatures.required", false);
+
+  AddonTestUtils.createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "78.2.0", "78.2.0");
+
+  await AddonTestUtils.promiseStartupManager();
+
+  let xpiFile = __LOCATION__.parent.parent.parent;
+  xpiFile.append("dist");
+  xpiFile.append("gdata-provider.xpi");
+  let extension = ExtensionTestUtils.loadExtensionXPI(xpiFile);
+
+  // We're starting up and then immediately marking as unloaded, otherwise code will complain the
+  // test wasn't shut down between test runs. We want to keep the extension installed during the
+  // whole duration of all tests.
+  await extension.startup();
+  await extension.markUnloaded();
+
+  gServer = new GDataServer("xpcshell@example.com", "tasksId");
+  gServer.start();
 }
 
 add_task(async function test_migrate_cache() {
@@ -670,6 +692,10 @@ add_task(async function test_dateToJSON() {
     return items[0].startDate;
   }
 
+  let { dateToJSON } = ChromeUtils.import(
+    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
+  );
+
   let date;
 
   // no timezone
@@ -747,6 +773,10 @@ add_task(async function test_JSONToDate() {
     let date = JSONToDate(aEntry, calendarTz);
     return date ? date.icalString + " in " + date.timezone.tzid : null;
   }
+
+  let { JSONToDate } = ChromeUtils.import(
+    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
+  );
 
   // A date, using the passed in default timezone
   equal(convert({ date: "2015-01-02" }), "20150102 in Europe/Berlin");
