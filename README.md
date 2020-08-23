@@ -1,7 +1,7 @@
 Provider for Google Calendar
 ============================
 
-![Build Status](https://github.com/kewisch/gdata-provider/workflows/Provider%20for%20Google%20Calendar/badge.svg)
+![Build Status](https://github.com/kewisch/gdata-provider/workflows/Checkin/badge.svg)
 
 These are the sources for the [Provider for Google Calendar](https://addons.thunderbird.net/thunderbird/addon/provider-for-google-calendar/).
 
