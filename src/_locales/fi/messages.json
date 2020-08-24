@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Google-kalenterin tarjoaja",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Sallii Google-kalenterin kaksisuuntaisen käytön",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google-kalenteri",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google oletus"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "G"
+  },
+
+  "gdata.migration.title": {
+    "message": "Siirrä vain luku -kalenterit"
+  },
+  "gdata.migration.description": {
+    "message": "Google-kalenterin tarjoaja on havainnut, että sinulla on kalentereita, joista on mahdollista päästä Google-kalenteriin vain luku -tilassa. Jos haluat päivittää jonkin (tai kaikki) näistä kalentereista, valitse ne alla olevasta luettelosta."
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Päivitä"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "P"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Tarkasta aina "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Oletusmuistutus"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Valitse olemassa oleva istunto tai muodosta uusi istunto syöttämällä sähköpostiosoitteesi. Tarvitset vain yhden istunnon tiliä kohti."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Valitse kalenterit ja tehtävälistat, jotka haluat tilata."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Siirry seuraavaan vaiheeseen tekemään kalenterisi asetukset."
+  },
+
+  "calendarsHeader": {
+    "message": "Kalenterit"
+  },
+  "taskListsHeader": {
+    "message": "Tehtävälistat"
+  },
+
+  "busyTitle": {
+    "message": "Varattu ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "Kalenterin $session_id$ kiintiö on ylitetty, yritä myöhemmin uudelleen.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Tämä tarjoajan versio on vanhentunut. Päivitä uusimpaan versioon."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google-kalenteri hyväksyy muistutuksen korkeintaan 4 viikkoa ennen tapahtuman alkua."
+  },
+
+  "syncProgressEvent": {
+    "message": "Synkronoidaan kalenterin $calendar_name$ tapahtumaa $num_events_synced$/$total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Synkronoidaan kalenterin $calendar_name$ tehtävää $num_tasks_synced$/$total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Synkronoidaan kalenteria $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Google-kalenterin tarjoaja haluaa käsitellä tilisi $session_id$ tietoja tapahtumien ja tehtävien noutamiseksi. Kirjautumistiedot ja kalenterin tiedot siirretään ainoastaan tietokoneesi ja Googlen välillä, kolmannet osapuolet eivät saa näitä tietoja.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Kirjaudu sisään tilillesi $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

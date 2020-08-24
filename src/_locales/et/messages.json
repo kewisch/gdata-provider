@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Google Calendari teenusepakkuja",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Lubab kahesuunalist ligipääsu Google Calendarile",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google vaikimisi"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "v"
+  },
+
+  "gdata.migration.title": {
+    "message": "Kirjutuskaitstud kalendrite migreerimine"
+  },
+  "gdata.migration.description": {
+    "message": "Google Calendari teenusepakkuja tuvastas, et sul on kalendreid, mis pääsevad Google Calendarile ligi vaid kirjutuskaitstud režiimis. Kui soovid uuendada mõnda neist kalendritest, vali need allpool."
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Uuenda"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "U"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Kontrolli alati "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Vaikimisi meeldetuletus"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Palun vali olemasolev seanss või sisesta e-posti aadress uue seansi loomiseks. Iga konto vajab vaid ühte seanssi."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Palun vali kalendrid ja ülesannete nimekirjad, mida soovid tellida."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Kalendrite seadistamiseks liigu järgmise sammu juurde."
+  },
+
+  "calendarsHeader": {
+    "message": "Kalendrid"
+  },
+  "taskListsHeader": {
+    "message": "Ülesannete nimekirjad"
+  },
+
+  "busyTitle": {
+    "message": "Hõivatud ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "$session_id$ kvoot on ületatud, palun proovi hiljem uuesti.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Teenusepakkuja versioon on aegunud, palun uuenda viimasele versioonile."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google Calendar lubab meeldetuletusi vaid 4 nädalat enne sündmuse algust."
+  },
+
+  "syncProgressEvent": {
+    "message": "Kalendri $calendar_name$ sündmuste sünkroniseerimine: $num_events_synced$ $total_events_to_sync$-st",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Kalendri $calendar_name$ ülesannete sünkroniseerimine: $num_tasks_synced$ $total_tasks_to_sync$-st",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Sünkroniseeritakse kalendrit $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Google Calendari teenusepakkuja vajab sündmuste ja ülesannete hankimiseks ligipääsu kontole $session_id$. Mandaati ja kalendri andmeid edastatakse vaid sinu arvuti ja Google'i vahel, kolmandate osapoolte saite ei kasutata.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Sisselogimine kontole $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

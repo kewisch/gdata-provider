@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Провајдер Google календара",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Дозволи двосмерни приступ Google календару",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google календар",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google подразумевано"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "д"
+  },
+
+  "gdata.migration.title": {
+    "message": "Мигрирај неуписиве календаре"
+  },
+  "gdata.migration.description": {
+    "message": "Провајдер Google календара је пронашао да имате постојеће календаре који могу приступати Google календару само у режиму читања. Уколико желите да надоградите било који од ових календара, изаберите их испод"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Надогради"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "Н"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Увек провери "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Подразумевани подсетник"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Изаберите већ постојећу сесију или унесите вашу адресу е-поште да бисте направили нову сесију. Треба вам само једна сесија по налогу."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Изаберите календаре и спискове задатака на које се желите претплатити."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Идите на следећи корак да бисте подесили ваше календаре."
+  },
+
+  "calendarsHeader": {
+    "message": "Calendars"
+  },
+  "taskListsHeader": {
+    "message": "Task Lists"
+  },
+
+  "busyTitle": {
+    "message": "Заузет ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "Квота за $session_id$ је премашена, пробајте поново касније.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Издање овог провајдера је истекло, ажурирајте се на последње издање."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google календар дозвољава подсетнике за највише 4 недеља пре почетка догађаја."
+  },
+
+  "syncProgressEvent": {
+    "message": "Синхронизујем $calendar_name$ догађај $num_events_synced$ од $total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Синхронизујем $calendar_name$ задатак $num_tasks_synced$ од $total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Синхронизујем календар $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Провајдер Google календара би желео да приступи ваше налогу $session_id$ да би добавио догађаје и задатке. Приступни параметри и календарски подаци се пребацују само између Google-а и вашег рачунара, нема трећих страна.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Пријавите се на ваш налог $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

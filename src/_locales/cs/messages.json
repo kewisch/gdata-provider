@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Poskytovatel Google kalendáře",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Umožňuje obousměrný přístup ke Google kalendáři",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Kalendář Google",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Výchozí nastavení Google"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "V"
+  },
+
+  "gdata.migration.title": {
+    "message": "Migrace kalendáře pro čtení"
+  },
+  "gdata.migration.description": {
+    "message": "Poskytovatel kalendáře Google detekoval kalendáře, které umožňují přístup ke kalendáři Google pouze v režimu jen pro čtení. Pokud si přejete aktualizovat některý z těchto kalendářů, vyberte jej prosím níže"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Aktualizovat"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "A"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Vždy kontrolovat"
+  },
+
+  "gdata.reminder.default": {
+    "message": "Výchozí připomenutí"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Vyberte prosím existující relaci nebo vložte vaši e-mailovou adresu pro vytvoření nové. Pro jeden účet stačí pouze jedna relace."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Vyberte prosím kalendáře a úkoly, které chcete odebírat."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Pokračujte prosím dalším krokem pro nastavení vašich kalendářů."
+  },
+
+  "calendarsHeader": {
+    "message": "Kalendáře"
+  },
+  "taskListsHeader": {
+    "message": "Task Lists"
+  },
+
+  "busyTitle": {
+    "message": "Není volno ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "Kvóta pro $session_id$ byla vyčerpána, zkuste to prosím znovu později.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Tato verze poskytovatele je zastaralá, aktualizujte jej prosím na nejnovější verzi."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google Calendar umožňuje připomenutí maximálně 4 týdny před začátkem události."
+  },
+
+  "syncProgressEvent": {
+    "message": "Synchronizace $num_events_synced$ událostí z $total_events_to_sync$ v kalendáři $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Synchronizace $num_tasks_synced$ úkolů z $total_tasks_to_sync$ v kalendáři $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Synchronizace kalendáře $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Poskytovatel Google kalendáře by rád získal přístup k vašemu účtu $session_id$ pro získání událostí a úkolů. Přihlašovací údaje a data kalendáře jsou přenášena pouze mezi vaším počítačem a servery Google, žádné třetí strany zapojeny nejsou.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Přihlaste se ke svému účtu $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

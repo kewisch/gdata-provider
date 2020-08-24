@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Google Calendar hornitzailea",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Google Calendar-era sarrera norabide bietan ahalbidetzen du",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google lehenetsia"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "l"
+  },
+
+  "gdata.migration.title": {
+    "message": "Irakurtzeko soilik diren egutegiak migratu"
+  },
+  "gdata.migration.description": {
+    "message": "Google Calendar hornitzaileak irakurtzeko soilik gaitasuna duten hainbat egutegi dituzula detektatu du. Hauetako edozein egutegi eguneratu nahi bazenu, aukeratu itzazu azpian"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Bertsio-berritzea"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "B"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Egiaztatu beti "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Gogorarazle lehenetsia"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Mesedez hautatu sesioa edo sartu posta helbidea sesio berria sortzeko. Kontuko sesio bakarra behar duzu."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Harpidetu nahi zaren egutegi eta zeregin zerrenda hautatu."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Hurrengo urratsera joan zure egutegiak konfiguratzeko."
+  },
+
+  "calendarsHeader": {
+    "message": "Egutegiak"
+  },
+  "taskListsHeader": {
+    "message": "Zereginen zerrenda"
+  },
+
+  "busyTitle": {
+    "message": "Lanpetua ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "$session_id$(r)en muga gainditu da, saiatu beranduago.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Bertsio hau iraungitu da, mesedez eguneratu azken bertsiora."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google Calendar-en gogorarazleak gertaera hasi baino 4 aste aurreragokoak ezin dira izan."
+  },
+
+  "syncProgressEvent": {
+    "message": "$calendar_name$ sinkronizatzen $total_events_to_sync$(e)tik $num_events_synced$. gertaera",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "$calendar_name$ sinkronizatzen $total_tasks_to_sync$(e)tik $num_tasks_synced$. zeregina",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "$calendar_name$ egutegia sinkronizatzen",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Google Calendar hornitzaileak zure $session_id$ kontuan sartu nahi luke gertaerak eta zereginak berreskuratzeko. Nortasuna egiaztatzeko datuak eta egutegiarenak zure ordenagailuaren eta Google-n artean zuzenean bidaltzen dira, tarteko hirugarren gunerik ez dagoelarik.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Sartu zure $session_id$ kontura",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

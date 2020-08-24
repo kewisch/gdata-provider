@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Furnizuesi për Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Lejo hyrje dydrejtimëshe te Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google Default"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "D"
+  },
+
+  "gdata.migration.title": {
+    "message": "Migro kalendarë vetëm-lexim"
+  },
+  "gdata.migration.description": {
+    "message": "Furnizuesi për Google Calendar ka zbuluar se keni kalendarë ekzistues që mundet të hyjnë në Google Calendar vetëm nën mënyrën lexim. Nëse doni të përditësoni ndonjë prej këtyre kalendarëve, ju lutemi, përzgjidhini më poshtë"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Përmirësoji"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "P"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Kontrollo Përherë "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Kujtues Parazgjedhje"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Ju lutemi, zgjidhni një sesion ekzistues ose jepni adresën tuaj që të krijohet një sesion i ri. Ju duhet vetëm një sesion për llogari."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Ju lutemi, përzgjidhni kalendarët dhe listat e punëve te të cilat do të donit të pajtoheshit."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Ju lutemi, që të rregulloni kalendarët tuaj, vazhdoni me hapin pasues."
+  },
+
+  "calendarsHeader": {
+    "message": "Calendars"
+  },
+  "taskListsHeader": {
+    "message": "Task Lists"
+  },
+
+  "busyTitle": {
+    "message": "I zënë ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "U tejkalua kuota për $session_id$, ju lutemi, riprovoni më vonë.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Ky version i furnizuesit ka skaduar, ju lutemi, përditësojeni me versionin e ri."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google Calendar lejon vetëm kujtues për deri në 4 javë përpara se të fillojë veprimtaria."
+  },
+
+  "syncProgressEvent": {
+    "message": "Po njëkohësohet veprimtaria $num_events_synced$ e $calendar_name$ nga $total_events_to_sync$ gjithsej",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Po njëkohësohet puna $num_tasks_synced$ e $calendar_name$ nga $total_tasks_to_sync$ gjithsej",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Po njëkohësohet Kalendari $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Furnizuesi i Google Calendar-it do të donte të hynte te llogaria juaj $session_id$ për të marrë veprimtari dhe punë. Kredencialet për hyrje dhe të dhënat e kalendarit shpërngulen vetëm mes kompjuterit tuaj dhe Google-it, pa përfshirje sajtesh nga palë të treta.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Hyni në llogarinë tuaj $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Proveïdor del Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Permet un accés bidireccional al Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Per defecte de Google"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "d"
+  },
+
+  "gdata.migration.title": {
+    "message": "Migració de calendaris només de lectura"
+  },
+  "gdata.migration.description": {
+    "message": "El proveïdor del Google Calendar ha detectat que teniu calendaris que només poden accedir al Google Calendar en mode només de lectura. Si voleu actualitzar cap d'aquests calendaris, seleccioneu-los a continuació"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Actualitza"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "A"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Comprova-ho sempre "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Recordatori per defecte"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Trieu una sessió existent o escriviu la vostra adreça electrònica per crear una sessió nova. Només cal una sessió per compte."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Seleccioneu els calendaris i les llistes de tasques als quals us voleu subscriure."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Avanceu fins al pas següent per configurar els calendaris."
+  },
+
+  "calendarsHeader": {
+    "message": "Calendars"
+  },
+  "taskListsHeader": {
+    "message": "Task Lists"
+  },
+
+  "busyTitle": {
+    "message": "Ocupat ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "S'ha excedit la quota per a $session_id$. Torneu-ho a provar més tard.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Aquesta versió del proveïdor ha caducat. Actualitzeu-lo a la versió més recent."
+  },
+
+  "reminderOutOfRange": {
+    "message": "El Google Calendar només permet recordatoris de fins a 4 setmanes abans de l'inici de la cita."
+  },
+
+  "syncProgressEvent": {
+    "message": "S'estan sincronitzant les cites de $calendar_name$ ($num_events_synced$/$total_events_to_sync$)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "S'estan sincronitzant les tasques de $calendar_name$ ($num_tasks_synced$/$total_tasks_to_sync$)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "S'està sincronitzant el calendari $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "L'extensió «Provider for Google Calendar» vol accedir al compte $session_id$ per recuperar les cites i tasques. Les credencials i dades dels calendaris es transferiran només entre el vostre ordinador i Google; no hi ha cap altra part implicada.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Inicieu la sessió al compte $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

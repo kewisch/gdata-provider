@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Trình cung cấp cho Google Lịch",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Cho phép giao tiếp hai chiều với Google Lịch",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google Lịch",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google Mặc Định"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "G"
+  },
+
+  "gdata.migration.title": {
+    "message": "Di chuyển các bộ lịch chỉ-đọc"
+  },
+  "gdata.migration.description": {
+    "message": "Nhà cung cấp cho Google Lịch nhận thấy các bộ lịch của bạn chỉ có thể truy cập Google Lịch trong chế độ chỉ-đọc. Nếu bạn muốn nâng cấp bất kì bộ lịch nào, vui lòng chọn chúng ở bên dưới"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Nâng cấp"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "N"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Luôn luôn kiểm tra "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Nhắc nhở mặc định"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Vui lòng chọn một phiên hiện có hoặc nhập địa chỉ email của bạn để tạo một phiên mới. Bạn chỉ cần một phiên cho mỗi tài khoản."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Vui lòng chọn lịch và danh sách nhiệm vụ bạn muốn đăng ký."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Vui lòng chuyển sang bước tiếp theo để thiết lập lịch của bạn."
+  },
+
+  "calendarsHeader": {
+    "message": "Lịch"
+  },
+  "taskListsHeader": {
+    "message": "Danh sách nhiệm vụ"
+  },
+
+  "busyTitle": {
+    "message": "Bận ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "Hạn ngạch cho $session_id$ đã bị vượt quá, vui lòng thử lại sau.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Phiên bản này của nhà cung cấp đã hết hạn, vui lòng cập nhật lên phiên bản mới nhất."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Lịch Google chỉ cho phép nhắc nhở tối đa 4 tuần trước khi sự kiện bắt đầu."
+  },
+
+  "syncProgressEvent": {
+    "message": "Đồng bộ hóa sự kiện $calendar_name$ $num_events_synced$ của $total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Đồng bộ hóa nhiệm vụ $calendar_name$ $num_tasks_synced$ của $total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Đồng bộ hóa Lịch $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Nhà cung cấp cho Lịch Google muốn truy cập vào tài khoản của bạn $session_id$ để truy xuất các sự kiện và nhiệm vụ. Thông tin xác thực và dữ liệu lịch chỉ được chuyển giữa máy tính của bạn và Google, không có trang web của bên thứ ba nào được tham gia.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Đăng nhập vào tài khoản của bạn $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

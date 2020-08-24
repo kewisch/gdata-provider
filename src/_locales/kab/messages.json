@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Asaǧǧa i uwitay Google",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Sireg anekcum si sin idisan ɣer uwiyitay Google",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Awitay Google",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Aɣewwaṛ amezwer Google"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "G"
+  },
+
+  "gdata.migration.title": {
+    "message": "Sgaǧ iwitayen n tɣuṛi kan"
+  },
+  "gdata.migration.description": {
+    "message": "Asaǧǧaw i uwitay Google yeffa-d d akken llan iwitayen ur yemiren ara ad kecmen ɣer iwitayen n Google deg uskar n tɣuri kan. Ma tebɣiḍ ad tessaliḍ aswir n yiwen seg iwitayen-agi, fren-iten daw-a."
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Leqqem"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "L"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Senqad yal tikelt"
+  },
+
+  "gdata.reminder.default": {
+    "message": "Asmekti amezwer"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Ma ulac aɣilif, fren tiɣimt neɣ sekcem tansa imayl akken ad ternuḍ tiɣimit tamaynut. Tesriḍ kan yiwet n tɣimit i yiwen n umiḍan."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Ma ulac aɣilif fren tibdarin n iwitayen akked twuriwin anda tebɣid ad tejerredeḍ."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Ma ulac aɣilif ddu ɣer imecwar d-iteddun akken ad tesbaduḍ iwitayen-inek."
+  },
+
+  "calendarsHeader": {
+    "message": "Iwitayen"
+  },
+  "taskListsHeader": {
+    "message": "Tibdarin n wuri"
+  },
+
+  "busyTitle": {
+    "message": "Yettwaṭṭe ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "Amur $session_id$ iɛedda tilas, ma ulac aɣilif ɛreḍ tikelt nniḍen ticki.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Lqem n usaǧǧaw d aqbuṛ, ma ulac aɣilif ddu ɣer lqem amaynut."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Awitay Google yessirig kan ismektiyen arama d 4 n dduṛtat seg azemz n tazwara."
+  },
+
+  "syncProgressEvent": {
+    "message": "Amtawi n tedyant $num_events_synced$ si $calendar_name$ ar $total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Amtawi n twuri $num_tasks_synced$ si $calendar_name$ ar $total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Amtawi n uwitay $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Asaǧǧaw i uwitay Google yezmer yebɣa ad yekcem ɣer umiḍan-inek $session_id$ akken ad d-inadi tidyanin akked twuriwin. Isefka n unekcum akked iwitayen ttwaznen kan gar uselkim inek akked Google, ulac ismal wis kraḍ ara yilin gar-asen.\u0020",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Kcem ɣer umiḍan inek $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

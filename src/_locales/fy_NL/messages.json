@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Provider foar Google Aginda",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Jout bidireksjonele tagong ta Google Aginda",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google Aginda",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google standert"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "s"
+  },
+
+  "gdata.migration.title": {
+    "message": "Allinnich-lêzenaginda’s migrearje"
+  },
+  "gdata.migration.description": {
+    "message": "De Google Aginda-provider hat detektearre dat jo besteande aginda’s hawwe dy't Google Aginda allinnich yn allinnich-lêzenmodus benaderje kinen. As jo ien of mear fan dizze aginda’s opwerdearje wolle, selektearje dizze dan hjirûnder."
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Opwurdearje"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "O"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Altyd kontrolearje"
+  },
+
+  "gdata.reminder.default": {
+    "message": "Standertomtinken"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Kies in besteande sesje of fier jo e-mailadres yn om in nije sesje oan te meitsjen. Jo hawwe mar ien sesje per account nedich."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Selektearje de aginda’s en takenlisten wêrop jo jo abonnearje wolle."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Gean fierder mei de folgjende stap om jo aginda’s yn te stellen."
+  },
+
+  "calendarsHeader": {
+    "message": "Aginda's"
+  },
+  "taskListsHeader": {
+    "message": "Taaklisten"
+  },
+
+  "busyTitle": {
+    "message": "Beset ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "It kwotum foar $session_id$ is oer de grins, probearje it letter opnij.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Dizze ferzje fan de provider is ferâldere. Fernij dizze nei de nijste ferzje."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google Agenda brûkt allinnich omtinken oant 4 wiken foardat it barren begjint."
+  },
+
+  "syncProgressEvent": {
+    "message": "Syngronisearjen: $calendar_name$, barren $num_events_synced$ fan $total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Syngronisearjen: $calendar_name$, taak $num_tasks_synced$ fan $total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Syngronisearjen: aginda $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "De provider foar Google Aginda freget om tagong ta jo account $session_id$ foar it opheljen fan barrens en taken. Referinsjes en agindagegevens wurde allinnich oerdroegen tusken jo kompjûter en Google; der binne gjin websites fan tredden by belutsen.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Oanmelde by jo account $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

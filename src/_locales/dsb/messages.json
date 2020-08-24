@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Póbitowaŕ za Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Zmóžnja dwójosměrowy pśistup ku Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Standard Google"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "S"
+  },
+
+  "gdata.migration.title": {
+    "message": "Kalendery importěrowaś, kótarež daju se jano cytaś"
+  },
+  "gdata.migration.description": {
+    "message": "Póbitowaŕ za Google Calendar ma namakał, až maśo južo kalendery, kótarež maju pśistup ku Google Calendar jano w cytańskem modusu. Jolic cośo jaden abo někotare z tych kalenderow aktualizěrowaś, wubjeŕśo je dołojce"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Aktualizěrowaś"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "A"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Pśecej pśeglědowaś "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Standardne dopomnjeśe"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Pšosym wubjeŕśo eksistěrujuce pósejźenje abo zapódajó swóju e-mailowu adresu, aby nowe pósejźenje napórał. Trjebaśo jano jadno pósejźenje na konto."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Pšosym wubjeŕśo kalendery a lisćiny nadawkow, kótarež cośo aboněrowaś."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Pśosym pśejźćo k pśiducemu kšacoju, aby swóje kalendery konfigurěrował."
+  },
+
+  "calendarsHeader": {
+    "message": "Kalendarje"
+  },
+  "taskListsHeader": {
+    "message": "Lisćiny nadawkow"
+  },
+
+  "busyTitle": {
+    "message": "Zabrany ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "Późěl za $session_id$ jo se pśekšocył, pšosym wopytajśo pózdźej hyšći raz.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Toś ta wersija póbitowarja jo zestarjona, pšosym aktualizěrujśo na nejnowšu wersiju."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google Calendar dowólujo jano dopomnjeśa až do 4 tyźenjow pśed zachopjeńkom tšojenja."
+  },
+
+  "syncProgressEvent": {
+    "message": "$calendar_name$ synchronizěrujo tšojenje $num_events_synced$ z $total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "$calendar_name$ synchronizěrujo nadawk $num_tasks_synced$ z $total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Kalender $calendar_name$ se synchronizěrujo",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Póbitowaŕ za Google Calendar co na wašo konto $session_id$ pśistup měś, aby tšojenja a nadawki wótwółał. Pśizjawjeńske a kalenderowe daty pśenosuju se jano mjazy licadłom a Google, tśeśe póbitowarje njejsu wobźělone.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Pśizjawśo se pla swójogo konta $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

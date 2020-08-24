@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Google-კალენდრის მომწოდებელი",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Google კალენდარში ორმხრივი წვდომის საშუალებას იძლევა",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google კალენდარი",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google ნაგულისხმევი"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "ნ"
+  },
+
+  "gdata.migration.title": {
+    "message": "მხოლოდ წასაკითხი კალენდრების გადატანა"
+  },
+  "gdata.migration.description": {
+    "message": "Google კალენდრის მომწოდებელმა აღმოაჩინა, რომ რომ თქვენ გაგაჩნიათ კალენდრები, რომლებიც Google კალენდრის მიერ მხოლოდ წაკითხვის რეჟიმშია ხელმისაწვდომი. თუ რომელიმეს განახლება გსურთ, შეარჩიეთ ქვემოთ"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "განახლება"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "ხ"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "შემოწმება ყოველთვის "
+  },
+
+  "gdata.reminder.default": {
+    "message": "ნაგულისხმევი შემხსენებელი"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "გთხოვთ, აიღოთ არსებული სეანსიდან, ან შეიყვანოთ თქვენი ელფოსტა, ახალი სეანსის შესაქმნელად. თითოეულ ანგარიშზე, მხოლოდ ერთი სეანსია საჭირო."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "გთხოვთ, მიუთითოთ კალენდრებისა და დავალებების სია, რომელთა გამოწერაც გსურთ."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "გთხოვთ, გადახვიდეთ შემდეგ საფეხურზე, კალენდრის გასამართად."
+  },
+
+  "calendarsHeader": {
+    "message": "კალენდრები"
+  },
+  "taskListsHeader": {
+    "message": "დავალებების სიები"
+  },
+
+  "busyTitle": {
+    "message": "დაკავებული ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "$session_id$-ისთვის დასაშვებ რაოდენობაზე გადაჭარბებულია, გთხოვთ, სცადოთ ხელახლა.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "ამ მომწოდებლის ვერსია ვადაგასულია, გთხოვთ, განაახლოთ უახლეს ვერსიამდე."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google კალენდარი, ღონისძიების დაწყებამდე, მხოლოდ 4 კვირის შუალედში იძლევა შეხსენების დაყენების საშუალებას."
+  },
+
+  "syncProgressEvent": {
+    "message": "$calendar_name$ დასინქრონება: $num_events_synced$ ღონისძიება, $total_events_to_sync$-იდან",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "$calendar_name$ დასინქრონება: $num_tasks_synced$ დავალება, $total_tasks_to_sync$-იდან",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "$calendar_name$ კალენდრის სინქრონიზაცია",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Google კალენდრის მომსახურების მომწოდებელს, სურს თქვენს $session_id$ ანგარიშთან დაკავშირება, ღონისძიებებისა და დავალებებთან წვდომის მისაღებად. ანგარიშის და კალენდრის მონაცემები თქვენი კომპიუტერიდან პირდაპირ გადაეგზავნება Google-ს, შუამავალი საიტების გარეშე.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "$session_id$ ანგარიშზე შესვლა",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

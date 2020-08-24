@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Google Calendar 提供者",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "讓您可以雙向存取 Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google 預設值"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "D"
+  },
+
+  "gdata.migration.title": {
+    "message": "轉移唯讀的行事曆"
+  },
+  "gdata.migration.description": {
+    "message": "Google Calendar 提供者發現您擁有只能使用於唯讀模式的行事曆。若您想要升級這些行事曆，請在下面選擇"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "升級"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "U"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "總是檢查 "
+  },
+
+  "gdata.reminder.default": {
+    "message": "預設提醒"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "請選擇現有的連線階段，或輸入您的電子郵件地址以建立新的連線階段。每個帳號您只需要建立一個連線。"
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "請選擇您要訂閱的行事曆與工作清單。"
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "請前往下一步設定您的行事曆。"
+  },
+
+  "calendarsHeader": {
+    "message": "行事曆"
+  },
+  "taskListsHeader": {
+    "message": "工作清單"
+  },
+
+  "busyTitle": {
+    "message": "忙碌（$calendar_name$）",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "$session_id$ 的配額已經用完，請稍後再試。",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "此版本的提供者已經過時，請更新到最新版本。"
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google Calendar 僅允許於活動開始四星期內的提醒。"
+  },
+
+  "syncProgressEvent": {
+    "message": "正在同步 $calendar_name$ 的第 $num_events_synced$ 筆事件，共 $total_events_to_sync$ 筆",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "正在同步 $calendar_name$ 的第 $num_tasks_synced$ 筆工作，共 $total_tasks_to_sync$ 筆",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "正在同步行事曆 $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Google Calendar 提供者想要存取您的 $session_id$ 帳號以取回您的事件與工作。您的帳號密碼將會直接從電腦傳輸到 Google，不會被其他人知道。",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "登入至您的帳號 $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

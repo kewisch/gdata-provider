@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Provider voor Google Agenda",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Geeft bidirectionele toegang tot Google Agenda",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google Agenda",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google standaard"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "s"
+  },
+
+  "gdata.migration.title": {
+    "message": "Alleen-lezenagenda’s migreren"
+  },
+  "gdata.migration.description": {
+    "message": "De provider voor Google Agenda heeft gedetecteerd dat u bestaande agenda’s hebt die Google Agenda alleen in alleen-lezenmodus kunnen benaderen. Als u een of meer van deze agenda’s wilt bijwerken, selecteer deze dan hieronder."
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Bijwerken"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "B"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Altijd controleren"
+  },
+
+  "gdata.reminder.default": {
+    "message": "Standaardherinnering"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Kies een bestaande sessie of voer uw e-mailadres in om een nieuwe sessie aan te maken. U hebt maar één sessie per account nodig."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Selecteer de agenda’s en takenlijsten waarop u zich wilt abonneren."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Ga verder met de volgende stap om uw agenda’s in te stellen."
+  },
+
+  "calendarsHeader": {
+    "message": "Calendars"
+  },
+  "taskListsHeader": {
+    "message": "Task Lists"
+  },
+
+  "busyTitle": {
+    "message": "Bezet ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "Het quotum voor $session_id$ is overschreden, probeer het later opnieuw.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Deze versie van de provider is verouderd. Werk deze bij naar de nieuwste versie."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google Agenda gebruikt alleen herinneringen tot 4 weken voordat de gebeurtenis begint."
+  },
+
+  "syncProgressEvent": {
+    "message": "Synchroniseren: $calendar_name$, gebeurtenis $num_events_synced$ van $total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Synchroniseren: $calendar_name$, taak $num_tasks_synced$ van $total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Synchroniseren: agenda $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "De provider voor Google Agenda vraagt om toegang tot uw account $session_id$ voor het ophalen van gebeurtenissen en taken. Referenties en agendagegevens worden alleen overgedragen tussen uw computer en Google; er zijn geen websites van derden bij betrokken.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Aanmelden bij uw account $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

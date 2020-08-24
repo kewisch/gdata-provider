@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Darparwr ar gyfer Calendr Google",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Mae'n caniatáu mynediad y ddwy ffordd i Galendr Google",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Rhagosodiad Google"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "G"
+  },
+
+  "gdata.migration.title": {
+    "message": "Mudo calendrau darllen yn unig"
+  },
+  "gdata.migration.description": {
+    "message": "Mae'r darparwr ar gyfer Calendr Google wedi canfod fod gennych eisoes galendrau sydd ddim ond â'r gallu i gael mynediad at Calendrau Google yn y modd darllen yn unig. Os hoffech chi ddiweddaru unrhyw un o'r calendrau hyn, dewiswch nhw isod"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Diweddaru"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "U"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Gwirio bob tro "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Atgoffwr Rhagosodedig"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Dewiswch sesiwn gyfredol neu rhowch gyfeiriad e-bost a chreu sesiwn newydd. Dim ond un sesiwn i'r cyfrif sydd ei angen."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Dewiswch y calendrau a'r rhestrau tasgau yr hoffech danysgrifio iddyn nhw."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Symudwch ymlaen i'r cam nesaf er mwyn gosod eich calendrau."
+  },
+
+  "calendarsHeader": {
+    "message": "Calendrau"
+  },
+  "taskListsHeader": {
+    "message": "Rhestrau Tasgau"
+  },
+
+  "busyTitle": {
+    "message": "Prysur ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "Mae'r cwota ar gyfer $session_id$ wedi ei lenwi, ceisiwch eto.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Mae fersiwn y darparwr wedi dod i ben, diweddarwch i'r fersiwn diweddaraf."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Dim ond caniatáu atgoffwyr hyd at 4 wythnos cyn digwyddiad y mae Google Calendar."
+  },
+
+  "syncProgressEvent": {
+    "message": "Cydweddu $calendar_name$ $num_events_synced$ digwyddiad allan o $total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Cydweddu tasgau $calendar_name$ $num_tasks_synced$ allan o $total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Cydweddu Calendr $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Hoffai Provider for Google Calendar gael mynediad i'ch cyfrif $session_id$ i estyn digwyddiadau a thasgau. Dim ond rhyngoch chi a'ch cyfrifiadur y bydd manylion mewngofnodi a data calendr yn cael eu trosglwyddo, ni fydd trydydd parti ynglŷn â hyn.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Mewngofnodwch i'ch cyfrif $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

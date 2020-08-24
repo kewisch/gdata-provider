@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Furnizor pentru Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Permite acces bidirecțional la Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Calendar Google",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Implicit de la Google"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "d"
+  },
+
+  "gdata.migration.title": {
+    "message": "Migrare calendare disponibile numai pentru citire"
+  },
+  "gdata.migration.description": {
+    "message": "Furnizorul pentru Google Calendar a detectat că ai calendare existente care sunt capabile să acceseze Google Calendar în modul numai citire. Dacă dorești să actualizezi oricare dintre aceste calendare, te rugăm să le selectezi mai jos"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Actualizare"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "u"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Verifică întotdeauna "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Reamintire implicită"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Te rugăm să alegi o sesiune existentă sau să îți introduci adresa de e-mail pentru a crea o sesiune nouă. Ai nevoie numai de o sesiune per cont."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Te rugăm să selectezi calendarele și listele de sarcini la care dorești să te abonezi."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Te rugăm să treci la pasul următor pentru a configura calendarele."
+  },
+
+  "calendarsHeader": {
+    "message": "Calendars"
+  },
+  "taskListsHeader": {
+    "message": "Task Lists"
+  },
+
+  "busyTitle": {
+    "message": "Ocupat ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "S-a depășit cota pentru $session_id$; te rugăm să încerci din nou mai târziu.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Această versiune a furnizorului a expirat, te rugăm să o actualizezi la ultima versiune."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google Calendar permite doar reamintiri de până la 4 săptămâni înainte de începerea evenimentului."
+  },
+
+  "syncProgressEvent": {
+    "message": "Sincronizez $calendar_name$ cu evenimentul $num_events_synced$ din $total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Sincronizez $calendar_name$ cu sarcina $num_tasks_synced$ din $total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Sincronizez calendarul $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Furnizorul pentru Google Calendar dorește să-ți acceseze contul $session_id$ pentru a obține evenimentele și sarcinile. Datele de autentificare și ale calendarului sunt transferate doar între calculator și Google, niciun site terț nu este implicat.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Autentifică-te în contul tău $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

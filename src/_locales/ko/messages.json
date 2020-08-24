@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Google 罹섎┛?뜑",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Google 罹섎┛?뜑??? ?뼇諛⑺뼢 ?젒?냽 ?뿀?슜",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google 캘린더",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google 기본 설정"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "D"
+  },
+
+  "gdata.migration.title": {
+    "message": "읽기 전용 캘린더 마이그레이션"
+  },
+  "gdata.migration.description": {
+    "message": "구글 캘린더에 읽기 전용 모드로 접근할 수 있는 캘린더가 존재합니다. 이 캘린더중 하나를 업그레이드 하려면 하단의 리스트에서 선택을 하십시오."
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "업그레이드"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "U"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "항상 검사 "
+  },
+
+  "gdata.reminder.default": {
+    "message": "기본 알림"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "이미 존재하는 세션을 선택하거나 이메일을 입력해서 새 세션을 만들어주세요. 계정당 한 세션만 필요합니다."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "구독하고 싶은 캘린더와 할 일 목록을 선택 해 주세요."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "다음 단계로 진행 해 주세요."
+  },
+
+  "calendarsHeader": {
+    "message": "Calendars"
+  },
+  "taskListsHeader": {
+    "message": "Task Lists"
+  },
+
+  "busyTitle": {
+    "message": "바쁨 ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "$session_id$에 대한 할당량이 초과되었습니다. 나중에 다시 시도 해 주세요.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "새 버전의 프로바이더로 업데이트 해 주세요."
+  },
+
+  "reminderOutOfRange": {
+    "message": "구글 캘린더 미리알림은 일정 시작 4주 전 부터 가능합니다."
+  },
+
+  "syncProgressEvent": {
+    "message": "$calendar_name$의 일정 동기화 중 ($num_events_synced$/$total_events_to_sync$)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "$calendar_name$의 할 일 동기화 중 ($num_tasks_synced$/$total_tasks_to_sync$)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "캘린더 $calendar_name$ 동기화 중",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Google 캘린더 프로바이더가 여러분의 계정 $session_id$에 접근하여 일정과 할 일을 가져오고 싶어 합니다. 비밀번호와 일정 데이터는 여러분의 컴퓨터와 Google 사이에서만 전달되며 제 3자 사이트는 관여하지 않습니다.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "$session_id$ 계정으로 로그인",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

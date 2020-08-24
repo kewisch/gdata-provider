@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Provider for Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Google カレンダーと双方向のアクセスを可能にします",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google カレンダー",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google の初期値"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "D"
+  },
+
+  "gdata.migration.title": {
+    "message": "読み込み専用のカレンダーの移行"
+  },
+  "gdata.migration.description": {
+    "message": "Provider for Google Calendar は、読み込み専用モードでのみアクセスできる Google カレンダーを検出しました。アップグレードするには以下のカレンダーを選択してください:"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "アップグレード"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "U"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "毎回確認する "
+  },
+
+  "gdata.reminder.default": {
+    "message": "既定のアラーム"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "既存のセッションを選ぶかメールアドレスを入力して新しいセッションを作成してください。アカウントごとに必要なセッションは 1 つのみです。"
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "購読するカレンダーと ToDo リストを選択してください。"
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "次のステップへ進み、カレンダーをセットアップしてください。"
+  },
+
+  "calendarsHeader": {
+    "message": "カレンダー"
+  },
+  "taskListsHeader": {
+    "message": "ToDo リスト"
+  },
+
+  "busyTitle": {
+    "message": "ビジー ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "$session_id$ のクォータが上限に達しました。後で再度お試しください。",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "このバージョンは有効期限切れです。最新バージョンに更新してください。"
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google カレンダーは予定開始の 4 週間前までしかアラーム通知を許可していません。"
+  },
+
+  "syncProgressEvent": {
+    "message": "$calendar_name$ の予定を同期しています ($num_events_synced$ / $total_events_to_sync$)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "$calendar_name$ の ToDo を同期しています ($num_tasks_synced$ / $total_tasks_to_sync$)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "カレンダー $calendar_name$ を同期しています",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Provider for Google Calendar が予定と ToDo を取得するためにあなたのアカウント $session_id$ にアクセスしようとしています。ログイン情報とカレンダーデータは、あなたのコンピューターと Google の間でのみ転送され、第三者のサイトが介入することはありません。",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "アカウントにサインインしてください: $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

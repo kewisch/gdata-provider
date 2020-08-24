@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Fornecedor do calendário Google",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Permite acesso bidirecional ao calendário Google",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Calendário Google",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Pré-definição Google"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "d"
+  },
+
+  "gdata.migration.title": {
+    "message": "Migrar calendários de leitura"
+  },
+  "gdata.migration.description": {
+    "message": "O fornecedor do calendário Google detetou que você possui calendários que apenas conseguem aceder aos calendários Google no modo de leitura. Se pretender atualizar algum destes calendários, por favor selecione-os abaixo"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Atualizar"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "A"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Verificar sempre "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Lembrete predefinido"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Por favor escolha uma sessão existente ou escreva o seu endereço de email para criar uma. Apenas precisa de uma sessão por conta."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Por favor selecione os calendários ou listas de tarefas que pretende subscrever."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Por favor, avance para o próximo passo de modo a configurar os calendários."
+  },
+
+  "calendarsHeader": {
+    "message": "Calendars"
+  },
+  "taskListsHeader": {
+    "message": "Task Lists"
+  },
+
+  "busyTitle": {
+    "message": "Ocupado ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "Excedeu a quota para $session_id$. Por favor tente mais tarde.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Esta versão do fornecedor expirou, por favor atualize para a versão mais recente."
+  },
+
+  "reminderOutOfRange": {
+    "message": "O calendário Google apenas permite lembretes até uma máximo de 4 semanas antes do evento começar."
+  },
+
+  "syncProgressEvent": {
+    "message": "A sincronizar $calendar_name$, evento $num_events_synced$ de $total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "A sincronizar $calendar_name$, tarefa $num_tasks_synced$ de $total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "A sincronizar calendário $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "O fornecedor do calendário do Google deseja aceder à sua conta $session_id$ para obter eventos e tarefas. As credenciais e dados do calendário apenas são transferidas entre o seu computador e a Google, não existem terceiros envolvidos.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Iniciar sessão com a conta $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

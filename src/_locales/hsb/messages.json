@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Poskićowar za Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Zmóžnja dwusměrowy přistup na Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Standard Google"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "S"
+  },
+
+  "gdata.migration.title": {
+    "message": "Protyki importować, kotrež hodźa so jenož čitać"
+  },
+  "gdata.migration.description": {
+    "message": "Poskićowar za Google Calendar ma wotkrył, zo maće hižo protyki, kotrež maja přistup na Google Calendar jenož w čitanskim modusu. Jeli chceće jednu abo wjacore z tych protykow aktualizować, wubjerće je deleka"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Aktualizować"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "A"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Přeco přepruwować "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Standardne dopomnjeće"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Prošu wubjerće eksistowace posedźenje abo zapodajće swoju e-mejlowu adresu, zo byšće nowe posedźenje wutworił. Trjebaće jenož jedne posedźenje na konto."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Prošu wubjerće protyki a lisćiny nadawkow, kotrež chceće abonować."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Prošu přeńdźće k přichodnemu krokej, zo byšće swoje protyki konfigurował."
+  },
+
+  "calendarsHeader": {
+    "message": "Protyki"
+  },
+  "taskListsHeader": {
+    "message": "Lisćiny nadawkow"
+  },
+
+  "busyTitle": {
+    "message": "Ma činić ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "Podźěl za $session_id$ je so překročił, prošu spytajće pozdźišo hišće raz.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Tuta wersija poskićowarja je zestarjena, prošu aktualizujće na najnowšu wersiju."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Google Calendar dowola jenož dopomnjeća hač do 4 tydźenjow před spočatkom podawka."
+  },
+
+  "syncProgressEvent": {
+    "message": "$calendar_name$ podawk $num_events_synced$ z $total_events_to_sync$ so synchronizuje",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "$calendar_name$ nadawk $num_tasks_synced$ z $total_tasks_to_sync$ so synchronizuje",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Protyka $calendar_name$ so synchronuzje",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Poskićowar za Google Calendar chce na waše konto $session_id$ přistup měć, zo by podawki a nadawki wotwołał. Přizjewjenske a protykowe daty so jenož mjez ličakom a Google přenošuja, třeći poskićowarjo wobdźěleni njejsu.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Přizjewće so pola swojeho konta $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

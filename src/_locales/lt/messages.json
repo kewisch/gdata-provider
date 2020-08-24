@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Prieigos prie „Google“ kalendoriaus paslaugos teiktuvas",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Suteikia dvipusę prieigą prie „Google“ kalendoriaus",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "„Google“ kalendorius",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "„Google“ numatytasis"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "n"
+  },
+
+  "gdata.migration.title": {
+    "message": "Tik skaitymui skirtų kalendorių konvertavimas"
+  },
+  "gdata.migration.description": {
+    "message": "Prieigos prie „Google“ kalendoriaus teiktuvas nustatė, jog kai kurie jūsų naudojami kalendoriai geba tik skaityti „Google“ kalendorius. Jei kažkuriuos jų norite konvertuoti į dvipusės prieigos kalendorius, parinkite juos žemiau"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Konvertuoti"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "K"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Tikrinti visada "
+  },
+
+  "gdata.reminder.default": {
+    "message": "Numatytasis priminimas"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Pasirinkite jau egzistuojantį seansą arba įveskite savo el. pašto adresą naujam seansui sukurti. Vienai paskyrai reikia tik vieno seanso."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Pasirinkite kalendorius ir darbų sąrašus, kuriuos norite prenumeruoti."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Kalendorių konfigūravimui pereikite į tolesnį žingsnį."
+  },
+
+  "calendarsHeader": {
+    "message": "Calendars"
+  },
+  "taskListsHeader": {
+    "message": "Task Lists"
+  },
+
+  "busyTitle": {
+    "message": "Užimtas ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "Viršyta „$session_id$“ kvota, pabandykite vėliau.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Ši paslaugos teiktuvo laida paseno, prašom jį atnaujinti iki paskiausios laidos."
+  },
+
+  "reminderOutOfRange": {
+    "message": "„Google“ kalendoriuje leidžiama kurti priminimus, suveikiančius ne anksčiau kaip 4 savaitės iki įvykio pradžios."
+  },
+
+  "syncProgressEvent": {
+    "message": "Sinchronizuojamas $num_events_synced$-asis „$calendar_name$“ įvykis iš $total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Sinchronizuojamas $num_tasks_synced$-asis „$calendar_name$“ darbas iš $total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Sinchronizuojamas kalendorius „$calendar_name$“",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Prieigos prie „Google“ kalendoriaus teiktuvui reikalinga prieiga prie jūsų paskyros „$session_id$“, kad galėtų parsiųsti įvykių ir darbų sąrašą. Prisijungimo ir kalendoriaus duomenys perduodami tik tarp jūsų kompiuterio ir „Google“. Jokios trečiųjų šalių svetainės šiame procese nedalyvauja.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Prisijunkite prie savo paskyros $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

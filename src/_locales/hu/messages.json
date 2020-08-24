@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Szolgáltató a Google Calendarhoz",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Engedélyezi a kétirányú hozzáférést a Google Calendarhoz",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Google Naptár",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Google-alapértelmezés"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "a"
+  },
+
+  "gdata.migration.title": {
+    "message": "Csak olvasható naptárak migrálása"
+  },
+  "gdata.migration.description": {
+    "message": "A Google Calendar szolgáltatója észlelte, hogy vannak olyan naptárai, amelyek a Google Calendart csak olvasható módban képesek elérni. Ha szeretné frissíteni ezeket a naptárakat, akkor jelölje ki őket alább"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Frissítés"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "F"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Ellenőrzés mindig"
+  },
+
+  "gdata.reminder.default": {
+    "message": "Alapértelmezett emlékeztető"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Válasszon egy meglévő munkamenetet, vagy adja meg e-mail címét új létrehozásához. Fiókonként csak egy munkamenet szükséges."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Válassza ki a naptárakat és feladatlistákat, amelyekre fel szeretne iratkozni."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Lépjen tovább a naptárak beállításához."
+  },
+
+  "calendarsHeader": {
+    "message": "Naptárak"
+  },
+  "taskListsHeader": {
+    "message": "Feladatlisták"
+  },
+
+  "busyTitle": {
+    "message": "Elfoglalt ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "$session_id$ kvótája túllépve, próbálja újra később.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "A szolgáltató ezen verziója elavult, frissítsen a legújabb verzióra."
+  },
+
+  "reminderOutOfRange": {
+    "message": "A Google Naptár csak az esemény kezdete előtti 4 héten engedélyez emlékeztetőket."
+  },
+
+  "syncProgressEvent": {
+    "message": "$calendar_name$ eseményeinek szinkronizálása: $num_events_synced$/$total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "$calendar_name$ feladatainak szinkronizálása: $num_tasks_synced$/$total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "$calendar_name$ naptár szinkronizálása",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "A Google Naptár szolgáltató szeretne hozzáférni a(z) $session_id$ fiókjához az események és feladatok lekéréséhez. A hitelesítési és naptáradatok csak az Ön számítógépe és a Google között kerülnek átvitelre, ami külső oldalakat nem érint.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Jelentkezzen be ebbe a fiókba: $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}

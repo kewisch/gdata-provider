@@ -1,0 +1,155 @@
+{
+  "extensionName": {
+    "message": "Soláthraí Google Calendar",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "extensionDescription": {
+    "message": "Ceadaíonn seo rochtain dhéthreoch do Féilire Google",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata-provider.label": {
+    "message": "Féilire Google",
+    "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+
+  "gdata.privacy.default.label": {
+    "message": "Réamhshocrú Google"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "G"
+  },
+
+  "gdata.migration.title": {
+    "message": "Ascain féilirí inléite amháin"
+  },
+  "gdata.migration.description": {
+    "message": "Tá sé tugtha faoi deara ag Soláthraí Google Calendar go bhfuil féilirí agat cheana nach féidir leo Google Calendar a rochtain ach sa mhód inléite amháin. Má theastaíonn uait na féilirí seo a uasghrádú, roghnaigh thíos iad le do thoil."
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "Nuashonrú"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "N"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "Seiceáil i gcónaí"
+  },
+
+  "gdata.reminder.default": {
+    "message": "Meabhrúchán Réamhshocraithe"
+  },
+
+  "gdata.wizard.session.description": {
+    "message": "Roghnaigh seisiún atá ann nó cuir isteach do sheoladh ríomhphoist chun seisiún nua a chruthú. Ní theastaíonn uait ach seisiún amháin do gach cuntas."
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "Roghnaigh na féilirí agus liostaí tascanna ar mian leat liostáil leo."
+  },
+
+  "gdata.wizard.nextstep.description": {
+    "message": "Téigh go dtí an chéad chéim eile chun do chuid féilirí a shocrú."
+  },
+
+  "calendarsHeader": {
+    "message": "Calendars"
+  },
+  "taskListsHeader": {
+    "message": "Task Lists"
+  },
+
+  "busyTitle": {
+    "message": "Gnóthach ($calendar_name$)",
+    "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "quotaExceeded": {
+    "message": "Os cionn an chuóta le haghaidh $session_id$; bain triail eile as ar ball.",
+    "description": "This is shown when the request quota has been exceeded.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "Tá an leagan seo den soláthraí dulta i léig; ba chóir duit an leagan is déanaí a shuiteáil."
+  },
+
+  "reminderOutOfRange": {
+    "message": "Ní féidir le Google Calendar meabhrúchán a dhéanamh níos luaithe ná ceithre seachtaine roimh thús an imeachta."
+  },
+
+  "syncProgressEvent": {
+    "message": "Imeachtaí $calendar_name$ á sioncronú: $num_events_synced$ as $total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+
+  "syncProgressTask": {
+    "message": "Tascanna $calendar_name$ á sioncronú: $num_tasks_synced$ as $total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+
+  "syncStatus": {
+    "message": "Féilire $calendar_name$ á shioncronú",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+
+  "requestWindowDescription": {
+    "message": "Ba mhaith le soláthraí Google Calendar teacht ar do chuntas $session_id$ chun imeachtaí agus tascanna a fháil. Aistreofar dintiúir agus sonraí ó d'fhéilire idir do ríomhaire agus Google amháin; níl baint ag aon tríú páirtí leis.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
+  "requestWindowTitle": {
+    "message": "Logáil isteach i do chuntas $session_id$",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  }
+}
