@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Provider for Google Calendar",
-  "description": "Allows bidirectional access to Google Calendar",
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
   "version": "78.0",
   "author": "Philipp Kewisch",
   "homepage_url": "https://addons.thunderbird.net/thunderbird/addon/provider-for-google-calendar/",
