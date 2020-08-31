@@ -1,0 +1,61 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch */
+
+html, body {
+  background: ThreeDFace;
+  font: menu;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0 8px;
+  padding-bottom: 14px;
+}
+
+#calendar-listbox {
+  background: window;
+  padding: 5px;
+  height: 10ex;
+  flex-grow: 1;
+  min-height: 30ex;
+  overflow: auto;
+}
+
+#dialog-button-box {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
+  align-items: center;
+}
+
+#dialog-button-box .spacer {
+  flex-grow: 1;
+}
+
+#dialog-button-box > button {
+  margin: 5px 6px 3px;
+  min-width: 79px;
+  font: menu;
+  padding: 1px 7px 2px;
+}
+
+#dialog-button-box > button[default]:not(:-moz-window-inactive) {
+  color: white;
+}
+
+.calendar-listbox-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.calendar-listbox-item .colordot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}

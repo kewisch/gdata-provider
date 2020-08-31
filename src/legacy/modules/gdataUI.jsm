@@ -1,7 +1,7 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Portions Copyright (C) Philipp Kewisch, 2020 */
+ * Portions Copyright (C) Philipp Kewisch */
 
 var EXPORTED_SYMBOLS = ["register", "unregister", "recordModule", "recordWindow"];
 
@@ -54,16 +54,6 @@ function register() {
     ],
     false
   );
-
-  ExtensionSupport.registerWindowListener("gdata-messenger-window", {
-    chromeURLs: ["chrome://messenger/content/messenger.xhtml"],
-    onLoadWindow: window => {
-      let { checkMigrateCalendars } = ChromeUtils.import(
-        "resource://gdata-provider/legacy/modules/gdataMigration.jsm"
-      );
-      checkMigrateCalendars(window);
-    },
-  });
 }
 
 function unregister() {
@@ -72,8 +62,6 @@ function unregister() {
     Cu.unload(`resource://gdata-provider/legacy/modules/ui/${id}.jsm`);
   }
   unregisterIds = [];
-
-  ExtensionSupport.unregisterWindowListener("gdata-messenger-window");
 
   for (let path of unregisterModules) {
     Cu.unload("resource://gdata-provider/legacy/modules/" + path);

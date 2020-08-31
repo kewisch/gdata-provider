@@ -6,3 +6,7 @@
 # distribution paths
 build/**
 dist/**
+
+src/legacy/**
+src/background/libs/**
+src/experiments/calendar/**

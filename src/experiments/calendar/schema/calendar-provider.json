@@ -1,0 +1,114 @@
+[
+  {
+    "namespace": "manifest",
+    "types": [
+      {
+        "$extend": "WebExtensionManifest",
+        "properties": {
+          "calendar_provider": {
+            "type": "object",
+            "optional": true,
+            "additionalProperties": { "$ref": "UnrecognizedProperty" },
+            "properties": {
+              "capabilities": {
+                "$ref": "calendar.calendars.CalendarCapabilities",
+                "optional": true
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "namespace": "calendar.provider",
+    "events": [
+      {
+        "name": "onItemCreated",
+        "type": "function",
+        "parameters": [
+          { "name": "calendar", "$ref": "calendar.calendars.Calendar" },
+          { "name": "item", "$ref": "calendar.items.CalendarItem" }
+        ],
+        "extraParameters": [
+          {
+            "type": "object",
+            "optional": true,
+            "properties": {
+              "returnFormat": { "$ref": "calendar.items.ReturnFormat", "optional": true }
+            }
+          }
+        ]
+      },
+      {
+        "name": "onItemUpdated",
+        "type": "function",
+        "parameters": [
+          { "name": "calendar", "$ref": "calendar.calendars.Calendar" },
+          { "name": "item", "$ref": "calendar.items.CalendarItem" },
+          { "name": "oldItem", "$ref": "calendar.items.CalendarItem" }
+        ],
+        "extraParameters": [
+          {
+            "type": "object",
+            "optional": true,
+            "properties": {
+              "returnFormat": { "$ref": "calendar.items.ReturnFormat", "optional": true }
+            }
+          }
+        ]
+      },
+      {
+        "name": "onItemRemoved",
+        "type": "function",
+        "parameters": [
+          { "name": "calendar", "$ref": "calendar.calendars.Calendar" },
+          { "name": "item", "$ref": "calendar.items.CalendarItem" }
+        ]
+      },
+      {
+        "name": "onInit",
+        "type": "function",
+        "parameters": [
+          { "name": "calendar", "$ref": "calendar.calendars.Calendar" }
+        ]
+      },
+      {
+        "name": "onSync",
+        "type": "function",
+        "parameters": [
+          { "name": "calendar", "$ref": "calendar.calendars.Calendar" }
+        ]
+      },
+      {
+        "name": "onResetSync",
+        "type": "function",
+        "parameters": [
+          { "name": "calendar", "$ref": "calendar.calendars.Calendar" }
+        ]
+      },
+      {
+        "name": "onFreeBusy",
+        "type": "function",
+        "parameters": [
+          {
+            "name": "FreeBusyOptions",
+            "type": "object",
+            "properties": {
+              "addressee": { "type": "string" },
+              "start": { "type": "string" },
+              "end": { "type": "string" },
+              "types": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["free", "busy", "unavailable", "tentative"]
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

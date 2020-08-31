@@ -1,0 +1,246 @@
+[
+  {
+    "id" : "go6ijb0b46hlpbu4eeu92njevo@google.com",
+    "metadata" : {
+       "etag" : "\"2299601498276000\"",
+       "path" : "go6ijb0b46hlpbu4eeu92njevo"
+    },
+    "title" : "New Event",
+    "description": "Description",
+    "location": "Hard Drive",
+    "categories": ["foo", "bar"],
+    "type" : "event",
+    "formats" : {
+       "use" : "jcal",
+       "jcal" : [
+          "vcalendar",
+          [
+            ["calscale", {}, "text", "GREGORIAN"],
+            ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+            ["version", {}, "text", "2.0"]
+          ],
+          [
+            ["vevent",
+              [
+                [ "uid", {}, "text", "go6ijb0b46hlpbu4eeu92njevo@google.com" ],
+                [ "created", {}, "date-time", "2006-06-08T21:04:52.000Z" ],
+                [ "last-modified", {}, "date-time", "2006-06-08T21:05:49.138Z" ],
+                [ "dtstamp", {}, "date-time", "2006-06-08T21:05:49.138Z" ],
+                [ "description", {}, "text", "Description" ],
+                [ "location", {}, "text", "Hard Drive" ],
+                [ "status", {}, "text", "confirmed" ],
+                [ "summary", {}, "text", "New Event" ],
+                [ "class", {}, "text", "PRIVATE" ],
+                [ "sequence", {}, "integer", 1 ],
+                [ "url", {}, "text", "https://example.com/calendar/event?eid=eventhash" ],
+                [ "transp", {}, "text", "TRANSPARENT" ],
+                [ "dtstart", { "tzid" : "Europe/Berlin" }, "date-time", "2006-06-10T18:00:00" ],
+                [ "dtend", { "tzid" : "Europe/Berlin" }, "date-time", "2006-06-10T20:00:00" ],
+                [ "organizer", { "cn" : "Eggs P. Seashell" }, "uri", "mailto:organizer@example.com" ],
+                [ "attendee", { "cn" : "attendee name", "cutype" : "INDIVIDUAL", "partstat" : "TENTATIVE", "role" : "OPT-PARTICIPANT" }, "uri", "mailto:attendee@example.com" ],
+                [ "x-moz-lastack", {}, "date-time", "2014-01-01T01:01:01Z" ],
+                [ "x-moz-snooze-time", {}, "date-time", "2014-01-01T02:02:02Z" ],
+                [ "categories", {}, "text", "foo", "bar" ]
+              ],
+              [
+                 [
+                    "valarm",
+                    [
+                       [ "action", {}, "text", "EMAIL" ],
+                       [ "description", {}, "text", "alarm" ],
+                       [ "trigger", {}, "duration", "-PT20M" ]
+                    ],
+                    []
+                 ],
+                 [
+                    "valarm",
+                    [
+                       [ "action", {}, "text", "DISPLAY" ],
+                       [ "description", {}, "text", "alarm" ],
+                       [ "trigger", { "tzid": "Europe/Berlin" }, "date-time", "2006-06-10T17:55:00" ]
+                    ],
+                    []
+                 ],
+                 [
+                    "valarm",
+                    [
+                       [ "action", {}, "text", "DISPLAY" ],
+                       [ "description", {}, "text", "alarm" ],
+                       [ "trigger", { "related": "END" }, "duration", "-PT2H10M" ]
+                    ],
+                    []
+                 ],
+                 [
+                    "valarm",
+                    [
+                       [ "action", {}, "text", "DISPLAY" ],
+                       [ "description", {}, "text", "alarm" ],
+                       [ "trigger", {}, "duration", "-PT30M" ]
+                    ],
+                    []
+                 ],
+                 [
+                    "valarm",
+                    [
+                       [ "action", {}, "text", "DISPLAY" ],
+                       [ "description", {}, "text", "alarm" ],
+                       [ "trigger", {}, "duration", "-PT35M" ]
+                    ],
+                    []
+                 ],
+                 [
+                    "valarm",
+                    [
+                       [ "action", {}, "text", "DISPLAY" ],
+                       [ "description", {}, "text", "alarm" ],
+                       [ "trigger", {}, "duration", "-PT40M" ]
+                    ],
+                    []
+                 ],
+                 [
+                    "valarm",
+                    [
+                       [ "action", {}, "text", "DISPLAY" ],
+                       [ "description", {}, "text", "default alarm" ],
+                       [ "trigger", {}, "duration", "-PT15M" ],
+                       [ "x-default-alarm", {}, "boolean", true ]
+                    ],
+                    []
+                 ]
+              ]
+            ]
+          ]
+       ]
+    }
+  },
+  {
+    "id": "swpefnfloqssxjdlbpyqlyqddb@google.com",
+    "title": "busyTitle[calendarName]",
+    "description": "Description",
+    "location": "Hard Drive",
+    "categories": ["foo", "bar"],
+    "type" : "event",
+    "metadata": {
+      "etag": "\"2128312983238480\"",
+      "path": "swpefnfloqssxjdlbpyqlyqddb"
+    },
+    "formats": {
+      "use": "jcal",
+      "jcal": [
+        "vcalendar",
+        [
+          ["calscale", {}, "text", "GREGORIAN"],
+          ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+          ["version", {}, "text", "2.0"]
+        ],
+        [
+          ["vevent",
+            [
+              [ "uid", {}, "text", "swpefnfloqssxjdlbpyqlyqddb@google.com" ],
+              [ "created", {}, "date-time", "2006-06-08T21:04:52.000Z" ],
+              [ "last-modified", {}, "date-time", "2006-06-08T21:05:49.138Z" ],
+              [ "dtstamp", {}, "date-time", "2006-06-08T21:05:49.138Z" ],
+              [ "description", {}, "text", "description" ],
+              [ "location", {}, "text", "Hard Drive" ],
+              [ "status", {}, "text", "confirmed" ],
+              [ "summary", {}, "text", "busyTitle[calendarName]" ],
+              [ "class", {}, "text", "PRIVATE" ],
+              [ "sequence", {}, "integer", 1 ],
+              [ "url", {}, "text", "https://example.com/calendar/event?eid=eventhash" ],
+              [ "transp", {}, "text", "TRANSPARENT" ],
+              [ "dtstart", {}, "date", "2006-06-10" ],
+              [ "organizer", { "cn": "Eggs P. Seashell" }, "uri", "urn:id:b4d9b3a9-b537-47bd-92a1-fb40c0c1c7fc"],
+              [ "attendee", { "role": "OPT-PARTICIPANT", "partstat": "TENTATIVE", "cutype": "INDIVIDUAL", "cn": "attendee name" }, "uri", "mailto:attendee@example.com" ],
+              [ "x-moz-lastack", {}, "date-time", "2014-01-01T01:01:01Z" ],
+              [ "x-moz-snooze-time", {}, "date-time", "2014-01-01T02:02:02Z" ],
+              [ "categories", {}, "text", "foo", "bar" ]
+            ],
+            [
+              [
+                "valarm",
+                [
+                  [ "action", {}, "text", "EMAIL" ],
+                  [ "description", {}, "text", "alarm" ],
+                  [ "trigger", {}, "duration", "-PT20M" ]
+                ],
+                []
+              ]
+            ]
+          ]
+        ]
+      ]
+    }
+  },
+  {
+    "id": "xkoaavctdghzjszjssqttcbhkv@google.com",
+    "title" : "New Event",
+    "type" : "event",
+    "metadata": {
+      "etag": "\"8735583482382345\"",
+      "path": "xkoaavctdghzjszjssqttcbhkv"
+    },
+    "formats": {
+      "use": "jcal",
+      "jcal": [
+        "vcalendar",
+        [
+          ["calscale", {}, "text", "GREGORIAN"],
+          ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+          ["version", {}, "text", "2.0"]
+        ],
+        [
+          ["vevent",
+            [
+              [ "uid", {}, "text", "xkoaavctdghzjszjssqttcbhkv@google.com" ],
+              [ "created", {}, "date-time", "2006-06-08T21:04:52.000Z" ],
+              [ "last-modified", {}, "date-time", "2006-06-08T21:05:49.138Z" ],
+              [ "dtstamp", {}, "date-time", "2006-06-08T21:05:49.138Z" ],
+              [ "summary", {}, "text", "New Event" ],
+              [ "dtstart", {}, "date", "2006-06-10" ],
+              [ "dtend", {}, "date", "2006-06-11" ],
+              [ "status", {}, "text", "none" ],
+              [ "x-default-alarm", {}, "boolean", true ]
+            ],
+            [ ]
+          ]
+        ]
+      ]
+    }
+  },
+  {
+    "id": "lqohjsbhqoztdkusnpruvooacn",
+    "title" : "New Task",
+    "type" : "task",
+    "metadata": {
+      "etag": "\"8735583482382345\"",
+      "path": "lqohjsbhqoztdkusnpruvooacn"
+    },
+    "formats": {
+      "use": "jcal",
+      "jcal": [
+        "vcalendar",
+        [
+          ["calscale", {}, "text", "GREGORIAN"],
+          ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+          ["version", {}, "text", "2.0"]
+        ],
+        [
+          ["vtodo",
+            [
+              [ "uid", {}, "text", "lqohjsbhqoztdkusnpruvooacn" ],
+              [ "created", {}, "date-time", "2006-06-08T21:04:52.000Z" ],
+              [ "last-modified", {}, "date-time", "2006-06-08T21:05:49.138Z" ],
+              [ "dtstamp", {}, "date-time", "2006-06-08T21:05:49.138Z" ],
+              [ "summary", {}, "text", "New Task" ],
+              [ "due", {}, "date", "2006-06-10" ],
+              [ "completed", {}, "date", "2006-06-11" ],
+              [ "status", {}, "text", "none" ],
+              [ "x-default-alarm", {}, "boolean", true ]
+            ],
+            [ ]
+          ]
+        ]
+      ]
+    }
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "namespace": "gdata",
+    "functions": [
+      {
+        "name": "getLegacyPrefs",
+        "async": true,
+        "type": "function",
+        "parameters": []
+      },
+      {
+        "name": "purgeLegacyPrefs",
+        "async": true,
+        "type": "function",
+        "description": "Purge the legacy prefs",
+        "parameters": []
+      },
+      {
+        "name": "getOAuthToken",
+        "async": true,
+        "type": "function",
+        "parameters": [
+          { "type": "string", "name": "sessionId" }
+        ]
+      },
+      {
+        "name": "setOAuthToken",
+        "async": true,
+        "type": "function",
+        "parameters": [
+          { "type": "string", "name": "sessionId" },
+          {
+            "choices": [
+              { "type": "string", "name": "value" },
+              { "type": "null", "name": "value" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -12,27 +12,99 @@
       "strict_min_version": "91.0"
     }
   },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      "strict_min_version": "78.2.0"
+    }
+  },
   "icons": {
     "256": "icon.png"
   },
 
+  "calendar_provider": {
+    "capabilities": {
+      "timezones": {
+        "floating": false,
+        "UTC": true
+      },
+      "attachments": false,
+      "priority": false,
+      "privacy": ["default", "public", "private"],
+      "categories": {
+        "count": 3
+      },
+      "alarms": {
+        "count": 5,
+        "actions": ["display", "email"]
+      },
+      "tasks": true,
+      "events": true,
+      "removeModes": ["unsubscribe"],
+      "requiresNetwork": true
+    }
+  },
+
+  "browser_action": {
+    "default_popup": "content/migration-wizard.html"
+  },
+
   "background": {
-    "scripts": ["background.js"]
+    "page": "background/index.html"
   },
 
   "permissions": [
-    "storage"
+    "storage",
+    "identity",
+    "notifications",
+    "idle",
+    "webRequest",
+
+    "https://www.googleapis.com/calendar/v3/*",
+    "https://www.googleapis.com/tasks/v1/*",
+    "https://accounts.google.com/o/oauth2/approval/v2*"
   ],
 
   "experiment_apis": {
     "gdata": {
-      "schema": "api/schema.json",
+      "schema": "experiments/gdata/gdata.json",
       "parent": {
         "scopes": ["addon_parent"],
-        "script": "api/gdata.js",
+        "script": "experiments/gdata/ext-gdata.js",
         "events": ["startup"],
         "paths": [
           ["gdata"]
+        ]
+      }
+    },
+    "calendar_items": {
+      "schema": "experiments/calendar/schema/calendar-items.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/calendar/parent/ext-calendar-items.js",
+        "paths": [
+          ["calendar", "items"]
+        ]
+      }
+    },
+    "calendar_calendars": {
+      "schema": "experiments/calendar/schema/calendar-calendars.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/calendar/parent/ext-calendar-calendars.js",
+        "paths": [
+          ["calendar", "calendars"]
+        ]
+      }
+    },
+    "calendar_provider": {
+      "schema": "experiments/calendar/schema/calendar-provider.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/calendar/parent/ext-calendar-provider.js",
+        "events": ["startup"],
+        "paths": [
+          ["calendar", "provider"]
         ]
       }
     }

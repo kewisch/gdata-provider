@@ -3,6 +3,7 @@
   "description": "Provider for Google Calendar",
   "version": "91.0.0pre",
   "private": true,
+  "type": "module",
   "author": "Philipp Kewisch <mozilla@kewis.ch>",
   "license": "MPL-2.0",
   "directories": {
@@ -16,29 +17,52 @@
   "bugs": {
     "url": "https://github.com/kewisch/gdata-provider/issues"
   },
+  "jest": {
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/background/libs/.*",
+      "<rootDir>/src/experiments/.*",
+      "<rootDir>/src/legacy/.*"
+    ],
+    "resetMocks": true,
+    "restoreMocks": true,
+    "testMatch": [
+      "<rootDir>/test/jest/*.test.js"
+    ],
+    "transform": {},
+    "verbose": true
+  },
   "scripts": {
-    "test": "action-thunderbird-tests test/xpcshell/xpcshell.ini",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest test/jest",
     "build": "rm dist/gdata-provider.xpi; (cd src && zip -9r ../dist/gdata-provider.xpi *)",
     "clean": "rm dist/gdata-provider.xpi",
     "bump": "bumper() { bump package.json \"$1\"; bump src/manifest.json \"$1\"; }; bumper",
     "tag": "git tag v$(jq -r '.version' src/manifest.json)",
     "lint": "commitlint -f origin/master && eslint --ext '.jsm' . || true"
   },
-  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
-    "action-thunderbird-tests": "github:kewisch/action-thunderbird-tests#master",
+    "@testing-library/dom": "^8.1.0",
+    "@testing-library/jest-dom": "^5.14.1",
     "babel-eslint": "^10.1.0",
     "bump-file": "^2.0.0",
     "conventional-changelog-cli": "^2.0.25",
-    "eslint": "6.2.2",
-    "eslint-config-prettier": "6.1.0",
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-fetch-options": "0.0.5",
-    "eslint-plugin-html": "6.0.0",
-    "eslint-plugin-mozilla": "2.1.0",
-    "eslint-plugin-no-unsanitized": "3.0.2",
-    "eslint-plugin-prettier": "3.1.0",
-    "prettier": "1.17.0"
+    "eslint-plugin-html": "^6.0.0",
+    "eslint-plugin-jest": "^24.3.6",
+    "eslint-plugin-mozilla": "^2.1.0",
+    "eslint-plugin-no-unsanitized": "^3.0.2",
+    "eslint-plugin-prettier": "^3.4.0",
+    "ical.js": "^1.4.0",
+    "jest": "^27.0.5",
+    "jest-fetch-mock": "github:jefflau/jest-fetch-mock#46e09b9b43951370dcc27e0c0d60b05061da52d0",
+    "prettier": "^1.19.1"
   }
 }

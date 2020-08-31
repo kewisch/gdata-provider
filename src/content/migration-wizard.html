@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
+   - Portions Copyright (C) Philipp Kewisch -->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="migration-wizard.css">
+    <script defer type="module" src="migration-wizard.js"></script>
+
+    <template id="calendar-listbox-item">
+      <label class="calendar-listbox-item">
+        <input type="checkbox" class="listitem-checkbox">
+        <div class="colordot"></div>
+        calendar-name
+      </label>
+    </template>
+  </head>
+  <body>
+    <p id="gdata-migration-description"></p>
+    <div id="calendar-listbox" role="list"></div>
+
+    <div id="dialog-button-box">
+      <label id="always-check-label">
+        <input id="always-check" type="checkbox">
+      </label>
+      <div class="spacer"></div>
+      <button id="cancel"></button>
+      <button id="accept" default="true"></button>
+    </div>
+  </body>
+</html>
