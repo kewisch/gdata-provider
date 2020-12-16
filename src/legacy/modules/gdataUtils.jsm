@@ -24,6 +24,16 @@ var { ExtensionParent } = ChromeUtils.import("resource://gre/modules/ExtensionPa
 
 var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
 
+XPCOMUtils.defineLazyModuleGetters(this, {
+  CalAlarm: "resource:///modules/CalAlarm.jsm",
+  CalAttachment: "resource:///modules/CalAttachment.jsm",
+  CalAttendee: "resource:///modules/CalAttendee.jsm",
+  CalEvent: "resource:///modules/CalEvent.jsm",
+  CalRecurrenceInfo: "resource:///modules/CalRecurrenceInfo.jsm",
+  CalRelation: "resource:///modules/CalRelation.jsm",
+  CalTodo: "resource:///modules/CalTodo.jsm",
+});
+
 var FOUR_WEEKS_IN_MINUTES = 40320;
 
 var EXPORTED_SYMBOLS = [
@@ -599,7 +609,7 @@ function setupRecurrence(aItem, aRecurrence, aTimezone) {
   if (aItem.recurrenceInfo) {
     aItem.recurrenceInfo.clearRecurrenceItems();
   } else {
-    aItem.recurrenceInfo = cal.createRecurrenceInfo(aItem);
+    aItem.recurrenceInfo = new CalRecurrenceInfo(aItem);
   }
 
   let rootComp;
@@ -667,7 +677,7 @@ function JSONToAlarm(aEntry, aDefault) {
     email: "EMAIL",
     popup: "DISPLAY",
   };
-  let alarm = cal.createAlarm();
+  let alarm = new CalAlarm();
   let alarmOffset = cal.createDuration();
   alarm.action = alarmActionMap[aEntry.method] || "DISPLAY";
   alarm.related = Ci.calIAlarm.ALARM_RELATED_START;
@@ -693,7 +703,7 @@ function JSONToAlarm(aEntry, aDefault) {
 function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetadata) {
   aDefaultReminders = aDefaultReminders || [];
   aMetadata = aMetadata || {};
-  let item = aReferenceItem || cal.createEvent();
+  let item = aReferenceItem || new CalEvent();
   item.calendar = aCalendar.superCalendar;
   let privateProps = ("extendedProperties" in aEntry && aEntry.extendedProperties.private) || {};
   let sharedProps = ("extendedProperties" in aEntry && aEntry.extendedProperties.shared) || {};
@@ -751,7 +761,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
 
     // organizer
     if (aEntry.organizer) {
-      let organizer = cal.createAttendee();
+      let organizer = new CalAttendee();
       if (aEntry.organizer.email) {
         organizer.id = "mailto:" + aEntry.organizer.email;
       } else {
@@ -786,7 +796,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
         accepted: "ACCEPTED",
       };
       for (let attendeeEntry of aEntry.attendees) {
-        let attendee = cal.createAttendee();
+        let attendee = new CalAttendee();
         if (attendeeEntry.email) {
           attendee.id = "mailto:" + attendeeEntry.email;
         } else {
@@ -898,7 +908,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
     );
     return null;
   }
-  let item = cal.createTodo();
+  let item = new CalTodo();
   item.calendar = aCalendar.superCalendar;
 
   let tzs = cal.getTimezoneService();
@@ -932,7 +942,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
     }
 
     if (aEntry.parent) {
-      let relation = cal.createRelation();
+      let relation = new CalRelation();
       relation.relType = "PARENT";
       relation.relId = aEntry.parent;
       item.addRelation(relation);
@@ -940,7 +950,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
 
     if (aEntry.links) {
       for (let link of aEntry.links) {
-        let attach = cal.createAttachment();
+        let attach = new CalAttachment();
         attach.uri = Services.io.newURI(link.link);
         attach.setParameter("FILENAME", link.description);
         attach.setParameter("X-GOOGLE-TYPE", link.type);
@@ -1242,7 +1252,7 @@ ItemSaver.prototype = {
           let meta = this.metaData[exc.hashId];
           parent.id = meta.path + "@google.com";
         }
-        parent.recurrenceInfo = cal.createRecurrenceInfo(parent);
+        parent.recurrenceInfo = new CalRecurrenceInfo(parent);
         let rdate = Cc["@mozilla.org/calendar/recurrence-date;1"].createInstance(
           Ci.calIRecurrenceDate
         );
