@@ -156,7 +156,7 @@ function gdataInitUI(window, document) {
     if (calendar.type == "gdata" && reminderList.value == "default") {
       item.clearAlarms();
       let unwrappedCal = item.calendar.getProperty("cache.uncachedCalendar").wrappedJSObject;
-      let defaultReminders = unwrappedCal.defaultReminders;
+      let defaultReminders = unwrappedCal.defaultReminders || [];
 
       defaultReminders.forEach(item.addAlarm, item);
       if (!defaultReminders.length) {
