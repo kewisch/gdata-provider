@@ -1,0 +1,65 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+# Portions Copyright (C) Philipp Kewisch
+---
+name: "WebExtension Checkin"
+on:
+  push:
+    branches:
+      - webextension
+
+jobs:
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "Setup node"
+        uses: actions/setup-node@v1
+
+      - name: "npm ci"
+        run: npm ci
+
+      - name: "Commit lint"
+        uses: wagoid/commitlint-github-action@v4
+        with:
+          configFile: .commitlintrc.json
+          firstParent: true
+          failOnWarnings: true
+
+      - name: "ESLint"
+        uses: kewisch/action-yet-another-eslint@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-and-test:
+    name: "Build & Test"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "npm ci"
+        run: npm ci
+
+      - name: "Build"
+        run: npm run build
+
+      - name: "Upload Build"
+        uses: actions/upload-artifact@master
+        with:
+          name: gdata-provider.xpi
+          path: dist/gdata-provider.xpi
+
+      - name: "Run Tests"
+        run: npm run test
+
+      - name: "Coveralls"
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
