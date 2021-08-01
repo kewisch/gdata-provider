@@ -64,7 +64,14 @@ export function reverseObject(obj) {
 }
 
 export function sessionIdFromUrl(url) {
-  return url.username ? `${url.username}@${url.hostname}` : url.hostname;
+  // The first two cases are for the jest tests, node's URL constructor works differently.
+  if (url.username) {
+    return `${url.username}@${url.hostname}`;
+  } /* istanbul ignore else */ else if (url.hostname) {
+    return url.hostname;
+  } else {
+    return url.pathname.substring(2, url.pathname.length - 1);
+  }
 }
 
 /* istanbul ignore next */
