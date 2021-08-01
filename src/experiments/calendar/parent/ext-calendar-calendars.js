@@ -169,11 +169,31 @@ this.calendar_calendars = class extends ExtensionAPI {
             calendar.wrappedJSObject.mObservers.notify("onLoad", [calendar]);
           },
 
-          synchronize: function() {
-            // TODO don't rely on the window composite calendar. Have a method in the calendar
-            // manager that will do a full refresh
-            let mainWindow = Services.wm.getMostRecentWindow("mail:3pane");
-            cal.view.getCompositeCalendar(mainWindow).refresh();
+          synchronize: function(ids) {
+            let calendars = [];
+            if (ids) {
+              if (!Array.isArray(ids)) {
+                ids = [ids];
+              }
+              for (let id of ids) {
+                let calendar = calmgr.getCalendarById(id);
+                if (!calendar) {
+                  throw new ExtensionError(`Invalid calendar id: ${id}`);
+                }
+                calendars.push(calendar);
+              }
+            } else {
+              for (let calendar of cal.getCalendarManager().getCalendars()) {
+                if (calendar.getProperty("calendar-main-in-composite")) {
+                  calendars.push(calendar);
+                }
+              }
+            }
+            for (let calendar of calendars) {
+              if (!calendar.getProperty("disabled") && calendar.canRefresh) {
+                calendar.refresh();
+              }
+            }
           },
 
           onCreated: new EventManager({

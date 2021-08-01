@@ -40,6 +40,7 @@
               "UTC": { "type": "boolean", "optional": true }
             }
           },
+          "organizer": { "type": "string", "optional": true },
           "attachments": { "type": "boolean", "optional": true },
           "priority": { "type": "boolean", "optional": true },
           "privacy": {
@@ -174,7 +175,16 @@
         "name": "synchronize",
         "async": true,
         "type": "function",
-        "parameters": []
+        "parameters": [
+          {
+            "optional": true,
+            "name": "ids",
+            "choices": [
+              { "type": "string" },
+              { "type": "array", "items": { "type": "string" } }
+            ]
+          }
+        ]
       }
     ],
     "events": [
