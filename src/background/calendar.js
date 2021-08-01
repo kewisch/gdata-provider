@@ -52,6 +52,38 @@ export default class calGoogleCalendar {
     messenger.calendar.provider.onResetSync.addListener(calendar => {
       return this.get(calendar.id).then(instance => instance.onResetSync());
     });
+
+    messenger.calendar.provider.onDetectCalendars.addListener(
+      (username, password, location, savePassword, extraProperties) => {
+        return this.onDetectCalendars(username, password, location, savePassword, extraProperties);
+      }
+    );
+  }
+
+  static async onDetectCalendars(username, password, location, savePassword, extraProperties) {
+    let session = sessions.byId(username, true);
+
+    let [calendars, tasks] = await Promise.all([session.getCalendarList(), session.getTasksList()]);
+
+    calendars = calendars.map(gcal => {
+      return {
+        name: gcal.summary,
+        type: "ext-" + messenger.runtime.id,
+        url: `googleapi://${username}/?calendar=${encodeURIComponent(gcal.id)}`,
+        readOnly: gcal.accessRole == "freeBusyReader" || gcal.accessRole == "reader",
+        color: gcal.backgroundColor,
+      };
+    });
+
+    tasks = tasks.map(gcal => {
+      return {
+        name: gcal.title,
+        type: "ext-" + messenger.runtime.id,
+        url: `googleapi://${username}/?tasks=${encodeURIComponent(gcal.id)}`,
+      };
+    });
+
+    return calendars.concat(tasks);
   }
 
   defaultReminders = [];

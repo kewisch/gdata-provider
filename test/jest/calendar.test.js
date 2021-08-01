@@ -6,6 +6,7 @@ import { jest } from "@jest/globals";
 import createMessenger from "./webext-api";
 
 import calGoogleCalendar from "../../src/background/calendar";
+import sessions from "../../src/background/session";
 import gcalItems from "./fixtures/gcalItems.json";
 import jcalItems from "./fixtures/jcalItems.json";
 import v8 from "v8";
@@ -104,6 +105,7 @@ function mockTaskRequest(req, props) {
 }
 
 beforeEach(() => {
+  jestFetchMock.doMock();
   global.messenger = createMessenger();
   global.messenger.calendar.calendars._calendars = [
     { id: "id0", type: "ics", url: "https://example.com/feed.ics" },
@@ -173,6 +175,7 @@ test("initListeners", async () => {
   jest.spyOn(calendar, "onInit").mockImplementation(() => {});
   jest.spyOn(calendar, "onSync").mockImplementation(() => {});
   jest.spyOn(calendar, "onResetSync").mockImplementation(() => {});
+  jest.spyOn(calGoogleCalendar, "onDetectCalendars").mockImplementation(() => {});
 
   calGoogleCalendar.initListeners();
 
@@ -182,6 +185,7 @@ test("initListeners", async () => {
   expect(messenger.calendar.provider.onInit.addListener).toHaveBeenCalled();
   expect(messenger.calendar.provider.onSync.addListener).toHaveBeenCalled();
   expect(messenger.calendar.provider.onResetSync.addListener).toHaveBeenCalled();
+  expect(messenger.calendar.provider.onDetectCalendars.addListener).toHaveBeenCalled();
 
   await messenger.calendar.provider.onItemCreated.mockResponse(rawId1, { id: "item" });
   expect(calendar.onItemCreated).toHaveBeenCalledWith({ id: "item" });
@@ -207,6 +211,9 @@ test("initListeners", async () => {
 
   await messenger.calendar.provider.onResetSync.mockResponse(rawId1);
   expect(calendar.onResetSync).toHaveBeenCalledWith();
+
+  await messenger.calendar.provider.onDetectCalendars.mockResponse("user", "pass", "loc", true, {});
+  expect(calGoogleCalendar.onDetectCalendars).toHaveBeenCalledWith("user", "pass", "loc", true, {});
 });
 
 test("onInit", async () => {
@@ -301,7 +308,6 @@ describe("item functions", () => {
   let calendar;
 
   beforeEach(async () => {
-    jestFetchMock.doMock();
     calendar = await calGoogleCalendar.get("id1");
     await calendar.onInit();
     authenticate(calendar.session);
@@ -561,8 +567,6 @@ describe("item functions", () => {
 
 describe("onSync", () => {
   test.each(["owner", "freeBusyReader"])("accessRole=%s", async accessRole => {
-    jestFetchMock.doMock();
-
     let calendar = await calGoogleCalendar.get("id1");
     await calendar.onInit();
 
@@ -616,7 +620,6 @@ describe("onSync", () => {
   });
 
   test("reset sync", async () => {
-    jestFetchMock.doMock();
     let calendar = await calGoogleCalendar.get("id1");
     await calendar.onInit();
 
@@ -659,7 +662,6 @@ describe("onSync", () => {
   });
 
   test("fail", async () => {
-    jestFetchMock.doMock();
     let calendar = await calGoogleCalendar.get("id1");
     await calendar.onInit();
 
@@ -670,4 +672,63 @@ describe("onSync", () => {
 
     expect(messenger.calendar.calendars.clear).not.toHaveBeenCalled();
   });
+});
+
+test("onDetectCalendars", async () => {
+  fetch.mockResponse(req => {
+    if (req.url.startsWith("https://www.googleapis.com/calendar/v3/users/me/calendarList")) {
+      return {
+        body: JSON.stringify({
+          items: [
+            {
+              id: "calid",
+              summary: "calendar summary",
+              accessRole: "owner",
+              backgroundColor: "#FF0000",
+            },
+          ],
+        }),
+      };
+    } else if (req.url.startsWith("https://www.googleapis.com/tasks/v1/users/@me/lists")) {
+      return {
+        body: JSON.stringify({
+          items: [
+            {
+              id: "taskid",
+              title: "task summary",
+            },
+          ],
+        }),
+      };
+    }
+    return null;
+  });
+
+  let session = sessions.byId("username@example.com", true);
+  authenticate(session);
+
+  let calendars = await calGoogleCalendar.onDetectCalendars(
+    "username@example.com",
+    "password",
+    "example.com",
+    false,
+    {}
+  );
+  expect(calendars).toEqual(
+    expect.arrayContaining([
+      {
+        name: "calendar summary",
+        type: "ext-" + messenger.runtime.id,
+        url: "googleapi://username@example.com/?calendar=calid",
+        readOnly: false,
+        color: "#FF0000",
+      },
+      {
+        name: "task summary",
+        type: "ext-" + messenger.runtime.id,
+        url: "googleapi://username@example.com/?tasks=taskid",
+      },
+    ])
+  );
+  expect(calendars.length).toBe(2);
 });
