@@ -46,8 +46,21 @@
     }
   },
 
+  "calendar_item_action": {
+    "default_icon": "icon.png",
+    "default_popup": "content/calendar-item-action.html",
+    "default_title": "__MSG_extensionName__"
+  },
+
+  "calendar_item_details": {
+    "default_icon": "icon.png",
+    "default_content": "content/calendar-item-details.html",
+    "default_title": "__MSG_extensionName__",
+    "browser_style": true
+  },
+
   "browser_action": {
-    "default_popup": "content/migration-wizard.html"
+    "default_popup": "/content/migration-wizard.html"
   },
 
   "background": {
@@ -108,6 +121,29 @@
           ["calendar", "provider"]
         ]
       }
+    },
+    "calendarItemAction": {
+      "schema": "experiments/calendar/schema/calendarItemAction.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/calendar/parent/ext-calendarItemAction.js",
+        "events": ["startup"],
+        "paths": [
+          ["calendarItemAction"]
+        ]
+      }
+    },
+    "calendarItemDetails": {
+      "schema": "experiments/calendar/schema/calendarItemDetails.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/calendar/parent/ext-calendarItemDetails.js",
+        "events": ["startup"],
+        "paths": [
+          ["calendarItemDetails"]
+        ]
+      }
+
     }
   }
 }
