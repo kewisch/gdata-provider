@@ -223,7 +223,7 @@ function jsonToTask(entry, calendar, referenceItem) {
   return {
     id: entry.id,
     title: entry.title,
-    type: "todo",
+    type: "task",
     description: entry.notes,
     metadata: {
       etag: entry.etag,

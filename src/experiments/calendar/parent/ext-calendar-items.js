@@ -71,7 +71,7 @@ this.calendar_items = class extends ExtensionAPI {
             if (oldItem instanceof Ci.calIEvent) {
               updateProperties.type = "event";
             } else if (oldItem instanceof Ci.calITodo) {
-              updateProperties.type = "todo";
+              updateProperties.type = "task";
             }
             let newItem = propsToItem(updateProperties, oldItem?.clone());
             newItem.calendar = calendar.superCalendar;
