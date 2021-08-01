@@ -18,7 +18,7 @@ export async function migrateCalendars(ids) {
     ids.map(async id => {
       let calendar = await messenger.calendar.calendars.get(id);
       delete calendar.id;
-      calendar.type = "gdata";
+      calendar.type = "ext-" + messenger.runtime.id;
 
       // TODO existing properties copied: color, disabled, suppressAlarms,
       // calendar-main-in-composite, calendar-main-default, name, uri

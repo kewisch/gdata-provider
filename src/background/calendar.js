@@ -18,7 +18,7 @@ export default class calGoogleCalendar {
   static async get(id) {
     if (!this._instances[id]) {
       let calendar = await messenger.calendar.calendars.get(id);
-      if (!calendar || calendar.type != "gdata") {
+      if (!calendar || calendar.type != "ext-" + messenger.runtime.id) {
         throw new Error(`Requesting invalid calendar type ${calendar?.type} with id ${id}`);
       }
       this._instances[id] = new calGoogleCalendar(calendar);
