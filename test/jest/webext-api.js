@@ -62,6 +62,8 @@ export class WebExtCalendars {
     this.get = jest.fn(this.get.bind(this));
     this.create = jest.fn(this.create.bind(this));
     this.remove = jest.fn(this.remove.bind(this));
+    this.update = jest.fn(this.update.bind(this));
+    this.clear = jest.fn();
   }
 
   async query(opts) {
@@ -77,7 +79,7 @@ export class WebExtCalendars {
   }
 
   async get(id) {
-    let result = this._calendars.find(calendar => (calendar.id = id));
+    let result = this._calendars.find(calendar => calendar.id == id);
     return result ? Object.assign({}, result) : null;
   }
 
@@ -87,14 +89,79 @@ export class WebExtCalendars {
     this._calendars.push(clone);
   }
 
+  async update(id, update) {
+    let calendar = this._calendars.find(cal => cal.id == id);
+    if (!calendar) {
+      throw new Error("Could not find calendar");
+    }
+    Object.assign(calendar, update);
+    return calendar;
+  }
+
   async remove(id) {
     let idx = this._calendars.findIndex(elem => elem.id == id);
     this._calendars.splice(idx, 1);
   }
 }
 
-export class WebExtI18n {
-  getMessage(key, ...args) {
-    return `${key}[${args.join(",")}]`;
-  }
+export default function createMessenger() {
+  let messenger = {
+    calendar: {
+      calendars: new WebExtCalendars(),
+      provider: {
+        onFreeBusy: new WebExtListener(),
+        onItemCreated: new WebExtListener(),
+        onItemUpdated: new WebExtListener(),
+        onItemRemoved: new WebExtListener(),
+        onInit: new WebExtListener(),
+        onSync: new WebExtListener(),
+        onResetSync: new WebExtListener(),
+        onDetectCalendars: new WebExtListener(),
+      },
+    },
+    gdata: {
+      _token: "token",
+      getOAuthToken: jest.fn(async () => {
+        return messenger.gdata._token;
+      }),
+
+      setOAuthToken: jest.fn(async val => {
+        messenger.gdata._token = val;
+      }),
+    },
+    runtime: {
+      id: "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+    },
+    i18n: {
+      getMessage(key, ...args) {
+        return `${key}[${args.join(",")}]`;
+      },
+      getUILanguage: function() {
+        return "klingon";
+      },
+    },
+    storage: {
+      local: new WebExtStorage(),
+    },
+    idle: {
+      _idleState: "active",
+      queryState: jest.fn(async () => {
+        return messenger.idle._idleState;
+      }),
+    },
+    notifications: {
+      create: jest.fn(async () => {}),
+    },
+    webRequest: {
+      onBeforeRequest: new WebExtListener(),
+    },
+    windows: {
+      create: jest.fn(async () => {
+        return { id: "windowId" };
+      }),
+      remove: jest.fn(async () => {}),
+      onRemoved: new WebExtListener(),
+    },
+  };
+  return messenger;
 }

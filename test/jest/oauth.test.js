@@ -3,11 +3,12 @@ jestFetchMock.enableFetchMocks();
 
 import OAuth2 from "../../src/background/oauth";
 import { jest } from "@jest/globals";
-import { WebExtListener } from "./utils";
+import createMessenger from "./webext-api";
 
 var oauth;
 
 beforeEach(() => {
+  global.browser = createMessenger();
   jestFetchMock.doMock();
   oauth = new OAuth2({
     clientId: "clientId",
@@ -22,28 +23,8 @@ beforeEach(() => {
   jest.useFakeTimers("modern").setSystemTime(new Date("2021-01-01").getTime());
 });
 
-global.browser = {
-  i18n: {
-    getUILanguage: function() {
-      return "klingon";
-    },
-    getMessage: function(key, ...args) {
-      return `${key}[${args.join(",")}]`;
-    },
-  },
-  windows: {},
-  webRequest: {},
-};
-
 describe("oauth flow", () => {
   test("success", async () => {
-    global.browser.windows.create = jest.fn(async () => {
-      return { id: "windowId" };
-    });
-    global.browser.windows.remove = jest.fn(async () => {});
-    global.browser.webRequest.onBeforeRequest = new WebExtListener();
-    global.browser.windows.onRemoved = new WebExtListener();
-
     fetch.mockResponseOnce(
       JSON.stringify({
         access_token: "accessToken",
@@ -87,13 +68,6 @@ describe("oauth flow", () => {
   });
 
   test("cancel", async () => {
-    global.browser.windows.create = jest.fn(async () => {
-      return { id: "windowId" };
-    });
-    global.browser.windows.remove = jest.fn(async () => {});
-    global.browser.webRequest.onBeforeRequest = new WebExtListener();
-    global.browser.windows.onRemoved = new WebExtListener();
-
     global.browser.windows.onRemoved.mockResponse("wrongWindowId");
     global.browser.windows.onRemoved.mockResponse("windowId");
 
@@ -106,13 +80,6 @@ describe("oauth flow", () => {
   });
 
   test("response error", async () => {
-    global.browser.windows.create = jest.fn(async () => {
-      return { id: "windowId" };
-    });
-    global.browser.windows.remove = jest.fn(async () => {});
-    global.browser.webRequest.onBeforeRequest = new WebExtListener();
-    global.browser.windows.onRemoved = new WebExtListener();
-
     global.browser.webRequest.onBeforeRequest.mockResponse({
       url: oauth.APPROVAL_URL + "?response=error%3DerrorCode",
     });
@@ -128,13 +95,6 @@ describe("oauth flow", () => {
   });
 
   test("fetch response error", async () => {
-    global.browser.windows.create = jest.fn(async () => {
-      return { id: "windowId" };
-    });
-    global.browser.windows.remove = jest.fn(async () => {});
-    global.browser.webRequest.onBeforeRequest = new WebExtListener();
-    global.browser.windows.onRemoved = new WebExtListener();
-
     fetch.mockResponseOnce(null, { status: 500 });
 
     global.browser.webRequest.onBeforeRequest.mockResponse({
@@ -155,13 +115,6 @@ describe("oauth flow", () => {
   });
 
   test("fetch response error json detail", async () => {
-    global.browser.windows.create = jest.fn(async () => {
-      return { id: "windowId" };
-    });
-    global.browser.windows.remove = jest.fn(async () => {});
-    global.browser.webRequest.onBeforeRequest = new WebExtListener();
-    global.browser.windows.onRemoved = new WebExtListener();
-
     fetch.mockResponseOnce(JSON.stringify({ error: "from_response" }), { status: 500 });
 
     global.browser.webRequest.onBeforeRequest.mockResponse({

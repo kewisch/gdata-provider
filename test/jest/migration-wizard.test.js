@@ -4,7 +4,7 @@
 
 import fs from "fs";
 import { jest } from "@jest/globals";
-import { WebExtStorage, WebExtCalendars, WebExtI18n } from "./utils";
+import createMessenger from "./webext-api";
 import jestDom from "@testing-library/jest-dom";
 import migrateMain from "../../src/content/migration-wizard.js";
 
@@ -12,14 +12,6 @@ const html = fs.readFileSync(
   new URL("../../src/content/migration-wizard.html", import.meta.url),
   "utf-8"
 );
-
-global.messenger = {
-  i18n: new WebExtI18n(),
-  storage: {},
-  calendar: {
-    calendars: {},
-  },
-};
 
 function qs(id) {
   return document.querySelector(id);
@@ -31,10 +23,10 @@ async function getStoragePref(name, defaultValue = null) {
 
 beforeEach(async () => {
   document.documentElement.innerHTML = html;
-  global.messenger.storage.local = new WebExtStorage();
   jest.spyOn(window, "close").mockImplementation(() => {});
 
-  messenger.calendar.calendars = new WebExtCalendars([
+  global.messenger = createMessenger();
+  global.messenger.calendar.calendars._calendars = [
     {
       id: "id1",
       type: "ics",
@@ -42,7 +34,7 @@ beforeEach(async () => {
       color: "#FFFFFF",
       url: "https://calendar.google.com/calendar/ical/user@example.com/private/full.ics",
     },
-  ]);
+  ];
 });
 
 test("init", async () => {
@@ -135,7 +127,7 @@ test("accept with calendars", async () => {
   expect(messenger.calendar.calendars.create).toHaveBeenCalledTimes(1);
   expect(messenger.calendar.calendars.create).toHaveBeenCalledWith({
     color: "#FFFFFF",
-    type: "gdata",
+    type: "ext-" + messenger.runtime.id,
     name: "user@example.com",
     url: "https://calendar.google.com/calendar/ical/user@example.com/private/full.ics",
   });

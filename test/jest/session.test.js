@@ -4,25 +4,12 @@ jestFetchMock.enableFetchMocks();
 import sessions from "../../src/background/session";
 import calGoogleRequest from "../../src/background/request";
 import { jest } from "@jest/globals";
-import { WebExtListener } from "./utils";
+import createMessenger from "./webext-api";
 
 let session;
 
-global.messenger = {
-  calendar: {
-    provider: {},
-  },
-  notifications: {},
-  i18n: {
-    getMessage: function(key, ...args) {
-      return `${key}[${args.join(",")}]`;
-    },
-  },
-  gdata: {},
-};
-
 beforeEach(() => {
-  global.messenger.calendar.provider.onFreeBusy = new WebExtListener();
+  global.messenger = createMessenger();
   jest.spyOn(global.console, "log").mockImplementation(() => {});
   jest.spyOn(global.console, "error").mockImplementation(() => {});
   session = sessions.byId("sessionId", true);
@@ -34,7 +21,6 @@ beforeEach(() => {
 
 test("get session by id", () => {
   let id = "otherSessionId";
-  global.messenger.calendar.provider.onFreeBusy = new WebExtListener();
 
   let session1 = sessions.byId(id);
 
@@ -150,7 +136,6 @@ describe("freebusy request", () => {
 });
 
 test("notifyOutdated", () => {
-  messenger.notifications.create = jest.fn();
   session._lastNotified = null;
   session.notifyOutdated();
   expect(messenger.notifications.create).toHaveBeenCalledWith("providerOutdated", {
@@ -164,7 +149,6 @@ test("notifyOutdated", () => {
 });
 
 test("notifyQuotaExceeded", () => {
-  messenger.notifications.create = jest.fn();
   session._lastNotified = null;
   session.notifyQuotaExceeded();
   expect(messenger.notifications.create).toHaveBeenCalledWith("quotaExceeded", {
@@ -178,9 +162,6 @@ test("notifyQuotaExceeded", () => {
 });
 
 test("login", async () => {
-  messenger.gdata.getOAuthToken = async () => "refreshToken";
-  messenger.gdata.setOAuthToken = jest.fn();
-
   session.oauth.ensureLogin = jest.fn(async () => {
     session.oauth.refreshToken = "refreshToken";
   });
@@ -353,7 +334,6 @@ test("getTasksList", async () => {
 test("invalidate", async () => {
   session.oauth.refreshToken = "refreshToken";
   session.oauth.invalidate = jest.fn();
-  messenger.gdata.setOAuthToken = jest.fn();
 
   await session.invalidate();
 

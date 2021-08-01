@@ -3,7 +3,7 @@ jestFetchMock.enableFetchMocks();
 
 import { jest } from "@jest/globals";
 
-import { WebExtListener, WebExtStorage } from "./utils";
+import createMessenger from "./webext-api";
 
 import calGoogleCalendar from "../../src/background/calendar";
 import gcalItems from "./fixtures/gcalItems.json";
@@ -104,75 +104,46 @@ function mockTaskRequest(req, props) {
 }
 
 beforeEach(() => {
-  global.messenger = {
-    calendar: {
-      calendars: {
-        _calendars: {
-          id0: { id: "id0", type: "ics", url: "https://example.com/feed.ics" },
-          id1: {
-            id: "id1",
-            cacheId: "cached-id1",
-            type: "gdata",
-            url: "googleapi://sessionId/?calendar=id1%40calendar.google.com&tasks=taskhash",
-          },
-          id2: { id: "id2", cacheId: "cached-id2", type: "gdata", url: "googleapi://sessionId/" },
-          id3: {
-            id: "id3",
-            cacheId: "cached-id3",
-            type: "gdata",
-            url: "googleapi://sessionId@group.calendar.google.com/",
-          },
-          id4: {
-            id: "id4",
-            cacheId: "cached-id4",
-            type: "gdata",
-            url: "https://www.google.com/calendar/ical/sessionId/private/full",
-          },
-          id5: {
-            id: "id5",
-            cacheId: "cached-id5",
-            type: "gdata",
-            url: "https://www.google.com/calendar/feeds/user%40example.com/public/full",
-          },
-          id6: { id: "id6", cacheId: "cached-id6", type: "gdata", url: "wat://" },
-        },
-        get: jest.fn(async id => {
-          return messenger.calendar.calendars._calendars[id];
-        }),
-        update: jest.fn(async (id, update) => {
-          let calendar = messenger.calendar.calendars._calendars;
-          Object.assign(calendar, update);
-          return calendar;
-        }),
-        clear: jest.fn(),
-      },
-      provider: {
-        onFreeBusy: new WebExtListener(false),
-      },
+  global.messenger = createMessenger();
+  global.messenger.calendar.calendars._calendars = [
+    { id: "id0", type: "ics", url: "https://example.com/feed.ics" },
+    {
+      id: "id1",
+      cacheId: "cached-id1",
+      type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      url: "googleapi://sessionId/?calendar=id1%40calendar.google.com&tasks=taskhash",
     },
-    gdata: {
-      getOAuthToken: async function() {
-        return "accessToken";
-      },
-
-      setOAuthToken: async function() {},
+    {
+      id: "id2",
+      cacheId: "cached-id2",
+      type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      url: "googleapi://sessionId/",
     },
-    i18n: {
-      getMessage: function(key, ...args) {
-        return `${key}[${args.join(",")}]`;
-      },
+    {
+      id: "id3",
+      cacheId: "cached-id3",
+      type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      url: "googleapi://sessionId@group.calendar.google.com/",
     },
-
-    storage: {
-      local: new WebExtStorage(),
+    {
+      id: "id4",
+      cacheId: "cached-id4",
+      type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      url: "https://www.google.com/calendar/ical/sessionId/private/full",
     },
-    idle: {
-      _idleState: "active",
-      queryState: jest.fn(async () => {
-        return messenger.idle._idleState;
-      }),
+    {
+      id: "id5",
+      cacheId: "cached-id5",
+      type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      url: "https://www.google.com/calendar/feeds/user%40example.com/public/full",
     },
-  };
+    {
+      id: "id6",
+      cacheId: "cached-id6",
+      type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      url: "wat://",
+    },
+  ];
 
   jest.spyOn(global.console, "log").mockImplementation(() => {});
   jest.spyOn(global.console, "error").mockImplementation(() => {});
@@ -191,21 +162,17 @@ test("static init", async () => {
 });
 
 test("initListeners", async () => {
-  function prepareMock(method, ...args) {
-    messenger.calendar.provider[method] = new WebExtListener();
-    jest.spyOn(calendar, method).mockImplementation(() => {});
-  }
+  function prepareMock(method, ...args) {}
 
-  let rawId1 = messenger.calendar.calendars._calendars.id1;
+  let rawId1 = await messenger.calendar.calendars.get("id1");
   let calendar = await calGoogleCalendar.get("id1");
-  let called = {};
 
-  prepareMock("onItemCreated", rawId1, { id: "item" });
-  prepareMock("onItemUpdated", rawId1, { id: "item", title: "new" }, { id: "item", title: "old" });
-  prepareMock("onItemRemoved", rawId1, { id: "item" });
-  prepareMock("onInit", rawId1);
-  prepareMock("onSync", rawId1);
-  prepareMock("onResetSync", rawId1);
+  jest.spyOn(calendar, "onItemCreated").mockImplementation(() => {});
+  jest.spyOn(calendar, "onItemUpdated").mockImplementation(() => {});
+  jest.spyOn(calendar, "onItemRemoved").mockImplementation(() => {});
+  jest.spyOn(calendar, "onInit").mockImplementation(() => {});
+  jest.spyOn(calendar, "onSync").mockImplementation(() => {});
+  jest.spyOn(calendar, "onResetSync").mockImplementation(() => {});
 
   calGoogleCalendar.initListeners();
 

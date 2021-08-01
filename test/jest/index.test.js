@@ -1,27 +1,5 @@
 import { jest } from "@jest/globals";
-import { WebExtStorage, WebExtListener } from "./utils";
-
-global.messenger = {
-  gdata: {
-    getLegacyPrefs: jest.fn(),
-    purgeLegacyPrefs: jest.fn(),
-  },
-  storage: {},
-  calendar: {
-    calendars: {},
-    provider: {
-      onItemCreated: new WebExtListener(),
-      onItemUpdated: new WebExtListener(),
-      onItemRemoved: new WebExtListener(),
-      onSync: new WebExtListener(),
-      onInit: new WebExtListener(),
-      onResetSync: new WebExtListener(),
-    },
-  },
-  runtime: {
-    id: "runtimeId",
-  },
-};
+import createMessenger from "./webext-api";
 
 let migrate;
 
@@ -30,7 +8,7 @@ beforeAll(async () => {
   migrate = syms.migrate;
 });
 beforeEach(() => {
-  global.messenger.storage.local = new WebExtStorage();
+  global.messenger = createMessenger();
 });
 
 test("migrate", async () => {

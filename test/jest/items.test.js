@@ -5,20 +5,13 @@ import { jsonToItem, itemToJson, patchItem, ItemSaver } from "../../src/backgrou
 import calGoogleCalendar from "../../src/background/calendar";
 import ICAL from "ical.js";
 import v8 from "v8";
-import { WebExtStorage } from "./utils";
+import createMessenger from "./webext-api";
 
 import { jest } from "@jest/globals";
 
-global.messenger = {
-  storage: {
-    local: new WebExtStorage(),
-  },
-  i18n: {
-    getMessage: function(key, ...args) {
-      return `${key}[${args.join(",")}]`;
-    },
-  },
-};
+beforeEach(() => {
+  global.messenger = createMessenger();
+});
 
 // TODO test recurrence-id/ost, recurringEventId
 // TODO conferenceData
