@@ -91,10 +91,14 @@ export default class calGoogleRequest {
 
     this.response = await fetch(uri, this.options);
     try {
-      if (this.response.headers.get("Content-Length") == "0") {
+      if (this.response.headers.get("Content-Type")?.startsWith("application/json")) {
+        this.json = await this.response.json();
+      } else if (this.response.headers.get("Content-Length") == "0") {
         this.json = { status: "No Content" };
       } else {
-        this.json = await this.response.json();
+        throw new Error(
+          `Received plain response: ${(await this.response.text()).substr(0, 20)}...`
+        );
       }
     } catch (e) {
       console.error("Could not parse API response as JSON", e);

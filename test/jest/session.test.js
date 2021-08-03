@@ -62,7 +62,8 @@ describe("freebusy request", () => {
             busy: [{ start: "2021-01-01T00:00:00", end: "2021-01-02T00:00:00" }],
           },
         },
-      })
+      }),
+      { headers: { "Content-Type": "application/json" } }
     );
 
     let busy = await session.onFreeBusy(
@@ -104,7 +105,9 @@ describe("freebusy request", () => {
   });
 
   test("api error", async () => {
-    fetch.mockResponseOnce(JSON.stringify({ error: { errors: [{ reason: "karma" }] } }));
+    fetch.mockResponseOnce(JSON.stringify({ error: { errors: [{ reason: "karma" }] } }), {
+      headers: { "Content-Type": "application/json" },
+    });
     let busy = await session.onFreeBusy(
       "mailto:user@example.com",
       "20210101T000000",
@@ -122,7 +125,8 @@ describe("freebusy request", () => {
             busy: [{ start: "2021-01-01T00:00:00", end: "2021-01-02T00:00:00" }],
           },
         },
-      })
+      }),
+      { headers: { "Content-Type": "application/json" } }
     );
 
     let busy = await session.onFreeBusy(
@@ -219,19 +223,19 @@ describe("paginatedRequest", () => {
     let onLast = jest.fn(async () => "lastdata");
 
     fetch.mockResponses(
-      [JSON.stringify({ nextPageToken: "1" })],
-      [JSON.stringify({ nextPageToken: "2" })],
-      [JSON.stringify({ fin: true })]
+      [JSON.stringify({ nextPageToken: 1 }), { headers: { "Content-Type": "application/json" } }],
+      [JSON.stringify({ nextPageToken: 2 }), { headers: { "Content-Type": "application/json" } }],
+      [JSON.stringify({ fin: true }), { headers: { "Content-Type": "application/json" } }]
     );
 
     let lastData = await session.paginatedRequest(request, onFirst, onEach, onLast);
     let expectMethod = expect.objectContaining({ method: "GET" });
 
     expect(onFirst).toHaveBeenCalledTimes(1);
-    expect(onFirst).toHaveBeenCalledWith({ nextPageToken: "1" });
+    expect(onFirst).toHaveBeenCalledWith({ nextPageToken: 1 });
     expect(onEach).toHaveBeenCalledTimes(3);
-    expect(onEach).toHaveBeenNthCalledWith(1, { nextPageToken: "1" });
-    expect(onEach).toHaveBeenNthCalledWith(2, { nextPageToken: "2" });
+    expect(onEach).toHaveBeenNthCalledWith(1, { nextPageToken: 1 });
+    expect(onEach).toHaveBeenNthCalledWith(2, { nextPageToken: 2 });
     expect(onEach).toHaveBeenNthCalledWith(3, { fin: true });
     expect(onLast).toHaveBeenCalledTimes(1);
     expect(onLast).toHaveBeenCalledWith({ fin: true });
@@ -261,15 +265,15 @@ describe("paginatedRequest", () => {
     let onFirst = jest.fn(async () => {});
 
     fetch.mockResponses(
-      [JSON.stringify({ nextPageToken: "1" })],
-      [JSON.stringify({ nextPageToken: "2" })],
-      [JSON.stringify({ fin: true })]
+      [JSON.stringify({ nextPageToken: 1 }), { headers: { "Content-Type": "application/json" } }],
+      [JSON.stringify({ nextPageToken: 2 }), { headers: { "Content-Type": "application/json" } }],
+      [JSON.stringify({ fin: true }), { headers: { "Content-Type": "application/json" } }]
     );
 
     let lastData = await session.paginatedRequest(request, onFirst, null, null);
 
     expect(onFirst).toHaveBeenCalledTimes(1);
-    expect(onFirst).toHaveBeenCalledWith({ nextPageToken: "1" });
+    expect(onFirst).toHaveBeenCalledWith({ nextPageToken: 1 });
 
     expect(lastData).toBe(null);
   });
@@ -277,9 +281,15 @@ describe("paginatedRequest", () => {
 
 test("getCalendarList", async () => {
   fetch.mockResponses(
-    [JSON.stringify({ items: [1, 2, 3], nextPageToken: 1 })],
-    [JSON.stringify({ items: [4, 5, 6], nextPageToken: 2 })],
-    [JSON.stringify({ items: [7, 8, 9] })]
+    [
+      JSON.stringify({ items: [1, 2, 3], nextPageToken: 1 }),
+      { headers: { "Content-Type": "application/json" } },
+    ],
+    [
+      JSON.stringify({ items: [4, 5, 6], nextPageToken: 2 }),
+      { headers: { "Content-Type": "application/json" } },
+    ],
+    [JSON.stringify({ items: [7, 8, 9] }), { headers: { "Content-Type": "application/json" } }]
   );
 
   let expectMethod = expect.objectContaining({ method: "GET" });
@@ -305,9 +315,15 @@ test("getCalendarList", async () => {
 
 test("getTasksList", async () => {
   fetch.mockResponses(
-    [JSON.stringify({ items: [1, 2, 3], nextPageToken: 1 })],
-    [JSON.stringify({ items: [4, 5, 6], nextPageToken: 2 })],
-    [JSON.stringify({ items: [7, 8, 9] })]
+    [
+      JSON.stringify({ items: [1, 2, 3], nextPageToken: 1 }),
+      { headers: { "Content-Type": "application/json" } },
+    ],
+    [
+      JSON.stringify({ items: [4, 5, 6], nextPageToken: 2 }),
+      { headers: { "Content-Type": "application/json" } },
+    ],
+    [JSON.stringify({ items: [7, 8, 9] }), { headers: { "Content-Type": "application/json" } }]
   );
 
   let expectMethod = expect.objectContaining({ method: "GET" });

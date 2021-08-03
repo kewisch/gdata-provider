@@ -22,6 +22,7 @@ function mockCalendarRequest(req, props) {
     return {
       headers: {
         Date: new Date(),
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(
         Object.assign(
@@ -50,6 +51,7 @@ function mockCalendarListRequest(req, props) {
     return {
       headers: {
         Date: new Date(),
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(
         Object.assign(
@@ -87,6 +89,7 @@ function mockTaskRequest(req, props) {
     return {
       headers: {
         Date: new Date(),
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(
         Object.assign(
@@ -327,6 +330,9 @@ describe("item functions", () => {
           delete gcalItemResponse.reminders.overrides;
 
           return {
+            headers: {
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify(gcalItemResponse),
           };
         }
@@ -371,6 +377,9 @@ describe("item functions", () => {
           )
         ) {
           return {
+            headers: {
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify(gcalItems[0]),
           };
         }
@@ -457,6 +466,9 @@ describe("item functions", () => {
       fetch.mockResponse(req => {
         if (req.url.startsWith("https://www.googleapis.com/tasks/v1/lists/taskhash/tasks")) {
           return {
+            headers: {
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify(gcalItems[2]),
           };
         }
@@ -498,6 +510,9 @@ describe("item functions", () => {
           )
         ) {
           return {
+            headers: {
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify(gcalItems[0]),
           };
         }
@@ -661,6 +676,46 @@ describe("onSync", () => {
     expect(hasCalledTwice).toBe(true);
   });
 
+  test("resource gone twice", async () => {
+    let calendar = await calGoogleCalendar.get("id1");
+    await calendar.onInit();
+
+    fetch.mockResponse(req => {
+      let response;
+
+      if (req.url.startsWith("https://www.googleapis.com/calendar/v3/calendars")) {
+        // RESOURCE_GONE
+        return {
+          headers: {
+            "Content-Length": 0,
+          },
+          status: 410,
+        };
+      }
+      if ((response = mockCalendarListRequest(req)) !== null) {
+        return response;
+      }
+      if ((response = mockTaskRequest(req)) !== null) {
+        return response;
+      }
+
+      throw new Error("Unhandled request " + req.url);
+    });
+
+    jest.spyOn(calendar, "onSync");
+    jest.spyOn(calendar, "onResetSync");
+
+    authenticate(calendar.session);
+    await expect(calendar.onSync()).rejects.toThrow("RESOURCE_GONE");
+
+    expect(calendar.onSync).toHaveBeenCalledTimes(2);
+    expect(calendar.onResetSync).toHaveBeenCalledTimes(2);
+    expect(console.error).toHaveBeenCalledWith(
+      "[calGoogleCalendar]",
+      "Incremental update failed twice, not trying again"
+    );
+  });
+
   test("fail", async () => {
     let calendar = await calGoogleCalendar.get("id1");
     await calendar.onInit();
@@ -668,7 +723,7 @@ describe("onSync", () => {
     fetch.mockResponse("blergh");
 
     authenticate(calendar.session);
-    expect(calendar.onSync()).rejects.toThrow(/invalid json response/);
+    await expect(calendar.onSync()).rejects.toThrow("Received plain response: blergh...");
 
     expect(messenger.calendar.calendars.clear).not.toHaveBeenCalled();
   });
@@ -678,6 +733,9 @@ test("onDetectCalendars", async () => {
   fetch.mockResponse(req => {
     if (req.url.startsWith("https://www.googleapis.com/calendar/v3/users/me/calendarList")) {
       return {
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           items: [
             {
@@ -691,6 +749,9 @@ test("onDetectCalendars", async () => {
       };
     } else if (req.url.startsWith("https://www.googleapis.com/tasks/v1/users/@me/lists")) {
       return {
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           items: [
             {

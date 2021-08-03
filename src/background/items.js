@@ -621,7 +621,7 @@ export class ItemSaver {
     } else if (data.kind == "tasks#tasks") {
       return this.parseTaskStream(data);
     } else {
-      throw new Error("Invalid stream type: " + data?.kind);
+      throw new Error("Invalid stream type: " + (data?.kind || data?.status));
     }
   }
 

@@ -21,6 +21,9 @@ function mockErrorResponse(status, error) {
   jest.spyOn(global.console, "log").mockImplementation(() => {});
   fetch.mockResponseOnce(JSON.stringify({ error: { errors: [error] } }), {
     status: status,
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 }
 
@@ -30,7 +33,7 @@ test("commit basics", async () => {
     uri: "https://localhost/test",
   });
 
-  fetch.mockResponseOnce(JSON.stringify({}));
+  fetch.mockResponseOnce(JSON.stringify({}), { headers: { "Content-Type": "application/json" } });
   let res = await request.commit(session);
   expect(session.ensureLogin).toHaveBeenCalled();
   expect(res).toEqual({});
@@ -42,7 +45,7 @@ test("commit basics", async () => {
     json: { foo: "bar" },
   });
 
-  fetch.mockResponseOnce(JSON.stringify({}));
+  fetch.mockResponseOnce(JSON.stringify({}), { headers: { "Content-Type": "application/json" } });
   res = await request.commit(session);
   expect(fetch.mock.calls[fetch.mock.calls.length - 1][1].body).toBe('{"foo":"bar"}');
   expect(fetch).toBeCalledWith(
@@ -64,7 +67,7 @@ test("commit invalid response", async () => {
 
   jest.spyOn(global.console, "error").mockImplementation(() => {});
   fetch.mockResponseOnce("wrong");
-  await expect(request.commit(session)).rejects.toThrow(/invalid json response/);
+  await expect(request.commit(session)).rejects.toThrow("Received plain response: wrong...");
 });
 
 test("status code 201", async () => {
@@ -74,7 +77,10 @@ test("status code 201", async () => {
     params: { undef: null, foo: "bar" },
     json: { foo: "bar" },
   });
-  fetch.mockResponseOnce(JSON.stringify({ result: 1 }), { status: 201 });
+  fetch.mockResponseOnce(JSON.stringify({ result: 1 }), {
+    status: 201,
+    headers: { "Content-Type": "application/json" },
+  });
   let res = await request.commit(session);
   expect(res).toEqual({ result: 1 });
   expect(request.response.status).toBe(201);
@@ -200,8 +206,14 @@ describe("auth error", () => {
     });
     jest.spyOn(global.console, "log").mockImplementation(() => {});
     fetch.mockResponses(
-      [JSON.stringify({ error: { errors: [{ reason: "unauthorized_client" }] } }), { status: 401 }],
-      [JSON.stringify({ result: 1 }), { status: 200 }]
+      [
+        JSON.stringify({ error: { errors: [{ reason: "unauthorized_client" }] } }),
+        { status: 401, headers: { "Content-Type": "application/json" } },
+      ],
+      [
+        JSON.stringify({ result: 1 }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      ]
     );
     let res = await request.commit(session);
     expect(request.response.status).toBe(200);
@@ -217,8 +229,14 @@ describe("auth error", () => {
     });
     jest.spyOn(global.console, "log").mockImplementation(() => {});
     fetch.mockResponses(
-      [JSON.stringify({ error: { errors: [{ reason: "unauthorized_client" }] } }), { status: 401 }],
-      [JSON.stringify({ error: { errors: [{ reason: "invalid_grant" }] } }), { status: 403 }]
+      [
+        JSON.stringify({ error: { errors: [{ reason: "unauthorized_client" }] } }),
+        { status: 401, headers: { "Content-Type": "application/json" } },
+      ],
+      [
+        JSON.stringify({ error: { errors: [{ reason: "invalid_grant" }] } }),
+        { status: 403, headers: { "Content-Type": "application/json" } },
+      ]
     );
     await expect(request.commit(session)).rejects.toThrow("TOKEN_FAILURE");
 
@@ -298,8 +316,14 @@ describe("auth error", () => {
     });
     jest.spyOn(global.console, "log").mockImplementation(() => {});
     fetch.mockResponses(
-      [JSON.stringify({ error: { errors: [{ reason: "authError" }] } }), { status: 401 }],
-      [JSON.stringify({ result: 1 }), { status: 200 }]
+      [
+        JSON.stringify({ error: { errors: [{ reason: "authError" }] } }),
+        { status: 401, headers: { "Content-Type": "application/json" } },
+      ],
+      [
+        JSON.stringify({ result: 1 }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      ]
     );
     let res = await request.commit(session);
     expect(request.response.status).toBe(200);
@@ -315,8 +339,14 @@ describe("auth error", () => {
     });
     jest.spyOn(global.console, "log").mockImplementation(() => {});
     fetch.mockResponses(
-      [JSON.stringify({ error: { errors: [{ reason: "authError" }] } }), { status: 401 }],
-      [JSON.stringify({ error: { errors: [{ reason: "invalidCredentials" }] } }), { status: 403 }]
+      [
+        JSON.stringify({ error: { errors: [{ reason: "authError" }] } }),
+        { status: 401, headers: { "Content-Type": "application/json" } },
+      ],
+      [
+        JSON.stringify({ error: { errors: [{ reason: "invalidCredentials" }] } }),
+        { status: 403, headers: { "Content-Type": "application/json" } },
+      ]
     );
     await expect(request.commit(session)).rejects.toThrow("LOGIN_FAILED");
     expect(request.response.status).toBe(403);
