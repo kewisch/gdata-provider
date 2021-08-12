@@ -32,133 +32,30 @@ export function itemToJson(item, calendar, isImport) {
 }
 
 function eventToJson(item, calendar, isImport) {
-  function setIf(obj, prop, value) {
-    if (value !== null && typeof value != "undefined") {
-      obj[prop] = value;
-    }
+  let oldItem = {
+    formats: {
+      jcal: ["vcalendar", [], [["vevent", [], []]]],
+    },
+  };
+
+  let entry = patchEvent(item, oldItem);
+  if (item.id) {
+    entry.icalUID = item.id;
   }
-
-  let vcalendar = new ICAL.Component(item.formats.jcal);
-  let vevent = vcalendar.getFirstSubcomponent("vevent");
-  if (!vevent) {
-    throw new Error(`Missing vevent in toplevel component ${item.formats.jcal?.[0]}`);
-  }
-  let entry = { extendedProperties: { private: {}, shared: {} } };
-
-  setIf(entry, "icalUID", item.id);
-  setIf(entry, "summary", item.title);
-  setIf(entry, "description", item.description);
-  setIf(entry, "location", item.location);
-
-  setIf(entry, "start", dateToJson(vevent.getFirstProperty("dtstart")));
-  setIf(entry, "end", dateToJson(vevent.getFirstProperty("dtend"))); // TODO duration
-
-  // TODO calendar.google.enableAttendees
-  entry.attendees = convertAttendees(vevent);
-
-  // TODO recurence
-  // TODO recurring snooze
-  setIf(entry, "originalStartTime", dateToJson(vevent.getFirstProperty("recurrence-id")));
-
-  entry.reminders = { overrides: [], useDefault: false };
-  for (let valarm of vevent.getAllSubcomponents("valarm")) {
-    if (valarm.getFirstPropertyValue("x-default-alarm")) {
-      // This is one of the Google default alarms on the calendar, it should therefore not be
-      // serialized. We need to do this because Lightning does not have the concept of a default
-      // alarm.
-      entry.reminders.useDefault = true;
-      continue;
-    }
-    if (entry.reminders.overrides.length == 5) {
-      // Need to continue here, there may be x-default-alarms further on.
-      continue;
-    }
-
-    let override = {};
-    override.method = ALARM_ACTION_MAP_REV[valarm.getFirstPropertyValue("action")];
-    let trigger = valarm.getFirstProperty("trigger");
-    let related = trigger.getParameter("related");
-    if (trigger.type == "date-time") {
-      override.minutes = Math.floor(
-        vevent
-          .getFirstPropertyValue("dtstart")
-          .subtractDateTz(trigger.getFirstValue())
-          .toSeconds() / 60
-      );
-    } else if (related == "END") {
-      let length = vevent
-        .getFirstPropertyValue("dtend")
-        .subtractDateTz(vevent.getFirstPropertyValue("dtstart"));
-      override.minutes = -Math.floor(
-        (trigger.getFirstValue().toSeconds() + length.toSeconds()) / 60
-      );
-    } else {
-      override.minutes = -Math.floor(trigger.getFirstValue().toSeconds() / 60);
-    }
-
-    override.minutes = Math.min(Math.max(0, override.minutes), FOUR_WEEKS_IN_MINUTES);
-    entry.reminders.overrides.push(override);
-  }
-
-  if (!entry.reminders.overrides.length && vevent.getFirstPropertyValue("x-default-alarm")) {
-    delete entry.reminders.overrides;
-    entry.reminders.useDefault = true;
-  }
-
-  setIf(
-    entry.extendedProperties.private,
-    "X-MOZ-LASTACK",
-    vevent.getFirstPropertyValue("x-moz-lastack")?.toICALString()
-  );
-  setIf(
-    entry.extendedProperties.private,
-    "X-MOZ-SNOOZE-TIME",
-    vevent.getFirstPropertyValue("x-moz-snooze-time")?.toICALString()
-  );
-
-  setIf(entry, "sequence", vevent.getFirstPropertyValue("sequence"));
-  setIf(entry, "status", vevent.getFirstPropertyValue("status")?.toLowerCase());
-  if (entry.status == "cancelled") {
-    throw new Error("NS_ERROR_LOSS_OF_SIGNIFICANT_DATA");
-  }
-  if (entry.status == "none") {
-    delete entry.status;
-  }
-
-  setIf(entry, "transparency", vevent.getFirstPropertyValue("transp")?.toLowerCase());
-  setIf(entry, "visibility", vevent.getFirstPropertyValue("class")?.toLowerCase()); // TODO mapping
-
-  setIf(
-    entry.extendedProperties.shared,
-    "X-MOZ-CATEGORIES",
-    arrayToCategoriesString(item.categories)
-  );
-
   return entry;
 }
 
 function taskToJson(item, calendar, isImport) {
-  function setIf(obj, prop, value) {
-    if (value !== null && typeof value != "undefined") {
-      obj[prop] = value;
-    }
+  let oldItem = {
+    formats: {
+      jcal: ["vcalendar", [], [["vtodo", [], []]]],
+    },
+  };
+
+  let entry = patchTask(item, oldItem);
+  if (item.id) {
+    entry.id = item.id;
   }
-
-  let vcalendar = new ICAL.Component(item.formats.jcal);
-  let vtodo = vcalendar.getFirstSubcomponent("vtodo");
-  let entry = {};
-
-  setIf(entry, "id", item.id);
-  setIf(entry, "title", item.title);
-  setIf(
-    entry,
-    "status",
-    vtodo.getFirstPropertyValue("status") == "completed" ? "completed" : "needsAction"
-  );
-  setIf(entry, "notes", item.description);
-
-  setIf(entry, "due", vtodo.getFirstPropertyValue("due")?.toString());
-  setIf(entry, "completed", vtodo.getFirstPropertyValue("completed")?.toString());
 
   return entry;
 }
@@ -233,6 +130,74 @@ function jsonToTask(entry, calendar, referenceItem) {
   };
 }
 
+function haveRemindersChanged(remindersEntry, oldRemindersEntry) {
+  if (
+    remindersEntry.useDefault != oldRemindersEntry.useDefault ||
+    remindersEntry.overrides.length != oldRemindersEntry.overrides.length
+  ) {
+    return true;
+  }
+
+  let reminderMap = new Set(oldRemindersEntry.overrides.map(entry => entry.method + entry.minutes));
+  if (oldRemindersEntry.overrides.some(entry => !reminderMap.has(entry.method + entry.minutes))) {
+    return true;
+  }
+
+  return false;
+}
+
+function convertReminders(vevent) {
+  // XXX While Google now supports multiple alarms and alarm values, we still need to fix bug 353492
+  // first so we can better take care of finding out what alarm is used for snoozing.
+
+  let reminders = { overrides: [], useDefault: false };
+  for (let valarm of vevent.getAllSubcomponents("valarm")) {
+    if (valarm.getFirstPropertyValue("x-default-alarm")) {
+      // This is one of the Google default alarms on the calendar, it should therefore not be
+      // serialized. We need to do this because Lightning does not have the concept of a default
+      // alarm.
+      reminders.useDefault = true;
+      continue;
+    }
+    if (reminders.overrides.length == 5) {
+      // Need to continue here, there may be x-default-alarms further on.
+      continue;
+    }
+
+    let override = {};
+    override.method = ALARM_ACTION_MAP_REV[valarm.getFirstPropertyValue("action")];
+    let trigger = valarm.getFirstProperty("trigger");
+    let related = trigger.getParameter("related");
+    if (trigger.type == "date-time") {
+      override.minutes = Math.floor(
+        vevent
+          .getFirstPropertyValue("dtstart")
+          .subtractDateTz(trigger.getFirstValue())
+          .toSeconds() / 60
+      );
+    } else if (related == "END") {
+      let length = vevent
+        .getFirstPropertyValue("dtend")
+        .subtractDateTz(vevent.getFirstPropertyValue("dtstart"));
+      override.minutes = -Math.floor(
+        (trigger.getFirstValue().toSeconds() + length.toSeconds()) / 60
+      );
+    } else {
+      override.minutes = -Math.floor(trigger.getFirstValue().toSeconds() / 60);
+    }
+
+    override.minutes = Math.min(Math.max(0, override.minutes), FOUR_WEEKS_IN_MINUTES);
+    reminders.overrides.push(override);
+  }
+
+  if (!reminders.overrides.length && vevent.getFirstPropertyValue("x-default-alarm")) {
+    delete reminders.overrides;
+    reminders.useDefault = true;
+  }
+
+  return reminders;
+}
+
 function haveAttendeesChanged(event, oldEvent) {
   let oldAttendees = new Map(
     oldEvent.getAllProperties("attendee").map(attendee => [attendee.getFirstValue(), attendee])
@@ -269,6 +234,12 @@ function haveAttendeesChanged(event, oldEvent) {
 }
 
 function convertAttendees(vevent) {
+  function setIf(att, prop, value) {
+    if (value) {
+      att[prop] = value;
+    }
+  }
+
   let attendees = [];
 
   for (let attendee of vevent.getAllProperties("attendee")) {
@@ -286,9 +257,44 @@ function convertAttendees(vevent) {
     att.responseStatus =
       ATTENDEE_STATUS_MAP_REV[attendee.getFirstParameter("partstat")] || "needsAction";
 
+    setIf(att, "comment", attendee.getFirstParameter("comment"));
+    setIf(att, "additionalGuests", attendee.getFirstParameter("x-num-guests"));
+    setIf(att, "displayName", attendee.getFirstParameter("cn"));
+
     attendees.push(att);
   }
   return attendees;
+}
+
+function convertRecurrence(vevent) {
+  let recrules = new Set();
+
+  for (let rrule of vevent.getAllProperties("RRULE")) {
+    recrules.add(rrule.toICALString());
+  }
+  for (let rrule of vevent.getAllProperties("RDATE")) {
+    recrules.add(rrule.toICALString());
+  }
+  for (let rrule of vevent.getAllProperties("EXDATE")) {
+    // TODO make this comment true
+    // EXDATES require special casing, since they might contain a TZID. To avoid the need for
+    // conversion of TZID strings, convert to UTC before serialization.
+    recrules.add(rrule.toICALString());
+  }
+  return recrules;
+}
+
+function convertRecurringSnoozeTime(vevent) {
+  // This is an evil workaround since we don't have a really good system to save the snooze time
+  // for recurring alarms or even retrieve them from the event. This should change when we have
+  // multiple alarms support.
+  let snoozeObj = {};
+  for (let property of vevent.getAllProperties()) {
+    if (property.name.startsWith("X-MOZ-SNOOZE-TIME-")) {
+      snoozeObj[property.name.substr(18)] = property.getFirstValue();
+    }
+  }
+  return Object.keys(snoozeObj).length ? JSON.stringify(snoozeObj) : null;
 }
 
 export function patchItem(item, oldItem) {
@@ -316,7 +322,9 @@ function patchTask(item, oldItem) {
   let oldTask = new ICAL.Component(oldItem.formats.jcal).getFirstSubcomponent("vtodo");
 
   setIfFirstProperty(entry, "title", "summary");
-  setIfFirstProperty(entry, "status");
+  setIfFirstProperty(entry, "status", "status", val => {
+    return val == "completed" ? "completed" : "needsAction";
+  });
   setIfFirstProperty(entry, "notes", "description");
 
   setIfFirstProperty(entry, "due", "due", dueDate => dueDate.toString());
@@ -352,47 +360,83 @@ function patchEvent(item, oldItem) {
   let event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
   let oldEvent = new ICAL.Component(oldItem.formats.jcal).getFirstSubcomponent("vevent");
 
+  if (!event) {
+    throw new Error(`Missing vevent in toplevel component ${item.formats.jcal?.[0]}`);
+  }
+
   setIfFirstProperty(entry, "summary");
   setIfFirstProperty(entry, "description");
   setIfFirstProperty(entry, "location");
 
   setIfDateChanged(entry, "start", "dtstart");
-  setIfDateChanged(entry, "end", "dtend");
+  setIfDateChanged(entry, "end", "dtend"); // TODO duration instead of end
 
-  // TODO recurence
-  // TODO recurring snooze
-  // TODO reminders
+  if (event.getFirstProperty("RRULE") || event.getFirstProperty("RDATE")) {
+    let oldRecurSnooze = convertRecurringSnoozeTime(oldEvent);
+    let newRecurSnooze = convertRecurringSnoozeTime(event);
+    if (oldRecurSnooze != newRecurSnooze) {
+      entry.extendedProperties.private["X-GOOGLE-SNOOZE-RECUR"] = newRecurSnooze;
+    }
+  }
+
+  let oldRecurrenceSet = convertRecurrence(oldEvent);
+  let newRecurrence = [...convertRecurrence(event)];
+  if (
+    oldRecurrenceSet.size != newRecurrence.length ||
+    newRecurrence.some(elem => !oldRecurrenceSet.has(elem))
+  ) {
+    entry.recurrence = newRecurrence.join("\n");
+  }
 
   setIfDateChanged(entry, "originalStartTime", "recurrence-id");
+  // TODO
+  //  setIf(entry, "recurringEventId", item.id.replace("@google.com", "")); // TODO parentMeta?.path || item.id.replace("@google.com", "");
 
   setIfFirstProperty(entry, "sequence");
-  setIfFirstProperty(entry, "status", "status", status => status?.toLowerCase());
   setIfFirstProperty(entry, "transparency", "transp", transparency => transparency?.toLowerCase());
   setIfFirstProperty(entry, "visibility", "class", visibility => visibility?.toLowerCase());
 
+  setIfFirstProperty(entry, "status", "status", status => status?.toLowerCase());
+  if (entry.status == "cancelled") {
+    throw new Error("NS_ERROR_LOSS_OF_SIGNIFICANT_DATA");
+  }
+  if (entry.status == "none") {
+    delete entry.status;
+  }
+
   // Attendees
-  // TODO this doesn't take into account changes within an attendee
+  // TODO if (Services.prefs.getBoolPref("calendar.google.enableAttendees", false)) {
   if (haveAttendeesChanged(event, oldEvent)) {
     entry.attendees = convertAttendees(event);
   }
+  // }
+
+  let oldReminders = convertReminders(oldEvent);
+  let reminders = convertReminders(event);
+  if (haveRemindersChanged(reminders, oldReminders)) {
+    entry.reminders = reminders;
+  }
 
   // Categories
-  let oldCatSet = new Set(oldItem.categories);
+  let oldCatSet = new Set(oldItem.categories || []);
   if (
-    oldCatSet.size != item.categories.length ||
-    item.categories.some(itm => !oldCatSet.has(itm))
+    oldCatSet.size != (item.categories?.length ?? 0) ||
+    item.categories?.some(itm => !oldCatSet.has(itm))
   ) {
     entry.extendedProperties.shared["X-MOZ-CATEGORIES"] = arrayToCategoriesString(item.categories);
   }
 
-  setIfFirstProperty(entry.extendedProperties.private, "X-MOZ-LASTACK", "x-moz-lastack", ack =>
-    ack?.toICALString()
+  setIfFirstProperty(
+    entry.extendedProperties.private,
+    "X-MOZ-LASTACK",
+    "x-moz-lastack",
+    ack => ack?.toICALString() // TODO this should be toRFC3339
   );
   setIfFirstProperty(
     entry.extendedProperties.private,
     "X-MOZ-SNOOZE-TIME",
     "x-moz-snooze-time",
-    snooze => snooze?.toICALString()
+    snooze => snooze?.toICALString() // TODO this should be toRFC3339
   );
 
   if (!Object.keys(entry.extendedProperties.shared).length) {

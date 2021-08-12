@@ -140,7 +140,7 @@
               [ "created", {}, "date-time", "2006-06-08T21:04:52.000Z" ],
               [ "last-modified", {}, "date-time", "2006-06-08T21:05:49.138Z" ],
               [ "dtstamp", {}, "date-time", "2006-06-08T21:05:49.138Z" ],
-              [ "description", {}, "text", "description" ],
+              [ "description", {}, "text", "Description" ],
               [ "location", {}, "text", "Hard Drive" ],
               [ "status", {}, "text", "confirmed" ],
               [ "summary", {}, "text", "busyTitle[calendarName]" ],

@@ -164,7 +164,7 @@ test("invalid item type", () => {
 describe("itemToJson", () => {
   let calendar = { console, name: "calendarName" };
 
-  test("events", async () => {
+  test("event 0", async () => {
     let data = itemToJson(jcalItems[0], calendar, false);
 
     // TODO originalStartTime
@@ -205,8 +205,10 @@ describe("itemToJson", () => {
       transparency: "transparent",
       visibility: "private",
     });
+  });
 
-    data = itemToJson(jcalItems[1], calendar, false);
+  test("event 1", async () => {
+    let data = itemToJson(jcalItems[1], calendar, false);
     expect(data).toEqual({
       extendedProperties: {
         private: { "X-MOZ-LASTACK": "20140101T010101Z", "X-MOZ-SNOOZE-TIME": "20140101T020202Z" },
@@ -235,14 +237,11 @@ describe("itemToJson", () => {
       transparency: "transparent",
       visibility: "private",
     });
+  });
 
-    data = itemToJson(jcalItems[2], calendar, false);
+  test("event 2", async () => {
+    let data = itemToJson(jcalItems[2], calendar, false);
     expect(data).toEqual({
-      attendees: [],
-      extendedProperties: {
-        private: {},
-        shared: {},
-      },
       icalUID: "xkoaavctdghzjszjssqttcbhkv@google.com",
       reminders: {
         useDefault: true,
@@ -255,7 +254,9 @@ describe("itemToJson", () => {
       },
       summary: "New Event",
     });
+  });
 
+  test("event failures", () => {
     expect(() => {
       data = itemToJson(
         { type: "event", formats: { jcal: ["x-wrong", [], [["x-notit", [], []]]] } },

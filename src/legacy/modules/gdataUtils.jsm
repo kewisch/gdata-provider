@@ -220,74 +220,11 @@ function toRFC3339Fraction(date) {
  * @return              A JS Object representing the item.
  */
 function EventToJSON(aItem, aOfflineStorage, aIsImport) {
-  function addExtendedProperty(aName, aValue, aPrivate) {
-    if (!aValue) {
-      // We unset an extended prop by not adding it
-      return;
-    }
-
-    if (!("extendedProperties" in itemData)) {
-      itemData.extendedProperties = {};
-    }
-    if (aPrivate) {
-      if (!("private" in itemData.extendedProperties)) {
-        itemData.extendedProperties.private = {};
-      }
-      itemData.extendedProperties.private[aName] = aValue;
-    } else {
-      if (!("shared" in itemData.extendedProperties)) {
-        itemData.extendedProperties.shared = {};
-      }
-      itemData.extendedProperties.shared[aName] = aValue;
-    }
-  }
-  function setIf(data, prop, value) {
-    if (value) {
-      data[prop] = value;
-    }
-  }
-
-  let itemData = {};
-
-  itemData.start = dateToJSON(aItem.startDate);
-  itemData.end = dateToJSON(aItem.endDate);
-
   if (aIsImport && aItem.id) {
     itemData.iCalUID = aItem.id;
     setIf(itemData, "created", toRFC3339Fraction(aItem.creationDate));
     setIf(itemData, "updated", toRFC3339Fraction(aItem.lastModifiedTime));
   }
-
-  setIf(itemData, "summary", aItem.title);
-  setIf(itemData, "description", aItem.descriptionHTML);
-  setIf(itemData, "location", aItem.getProperty("LOCATION"));
-  setIf(
-    itemData,
-    "transparency",
-    aItem.getProperty("TRANSP") && aItem.getProperty("TRANSP").toLowerCase()
-  );
-  setIf(itemData, "visibility", aItem.privacy && aItem.privacy.toLowerCase());
-  setIf(itemData, "sequence", aItem.getProperty("SEQUENCE"));
-
-  // eventStatus
-  let status = aItem.status && aItem.status.toLowerCase();
-  if (status == "cancelled") {
-    // If the status is canceled, then the event will be deleted. Since the
-    // user didn't choose to delete the event, we will protect him and not
-    // allow this status to be set
-    throw new Components.Exception(
-      "The status CANCELLED is reserved, delete the event instead!",
-      Cr.NS_ERROR_LOSS_OF_SIGNIFICANT_DATA
-    );
-  } else if (status == "none") {
-    status = null;
-  }
-  setIf(itemData, "status", status);
-
-  // Google does not support categories natively, but allows us to store data
-  // as an "extendedProperty", so we do here
-  let categories = cal.category.arrayToString(aItem.getCategories({}));
-  addExtendedProperty("X-MOZ-CATEGORIES", categories);
 
   // Only parse attendees if they are enabled, due to bug 407961
   if (Services.prefs.getBoolPref("calendar.google.enableAttendees", false)) {
@@ -299,28 +236,16 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
         ACCEPTED: "accepted",
       };
 
+      // TODO there seems to be code that either includes or doesn't include the organizer as an
+      // attendee
+
       let attendeeData = {};
       if (aItem.organizer && aItem.organizer.id == attendee.id) {
         needsOrganizer = false;
       }
-      let lowerId = attendee.id.toLowerCase();
-      if (lowerId.startsWith("mailto:")) {
-        attendeeData.email = attendee.id.replace(/^mailto:/i, "");
-      } else if (lowerId.startsWith("urn:id:")) {
-        attendeeData.id = attendee.id.replace(/^urn:id:/i, "");
-      }
-
-      setIf(attendeeData, "displayName", attendee.commonName);
-      setIf(attendeeData, "optional", attendee.role && attendee.role != "REQ-PARTICIPANT");
-      setIf(attendeeData, "responseStatus", statusMap[attendee.participationStatus]);
-      setIf(attendeeData, "comment", attendee.getProperty("COMMENT"));
-      setIf(attendeeData, "resource", attendee.userType && attendee.userType != "INDIVIDUAL");
-      setIf(attendeeData, "additionalGuests", attendee.getProperty("X-NUM-GUESTS"));
-      return attendeeData;
     };
 
     let needsOrganizer = true;
-    let attendeeData = aItem.getAttendees({}).map(createAttendee);
 
     if (aItem.organizer) {
       itemData.organizer = createAttendee(aItem.organizer);
@@ -328,117 +253,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
         attendeeData.push(itemData.organizer);
       }
     }
-
-    if (attendeeData.length) {
-      itemData.attendees = attendeeData;
-    }
   }
-
-  // reminder
-  let alarms = aItem.getAlarms({});
-  let actionMap = {
-    DISPLAY: "popup",
-    EMAIL: "email",
-  };
-
-  itemData.reminders = { overrides: [], useDefault: false };
-  for (let i = 0; i < 5 && i < alarms.length; i++) {
-    let alarm = alarms[i];
-    let alarmOffset;
-    let alarmData = {};
-
-    if (alarm.getProperty("X-DEFAULT-ALARM")) {
-      // This is a default alarm, it shouldn't be set as an override
-      itemData.reminders.useDefault = true;
-      continue;
-    }
-
-    alarmData.method = actionMap[alarm.action] || "popup";
-
-    if (alarm.related == alarm.ALARM_RELATED_ABSOLUTE) {
-      alarmOffset = aItem.startDate.subtractDate(alarm.alarmDate);
-    } else if (alarm.related == alarm.ALARM_RELATED_END) {
-      // Google always uses an alarm offset related to the start time
-      // for relative alarms.
-      alarmOffset = alarm.alarmOffset.clone();
-      alarmOffset.addDuration(aItem.endDate.subtractDate(aItem.startDate));
-    } else {
-      alarmOffset = alarm.offset;
-    }
-    alarmData.minutes = -alarmOffset.inSeconds / 60;
-
-    // Google doesn't allow alarms after the event starts, or more than 4
-    // weeks before the event. Make sure the minutes are within range.
-    alarmData.minutes = Math.min(Math.max(0, alarmData.minutes), FOUR_WEEKS_IN_MINUTES);
-
-    itemData.reminders.overrides.push(alarmData);
-  }
-
-  if (!alarms.length && aItem.getProperty("X-DEFAULT-ALARM") == "TRUE") {
-    delete itemData.reminders.overrides;
-    itemData.reminders.useDefault = true;
-  }
-
-  // gd:extendedProperty (alarmLastAck)
-  addExtendedProperty("X-MOZ-LASTACK", cal.dtz.toRFC3339(aItem.alarmLastAck), true);
-
-  // XXX While Google now supports multiple alarms and alarm values, we still
-  // need to fix bug 353492 first so we can better take care of finding out
-  // what alarm is used for snoozing.
-
-  // gd:extendedProperty (snooze time)
-  let itemSnoozeTime = aItem.getProperty("X-MOZ-SNOOZE-TIME");
-  let icalSnoozeTime = null;
-  if (itemSnoozeTime) {
-    // The property is saved as a string, translate back to calIDateTime.
-    icalSnoozeTime = cal.createDateTime();
-    icalSnoozeTime.icalString = itemSnoozeTime;
-  }
-  addExtendedProperty("X-MOZ-SNOOZE-TIME", cal.dtz.toRFC3339(icalSnoozeTime), true);
-
-  // gd:extendedProperty (snooze recurring alarms)
-  let snoozeValue = "";
-  if (aItem.recurrenceInfo) {
-    // This is an evil workaround since we don't have a really good system
-    // to save the snooze time for recurring alarms or even retrieve them
-    // from the event. This should change when we have multiple alarms
-    // support.
-    let snoozeObj = {};
-    for (let [name, value] of aItem.properties) {
-      if (name.substr(0, 18) == "X-MOZ-SNOOZE-TIME-") {
-        // We have a snooze time for a recurring event, add it to our object
-        snoozeObj[name.substr(18)] = value;
-      }
-    }
-    if (Object.keys(snoozeObj).length) {
-      snoozeValue = JSON.stringify(snoozeObj);
-    }
-  }
-  // Now save the snooze object in source format as an extended property. Do
-  // so always, since its currently impossible to unset extended properties.
-  addExtendedProperty("X-GOOGLE-SNOOZE-RECUR", snoozeValue, true);
-
-  // recurrence information
-  if (aItem.recurrenceInfo) {
-    itemData.recurrence = [];
-    let recurrenceItems = aItem.recurrenceInfo.getRecurrenceItems({});
-    for (let ritem of recurrenceItems) {
-      let prop = ritem.icalProperty;
-      if (ritem instanceof Ci.calIRecurrenceDate) {
-        // EXDATES require special casing, since they might contain
-        // a TZID. To avoid the need for conversion of TZID strings,
-        // convert to UTC before serialization.
-        prop.valueAsDatetime = ritem.date.getInTimezone(cal.dtz.UTC);
-      }
-      itemData.recurrence.push(prop.icalString.trim());
-    }
-  } else if (aItem.recurrenceId) {
-    itemData.originalStartTime = dateToJSON(aItem.recurrenceId);
-    let parentMeta = getItemMetadata(aOfflineStorage, aItem.parentItem);
-    itemData.recurringEventId = parentMeta ? parentMeta.path : aItem.id.replace("@google.com", "");
-  }
-
-  return itemData;
 }
 
 /**
