@@ -472,7 +472,6 @@ export default class calGoogleCalendar {
       let res = await Promise.all(promises);
     } catch (e) {
       if (e.message == "RESOURCE_GONE") {
-        // TOOD any safeguards here? Syncing again might trigger throttle?
         this.console.log("Server did not accept incremental update, resetting");
         await this.onResetSync();
         if (retry) {

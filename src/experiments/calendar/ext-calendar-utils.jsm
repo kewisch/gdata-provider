@@ -12,6 +12,7 @@ var EXPORTED_SYMBOLS = [
   "propsToItem",
   "convertItem",
   "convertAlarm",
+  "setupE10sBrowser",
 ];
 
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
@@ -21,11 +22,26 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   ICAL: "resource:///modules/calendar/Ical.jsm",
   CalEvent: "resource:///modules/CalEvent.jsm",
   CalTodo: "resource:///modules/CalTodo.jsm",
+  ExtensionParent: "resource://gre/modules/ExtensionParent.jsm",
 });
 
-var { ExtensionError } = ChromeUtils.import(
+var { ExtensionError, promiseEvent } = ChromeUtils.import(
   "resource://gre/modules/ExtensionUtils.jsm"
 ).ExtensionUtils;
+
+XPCOMUtils.defineLazyGetter(this, "standaloneStylesheets", () => {
+  let stylesheets = [];
+  let { AppConstants } = ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
+
+  if (AppConstants.platform === "macosx") {
+    stylesheets.push("chrome://browser/content/extension-mac-panel.css");
+  } else if (AppConstants.platform === "win") {
+    stylesheets.push("chrome://browser/content/extension-win-panel.css");
+  } else if (AppConstants.platform === "linux") {
+    stylesheets.push("chrome://browser/content/extension-linux-panel.css");
+  }
+  return stylesheets;
+});
 
 function isOwnCalendar(calendar, extension) {
   return calendar.superCalendar.type == "ext-" + extension.id;
@@ -217,4 +233,63 @@ function convertAlarm(item, alarm) {
     offset: alarm.offset?.icalString,
     related: ALARM_RELATED_MAP[alarm.related],
   };
+}
+
+async function setupE10sBrowser(extension, browser, parent, initOptions={}) {
+  browser.setAttribute("type", "content");
+  browser.setAttribute("disableglobalhistory", "true");
+  browser.setAttribute("messagemanagergroup", "webext-browsers");
+  browser.setAttribute("class", "webextension-popup-browser");
+  browser.setAttribute("webextension-view-type", "subview");
+
+  browser.setAttribute("initialBrowsingContextGroupId", extension.policy.browsingContextGroupId);
+  if (extension.remote) {
+    browser.setAttribute("remote", "true");
+    browser.setAttribute("remoteType", extension.remoteType);
+    browser.setAttribute("maychangeremoteness", "true");
+  }
+
+  let readyPromise;
+  if (extension.remote) {
+    readyPromise = promiseEvent(browser, "XULFrameLoaderCreated");
+  } else {
+    readyPromise = promiseEvent(browser, "load");
+  }
+
+  parent.appendChild(browser);
+
+  if (!extension.remote) {
+    // FIXME: bug 1494029 - this code used to rely on the browser binding
+    // accessing browser.contentWindow. This is a stopgap to continue doing
+    // that, but we should get rid of it in the long term.
+    browser.contentwindow; // eslint-disable-line no-unused-expressions
+  }
+
+  let sheets = [];
+  if (initOptions.browser_style) {
+    delete initOptions.browser_style;
+    sheets.push(...ExtensionParent.extensionStylesheets);
+  }
+  sheets.push(...standaloneStylesheets);
+
+  const initBrowser = () => {
+    ExtensionParent.apiManager.emit("extension-browser-inserted", browser);
+    let mm = browser.messageManager;
+    mm.loadFrameScript(
+      "chrome://extensions/content/ext-browser-content.js",
+      false,
+      true
+    );
+    let options = Object.assign({
+      allowScriptsToClose: true,
+      blockParser: false,
+      maxWidth: 800,
+      maxHeight: 600,
+      stylesheets: sheets
+    }, initOptions);
+    mm.sendAsyncMessage("Extension:InitBrowser", options);
+  };
+  browser.addEventListener("DidChangeBrowserRemoteness", initBrowser);
+
+  return readyPromise.then(initBrowser);
 }

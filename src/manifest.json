@@ -24,6 +24,8 @@
   },
 
   "calendar_provider": {
+    "name": "__MSG_extensionName__",
+    "creation_panel": "/content/calendar-creation.html",
     "capabilities": {
       "timezones": {
         "floating": false,

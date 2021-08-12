@@ -59,6 +59,10 @@ var sessions = {
 
     return sessionMap.get(id);
   },
+
+  get ids() {
+    return [...sessionMap.keys()];
+  },
 };
 export default sessions;
 

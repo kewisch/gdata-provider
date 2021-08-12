@@ -6,6 +6,7 @@
 import { getMigratableCalendars } from "./migrate.js";
 import { isTesting } from "./utils.js";
 import calGoogleCalendar from "./calendar.js";
+import sessions from "./session.js";
 
 export async function migrate() {
   let legacyprefs = await messenger.gdata.getLegacyPrefs();
@@ -34,12 +35,42 @@ async function installDebugCalendar() {
   }
 }
 
+async function initMessageListener() {
+  messenger.runtime.onMessage.addListener(async (message, sender) => {
+    if (message.action == "getSessions") {
+      return sessions.ids;
+    } else if (message.action == "getCalendarsAndTasks") {
+      let session = sessions.byId(message.sessionId, true);
+      await session.ensureLogin();
+
+      let [calendars, tasks] = await Promise.all([
+        session.getCalendarList(),
+        session.getTasksList(),
+      ]);
+      return { calendars, tasks };
+    } else if (message.action == "createCalendars") {
+      await Promise.all(
+        message.calendars.map(async data => {
+          let calendar = {
+            name: data.name,
+            type: "ext-" + messenger.runtime.id,
+            url: `googleapi://${message.sessionId}/?calendar=${encodeURIComponent(data.id)}`,
+          };
+          return messenger.calendar.calendars.create(calendar);
+        })
+      );
+    }
+    return null;
+  });
+}
+
 /* istanbul ignore next */
 (async () => {
   if (await isTesting()) {
     return;
   }
 
+  initMessageListener();
   calGoogleCalendar.initListeners();
   await migrate();
   // installDebugCalendar();
