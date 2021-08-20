@@ -1,5 +1,5 @@
-[
-  {
+{
+  "simple_event": {
     "id" : "go6ijb0b46hlpbu4eeu92njevo@google.com",
     "metadata" : {
        "etag" : "\"2299601498276000\"",
@@ -113,7 +113,7 @@
        ]
     }
   },
-  {
+  "valarm_override": {
     "id": "swpefnfloqssxjdlbpyqlyqddb@google.com",
     "title": "busyTitle[calendarName]",
     "description": "Description",
@@ -171,7 +171,7 @@
       ]
     }
   },
-  {
+  "valarm_default": {
     "id": "xkoaavctdghzjszjssqttcbhkv@google.com",
     "title" : "New Event",
     "type" : "event",
@@ -207,7 +207,7 @@
       ]
     }
   },
-  {
+  "simple_task": {
     "id": "lqohjsbhqoztdkusnpruvooacn",
     "title" : "New Task",
     "type" : "task",
@@ -243,4 +243,4 @@
       ]
     }
   }
-]
+}

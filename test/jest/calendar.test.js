@@ -326,7 +326,7 @@ describe("item functions", () => {
           )
         ) {
           // remove alarms in response
-          let gcalItemResponse = v8.deserialize(v8.serialize(gcalItems[0]));
+          let gcalItemResponse = v8.deserialize(v8.serialize(gcalItems.simple_event));
           delete gcalItemResponse.reminders.overrides;
 
           return {
@@ -339,8 +339,8 @@ describe("item functions", () => {
         throw new Error("Unhandled request " + req.url);
       });
 
-      let newItem = v8.deserialize(v8.serialize(jcalItems[0]));
-      let expected = v8.deserialize(v8.serialize(jcalItems[0]));
+      let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+      let expected = v8.deserialize(v8.serialize(jcalItems.simple_event));
 
       // remove alarms
       new ICAL.Component(newItem.formats.jcal)
@@ -380,14 +380,14 @@ describe("item functions", () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(gcalItems[0]),
+            body: JSON.stringify(gcalItems.simple_event),
           };
         }
         throw new Error("Unhandled request " + req.url);
       });
 
-      let oldItem = v8.deserialize(v8.serialize(jcalItems[0]));
-      let newItem = v8.deserialize(v8.serialize(jcalItems[0]));
+      let oldItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+      let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
 
       if (!sendUpdates) {
         // Using this condition also to check the branch without an etag
@@ -436,7 +436,7 @@ describe("item functions", () => {
         throw new Error("Unhandled request " + req.url);
       });
 
-      let removedItem = v8.deserialize(v8.serialize(jcalItems[0]));
+      let removedItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
 
       if (!sendUpdates) {
         // Using this also to check the branch without an etag
@@ -469,15 +469,15 @@ describe("item functions", () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(gcalItems[2]),
+            body: JSON.stringify(gcalItems.simple_task),
           };
         }
         throw new Error("Unhandled request " + req.url);
       });
 
-      expect(jcalItems[3].id).toBe("lqohjsbhqoztdkusnpruvooacn");
+      expect(jcalItems.simple_task.id).toBe("lqohjsbhqoztdkusnpruvooacn");
 
-      let item = await calendar.onItemCreated(jcalItems[3]);
+      let item = await calendar.onItemCreated(jcalItems.simple_task);
       let jcal = new ICAL.Component(item.formats.jcal);
 
       expect(jcal.name).toBe("vtodo");
@@ -513,14 +513,14 @@ describe("item functions", () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(gcalItems[0]),
+            body: JSON.stringify(gcalItems.simple_event),
           };
         }
         throw new Error("Unhandled request " + req.url);
       });
 
-      let oldItem = jcalItems[3];
-      let newItem = v8.deserialize(v8.serialize(jcalItems[3]));
+      let oldItem = jcalItems.simple_task;
+      let newItem = v8.deserialize(v8.serialize(jcalItems.simple_task));
 
       expect(oldItem.id).toBe("lqohjsbhqoztdkusnpruvooacn");
 
@@ -559,7 +559,7 @@ describe("item functions", () => {
         throw new Error("Unhandled request " + req.url);
       });
 
-      let item = await calendar.onItemRemoved(jcalItems[3]);
+      let item = await calendar.onItemRemoved(jcalItems.simple_task);
 
       // vcalendar -> vevent
       expect(fetch).toHaveBeenCalledWith(
@@ -574,7 +574,7 @@ describe("item functions", () => {
   });
 
   test("invalid", async () => {
-    let newItem = v8.deserialize(v8.serialize(jcalItems[0]));
+    let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
     newItem.type = "wat";
     await expect(calendar.onItemRemoved(newItem)).rejects.toThrow("Unknown item type: wat");
   });

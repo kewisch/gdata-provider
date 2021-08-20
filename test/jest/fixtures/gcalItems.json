@@ -1,5 +1,5 @@
-[
-  {
+{
+  "simple_event": {
     "kind": "calendar#event",
     "etag": "\"2299601498276000\"",
     "id": "go6ijb0b46hlpbu4eeu92njevo",
@@ -44,7 +44,7 @@
       }
     }
   },
-  {
+  "valarm_default": {
     "kind": "calendar#event",
     "etag": "\"2128312983238480\"",
     "id": "swpefnfloqssxjdlbpyqlyqddb",
@@ -107,7 +107,7 @@
       }
     }
   },
-  {
+  "simple_task": {
     "kind": "tasks#task",
     "etag": "\"2128312983238480\"",
     "id": "lqohjsbhqoztdkusnpruvooacn",
@@ -128,4 +128,4 @@
       "link": "https://example.com/filename.pdf"
     }]
   }
-]
+}

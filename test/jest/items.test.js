@@ -22,7 +22,7 @@ describe("jsonToItem", () => {
   test("events", async () => {
     let defaultReminders = [{ method: "popup", minutes: 120 }];
 
-    let item = await jsonToItem(gcalItems[0], calendar, defaultReminders, null);
+    let item = await jsonToItem(gcalItems.simple_event, calendar, defaultReminders, null);
     let jcal = new ICAL.Component(item.formats.jcal);
 
     expect(item.metadata.etag).toBe('"2299601498276000"');
@@ -110,7 +110,7 @@ describe("jsonToItem", () => {
 
     // Second item
     await messenger.storage.local.set({ "settings.accessRole": "freeBusyReader" });
-    item = await jsonToItem(gcalItems[1], calendar, [], null);
+    item = await jsonToItem(gcalItems.valarm_default, calendar, [], null);
     jcal = new ICAL.Component(item.formats.jcal);
     await messenger.storage.local.set({ "settings.accessRole": null });
 
@@ -124,7 +124,7 @@ describe("jsonToItem", () => {
   });
 
   test("tasks", async () => {
-    let item = await jsonToItem(gcalItems[2], calendar, [], null);
+    let item = await jsonToItem(gcalItems.simple_task, calendar, [], null);
     let jcal = new ICAL.Component(item.formats.jcal);
 
     expect(jcal.getFirstPropertyValue("uid")).toBe("lqohjsbhqoztdkusnpruvooacn");
@@ -165,7 +165,7 @@ describe("itemToJson", () => {
   let calendar = { console, name: "calendarName" };
 
   test("event 0", async () => {
-    let data = itemToJson(jcalItems[0], calendar, false);
+    let data = itemToJson(jcalItems.simple_event, calendar, false);
 
     // TODO originalStartTime
     // TODO date value
@@ -208,7 +208,7 @@ describe("itemToJson", () => {
   });
 
   test("event 1", async () => {
-    let data = itemToJson(jcalItems[1], calendar, false);
+    let data = itemToJson(jcalItems.valarm_override, calendar, false);
     expect(data).toEqual({
       extendedProperties: {
         private: { "X-MOZ-LASTACK": "20140101T010101Z", "X-MOZ-SNOOZE-TIME": "20140101T020202Z" },
@@ -240,7 +240,7 @@ describe("itemToJson", () => {
   });
 
   test("event 2", async () => {
-    let data = itemToJson(jcalItems[2], calendar, false);
+    let data = itemToJson(jcalItems.valarm_default, calendar, false);
     expect(data).toEqual({
       icalUID: "xkoaavctdghzjszjssqttcbhkv@google.com",
       reminders: {
@@ -258,14 +258,14 @@ describe("itemToJson", () => {
 
   test("event failures", () => {
     expect(() => {
-      data = itemToJson(
+      itemToJson(
         { type: "event", formats: { jcal: ["x-wrong", [], [["x-notit", [], []]]] } },
         calendar,
         false
       );
     }).toThrow("Missing vevent in toplevel component x-wrong");
     expect(() => {
-      data = itemToJson(
+      itemToJson(
         {
           type: "event",
           formats: {
@@ -279,7 +279,7 @@ describe("itemToJson", () => {
   });
 
   test("tasks", async () => {
-    let data = itemToJson(jcalItems[3], calendar, false);
+    let data = itemToJson(jcalItems.simple_task, calendar, false);
     expect(data).toEqual({
       due: "2006-06-10",
       completed: "2006-06-11",
@@ -299,7 +299,7 @@ describe("itemToJson", () => {
 describe("patchItem", () => {
   describe("patchEvent", () => {
     let item, event, changes;
-    let oldItem = jcalItems[0];
+    let oldItem = jcalItems.simple_event;
 
     beforeEach(() => {
       item = v8.deserialize(v8.serialize(oldItem));
@@ -432,7 +432,7 @@ describe("patchItem", () => {
 
   describe("patchTask", () => {
     let item, task, changes;
-    let oldItem = jcalItems[3];
+    let oldItem = jcalItems.simple_task;
 
     beforeEach(() => {
       item = v8.deserialize(v8.serialize(oldItem));
