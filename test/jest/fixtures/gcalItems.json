@@ -107,6 +107,16 @@
       }
     }
   },
+  "utc_event": {
+    "kind": "calendar#event",
+    "etag": "\"2128312983238480\"",
+    "id": "uasfsingergnenedfwiefefgjk",
+    "created": "2006-06-08T21:04:52.000Z",
+    "updated": "2006-06-08T21:05:49.138Z",
+    "summary": "New Event",
+    "start": { "dateTime": "2006-06-10T01:02:03Z" },
+    "endTimeUnspecified": true
+  },
   "simple_task": {
     "kind": "tasks#task",
     "etag": "\"2128312983238480\"",

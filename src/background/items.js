@@ -176,12 +176,11 @@ function convertReminders(vevent) {
           .toSeconds() / 60
       );
     } else if (related == "END") {
-      let length = vevent
-        .getFirstPropertyValue("dtend")
-        .subtractDateTz(vevent.getFirstPropertyValue("dtstart"));
-      override.minutes = -Math.floor(
-        (trigger.getFirstValue().toSeconds() + length.toSeconds()) / 60
-      );
+      let dtend = vevent.getFirstPropertyValue("dtend");
+      let length = dtend
+        ? dtend.subtractDateTz(vevent.getFirstPropertyValue("dtstart")).toSeconds()
+        : 0;
+      override.minutes = -Math.floor((trigger.getFirstValue().toSeconds() + length) / 60);
     } else {
       override.minutes = -Math.floor(trigger.getFirstValue().toSeconds() / 60);
     }
@@ -269,13 +268,13 @@ function convertAttendees(vevent) {
 function convertRecurrence(vevent) {
   let recrules = new Set();
 
-  for (let rrule of vevent.getAllProperties("RRULE")) {
+  for (let rrule of vevent.getAllProperties("rrule")) {
     recrules.add(rrule.toICALString());
   }
-  for (let rrule of vevent.getAllProperties("RDATE")) {
+  for (let rrule of vevent.getAllProperties("rdate")) {
     recrules.add(rrule.toICALString());
   }
-  for (let rrule of vevent.getAllProperties("EXDATE")) {
+  for (let rrule of vevent.getAllProperties("exdate")) {
     // TODO make this comment true
     // EXDATES require special casing, since they might contain a TZID. To avoid the need for
     // conversion of TZID strings, convert to UTC before serialization.
@@ -290,8 +289,8 @@ function convertRecurringSnoozeTime(vevent) {
   // multiple alarms support.
   let snoozeObj = {};
   for (let property of vevent.getAllProperties()) {
-    if (property.name.startsWith("X-MOZ-SNOOZE-TIME-")) {
-      snoozeObj[property.name.substr(18)] = property.getFirstValue();
+    if (property.name.startsWith("x-moz-snooze-time-")) {
+      snoozeObj[property.name.substr(18)] = property.getFirstValue()?.toICALString();
     }
   }
   return Object.keys(snoozeObj).length ? JSON.stringify(snoozeObj) : null;
@@ -308,9 +307,9 @@ export function patchItem(item, oldItem) {
 }
 
 function patchTask(item, oldItem) {
-  function setIfFirstProperty(obj, prop, jprop, transform) {
-    let oldValue = oldTask.getFirstPropertyValue(jprop || prop);
-    let newValue = task.getFirstPropertyValue(jprop || prop);
+  function setIfFirstProperty(obj, prop, jprop, transform = null) {
+    let oldValue = oldTask.getFirstPropertyValue(jprop);
+    let newValue = task.getFirstPropertyValue(jprop);
 
     if (oldValue?.toString() !== newValue?.toString()) {
       obj[prop] = transform ? transform(newValue) : newValue;
@@ -334,7 +333,7 @@ function patchTask(item, oldItem) {
 }
 
 function patchEvent(item, oldItem) {
-  function setIfFirstProperty(obj, prop, jprop, transform) {
+  function setIfFirstProperty(obj, prop, jprop = null, transform = null) {
     let oldValue = oldEvent.getFirstPropertyValue(jprop || prop);
     let newValue = event.getFirstPropertyValue(jprop || prop);
 
@@ -370,8 +369,12 @@ function patchEvent(item, oldItem) {
 
   setIfDateChanged(entry, "start", "dtstart");
   setIfDateChanged(entry, "end", "dtend"); // TODO duration instead of end
+  if (entry.end === null) {
+    delete entry.end;
+    entry.endTimeUnspecified = true;
+  }
 
-  if (event.getFirstProperty("RRULE") || event.getFirstProperty("RDATE")) {
+  if (event.getFirstProperty("rrule") || event.getFirstProperty("rdate")) {
     let oldRecurSnooze = convertRecurringSnoozeTime(oldEvent);
     let newRecurSnooze = convertRecurringSnoozeTime(event);
     if (oldRecurSnooze != newRecurSnooze) {
@@ -385,7 +388,7 @@ function patchEvent(item, oldItem) {
     oldRecurrenceSet.size != newRecurrence.length ||
     newRecurrence.some(elem => !oldRecurrenceSet.has(elem))
   ) {
-    entry.recurrence = newRecurrence.join("\n");
+    entry.recurrence = newRecurrence;
   }
 
   setIfDateChanged(entry, "originalStartTime", "recurrence-id");

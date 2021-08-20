@@ -126,6 +126,13 @@ describe("jsonToItem", () => {
       );
       expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610");
     });
+    test("utc_event event", async () => {
+      let item = await jsonToItem(gcalItems.utc_event, calendar, [], null);
+      let jcal = new ICAL.Component(item.formats.jcal);
+
+      expect(jcal.getFirstPropertyValue("uid")).toBe("uasfsingergnenedfwiefefgjk@google.com");
+      expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610T010203Z");
+    });
   });
 
   describe("tasks", () => {
@@ -279,6 +286,25 @@ describe("itemToJson", () => {
     });
   });
 
+  test("recurring event rrule", () => {
+    let data = itemToJson(jcalItems.recur_rrule, calendar, false);
+    expect(data).toEqual({
+      icalUID: "osndfnwejrgnejnsdjfwegjdfr@google.com",
+      start: {
+        date: "2006-06-10",
+      },
+      end: {
+        date: "2006-06-11",
+      },
+      summary: "New Event",
+      recurrence: expect.arrayContaining([
+        "RRULE:FREQ=YEARLY;COUNT=5;BYDAY=-1SU,2SA;BYMONTH=6",
+        "RDATE;VALUE=DATE:20060812",
+        "EXDATE;VALUE=DATE:20060625",
+      ]),
+    });
+  });
+
   test("event failures", () => {
     expect(() => {
       itemToJson(
@@ -370,6 +396,9 @@ describe("patchItem", () => {
       ],
     ])("prop %s", (jprop, prop, jchanged, changed) => {
       event.updatePropertyWithValue(jprop, jchanged);
+      if (jprop.startsWith("x-moz-snooze-time-")) {
+        console.warn(event.jCal);
+      }
       changes = patchItem(item, oldItem);
       expect(changes).toEqual({ [prop]: changed });
     });
@@ -391,6 +420,29 @@ describe("patchItem", () => {
       event.updatePropertyWithValue(jprop, jchanged);
       changes = patchItem(item, oldItem);
       expect(changes).toEqual({ [prop]: changed, reminders: expect.anything() });
+    });
+
+    test("dtend unspecified", () => {
+      event.removeProperty("dtend");
+      changes = patchItem(item, oldItem);
+      expect(changes).toEqual({ endTimeUnspecified: true, reminders: expect.anything() });
+    });
+
+    test("recurring snooze", () => {
+      oldItem = jcalItems.recur_rrule;
+      item = v8.deserialize(v8.serialize(oldItem));
+      event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+
+      event.updatePropertyWithValue(
+        "x-moz-snooze-time-20060610T190000",
+        ICAL.Time.fromString("2021-01-01T01:01:01")
+      );
+      changes = patchItem(item, oldItem);
+      expect(changes).toEqual({
+        extendedProperties: {
+          private: { "X-GOOGLE-SNOOZE-RECUR": '{"20060610T190000":"20210101T010101"}' },
+        },
+      });
     });
 
     describe("reminders", () => {
