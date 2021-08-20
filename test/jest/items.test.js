@@ -19,137 +19,160 @@ beforeEach(() => {
 describe("jsonToItem", () => {
   let calendar = { console, name: "calendarName" };
 
-  test("events", async () => {
-    let defaultReminders = [{ method: "popup", minutes: 120 }];
+  describe("events", () => {
+    test("simple event", async () => {
+      let defaultReminders = [{ method: "popup", minutes: 120 }];
 
-    let item = await jsonToItem(gcalItems.simple_event, calendar, defaultReminders, null);
-    let jcal = new ICAL.Component(item.formats.jcal);
+      let item = await jsonToItem(gcalItems.simple_event, calendar, defaultReminders, null);
+      let jcal = new ICAL.Component(item.formats.jcal);
 
-    expect(item.metadata.etag).toBe('"2299601498276000"');
-    expect(item.metadata.path).toBe("go6ijb0b46hlpbu4eeu92njevo");
+      expect(item.metadata.etag).toBe('"2299601498276000"');
+      expect(item.metadata.path).toBe("go6ijb0b46hlpbu4eeu92njevo");
 
-    expect(jcal.getFirstPropertyValue("uid")).toBe("go6ijb0b46hlpbu4eeu92njevo@google.com");
-    expect(jcal.getFirstPropertyValue("status")).toBe("confirmed");
-    expect(jcal.getFirstPropertyValue("url")).toBe(
-      "https://example.com/calendar/event?eid=eventhash"
-    );
-    expect(jcal.getFirstPropertyValue("created").toICALString()).toBe("20060608T210452"); // TODO this is floating, ical.js bug?
-    expect(jcal.getFirstPropertyValue("last-modified").toICALString()).toBe("20060608T210549"); // TODO this is floating, ical.js bug?
-    expect(jcal.getFirstPropertyValue("dtstamp").toICALString()).toBe("20060608T210549"); // TODO this is floating, ical.js bug?
-    expect(jcal.getFirstPropertyValue("summary")).toBe("New Event");
-    expect(jcal.getFirstPropertyValue("description")).toBe("Description");
-    expect(jcal.getFirstPropertyValue("location")).toBe("Hard Drive");
-    expect(jcal.getFirstPropertyValue("transp")).toBe("TRANSPARENT");
-    expect(jcal.getFirstPropertyValue("class")).toBe("PRIVATE");
-    expect(jcal.getFirstPropertyValue("sequence")).toBe(1);
+      expect(jcal.getFirstPropertyValue("uid")).toBe("go6ijb0b46hlpbu4eeu92njevo@google.com");
+      expect(jcal.getFirstPropertyValue("status")).toBe("confirmed");
+      expect(jcal.getFirstPropertyValue("url")).toBe(
+        "https://example.com/calendar/event?eid=eventhash"
+      );
+      expect(jcal.getFirstPropertyValue("created").toICALString()).toBe("20060608T210452"); // TODO this is floating, ical.js bug?
+      expect(jcal.getFirstPropertyValue("last-modified").toICALString()).toBe("20060608T210549"); // TODO this is floating, ical.js bug?
+      expect(jcal.getFirstPropertyValue("dtstamp").toICALString()).toBe("20060608T210549"); // TODO this is floating, ical.js bug?
+      expect(jcal.getFirstPropertyValue("summary")).toBe("New Event");
+      expect(jcal.getFirstPropertyValue("description")).toBe("Description");
+      expect(jcal.getFirstPropertyValue("location")).toBe("Hard Drive");
+      expect(jcal.getFirstPropertyValue("transp")).toBe("TRANSPARENT");
+      expect(jcal.getFirstPropertyValue("class")).toBe("PRIVATE");
+      expect(jcal.getFirstPropertyValue("sequence")).toBe(1);
 
-    expect(jcal.getFirstPropertyValue("organizer")).toBe("mailto:organizer@example.com");
-    expect(jcal.getFirstProperty("organizer").getParameter("cn")).toBe("Eggs P. Seashell");
+      expect(jcal.getFirstPropertyValue("organizer")).toBe("mailto:organizer@example.com");
+      expect(jcal.getFirstProperty("organizer").getParameter("cn")).toBe("Eggs P. Seashell");
 
-    // TODO timezones are a bit wonky. Probably need a test where there is just an offset but no zone
-    expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610T180000");
-    expect(jcal.getFirstProperty("dtstart").getParameter("tzid")).toBe("Europe/Berlin");
+      // TODO timezones are a bit wonky. Probably need a test where there is just an offset but no zone
+      expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610T180000");
+      expect(jcal.getFirstProperty("dtstart").getParameter("tzid")).toBe("Europe/Berlin");
 
-    expect(jcal.getFirstPropertyValue("dtend").toICALString()).toBe("20060610T200000");
-    expect(jcal.getFirstProperty("dtend").getParameter("tzid")).toBe("Europe/Berlin");
+      expect(jcal.getFirstPropertyValue("dtend").toICALString()).toBe("20060610T200000");
+      expect(jcal.getFirstProperty("dtend").getParameter("tzid")).toBe("Europe/Berlin");
 
-    let alarms = jcal.getAllSubcomponents("valarm");
-    expect(alarms.length).toBe(3);
-    expect(alarms[0].getFirstPropertyValue("action")).toBe("EMAIL");
-    expect(alarms[0].getFirstPropertyValue("trigger").toICALString()).toBe("-PT20M");
-    expect(alarms[0].getFirstPropertyValue("x-default-alarm")).toBe(null);
-    expect(alarms[1].getFirstPropertyValue("action")).toBe("DISPLAY");
-    expect(alarms[1].getFirstPropertyValue("trigger").toICALString()).toBe("-PT5M");
-    expect(alarms[1].getFirstPropertyValue("x-default-alarm")).toBe(null);
-    expect(alarms[2].getFirstPropertyValue("action")).toBe("DISPLAY");
-    expect(alarms[2].getFirstPropertyValue("trigger").toICALString()).toBe("-PT10M");
-    expect(alarms[2].getFirstPropertyValue("x-default-alarm")).toBe(null);
+      let alarms = jcal.getAllSubcomponents("valarm");
+      expect(alarms.length).toBe(3);
+      expect(alarms[0].getFirstPropertyValue("action")).toBe("EMAIL");
+      expect(alarms[0].getFirstPropertyValue("trigger").toICALString()).toBe("-PT20M");
+      expect(alarms[0].getFirstPropertyValue("x-default-alarm")).toBe(null);
+      expect(alarms[1].getFirstPropertyValue("action")).toBe("DISPLAY");
+      expect(alarms[1].getFirstPropertyValue("trigger").toICALString()).toBe("-PT5M");
+      expect(alarms[1].getFirstPropertyValue("x-default-alarm")).toBe(null);
+      expect(alarms[2].getFirstPropertyValue("action")).toBe("DISPLAY");
+      expect(alarms[2].getFirstPropertyValue("trigger").toICALString()).toBe("-PT10M");
+      expect(alarms[2].getFirstPropertyValue("x-default-alarm")).toBe(null);
 
-    let attendees = jcal.getAllProperties("attendee");
-    expect(attendees.length).toBe(1);
-    expect(attendees[0].getFirstValue()).toBe("mailto:attendee@example.com");
-    expect(attendees[0].getParameter("cn")).toBe("attendee name");
-    expect(attendees[0].getParameter("role")).toBe("OPT-PARTICIPANT");
-    expect(attendees[0].getParameter("partstat")).toBe("TENTATIVE");
-    expect(attendees[0].getParameter("cutype")).toBe("INDIVIDUAL");
+      let attendees = jcal.getAllProperties("attendee");
+      expect(attendees.length).toBe(1);
+      expect(attendees[0].getFirstValue()).toBe("mailto:attendee@example.com");
+      expect(attendees[0].getParameter("cn")).toBe("attendee name");
+      expect(attendees[0].getParameter("role")).toBe("OPT-PARTICIPANT");
+      expect(attendees[0].getParameter("partstat")).toBe("TENTATIVE");
+      expect(attendees[0].getParameter("cutype")).toBe("INDIVIDUAL");
 
-    expect(jcal.getFirstProperty("categories").getValues()).toEqual(["foo", "bar"]);
-    expect(jcal.getFirstPropertyValue("x-moz-lastack").toICALString()).toBe("20140101T010101Z");
-    expect(jcal.getFirstPropertyValue("x-moz-snooze-time").toICALString()).toBe("20140101T020202Z");
+      expect(jcal.getFirstProperty("categories").getValues()).toEqual(["foo", "bar"]);
+      expect(jcal.getFirstPropertyValue("x-moz-lastack").toICALString()).toBe("20140101T010101Z");
+      expect(jcal.getFirstPropertyValue("x-moz-snooze-time").toICALString()).toBe(
+        "20140101T020202Z"
+      );
 
-    // Remove the properties we consumed and see if we forgot anything
-    [
-      "uid",
-      "status",
-      "url",
-      "created",
-      "last-modified",
-      "dtstamp",
-      "summary",
-      "description",
-      "location",
-      "transp",
-      "class",
-      "sequence",
-      "organizer",
-      "dtstart",
-      "dtend",
-      "attendee",
-      "categories",
-      "x-moz-lastack",
-      "x-moz-snooze-time",
-      "x-default-alarm",
-    ].forEach(prop => {
-      jcal.removeAllProperties(prop);
+      // Remove the properties we consumed and see if we forgot anything
+      [
+        "uid",
+        "status",
+        "url",
+        "created",
+        "last-modified",
+        "dtstamp",
+        "summary",
+        "description",
+        "location",
+        "transp",
+        "class",
+        "sequence",
+        "organizer",
+        "dtstart",
+        "dtend",
+        "attendee",
+        "categories",
+        "x-moz-lastack",
+        "x-moz-snooze-time",
+        "x-default-alarm",
+      ].forEach(prop => {
+        jcal.removeAllProperties(prop);
+      });
+      let remaining = jcal.getAllProperties().map(prop => prop.name);
+      if (remaining.length) {
+        console.warn("Remaining props:", remaining);
+      }
+      expect(remaining.length).toBe(0);
     });
-    let remaining = jcal.getAllProperties().map(prop => prop.name);
-    if (remaining.length) {
-      console.warn("Remaining props:", remaining);
-    }
-    expect(remaining.length).toBe(0);
 
-    // Second item
-    await messenger.storage.local.set({ "settings.accessRole": "freeBusyReader" });
-    item = await jsonToItem(gcalItems.valarm_default, calendar, [], null);
-    jcal = new ICAL.Component(item.formats.jcal);
-    await messenger.storage.local.set({ "settings.accessRole": null });
+    test("valarm_default event", async () => {
+      await messenger.storage.local.set({ "settings.accessRole": "freeBusyReader" });
+      let item = await jsonToItem(gcalItems.valarm_default, calendar, [], null);
+      let jcal = new ICAL.Component(item.formats.jcal);
+      await messenger.storage.local.set({ "settings.accessRole": null });
 
-    expect(jcal.getFirstPropertyValue("uid")).toBe("swpefnfloqssxjdlbpyqlyqddb@google.com");
-    expect(jcal.getFirstPropertyValue("summary")).toBe("busyTitle[calendarName]");
-    expect(jcal.getFirstProperty("dtend")).toBe(null); // endTimeUnspecified
-    expect(jcal.getFirstPropertyValue("organizer")).toBe(
-      "urn:id:b4d9b3a9-b537-47bd-92a1-fb40c0c1c7fc"
-    );
-    expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610");
+      expect(jcal.getFirstPropertyValue("uid")).toBe("swpefnfloqssxjdlbpyqlyqddb@google.com");
+      expect(jcal.getFirstPropertyValue("summary")).toBe("busyTitle[calendarName]");
+      expect(jcal.getFirstProperty("dtend")).toBe(null); // endTimeUnspecified
+      expect(jcal.getFirstPropertyValue("organizer")).toBe(
+        "urn:id:b4d9b3a9-b537-47bd-92a1-fb40c0c1c7fc"
+      );
+      expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610");
+    });
   });
 
-  test("tasks", async () => {
-    let item = await jsonToItem(gcalItems.simple_task, calendar, [], null);
-    let jcal = new ICAL.Component(item.formats.jcal);
+  describe("tasks", () => {
+    test("simple task", async () => {
+      let item = await jsonToItem(gcalItems.simple_task, calendar, [], null);
+      let jcal = new ICAL.Component(item.formats.jcal);
 
-    expect(jcal.getFirstPropertyValue("uid")).toBe("lqohjsbhqoztdkusnpruvooacn");
-    expect(jcal.getFirstPropertyValue("last-modified")?.toICALString()).toBe("20060608T210549");
-    expect(jcal.getFirstPropertyValue("dtstamp")?.toICALString()).toBe("20060608T210549");
-    expect(jcal.getFirstPropertyValue("description")).toBe("description");
-    expect(jcal.getFirstPropertyValue("url")).toBe(
-      "https://example.com/calendar/task?eid=taskhash"
-    );
-    expect(jcal.getFirstProperty("related-to")?.jCal).toEqual([
-      "related-to",
-      { reltype: "PARENT" },
-      "text",
-      "parentId",
-    ]);
-    expect(jcal.getFirstPropertyValue("x-google-sortkey")).toBe(12312);
-    expect(jcal.getFirstPropertyValue("status")).toBe("COMPLETED");
-    expect(jcal.getFirstPropertyValue("completed")?.toICALString()).toBe("20060611T180000");
-    expect(jcal.getFirstPropertyValue("due")?.toICALString()).toBe("20060610T180000");
+      expect(jcal.getFirstPropertyValue("uid")).toBe("lqohjsbhqoztdkusnpruvooacn");
+      expect(jcal.getFirstPropertyValue("last-modified")?.toICALString()).toBe("20060608T210549");
+      expect(jcal.getFirstPropertyValue("dtstamp")?.toICALString()).toBe("20060608T210549");
+      expect(jcal.getFirstPropertyValue("description")).toBe("description");
+      expect(jcal.getFirstPropertyValue("url")).toBe(
+        "https://example.com/calendar/task?eid=taskhash"
+      );
+      expect(jcal.getFirstProperty("related-to")?.jCal).toEqual([
+        "related-to",
+        { reltype: "PARENT" },
+        "text",
+        "parentId",
+      ]);
+      expect(jcal.getFirstPropertyValue("x-google-sortkey")).toBe(12312);
+      expect(jcal.getFirstPropertyValue("status")).toBe("COMPLETED");
+      expect(jcal.getFirstPropertyValue("completed")?.toICALString()).toBe("20060611T180000");
+      expect(jcal.getFirstPropertyValue("due")?.toICALString()).toBe("20060610T180000");
 
-    let links = jcal.getAllProperties("attach");
-    expect(links.length).toBe(1);
-    expect(links[0].getParameter("filename")).toBe("filename.pdf");
-    expect(links[0].getParameter("x-google-type")).toBe("href");
-    expect(links[0].getFirstValue()).toBe("https://example.com/filename.pdf");
+      let links = jcal.getAllProperties("attach");
+      expect(links.length).toBe(1);
+      expect(links[0].getParameter("filename")).toBe("filename.pdf");
+      expect(links[0].getParameter("x-google-type")).toBe("href");
+      expect(links[0].getFirstValue()).toBe("https://example.com/filename.pdf");
+    });
+
+    test("deleted task", async () => {
+      let item = await jsonToItem(gcalItems.deleted_task, calendar, [], null);
+      let jcal = new ICAL.Component(item.formats.jcal);
+
+      expect(jcal.getFirstPropertyValue("uid")).toBe("jidlfaenrgjklebrgjebuwdfer");
+      expect(jcal.getFirstPropertyValue("status")).toBe("CANCELLED");
+    });
+
+    test("needsAction task", async () => {
+      let item = await jsonToItem(gcalItems.needs_action, calendar, [], null);
+      let jcal = new ICAL.Component(item.formats.jcal);
+
+      expect(jcal.getFirstPropertyValue("uid")).toBe("jidlfaenrgjklebrgjebuwdfer");
+      expect(jcal.getFirstPropertyValue("status")).toBe("NEEDS-ACTION");
+    });
   });
 });
 

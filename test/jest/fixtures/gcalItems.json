@@ -127,5 +127,27 @@
       "description": "filename.pdf",
       "link": "https://example.com/filename.pdf"
     }]
+  },
+  "deleted_task": {
+    "kind": "tasks#task",
+    "etag": "\"2128312983238480\"",
+    "id": "jidlfaenrgjklebrgjebuwdfer",
+    "title": "New Task",
+    "updated": "2006-06-08T21:05:49.138Z",
+    "selfLink": "https://example.com/calendar/task?eid=taskhash",
+    "status": "completed",
+    "deleted": true,
+    "hidden": false
+  },
+  "needs_action": {
+    "kind": "tasks#task",
+    "etag": "\"2128312983238480\"",
+    "id": "jidlfaenrgjklebrgjebuwdfer",
+    "title": "New Task",
+    "updated": "2006-06-08T21:05:49.138Z",
+    "selfLink": "https://example.com/calendar/task?eid=taskhash",
+    "status": "needsAction",
+    "deleted": false,
+    "hidden": false
   }
 }
