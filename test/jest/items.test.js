@@ -298,10 +298,10 @@ describe("itemToJson", () => {
 
 describe("patchItem", () => {
   describe("patchEvent", () => {
-    let item, event, changes;
-    let oldItem = jcalItems.simple_event;
+    let item, oldItem, event, changes;
 
     beforeEach(() => {
+      oldItem = jcalItems.simple_event;
       item = v8.deserialize(v8.serialize(oldItem));
       event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
     });
@@ -315,18 +315,6 @@ describe("patchItem", () => {
       ["summary", "summary", "changed", "changed"],
       ["description", "description", "changed", "changed"],
       ["location", "location", "changed", "changed"],
-      [
-        "dtstart",
-        "start",
-        ICAL.Time.fromString("2006-06-10T19:00:00"),
-        { dateTime: "2006-06-10T19:00:00", timeZone: "Europe/Berlin" },
-      ],
-      [
-        "dtend",
-        "end",
-        ICAL.Time.fromString("2006-06-10T19:00:00"),
-        { dateTime: "2006-06-10T19:00:00", timeZone: "Europe/Berlin" },
-      ],
       ["sequence", "sequence", 2, 2],
       ["status", "status", "TENTATIVE", "tentative"],
       ["transp", "transparency", "OPAQUE", "opaque"],
@@ -361,6 +349,79 @@ describe("patchItem", () => {
       event.updatePropertyWithValue(jprop, jchanged);
       changes = patchItem(item, oldItem);
       expect(changes).toEqual({ [prop]: changed });
+    });
+
+    test.each([
+      [
+        "dtstart",
+        "start",
+        ICAL.Time.fromString("2006-06-10T19:00:00"),
+        { dateTime: "2006-06-10T19:00:00", timeZone: "Europe/Berlin" },
+      ],
+      [
+        "dtend",
+        "end",
+        ICAL.Time.fromString("2006-06-10T19:00:00"),
+        { dateTime: "2006-06-10T19:00:00", timeZone: "Europe/Berlin" },
+      ],
+    ])("date prop %s", (jprop, prop, jchanged, changed) => {
+      event.updatePropertyWithValue(jprop, jchanged);
+      changes = patchItem(item, oldItem);
+      expect(changes).toEqual({ [prop]: changed, reminders: expect.anything() });
+    });
+
+    describe("reminders", () => {
+      // Using a different event here, otherwise we hit the 5 alarms limit
+      beforeEach(() => {
+        oldItem = jcalItems.valarm_override;
+        item = v8.deserialize(v8.serialize(oldItem));
+        event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+      });
+
+      test("action changed", () => {
+        let valarm = event.getFirstSubcomponent("valarm");
+        expect(valarm.getFirstPropertyValue("action")).toBe("EMAIL");
+        valarm.updatePropertyWithValue("action", "x-changed");
+        changes = patchItem(item, oldItem);
+
+        // x-changed is invalid, so it will default to "popup"
+        expect(changes).toEqual({
+          reminders: {
+            useDefault: false,
+            overrides: [{ method: "popup", minutes: 20 }],
+          },
+        });
+      });
+
+      test("override added", () => {
+        let valarm = new ICAL.Component("valarm");
+        valarm.updatePropertyWithValue("action", "EMAIL");
+        valarm.updatePropertyWithValue("description", "alarm");
+        valarm.updatePropertyWithValue("trigger", ICAL.Duration.fromSeconds(-120));
+        event.addSubcomponent(valarm);
+        changes = patchItem(item, oldItem);
+
+        expect(changes).toEqual({
+          reminders: {
+            useDefault: false,
+            overrides: expect.arrayContaining([
+              { method: "email", minutes: 20 },
+              { method: "email", minutes: 2 },
+            ]),
+          },
+        });
+      });
+      test("override removed", () => {
+        event.removeSubcomponent("valarm");
+        changes = patchItem(item, oldItem);
+
+        expect(changes).toEqual({
+          reminders: {
+            useDefault: false,
+            overrides: [],
+          },
+        });
+      });
     });
 
     test.each([

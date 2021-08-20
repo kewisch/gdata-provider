@@ -138,7 +138,7 @@ function haveRemindersChanged(remindersEntry, oldRemindersEntry) {
     return true;
   }
 
-  let reminderMap = new Set(oldRemindersEntry.overrides.map(entry => entry.method + entry.minutes));
+  let reminderMap = new Set(remindersEntry.overrides.map(entry => entry.method + entry.minutes));
   if (oldRemindersEntry.overrides.some(entry => !reminderMap.has(entry.method + entry.minutes))) {
     return true;
   }
@@ -165,7 +165,7 @@ function convertReminders(vevent) {
     }
 
     let override = {};
-    override.method = ALARM_ACTION_MAP_REV[valarm.getFirstPropertyValue("action")];
+    override.method = ALARM_ACTION_MAP_REV[valarm.getFirstPropertyValue("action")] || "popup";
     let trigger = valarm.getFirstProperty("trigger");
     let related = trigger.getParameter("related");
     if (trigger.type == "date-time") {
