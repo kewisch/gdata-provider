@@ -19,6 +19,14 @@ beforeEach(() => {
   jestFetchMock.doMock();
 });
 
+test("get session ids", () => {
+  let id = "get session id";
+
+  expect(sessions.ids).toEqual(["sessionId"]);
+  let session1 = sessions.byId(id, true);
+  expect(sessions.ids).toEqual(["sessionId", "get session id"]);
+});
+
 test("get session by id", () => {
   let id = "otherSessionId";
 
