@@ -11,6 +11,7 @@ import { jest } from "@jest/globals";
 
 beforeEach(() => {
   global.messenger = createMessenger();
+  jest.spyOn(global.console, "log").mockImplementation(() => {});
 });
 
 // TODO test recurrence-id/ost, recurringEventId
@@ -30,7 +31,7 @@ describe("jsonToItem", () => {
       expect(item.metadata.path).toBe("go6ijb0b46hlpbu4eeu92njevo");
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("go6ijb0b46hlpbu4eeu92njevo@google.com");
-      expect(jcal.getFirstPropertyValue("status")).toBe("confirmed");
+      expect(jcal.getFirstPropertyValue("status")).toBe("CONFIRMED");
       expect(jcal.getFirstPropertyValue("url")).toBe(
         "https://example.com/calendar/event?eid=eventhash"
       );
@@ -132,6 +133,14 @@ describe("jsonToItem", () => {
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("uasfsingergnenedfwiefefgjk@google.com");
       expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610T010203Z");
+    });
+
+    test("recur instance", async () => {
+      let item = await jsonToItem(gcalItems.recur_instance, calendar, [], null);
+      let jcal = new ICAL.Component(item.formats.jcal);
+
+      expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060626");
+      expect(jcal.getFirstPropertyValue("recurrence-id").toICALString()).toBe("20060625");
     });
   });
 
@@ -300,8 +309,25 @@ describe("itemToJson", () => {
       recurrence: expect.arrayContaining([
         "RRULE:FREQ=YEARLY;COUNT=5;BYDAY=-1SU,2SA;BYMONTH=6",
         "RDATE;VALUE=DATE:20060812",
-        "EXDATE;VALUE=DATE:20060625",
+        "EXDATE;VALUE=DATE:20070609",
       ]),
+    });
+  });
+
+  test("recurring event instance", () => {
+    let data = itemToJson(jcalItems.recur_instance, calendar, false);
+    expect(data).toEqual({
+      icalUID: "osndfnwejrgnejnsdjfwegjdfr@google.com",
+      start: {
+        date: "2006-06-26",
+      },
+      end: {
+        date: "2006-06-27",
+      },
+      originalStartTime: {
+        date: "2006-06-25",
+      },
+      summary: "New Event",
     });
   });
 
@@ -318,7 +344,7 @@ describe("itemToJson", () => {
         {
           type: "event",
           formats: {
-            jcal: ["vcalendar", [], [["vevent", [["status", {}, "text", "cancelled"]], []]]],
+            jcal: ["vcalendar", [], [["vevent", [["status", {}, "text", "CANCELLED"]], []]]],
           },
         },
         calendar,
@@ -600,26 +626,220 @@ describe("ItemSaver", () => {
   let calendar = {
     console,
     id: "calendarId",
+    cacheId: "calendarId#cache",
     setCalendarPref: jest.fn(),
   };
 
   beforeEach(() => {
     saver = new ItemSaver(calendar);
   });
-
-  test("Invalid items", () => {
-    expect(() => {
-      saver.parseItemStream({
-        kind: "wat#tf",
-      });
-    }).toThrow("Invalid stream type: wat#tf");
+  afterEach(() => {
+    expect(saver.missingParents.length).toBe(0);
   });
 
-  test("No timezone", () => {
-    saver.parseItemStream({
+  test("Invalid items", async () => {
+    await expect(() => {
+      return saver.parseItemStream({
+        kind: "wat#tf",
+      });
+    }).rejects.toThrow("Invalid stream type: wat#tf");
+
+    await expect(() => {
+      return saver.parseItemStream({
+        status: "fail",
+      });
+    }).rejects.toThrow("Invalid stream type: fail");
+  });
+
+  test("No timezone", async () => {
+    await saver.parseItemStream({
       kind: "calendar#events",
     });
 
     expect(calendar.setCalendarPref).not.toHaveBeenCalled();
+  });
+
+  describe("parseEventStream", () => {
+    test("No items", async () => {
+      await saver.parseEventStream({
+        items: [],
+      });
+
+      expect(console.log).toHaveBeenCalledWith("No events have been changed");
+    });
+
+    test("Simple item", async () => {
+      await saver.parseEventStream({
+        items: [gcalItems.valarm_default],
+      });
+      expect(console.log).toHaveBeenCalledWith("Parsing 1 received events");
+
+      expect(messenger.calendar.items.remove).not.toHaveBeenCalled();
+      expect(messenger.calendar.items.create).toHaveBeenCalledWith(
+        "calendarId#cache",
+        expect.objectContaining({
+          id: "swpefnfloqssxjdlbpyqlyqddb@google.com",
+          formats: {
+            use: "jcal",
+            jcal: ["vcalendar", expect.anything(), expect.anything()],
+          },
+        })
+      );
+    });
+    test("Master item removed", async () => {
+      let gitem = v8.deserialize(v8.serialize(gcalItems.valarm_default));
+      gitem.status = "cancelled";
+
+      await saver.parseEventStream({
+        items: [gitem],
+      });
+      expect(console.log).toHaveBeenCalledWith("Parsing 1 received events");
+
+      expect(messenger.calendar.items.create).not.toHaveBeenCalled();
+      expect(messenger.calendar.items.remove).toHaveBeenCalledWith(
+        "calendarId#cache",
+        "swpefnfloqssxjdlbpyqlyqddb@google.com"
+      );
+    });
+
+    test("recurring event", async () => {
+      await saver.parseEventStream({
+        items: [gcalItems.recur_rrule, gcalItems.recur_instance],
+      });
+      expect(console.log).toHaveBeenCalledWith("Parsing 2 received events");
+      expect(messenger.calendar.items.remove).not.toHaveBeenCalled();
+      expect(messenger.calendar.items.create).toHaveBeenCalledTimes(2);
+      expect(messenger.calendar.items.create).toHaveBeenCalledWith(
+        "calendarId#cache",
+        expect.objectContaining({
+          id: "osndfnwejrgnejnsdjfwegjdfr@google.com",
+          formats: {
+            use: "jcal",
+            jcal: ["vcalendar", expect.anything(), expect.anything()],
+          },
+        })
+      );
+    });
+
+    test("recurring event master cancelled", async () => {
+      let gitem = v8.deserialize(v8.serialize(gcalItems.recur_rrule));
+      gitem.status = "cancelled";
+
+      await saver.parseEventStream({
+        items: [gitem, gcalItems.recur_instance],
+      });
+      expect(console.log).toHaveBeenCalledWith("Parsing 2 received events");
+      expect(messenger.calendar.items.remove).toHaveBeenCalledWith(
+        "calendarId#cache",
+        "osndfnwejrgnejnsdjfwegjdfr@google.com"
+      );
+      expect(messenger.calendar.items.remove).toHaveBeenCalledTimes(1);
+      expect(messenger.calendar.items.create).not.toHaveBeenCalled();
+    });
+
+    test("recurring event missing parent", async () => {
+      await saver.parseEventStream({
+        items: [gcalItems.recur_instance],
+      });
+      expect(console.log).toHaveBeenCalledWith("Parsing 1 received events");
+      expect(messenger.calendar.items.remove).not.toHaveBeenCalled();
+
+      await saver.complete();
+
+      expect(messenger.calendar.items.create).toHaveBeenCalledWith(
+        "calendarId#cache",
+        expect.objectContaining({
+          id: "osndfnwejrgnejnsdjfwegjdfr@google.com",
+          formats: {
+            use: "jcal",
+            jcal: ["vcalendar", expect.anything(), expect.anything()],
+          },
+        })
+      );
+
+      let vcalendar = new ICAL.Component(
+        messenger.calendar.items.create.mock.calls[0][1].formats.jcal
+      );
+      let vevent = vcalendar.getFirstSubcomponent("vevent");
+
+      expect(vevent.getFirstProperty("recurrence-id")).toBe(null);
+      expect(vevent.getFirstPropertyValue("dtstart")?.toICALString()).toBe("20060625");
+      expect(vevent.getFirstPropertyValue("rdate")?.toICALString()).toBe("20060625");
+      expect(vevent.getFirstPropertyValue("x-moz-faked-master")).toBe("1");
+    });
+
+    test("recurring event missing parent cancelled", async () => {
+      let gitem = v8.deserialize(v8.serialize(gcalItems.recur_instance));
+      gitem.status = "cancelled";
+
+      await saver.parseEventStream({
+        items: [gitem],
+      });
+      expect(console.log).toHaveBeenCalledWith("Parsing 1 received events");
+      await saver.complete();
+
+      expect(messenger.calendar.items.remove).not.toHaveBeenCalled();
+      expect(messenger.calendar.items.create).not.toHaveBeenCalled();
+    });
+    test("recurring event missing parent found in storage", async () => {
+      let jitem = v8.deserialize(v8.serialize(jcalItems.recur_rrule));
+      await messenger.calendar.items._create("calendarId#cache", jitem);
+
+      let gitem = v8.deserialize(v8.serialize(gcalItems.recur_instance));
+      gitem.status = "cancelled";
+
+      await saver.parseEventStream({
+        items: [gitem],
+      });
+      expect(console.log).toHaveBeenCalledWith("Parsing 1 received events");
+      expect(messenger.calendar.items.create).not.toHaveBeenCalled();
+
+      await saver.complete();
+
+      expect(messenger.calendar.items.remove).not.toHaveBeenCalled();
+      expect(messenger.calendar.items.get).toHaveBeenCalledWith(
+        "calendarId#cache",
+        "osndfnwejrgnejnsdjfwegjdfr@google.com",
+        { returnFormat: "jcal" }
+      );
+      expect(messenger.calendar.items.create).toHaveBeenCalledWith(
+        "calendarId#cache",
+        expect.objectContaining({
+          id: "osndfnwejrgnejnsdjfwegjdfr@google.com",
+          formats: {
+            use: "jcal",
+            jcal: ["vcalendar", expect.anything(), expect.anything()],
+          },
+        })
+      );
+
+      let vcalendar = new ICAL.Component(
+        messenger.calendar.items.create.mock.calls[0][1].formats.jcal
+      );
+      let vevent = vcalendar.getFirstSubcomponent("vevent");
+      expect(
+        vevent.getAllProperties("exdate")?.map(prop => prop.getFirstValue()?.toICALString())
+      ).toEqual(expect.arrayContaining(["20060625", "20070609"]));
+    });
+  });
+
+  describe("parseTaskStream", () => {
+    test("task", async () => {
+      await saver.parseTaskStream({
+        items: [gcalItems.simple_task],
+      });
+
+      expect(messenger.calendar.items.remove).not.toHaveBeenCalled();
+      expect(messenger.calendar.items.create).toHaveBeenCalledWith(
+        "calendarId#cache",
+        expect.objectContaining({
+          id: "lqohjsbhqoztdkusnpruvooacn",
+          formats: {
+            use: "jcal",
+            jcal: ["vcalendar", expect.anything(), expect.anything()],
+          },
+        })
+      );
+    });
   });
 });

@@ -29,6 +29,24 @@ export function toRFC3339(entry) {
   // TODO
 }
 
+export function addVCalendar(vcomponent) {
+  if (vcomponent?.[0] == "vevent" || vcomponent?.[0] == "vtodo") {
+    return [
+      "vcalendar",
+      [
+        ["calscale", {}, "text", "GREGORIAN"],
+        ["prodid", {}, "text", "-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"],
+        ["version", {}, "text", "2.0"],
+      ],
+      [vcomponent],
+    ];
+  } else if (vcomponent?.[0] == "vcalendar") {
+    return vcomponent;
+  } else {
+    throw new Error("Invalid base component: " + vcomponent?.[0]);
+  }
+}
+
 export function getGoogleId(item) {
   let baseId = item.metadata?.path || item.id.replace(/@google.com$/, "");
   // TODO

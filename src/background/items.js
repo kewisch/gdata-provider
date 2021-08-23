@@ -3,7 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch */
 
-import { categoriesStringToArray, arrayToCategoriesString, reverseObject } from "./utils.js";
+import {
+  categoriesStringToArray,
+  arrayToCategoriesString,
+  reverseObject,
+  addVCalendar,
+} from "./utils.js";
 import ICAL from "./libs/ical.js";
 
 const ATTENDEE_STATUS_MAP = {
@@ -512,7 +517,7 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
 
   setIf("description", "text", entry.description);
   setIf("location", "text", entry.location);
-  setIf("status", "text", entry.status);
+  setIf("status", "text", entry.status?.toUpperCase());
 
   if (entry.originalStartTime) {
     veventprops.push(jsonToDate("recurrence-id", entry.originalStartTime));
@@ -576,7 +581,7 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   }
 
   if (entry.reminders) {
-    if (entry.reminders.useDefault && defaultReminders.length) {
+    if (entry.reminders.useDefault && defaultReminders?.length) {
       veventprops.push(["x-default-alarm", {}, "boolean", true]);
     }
 
@@ -655,14 +660,14 @@ export function jsonToAlarm(entry, isDefault = false) {
 
 export class ItemSaver {
   missingParents = [];
-  masterItems = Object.create(null);
+  parentItems = Object.create(null);
 
   constructor(calendar) {
     this.calendar = calendar;
     this.console = calendar.console;
   }
 
-  parseItemStream(data) {
+  async parseItemStream(data) {
     if (data.kind == "calendar#events") {
       return this.parseEventStream(data);
     } else if (data.kind == "tasks#tasks") {
@@ -685,51 +690,122 @@ export class ItemSaver {
       return;
     }
 
-    // In the first pass, we go through the data and sort into master items and exception items, as
-    // the master item might be after the exception in the stream.
+    let exceptionItems = [];
+
+    // In the first pass, we go through the data and sort into parent items and exception items, as
+    // the parent item might be after the exception in the stream.
+    // TODO figure out if it is ok to throw here
     await Promise.all(
       data.items.map(async entry => {
         let item = await jsonToEvent(entry, this.calendar);
+        item.formats.jcal = addVCalendar(item.formats.jcal);
 
-        if (!entry.originalStartTime) {
-          // TODO exceptions
-          this.masterItems[item.id] = item;
-          try {
-            await this.commitItem(item);
-          } catch (e) {
-            console.error(e);
-          }
+        if (entry.originalStartTime) {
+          exceptionItems.push(item);
+        } else {
+          this.parentItems[item.id] = item;
+          await this.commitItem(item);
         }
       })
     );
+
+    // Not doing this in parallel in case multiple exceptions for a parent item confuse things.
+    for (let exc of exceptionItems) {
+      let item = this.parentItems[exc.id];
+
+      if (item) {
+        await this.processException(exc, item);
+      } else {
+        this.missingParents.push(exc);
+      }
+      // TODO are we saving the etag of the exception events for future use?
+    }
   }
 
   async parseTaskStream(data) {
     await Promise.all(
       data.items.map(async entry => {
         let item = await jsonToTask(entry, this.calendar);
-        try {
-          await this.commitItem(item);
-        } catch (e) {
-          console.error(e);
-        }
+        item.formats.jcal = addVCalendar(item.formats.jcal);
+        await this.commitItem(item);
       })
     );
+  }
+
+  async processException(exc, item) {
+    let itemCalendar = new ICAL.Component(item.formats.jcal);
+    let itemEvent = itemCalendar.getFirstSubcomponent("vevent");
+
+    let exceptionCalendar = new ICAL.Component(exc.formats.jcal);
+    let exceptionEvent = exceptionCalendar.getFirstSubcomponent("vevent");
+
+    if (itemEvent.getFirstPropertyValue("status") == "CANCELLED") {
+      // Cancelled parent items don't have the full amount of information, specifically no
+      // recurrence info. Since they are cancelled anyway, we can just ignore processing this
+      // exception.
+      return;
+    }
+
+    if (exceptionEvent.getFirstPropertyValue("status") == "CANCELLED") {
+      itemEvent.addPropertyWithValue(
+        "exdate",
+        exceptionEvent.getFirstPropertyValue("recurrence-id").clone()
+      );
+    } else {
+      itemCalendar.addSubcomponent(exceptionEvent);
+    }
+
+    this.parentItems[item.id] = item;
+    await this.commitItem(item);
   }
 
   async commitItem(item) {
     // This is a normal item. If it was canceled, then it should be deleted, otherwise it should be
     // either added or modified. The relaxed mode of the cache calendar takes care of the latter two
     // cases.
-    let vevent = new ICAL.Component(item.formats.jcal);
-    if (vevent.getFirstPropertyValue("status") == "cancelled") {
+    let vcalendar = new ICAL.Component(item.formats.jcal);
+    let vcomp = vcalendar.getFirstSubcomponent("vevent") || vcalendar.getFirstSubcomponent("vtodo");
+
+    if (vcomp.getFirstPropertyValue("status") == "CANCELLED") {
       await messenger.calendar.items.remove(this.calendar.cacheId, item.id);
     } else {
       await messenger.calendar.items.create(this.calendar.cacheId, item);
     }
   }
 
+  /**
+   * Handle all remaining exceptions in the item saver. Ensures that any missing parent items are
+   * searched for or created.
+   */
   async complete() {
-    // TODO
+    await Promise.all(
+      this.missingParents.map(async exc => {
+        let excCalendar = new ICAL.Component(exc.formats.jcal);
+        let excEvent = excCalendar.getFirstSubcomponent("vevent");
+
+        let item = await messenger.calendar.items.get(this.calendar.cacheId, exc.id, {
+          returnFormat: "jcal",
+        });
+        if (item) {
+          await this.processException(exc, item);
+        } else if (excEvent.getFirstPropertyValue("status") != "CANCELLED") {
+          // If the item could not be found, it could be that the user is invited to an instance of
+          // a recurring event. Unless this is a cancelled exception, create a mock parent item with
+          // one positive RDATE.
+          let recId = excEvent.getFirstPropertyValue("recurrence-id");
+          // TODO this was also in the old code, but what happens if someone is invited to an
+          // exception of a recurring event that doesn't fall on the date of the recurrence-id?
+          excEvent.updatePropertyWithValue("dtstart", recId.clone());
+          excEvent.removeAllProperties("recurrence-id");
+          excEvent.updatePropertyWithValue("x-moz-faked-master", "1");
+          excEvent.updatePropertyWithValue("rdate", recId.clone());
+
+          // By now, exc is the parent event
+          await this.commitItem(exc);
+        }
+      })
+    );
+
+    this.missingParents = [];
   }
 }

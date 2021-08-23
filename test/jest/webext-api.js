@@ -87,6 +87,7 @@ export class WebExtCalendars {
     let clone = Object.assign({}, calendar);
     clone.id = "id" + (this._calendars.length + 1);
     this._calendars.push(clone);
+    return clone;
   }
 
   async update(id, update) {
@@ -104,10 +105,41 @@ export class WebExtCalendars {
   }
 }
 
+export class WebExtCalendarItems {
+  constructor() {
+    this._calendars = {};
+
+    this.create = jest.fn(this._create.bind(this));
+    this.remove = jest.fn(this._remove.bind(this));
+    this.get = jest.fn(this.get.bind(this));
+  }
+
+  _ensureCalendar(calendarId) {
+    if (!(calendarId in this._calendars)) {
+      this._calendars[calendarId] = {};
+    }
+  }
+
+  async _create(calendarId, item) {
+    this._ensureCalendar(calendarId);
+    this._calendars[calendarId][item.id] = item;
+  }
+
+  async _remove(calendarId, id) {
+    this._ensureCalendar(calendarId);
+    delete this._calendars[calendarId][id];
+  }
+
+  async get(calendarId, id) {
+    return this._calendars?.[calendarId]?.[id];
+  }
+}
+
 export default function createMessenger() {
   let messenger = {
     calendar: {
       calendars: new WebExtCalendars(),
+      items: new WebExtCalendarItems(),
       provider: {
         onFreeBusy: new WebExtListener(),
         onItemCreated: new WebExtListener(),

@@ -1,5 +1,6 @@
 import {
   isEmail,
+  addVCalendar,
   getGoogleId,
   categoriesStringToArray,
   arrayToCategoriesString,
@@ -9,6 +10,18 @@ import {
 test("isEmail", () => {
   expect(isEmail("test@example.com")).toBe(true);
   expect(isEmail("example.com")).toBe(false);
+});
+
+test("addVCalendar", () => {
+  let vcomp = ["vevent", [], []];
+  expect(addVCalendar(vcomp)).toEqual(["vcalendar", expect.anything(), [vcomp]]);
+
+  vcomp = ["vcalendar", [], []];
+  expect(addVCalendar(vcomp)).toBe(vcomp);
+
+  expect(() => {
+    addVCalendar(null);
+  }).toThrow("Invalid base component: undefined");
 });
 
 test("getGoogleId", () => {

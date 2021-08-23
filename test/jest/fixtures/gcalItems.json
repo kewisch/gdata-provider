@@ -117,6 +117,32 @@
     "start": { "dateTime": "2006-06-10T01:02:03Z" },
     "endTimeUnspecified": true
   },
+  "recur_rrule": {
+    "kind": "calendar#event",
+    "etag": "\"2128312983238480\"",
+    "id": "osndfnwejrgnejnsdjfwegjdfr",
+    "created": "2006-06-08T21:04:52.000Z",
+    "updated": "2006-06-08T21:05:49.138Z",
+    "summary": "New Event",
+    "start": { "date": "2006-06-10" },
+    "end": { "date": "2006-06-11" },
+    "recurrence": [
+      "RRULE:FREQ=YEARLY;COUNT=5;BYDAY=-1SU,2SA;BYMONTH=6",
+      "RDATE:2006-08-12",
+      "EXDATE:2007-06-09"
+    ]
+  },
+  "recur_instance": {
+    "kind": "calendar#event",
+    "etag": "\"2128312983238480\"",
+    "id": "osndfnwejrgnejnsdjfwegjdfr",
+    "created": "2006-06-08T21:04:52.000Z",
+    "updated": "2006-06-08T21:05:49.138Z",
+    "summary": "New Event",
+    "start": { "date": "2006-06-26" },
+    "end": { "date": "2006-06-27" },
+    "originalStartTime": { "date": "2006-06-25" }
+  },
   "simple_task": {
     "kind": "tasks#task",
     "etag": "\"2128312983238480\"",
