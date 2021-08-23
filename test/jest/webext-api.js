@@ -19,14 +19,16 @@ export class WebExtListener {
   }
 
   async trigger() {
+    let lastResponse = null;
     if (this._listeners.size && this._mockArgs.length) {
       for (let args of this._mockArgs) {
         for (let listener of this._listeners) {
-          await listener(...args);
+          lastResponse = await listener(...args);
         }
       }
       this._mockArgs = [];
     }
+    return lastResponse;
   }
 
   mockResponse(...args) {
@@ -163,6 +165,10 @@ export default function createMessenger() {
     },
     runtime: {
       id: "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      onMessage: new WebExtListener(),
+      sendMessage: jest.fn(message => {
+        return messenger.runtime.onMessage.mockResponse(message, {}, null);
+      }),
     },
     i18n: {
       getMessage(key, ...args) {

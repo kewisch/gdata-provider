@@ -1,12 +1,7 @@
 import { jest } from "@jest/globals";
 import createMessenger from "./webext-api";
+import { migrate, initMessageListener } from "../../src/background/index";
 
-let migrate;
-
-beforeAll(async () => {
-  let syms = await import("../../src/background/index");
-  migrate = syms.migrate;
-});
 beforeEach(() => {
   global.messenger = createMessenger();
 });
@@ -35,4 +30,11 @@ test("migrate no prefs", async () => {
 
   expect(Object.keys(messenger.storage.local.storage).length).toBe(0);
   expect(messenger.gdata.purgeLegacyPrefs).not.toHaveBeenCalled();
+});
+
+test("message listener", async () => {
+  // Most covered in the content tests
+  await initMessageListener();
+
+  expect(await messenger.runtime.sendMessage({ something: "else" })).toBe(null);
 });

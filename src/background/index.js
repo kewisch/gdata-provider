@@ -35,7 +35,7 @@ async function installDebugCalendar() {
   }
 }
 
-async function initMessageListener() {
+export async function initMessageListener() {
   messenger.runtime.onMessage.addListener(async (message, sender) => {
     if (message.action == "getSessions") {
       return sessions.ids;
