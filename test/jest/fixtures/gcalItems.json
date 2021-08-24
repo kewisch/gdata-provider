@@ -134,8 +134,8 @@
     "end": { "date": "2006-06-11" },
     "recurrence": [
       "RRULE:FREQ=YEARLY;COUNT=5;BYDAY=-1SU,2SA;BYMONTH=6",
-      "RDATE:2006-08-12",
-      "EXDATE:2007-06-09"
+      "RDATE;VALUE=DATE:20060812",
+      "EXDATE;VALUE=DATE:20070609"
     ]
   },
   "recur_instance": {

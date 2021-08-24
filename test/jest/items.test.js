@@ -139,6 +139,20 @@ describe("jsonToItem", () => {
       expect(jcal.getFirstPropertyValue("uid")).toBe("uasfsingergnenedfwiefefgjk@google.com");
       expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610T010203Z");
     });
+    test("recur rule", async () => {
+      let item = await jsonToItem(gcalItems.recur_rrule, calendar, [], null);
+      let jcal = new ICAL.Component(item.formats.jcal);
+
+      expect(jcal.getFirstPropertyValue("exdate")?.toICALString()).toBe("20070609");
+      expect(jcal.getFirstPropertyValue("rdate")?.toICALString()).toBe("20060812");
+
+      let recur = jcal.getFirstPropertyValue("rrule");
+      expect(recur).toBeTruthy();
+      expect(recur.freq).toBe("YEARLY");
+      expect(recur.count).toBe(5);
+      expect(recur.parts.BYDAY).toEqual(["-1SU", "2SA"]);
+      expect(recur.parts.BYMONTH).toEqual([6]);
+    });
 
     test("recur instance", async () => {
       let item = await jsonToItem(gcalItems.recur_instance, calendar, [], null);

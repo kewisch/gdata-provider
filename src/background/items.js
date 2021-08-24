@@ -562,7 +562,11 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
     }
   }
 
-  // TODO setupRecurrence
+  // Recurrence properties
+  for (let recItem of entry.recurrence || []) {
+    let prop = ICAL.Property.fromString(recItem);
+    veventprops.push(prop.jCal);
+  }
 
   for (let attendee of entry.attendees || []) {
     let id = "mailto:" + attendee.email;
