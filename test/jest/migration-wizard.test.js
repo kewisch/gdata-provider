@@ -6,7 +6,11 @@ import fs from "fs";
 import { jest } from "@jest/globals";
 import createMessenger from "./webext-api";
 import jestDom from "@testing-library/jest-dom";
-import migrateMain from "../../src/content/migration-wizard.js";
+import {
+  main as migrateMain,
+  clickAccept,
+  clickCancel,
+} from "../../src/content/migration-wizard.js";
 
 const html = fs.readFileSync(
   new URL("../../src/content/migration-wizard.html", import.meta.url),
@@ -74,9 +78,8 @@ test("cancel migrate true", async () => {
 
   expect(await getStoragePref("settings.migrate")).toBe(null);
 
-  let [completed] = await migrateMain();
-  cancel.click();
-  await completed;
+  await migrateMain();
+  await clickCancel();
 
   expect(window.close).toHaveBeenCalledTimes(1);
   expect(await getStoragePref("settings.migrate")).toBe(true);
@@ -88,10 +91,9 @@ test("cancel migrate false", async () => {
 
   expect(await getStoragePref("settings.migrate")).toBe(null);
 
-  let [completed] = await migrateMain();
+  await migrateMain();
   alwaysCheck.click();
-  cancel.click();
-  await completed;
+  await clickCancel();
 
   expect(window.close).toHaveBeenCalledTimes(1);
   expect(await getStoragePref("settings.migrate")).toBe(false);
@@ -102,9 +104,8 @@ test("accept no calendars", async () => {
 
   expect(await getStoragePref("settings.migrate")).toBe(null);
 
-  let [completed] = await migrateMain();
-  accept.click();
-  await completed;
+  await migrateMain();
+  await clickAccept();
 
   expect(window.close).toHaveBeenCalledTimes(1);
   expect(messenger.calendar.calendars.create).toHaveBeenCalledTimes(0);
@@ -118,10 +119,9 @@ test("accept with calendars", async () => {
 
   expect(await getStoragePref("settings.migrate")).toBe(null);
 
-  let [completed] = await migrateMain();
+  await migrateMain();
   qs("#calendar-listbox input").click();
-  accept.click();
-  await completed;
+  await clickAccept();
 
   expect(window.close).toHaveBeenCalledTimes(1);
   expect(messenger.calendar.calendars.create).toHaveBeenCalledTimes(1);

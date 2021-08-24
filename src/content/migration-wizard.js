@@ -6,7 +6,7 @@
 import { getMigratableCalendars, migrateCalendars } from "../background/migrate.js";
 import { isTesting } from "../background/utils.js";
 
-export default async function main() {
+export async function main() {
   let accept = document.getElementById("accept");
   let cancel = document.getElementById("cancel");
   let alwaysCheck = document.getElementById("always-check");
@@ -39,32 +39,27 @@ export default async function main() {
   let prefs = await messenger.storage.local.get({ "settings.migrate": true });
   alwaysCheck.checked = prefs["settings.migrate"];
 
-  // TODO maybe hijack window.close instead of having production code to aid a test
-  let complete;
-  let promise = new Promise(resolve => {
-    complete = resolve;
-  });
-
   // Event listeners
-  accept.addEventListener("click", async event => {
-    try {
-      let calendarIds = [...document.querySelectorAll("#calendar-listbox input:checked")].map(
-        item => item.value
-      );
-      await messenger.storage.local.set({ "settings.migrate": alwaysCheck.checked });
-      await migrateCalendars(calendarIds);
-    } finally {
-      window.close();
-      complete(true);
-    }
-  });
-  cancel.addEventListener("click", () => {
-    messenger.storage.local.set({ "settings.migrate": alwaysCheck.checked });
-    window.close();
-    complete(false);
-  });
+  accept.addEventListener("click", clickAccept);
+  cancel.addEventListener("click", clickCancel);
+}
 
-  return [promise];
+export async function clickAccept(event) {
+  try {
+    let alwaysCheck = document.getElementById("always-check");
+    let calendarIds = [...document.querySelectorAll("#calendar-listbox input:checked")].map(
+      item => item.value
+    );
+    await messenger.storage.local.set({ "settings.migrate": alwaysCheck.checked });
+    await migrateCalendars(calendarIds);
+  } finally {
+    window.close();
+  }
+}
+export async function clickCancel(event) {
+  let alwaysCheck = document.getElementById("always-check");
+  await messenger.storage.local.set({ "settings.migrate": alwaysCheck.checked });
+  window.close();
 }
 
 /* istanbul ignore next */
