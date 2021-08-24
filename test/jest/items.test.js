@@ -145,6 +145,12 @@ describe("jsonToItem", () => {
 
       expect(jcal.getFirstPropertyValue("exdate")?.toICALString()).toBe("20070609");
       expect(jcal.getFirstPropertyValue("rdate")?.toICALString()).toBe("20060812");
+      console.warn(JSON.stringify(item.formats.jcal, null, 2));
+
+      // 1155340800000000 == 2006-08-12 00:00:00 UTC
+      expect(jcal.getFirstPropertyValue("x-moz-snooze-time-1155340800000000")?.toICALString()).toBe(
+        "20211012T123456Z"
+      );
 
       let recur = jcal.getFirstPropertyValue("rrule");
       expect(recur).toBeTruthy();

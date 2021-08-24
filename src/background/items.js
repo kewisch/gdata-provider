@@ -600,23 +600,20 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   setIf("x-moz-lastack", "date-time", privateProps["X-MOZ-LASTACK"]);
   setIf("x-moz-snooze-time", "date-time", privateProps["X-MOZ-SNOOZE-TIME"]);
 
-  /* TODO this seems misplaced?
-  // extendedProperty (snooze recurring alarms)
-  if (item.recurrenceInfo) {
-    // Transform back the string into our snooze properties
-    let snoozeObj;
-    try {
-      let snoozeString = privateProps["X-GOOGLE-SNOOZE-RECUR"];
-      snoozeObj = JSON.parse(snoozeString);
-    } catch (e) {
-      // Just swallow parsing errors, not so important.
-    }
-
-    for (let [rid, value] of Object.entries(snoozeObj || {})) {
-      setIf("x-moz-snooze-time-" + rid, "date-time", value);
-    }
+  let snoozeObj;
+  try {
+    snoozeObj = JSON.parse(privateProps["X-GOOGLE-SNOOZE-RECUR"]);
+  } catch (e) {
+    // Ok to swallow
   }
-  */
+
+  for (let [rid, value] of Object.entries(snoozeObj || {})) {
+    setIf(
+      "x-moz-snooze-time-" + rid,
+      "date-time",
+      ICAL.design.icalendar.value["date-time"].fromICAL(value)
+    );
+  }
 
   // Google does not support categories natively, but allows us to store data as an
   // "extendedProperty", and here it's going to be retrieved again

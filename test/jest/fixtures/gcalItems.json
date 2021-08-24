@@ -136,7 +136,12 @@
       "RRULE:FREQ=YEARLY;COUNT=5;BYDAY=-1SU,2SA;BYMONTH=6",
       "RDATE;VALUE=DATE:20060812",
       "EXDATE;VALUE=DATE:20070609"
-    ]
+    ],
+    "extendedProperties": {
+      "private": {
+        "X-GOOGLE-SNOOZE-RECUR": "{\"1155340800000000\": \"20211012T123456Z\"}"
+      }
+    }
   },
   "recur_instance": {
     "kind": "calendar#event",

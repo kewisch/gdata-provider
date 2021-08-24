@@ -257,76 +257,6 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
 }
 
 /**
- * Sets up the recurrence info on the item
- *
- * @param aItem              The item to setup recurrence for.
- * @param aRecurrence        The JSON entry describing recurrence.
- */
-function setupRecurrence(aItem, aRecurrence, aTimezone) {
-  if (!aRecurrence) {
-    return;
-  }
-
-  if (aItem.recurrenceInfo) {
-    aItem.recurrenceInfo.clearRecurrenceItems();
-  } else {
-    aItem.recurrenceInfo = new CalRecurrenceInfo(aItem);
-  }
-
-  let rootComp;
-  let vevent = "BEGIN:VEVENT\r\n" + aRecurrence.join("\r\n") + "\r\nEND:VEVENT";
-  try {
-    rootComp = cal.getIcsService().parseICS(vevent, null);
-  } catch (e) {
-    cal.ERROR("[calGoogleCalendar] Unable to parse recurrence item: " + vevent);
-  }
-
-  let hasRecurringRules = false;
-  for (let prop = rootComp.getFirstProperty("ANY"); prop; prop = rootComp.getNextProperty("ANY")) {
-    switch (prop.propertyName) {
-      case "RDATE":
-      case "EXDATE": {
-        let recItem = Cc["@mozilla.org/calendar/recurrence-date;1"].createInstance(
-          Ci.calIRecurrenceDate
-        );
-        try {
-          recItem.icalProperty = prop;
-          aItem.recurrenceInfo.appendRecurrenceItem(recItem);
-          hasRecurringRules = true;
-        } catch (e) {
-          cal.ERROR(
-            "[calGoogleCalendar] Error parsing " +
-              prop.propertyName +
-              " (" +
-              prop.icalString +
-              "):" +
-              e
-          );
-        }
-        break;
-      }
-      case "RRULE": {
-        let recRule = cal.createRecurrenceRule();
-        try {
-          recRule.icalProperty = prop;
-          aItem.recurrenceInfo.appendRecurrenceItem(recRule);
-          hasRecurringRules = true;
-        } catch (e) {
-          cal.ERROR("[calGoogleCalendar] Error parsing RRULE (" + prop.icalString + "):" + e);
-        }
-        break;
-      }
-    }
-  }
-
-  if (!hasRecurringRules) {
-    // If there were no parsable recurrence items, then clear the
-    // recurrence info.
-    aItem.recurrenceInfo = null;
-  }
-}
-
-/**
  * Converts a JS Object representing the event to a calIEvent.
  *
  * @param aEntry            The JS Object representation of the item.
@@ -488,23 +418,6 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
     let snoozeProperty = dtSnoozeTime ? dtSnoozeTime.icalString : null;
     item.setProperty("X-MOZ-SNOOZE-TIME", snoozeProperty);
 
-    // extendedProperty (snooze recurring alarms)
-    if (item.recurrenceInfo) {
-      // Transform back the string into our snooze properties
-      let snoozeObj;
-      try {
-        let snoozeString = privateProps["X-GOOGLE-SNOOZE-RECUR"];
-        snoozeObj = JSON.parse(snoozeString);
-      } catch (e) {
-        // Just swallow parsing errors, not so important.
-      }
-
-      if (snoozeObj) {
-        for (let rid in snoozeObj) {
-          item.setProperty("X-MOZ-SNOOZE-TIME-" + rid, snoozeObj[rid]);
-        }
-      }
-    }
 
     // Google does not support categories natively, but allows us to store
     // data as an "extendedProperty", and here it's going to be retrieved
