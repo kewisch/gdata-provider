@@ -276,15 +276,20 @@ function convertRecurrence(vevent) {
   for (let rrule of vevent.getAllProperties("rrule")) {
     recrules.add(rrule.toICALString());
   }
-  for (let rrule of vevent.getAllProperties("rdate")) {
-    recrules.add(rrule.toICALString());
+
+  // EXDATEs and RDATEs require special casing, since they might contain a TZID. To avoid the need
+  // for conversion of TZID strings, convert to UTC before serialization.
+  for (let rdate of vevent.getAllProperties("rdate")) {
+    rdate.setValue(rdate.getFirstValue().convertToZone(ICAL.Timezone.utcTimezone));
+    rdate.removeParameter("tzid");
+    recrules.add(rdate.toICALString());
   }
-  for (let rrule of vevent.getAllProperties("exdate")) {
-    // TODO make this comment true
-    // EXDATES require special casing, since they might contain a TZID. To avoid the need for
-    // conversion of TZID strings, convert to UTC before serialization.
-    recrules.add(rrule.toICALString());
+  for (let exdate of vevent.getAllProperties("exdate")) {
+    exdate.setValue(exdate.getFirstValue().convertToZone(ICAL.Timezone.utcTimezone));
+    exdate.removeParameter("tzid");
+    recrules.add(exdate.toICALString());
   }
+
   return recrules;
 }
 

@@ -637,6 +637,19 @@ describe("patchItem", () => {
           },
         });
       });
+
+      test.each(["exdate", "rdate"])("%s utc", prop => {
+        event.removeAllProperties(prop);
+        let rprop = new ICAL.Property(prop);
+        rprop.setValue(ICAL.Time.fromString("2007-06-09T12:23:34"));
+        rprop.setParameter("tzid", "Europe/Berlin");
+        event.addProperty(rprop);
+
+        changes = patchItem(item, oldItem);
+        expect(changes.recurrence).toEqual(
+          expect.arrayContaining([prop.toUpperCase() + ":20070609T122334Z"])
+        );
+      });
     });
   });
 
