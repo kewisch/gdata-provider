@@ -145,7 +145,6 @@ describe("jsonToItem", () => {
 
       expect(jcal.getFirstPropertyValue("exdate")?.toICALString()).toBe("20070609");
       expect(jcal.getFirstPropertyValue("rdate")?.toICALString()).toBe("20060812");
-      console.warn(JSON.stringify(item.formats.jcal, null, 2));
 
       // 1155340800000000 == 2006-08-12 00:00:00 UTC
       expect(jcal.getFirstPropertyValue("x-moz-snooze-time-1155340800000000")?.toICALString()).toBe(
@@ -406,105 +405,162 @@ describe("patchItem", () => {
   describe("patchEvent", () => {
     let item, oldItem, event, changes;
 
-    beforeEach(() => {
-      oldItem = jcalItems.simple_event;
-      item = v8.deserialize(v8.serialize(oldItem));
-      event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
-    });
+    describe("simple event", () => {
+      beforeEach(() => {
+        oldItem = jcalItems.simple_event;
+        item = v8.deserialize(v8.serialize(oldItem));
+        event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+      });
 
-    test("no changes", () => {
-      changes = patchItem(item, oldItem);
-      expect(changes).toEqual({});
-    });
+      test("no changes", () => {
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({});
+      });
 
-    test.each([
-      ["summary", "summary", "changed", "changed"],
-      ["description", "description", "changed", "changed"],
-      ["location", "location", "changed", "changed"],
-      ["sequence", "sequence", 2, 2],
-      ["status", "status", "TENTATIVE", "tentative"],
-      ["transp", "transparency", "OPAQUE", "opaque"],
-      ["class", "visibility", "PUBLIC", "public"],
-      [
-        "x-moz-lastack",
-        "extendedProperties",
-        "2006-06-10T19:00:00",
-        { private: { "X-MOZ-LASTACK": "20060610T190000" } },
-      ],
-      [
-        "x-moz-snooze-time",
-        "extendedProperties",
-        "2006-06-10T19:00:00",
-        { private: { "X-MOZ-SNOOZE-TIME": "20060610T190000" } },
-      ],
-      [
-        "attendee",
-        "attendees",
-        "mailto:attendee3@example.com",
-        expect.arrayContaining([
-          {
-            email: "attendee2@example.com",
-            optional: false,
-            resource: true,
-            responseStatus: "tentative",
-          },
+      test.each([
+        ["summary", "summary", "changed", "changed"],
+        ["description", "description", "changed", "changed"],
+        ["location", "location", "changed", "changed"],
+        ["sequence", "sequence", 2, 2],
+        ["status", "status", "TENTATIVE", "tentative"],
+        ["transp", "transparency", "OPAQUE", "opaque"],
+        ["class", "visibility", "PUBLIC", "public"],
+        [
+          "x-moz-lastack",
+          "extendedProperties",
+          "2006-06-10T19:00:00",
+          { private: { "X-MOZ-LASTACK": "20060610T190000" } },
+        ],
+        [
+          "x-moz-snooze-time",
+          "extendedProperties",
+          "2006-06-10T19:00:00",
+          { private: { "X-MOZ-SNOOZE-TIME": "20060610T190000" } },
+        ],
+        [
+          "attendee",
+          "attendees",
+          "mailto:attendee3@example.com",
+          expect.arrayContaining([
+            {
+              email: "attendee2@example.com",
+              optional: false,
+              resource: true,
+              responseStatus: "tentative",
+            },
+            {
+              displayName: "attendee name",
+              email: "attendee3@example.com",
+              optional: true,
+              resource: false,
+              responseStatus: "tentative",
+            },
+          ]),
+        ],
+      ])("prop %s", (jprop, prop, jchanged, changed) => {
+        event.updatePropertyWithValue(jprop, jchanged);
+        if (jprop.startsWith("x-moz-snooze-time-")) {
+          console.warn(event.jCal);
+        }
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({ [prop]: changed });
+      });
+
+      test.each([
+        [
+          "dtstart",
+          "start",
+          ICAL.Time.fromString("2006-06-10T19:00:00"),
+          { dateTime: "2006-06-10T19:00:00", timeZone: "Europe/Berlin" },
+        ],
+        [
+          "dtend",
+          "end",
+          ICAL.Time.fromString("2006-06-10T19:00:00"),
+          { dateTime: "2006-06-10T19:00:00", timeZone: "Europe/Berlin" },
+        ],
+      ])("date prop %s", (jprop, prop, jchanged, changed) => {
+        event.updatePropertyWithValue(jprop, jchanged);
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({ [prop]: changed, reminders: expect.anything() });
+      });
+
+      test("dtend unspecified", () => {
+        event.removeProperty("dtend");
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({ endTimeUnspecified: true, reminders: expect.anything() });
+      });
+
+      test.each([
+        ["cn", "displayName", "changed", "changed"],
+        ["role", "optional", "REQ-PARTICIPANT", false],
+        ["cutype", "resource", "RESOURCE", true],
+        ["partstat", "responseStatus", "ACCEPTED", "accepted"],
+      ])("attendee %s", (jprop, prop, jchanged, changed) => {
+        event.getFirstProperty("attendee").setParameter(jprop, jchanged);
+        changes = patchItem(item, oldItem);
+
+        let attendee = Object.assign(
           {
             displayName: "attendee name",
-            email: "attendee3@example.com",
+            email: "attendee@example.com",
             optional: true,
             resource: false,
             responseStatus: "tentative",
           },
-        ]),
-      ],
-    ])("prop %s", (jprop, prop, jchanged, changed) => {
-      event.updatePropertyWithValue(jprop, jchanged);
-      if (jprop.startsWith("x-moz-snooze-time-")) {
-        console.warn(event.jCal);
-      }
-      changes = patchItem(item, oldItem);
-      expect(changes).toEqual({ [prop]: changed });
-    });
+          { [prop]: changed }
+        );
 
-    test.each([
-      [
-        "dtstart",
-        "start",
-        ICAL.Time.fromString("2006-06-10T19:00:00"),
-        { dateTime: "2006-06-10T19:00:00", timeZone: "Europe/Berlin" },
-      ],
-      [
-        "dtend",
-        "end",
-        ICAL.Time.fromString("2006-06-10T19:00:00"),
-        { dateTime: "2006-06-10T19:00:00", timeZone: "Europe/Berlin" },
-      ],
-    ])("date prop %s", (jprop, prop, jchanged, changed) => {
-      event.updatePropertyWithValue(jprop, jchanged);
-      changes = patchItem(item, oldItem);
-      expect(changes).toEqual({ [prop]: changed, reminders: expect.anything() });
-    });
+        expect(changes).toEqual({ attendees: expect.arrayContaining([attendee]) });
+      });
 
-    test("dtend unspecified", () => {
-      event.removeProperty("dtend");
-      changes = patchItem(item, oldItem);
-      expect(changes).toEqual({ endTimeUnspecified: true, reminders: expect.anything() });
-    });
+      test("attendee removed", () => {
+        event.removeAllProperties("attendee");
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({ attendees: [] });
+      });
+      test("attendee added", () => {
+        event.addProperty(
+          new ICAL.Property([
+            "attendee",
+            { email: "attendee3@example.com" },
+            "uri",
+            "urn:id:b5122b37-1aa7-4af1-a3dc-a54605d58a3d",
+          ])
+        );
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({
+          attendees: expect.arrayContaining([
+            {
+              displayName: "attendee name",
+              email: "attendee@example.com",
+              optional: true,
+              resource: false,
+              responseStatus: "tentative",
+            },
+            {
+              email: "attendee2@example.com",
+              optional: false,
+              resource: true,
+              responseStatus: "tentative",
+            },
+            {
+              email: "attendee3@example.com",
+              optional: false,
+              resource: false,
+              responseStatus: "needsAction",
+            },
+          ]),
+        });
+      });
 
-    test("recurring snooze", () => {
-      oldItem = jcalItems.recur_rrule;
-      item = v8.deserialize(v8.serialize(oldItem));
-      event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
-
-      event.updatePropertyWithValue(
-        "x-moz-snooze-time-20060610T190000",
-        ICAL.Time.fromString("2021-01-01T01:01:01")
-      );
-      changes = patchItem(item, oldItem);
-      expect(changes).toEqual({
-        extendedProperties: {
-          private: { "X-GOOGLE-SNOOZE-RECUR": '{"20060610T190000":"20210101T010101"}' },
-        },
+      test("categories", () => {
+        event.getFirstProperty("categories").setValues(["foo", "bar", "baz"]);
+        item.categories = ["foo", "bar", "baz"];
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({
+          extendedProperties: { shared: { "X-MOZ-CATEGORIES": "foo,bar,baz" } },
+        });
       });
     });
 
@@ -562,75 +618,24 @@ describe("patchItem", () => {
       });
     });
 
-    test.each([
-      ["cn", "displayName", "changed", "changed"],
-      ["role", "optional", "REQ-PARTICIPANT", false],
-      ["cutype", "resource", "RESOURCE", true],
-      ["partstat", "responseStatus", "ACCEPTED", "accepted"],
-    ])("attendee %s", (jprop, prop, jchanged, changed) => {
-      event.getFirstProperty("attendee").setParameter(jprop, jchanged);
-      changes = patchItem(item, oldItem);
-
-      let attendee = Object.assign(
-        {
-          displayName: "attendee name",
-          email: "attendee@example.com",
-          optional: true,
-          resource: false,
-          responseStatus: "tentative",
-        },
-        { [prop]: changed }
-      );
-
-      expect(changes).toEqual({ attendees: expect.arrayContaining([attendee]) });
-    });
-
-    test("attendee removed", () => {
-      event.removeAllProperties("attendee");
-      changes = patchItem(item, oldItem);
-      expect(changes).toEqual({ attendees: [] });
-    });
-    test("attendee added", () => {
-      event.addProperty(
-        new ICAL.Property([
-          "attendee",
-          { email: "attendee3@example.com" },
-          "uri",
-          "urn:id:b5122b37-1aa7-4af1-a3dc-a54605d58a3d",
-        ])
-      );
-      changes = patchItem(item, oldItem);
-      expect(changes).toEqual({
-        attendees: expect.arrayContaining([
-          {
-            displayName: "attendee name",
-            email: "attendee@example.com",
-            optional: true,
-            resource: false,
-            responseStatus: "tentative",
-          },
-          {
-            email: "attendee2@example.com",
-            optional: false,
-            resource: true,
-            responseStatus: "tentative",
-          },
-          {
-            email: "attendee3@example.com",
-            optional: false,
-            resource: false,
-            responseStatus: "needsAction",
-          },
-        ]),
+    describe("recurrence", () => {
+      beforeEach(() => {
+        oldItem = jcalItems.recur_rrule;
+        item = v8.deserialize(v8.serialize(oldItem));
+        event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
       });
-    });
 
-    test("categories", () => {
-      event.getFirstProperty("categories").setValues(["foo", "bar", "baz"]);
-      item.categories = ["foo", "bar", "baz"];
-      changes = patchItem(item, oldItem);
-      expect(changes).toEqual({
-        extendedProperties: { shared: { "X-MOZ-CATEGORIES": "foo,bar,baz" } },
+      test("recurring snooze", () => {
+        event.updatePropertyWithValue(
+          "x-moz-snooze-time-20060610T190000",
+          ICAL.Time.fromString("2021-01-01T01:01:01")
+        );
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({
+          extendedProperties: {
+            private: { "X-GOOGLE-SNOOZE-RECUR": '{"20060610T190000":"20210101T010101"}' },
+          },
+        });
       });
     });
   });
