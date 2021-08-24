@@ -220,6 +220,14 @@ class ExtCalendar extends cal.provider.BaseClass {
         this.offlineStorage.setMetaData(item.id, JSON.stringify(metadata));
       }
 
+      if (aItem.id && item.id != aItem.id) {
+        // The ID of the item has changed. We'll have to make sure that whatever old item is in the
+        // cache is removed.
+        // TODO Test this well or risk data loss
+        let pcal = cal.async.promisifyCalendar(this);
+        await pcal.deleteItem(aItem);
+      }
+
       if (!item.calendar) {
         item.calendar = this.superCalendar;
       }

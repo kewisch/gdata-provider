@@ -253,12 +253,6 @@ export default class calGoogleCalendar {
       });
     }
 
-    /* istanbul ignore next */
-    if (item.id && newItem.id != item.id) {
-      // TODO make switching ids part of the API
-      await messenger.calendar.items.remove(item.id);
-    }
-
     this.console.log(`Adding ${item.title} succeeded`);
 
     return newItem;
