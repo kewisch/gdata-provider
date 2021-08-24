@@ -508,7 +508,7 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
 
   let uid = entry.iCalUID || (entry.recurringEventId || entry.id) + "@google.com";
 
-  // TODO json to date: start/end/recurrence-id
+  // TODO json to date: start/end/recurrence-id - these use settings.timeZone as their default zone
 
   setIf("uid", "text", uid);
   setIf("created", "date-time", entry.created);
@@ -689,12 +689,17 @@ export class ItemSaver {
 
     let exceptionItems = [];
 
+    // TODO default reminders from stream
+    // let defaultReminders = (aData.defaultReminders || []).map(reminder =>
+    //   JSONToAlarm(reminder, true)
+    // );
+
     // In the first pass, we go through the data and sort into parent items and exception items, as
     // the parent item might be after the exception in the stream.
     // TODO figure out if it is ok to throw here
     await Promise.all(
       data.items.map(async entry => {
-        let item = await jsonToEvent(entry, this.calendar);
+        let item = await jsonToEvent(entry, this.calendar); // TODO pass in default reminders
         item.formats.jcal = addVCalendar(item.formats.jcal);
 
         if (entry.originalStartTime) {
@@ -720,6 +725,13 @@ export class ItemSaver {
   }
 
   async parseTaskStream(data) {
+    if (data.items?.length) {
+      this.console.log(`Parsing ${data.items.length} received tasks`);
+    } else {
+      this.console.log("No tasks have been changed");
+      return;
+    }
+
     await Promise.all(
       data.items.map(async entry => {
         let item = await jsonToTask(entry, this.calendar);
