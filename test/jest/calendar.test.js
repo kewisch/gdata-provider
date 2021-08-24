@@ -367,7 +367,7 @@ describe("item functions", () => {
       );
       expect(messenger.calendar.calendars.update).toHaveBeenLastCalledWith("id1", {
         capabilities: {
-          organizerName: "Eggs P. Seashell"
+          organizerName: "Eggs P. Seashell",
         },
       });
     });

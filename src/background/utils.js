@@ -49,13 +49,15 @@ export function addVCalendar(vcomponent) {
 
 export function getGoogleId(item) {
   let baseId = item.metadata?.path || item.id.replace(/@google.com$/, "");
-  // TODO
-  // if (aItem.recurrenceId) {
-  //   let recSuffix = "_" + aItem.recurrenceId.getInTimezone(cal.dtz.UTC).icalString;
-  //   if (!baseId.endsWith(recSuffix)) {
-  //     baseId += recSuffix;
-  //   }
-  // }
+
+  let vevent = new ICAL.Component(item.formats.jcal);
+  let recId = vevent.getFirstPropertyValue("recurrence-id");
+  if (recId) {
+    let recSuffix = "_" + recId.convertToZone(ICAL.Timezone.utcTimezone).toICALString();
+    if (!baseId.endsWith(recSuffix)) {
+      baseId += recSuffix;
+    }
+  }
   return baseId;
 }
 
