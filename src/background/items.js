@@ -556,10 +556,6 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
       orgparams.cn = entry.organizer.displayName;
     }
     veventprops.push(["organizer", orgparams, "uri", id]);
-
-    if (entry.organizer.self) {
-      // TODO remember display name for scheduling, we found ourselves!
-    }
   }
 
   // Recurrence properties

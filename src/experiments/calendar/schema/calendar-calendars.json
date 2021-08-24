@@ -41,6 +41,7 @@
             }
           },
           "organizer": { "type": "string", "optional": true },
+          "organizerName": { "type": "string", "optional": true },
           "attachments": { "type": "boolean", "optional": true },
           "priority": { "type": "boolean", "optional": true },
           "privacy": {

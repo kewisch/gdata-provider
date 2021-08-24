@@ -12,7 +12,7 @@
     "location": "Hard Drive",
     "colorId": 17,
     "creator": { "email": "creator@example.com", "displayName": "Eggs P. Seashell" },
-    "organizer": { "email": "organizer@example.com", "displayName": "Eggs P. Seashell" },
+    "organizer": { "email": "organizer@example.com", "displayName": "Eggs P. Seashell", "self": true },
     "start": { "dateTime": "2006-06-10T18:00:00", "timeZone": "Europe/Berlin" },
     "end": { "dateTime": "2006-06-10T20:00:00", "timeZone": "Europe/Berlin" },
     "transparency": "transparent",

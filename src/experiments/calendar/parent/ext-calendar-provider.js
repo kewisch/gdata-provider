@@ -152,6 +152,12 @@ class ExtCalendar extends cal.provider.BaseClass {
           return this.capabilities.organizer;
         }
         break;
+      case "organizerCN":
+        if (this.capabilities.organizerName) {
+          return this.capabilities.organizerName;
+        }
+        break;
+
 
       case "readOnly":
         if (this.capabilities.mutable === false) {

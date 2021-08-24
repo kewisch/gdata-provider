@@ -244,6 +244,15 @@ export default class calGoogleCalendar {
       /* TODO metaData */ null
     );
 
+    if (data.organizer?.self) {
+      // We found ourselves, remember the display name
+      await messenger.calendar.calendars.update(this.id, {
+        capabilities: {
+          organizerName: data.organizer.displayName,
+        },
+      });
+    }
+
     /* istanbul ignore next */
     if (item.id && newItem.id != item.id) {
       // TODO make switching ids part of the API

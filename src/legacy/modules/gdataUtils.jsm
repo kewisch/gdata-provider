@@ -324,26 +324,6 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
     aMetadata.etag = aEntry.etag;
     aMetadata.path = aEntry.id;
 
-    // organizer
-    if (aEntry.organizer) {
-      let organizer = new CalAttendee();
-      if (aEntry.organizer.email) {
-        organizer.id = "mailto:" + aEntry.organizer.email;
-      } else {
-        organizer.id = "urn:id:" + aEntry.organizer.id;
-      }
-      organizer.commonName = aEntry.organizer.displayName;
-      organizer.isOrganizer = true;
-      item.organizer = organizer;
-
-      if (aEntry.organizer.self && aCalendar.session) {
-        // Remember the display name, we found ourselves!
-        aCalendar.setProperty("organizerCN", aEntry.organizer.displayName);
-      }
-    } else {
-      item.organizer = null;
-    }
-
     // start and end
     item.startDate = JSONToDate(aEntry.start, calendarZone);
     item.endDate = JSONToDate(aEntry.end, calendarZone);

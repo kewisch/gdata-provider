@@ -365,6 +365,11 @@ describe("item functions", () => {
           method: "POST",
         })
       );
+      expect(messenger.calendar.calendars.update).toHaveBeenLastCalledWith("id1", {
+        capabilities: {
+          organizerName: "Eggs P. Seashell"
+        },
+      });
     });
 
     test.each([false, true])("onItemUpdated success sendUpdates=%s", async sendUpdates => {
