@@ -565,7 +565,7 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   // TODO setupRecurrence
 
   for (let attendee of entry.attendees || []) {
-    let id = attendee.email ? "mailto:" + attendee.email : "urn:id:" + attendee.id;
+    let id = "mailto:" + attendee.email;
     let params = {
       role: attendee.optional ? "OPT-PARTICIPANT" : "REQ-PARTICIPANT",
       partstat: ATTENDEE_STATUS_MAP[attendee.responseStatus],

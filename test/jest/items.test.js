@@ -68,12 +68,17 @@ describe("jsonToItem", () => {
       expect(alarms[2].getFirstPropertyValue("x-default-alarm")).toBe(null);
 
       let attendees = jcal.getAllProperties("attendee");
-      expect(attendees.length).toBe(1);
+      expect(attendees.length).toBe(2);
       expect(attendees[0].getFirstValue()).toBe("mailto:attendee@example.com");
       expect(attendees[0].getParameter("cn")).toBe("attendee name");
       expect(attendees[0].getParameter("role")).toBe("OPT-PARTICIPANT");
       expect(attendees[0].getParameter("partstat")).toBe("TENTATIVE");
       expect(attendees[0].getParameter("cutype")).toBe("INDIVIDUAL");
+
+      expect(attendees[1].getFirstValue()).toBe("mailto:attendee2@example.com");
+      expect(attendees[1].getParameter("role")).toBe("REQ-PARTICIPANT");
+      expect(attendees[1].getParameter("partstat")).toBe("TENTATIVE");
+      expect(attendees[1].getParameter("cutype")).toBe("RESOURCE");
 
       expect(jcal.getFirstProperty("categories").getValues()).toEqual(["foo", "bar"]);
       expect(jcal.getFirstPropertyValue("x-moz-lastack").toICALString()).toBe("20140101T010101Z");
@@ -226,6 +231,12 @@ describe("itemToJson", () => {
           email: "attendee@example.com",
           optional: true,
           resource: false,
+          responseStatus: "tentative",
+        },
+        {
+          email: "attendee2@example.com",
+          optional: false,
+          resource: true,
           responseStatus: "tentative",
         },
       ],
@@ -409,16 +420,22 @@ describe("patchItem", () => {
       [
         "attendee",
         "attendees",
-        "mailto:attendee2@example.com",
-        [
+        "mailto:attendee3@example.com",
+        expect.arrayContaining([
+          {
+            email: "attendee2@example.com",
+            optional: false,
+            resource: true,
+            responseStatus: "tentative",
+          },
           {
             displayName: "attendee name",
-            email: "attendee2@example.com",
+            email: "attendee3@example.com",
             optional: true,
             resource: false,
             responseStatus: "tentative",
           },
-        ],
+        ]),
       ],
     ])("prop %s", (jprop, prop, jchanged, changed) => {
       event.updatePropertyWithValue(jprop, jchanged);
@@ -545,7 +562,7 @@ describe("patchItem", () => {
         { [prop]: changed }
       );
 
-      expect(changes).toEqual({ attendees: [attendee] });
+      expect(changes).toEqual({ attendees: expect.arrayContaining([attendee]) });
     });
 
     test("attendee removed", () => {
@@ -557,14 +574,14 @@ describe("patchItem", () => {
       event.addProperty(
         new ICAL.Property([
           "attendee",
-          { email: "attendee2@example.com" },
+          { email: "attendee3@example.com" },
           "uri",
           "urn:id:b5122b37-1aa7-4af1-a3dc-a54605d58a3d",
         ])
       );
       changes = patchItem(item, oldItem);
       expect(changes).toEqual({
-        attendees: [
+        attendees: expect.arrayContaining([
           {
             displayName: "attendee name",
             email: "attendee@example.com",
@@ -575,10 +592,16 @@ describe("patchItem", () => {
           {
             email: "attendee2@example.com",
             optional: false,
+            resource: true,
+            responseStatus: "tentative",
+          },
+          {
+            email: "attendee3@example.com",
+            optional: false,
             resource: false,
             responseStatus: "needsAction",
           },
-        ],
+        ]),
       });
     });
 

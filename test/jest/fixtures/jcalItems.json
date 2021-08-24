@@ -38,6 +38,7 @@
                 [ "dtend", { "tzid" : "Europe/Berlin" }, "date-time", "2006-06-10T20:00:00" ],
                 [ "organizer", { "cn" : "Eggs P. Seashell" }, "uri", "mailto:organizer@example.com" ],
                 [ "attendee", { "cn" : "attendee name", "cutype" : "INDIVIDUAL", "partstat" : "TENTATIVE", "role" : "OPT-PARTICIPANT" }, "uri", "mailto:attendee@example.com" ],
+                [ "attendee", { "cutype" : "RESOURCE", "partstat" : "TENTATIVE", "role" : "REQ-PARTICIPANT" }, "uri", "mailto:attendee2@example.com" ],
                 [ "x-moz-lastack", {}, "date-time", "2014-01-01T01:01:01Z" ],
                 [ "x-moz-snooze-time", {}, "date-time", "2014-01-01T02:02:02Z" ],
                 [ "categories", {}, "text", "foo", "bar" ]
