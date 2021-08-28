@@ -36,14 +36,15 @@ function gdataInitUI(window, document) {
     let rv = protofunc.apply(this, args);
     let calendar = getCurrentCalendar();
     let isGoogleCalendar = calendar.type == "gdata";
-    let isTask = cal.item.isToDo(window.calendarItem);
-    let isEvent = cal.item.isEvent(window.calendarItem);
+    let isTask = window.calendarItem.isTodo();
+    let isEvent = window.calendarItem.isEvent();
     let isGoogleTask = isGoogleCalendar && isTask;
     let isGoogleEvent = isGoogleCalendar && isEvent;
 
     window.sendMessage({ command: "gdataIsTask", isGoogleTask: isGoogleTask });
 
     let hideForTaskIds = [
+      "FormatToolbox",
       "event-grid-location-row",
 
       "event-grid-startdate-row",
@@ -117,8 +118,15 @@ function gdataInitUI(window, document) {
       categoriesLabel.origLabel = categoriesLabel.value;
     }
 
-    window.setBooleanAttribute("item-categories", "hidden", isGoogleTask);
-    window.setBooleanAttribute(calendarLabel, "hidden", isGoogleTask);
+    let itemCategories = document.getElementById("item-categories");
+
+    if (isGoogleTask) {
+      itemCategories.setAttribute("hidden", "true");
+      calendarLabel.setAttribute("hidden", "true");
+    } else {
+      itemCategories.removeAttribute("hidden");
+      calendarLabel.removeAttribute("hidden");
+    }
 
     categoriesLabel.value = isGoogleTask ? calendarLabel.value : categoriesLabel.origLabel;
 
@@ -128,7 +136,7 @@ function gdataInitUI(window, document) {
   monkeyPatch(window, "updateCategoryMenulist", function(protofunc, ...args) {
     let rv;
     let calendar = window.getCurrentCalendar();
-    if (calendar.type == "gdata" && cal.item.isToDo(window.calendarItem)) {
+    if (calendar.type == "gdata" && window.calendarItem.isTodo()) {
       let unwrappedCal = calendar.getProperty("cache.uncachedCalendar").wrappedJSObject;
       unwrappedCal.mProperties["capabilities.categories.maxCount"] = 0;
       rv = protofunc.apply(this, args);
@@ -144,7 +152,10 @@ function gdataInitUI(window, document) {
     let reminderList = document.getElementById("item-alarm");
 
     if (reminderList.value == "default") {
-      window.removeChildren("reminder-icon-box");
+      let iconBox = document.querySelector(".alarm-icons-box");
+      while (iconBox.firstChild) {
+        iconBox.firstChild.remove();
+      }
     }
 
     return rv;
@@ -207,7 +218,7 @@ function gdataInitUI(window, document) {
 
     // Now that the custom reminders were changed, we need to remove the
     // default alarm status, otherwise the wrong alarm will be set.
-    let customItem = document.getElementById("reminder-custom-menuitem");
+    let customItem = document.querySelector(".reminder-custom-menuitem");
     if (customItem.reminders) {
       for (let reminder of customItem.reminders) {
         reminder.deleteProperty("X-DEFAULT-ALARM");

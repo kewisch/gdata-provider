@@ -43,7 +43,7 @@ function gdataInitUI(window, document) {
     }
 
     let acceptButton = document
-      .getElementById("calendar-event-dialog-reminder")
+      .querySelector("#calendar-event-dialog-reminder dialog")
       .getButton("accept");
     acceptButton.disabled = !validated;
 
@@ -56,7 +56,7 @@ function gdataInitUI(window, document) {
 
     if (validated) {
       notificationbox.removeAllNotifications();
-    } else {
+    } else if (!notificationbox.getNotificationWithValue("reminderNotification")) {
       let notification = notificationbox.appendNotification(
         reminderOutOfRange,
         "reminderNotification",
@@ -64,8 +64,7 @@ function gdataInitUI(window, document) {
         notificationbox.PRIORITY_CRITICAL_HIGH
       );
 
-      let closeButton = notification.messageDetails.nextElementSibling;
-      closeButton.setAttribute("hidden", "true");
+      notification.closeButton.setAttribute("hidden", "true");
     }
   }
 

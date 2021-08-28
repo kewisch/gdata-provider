@@ -23,8 +23,6 @@ var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 var { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm");
 
-var { fixIterator } = ChromeUtils.import("resource:///modules/iteratorUtils.jsm");
-
 var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
 
 var cIFBI = Ci.calIFreeBusyInterval;
@@ -223,7 +221,9 @@ calGoogleSession.prototype = {
     // google.com then we won't overwrite the rule though.
     if (Services.prefs.getIntPref("network.cookie.cookieBehavior") == 2) {
       let found = null;
-      for (let perm of fixIterator(Services.perms.enumerator, Ci.nsIPermission)) {
+      let perms = Services.perms.enumerator;
+      while (perms.hasMoreElements()) {
+        let perm = perms.getNext().QueryInterface(Ci.nsIPermission);
         if (perm.type == "cookie" && perm.host == "google.com") {
           found = perm;
           break;

@@ -12,7 +12,6 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
 var EXPORTED_SYMBOLS = ["OAuth2"]; /* exported OAuth2 */
 
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-var { Log4Moz } = ChromeUtils.import("resource:///modules/gloda/Log4moz.jsm");
 var { httpRequest } = ChromeUtils.import("resource://gre/modules/Http.jsm");
 
 function parseURLData(aData) {
@@ -35,7 +34,11 @@ function OAuth2(aBaseURI, aScope, aAppKey, aAppSecret) {
   this.scope = aScope;
   this.extraAuthParams = [];
 
-  this.log = Log4Moz.getConfiguredLogger("TBOAuth");
+  this.log = console.createInstance({
+    prefix: "gdata.oauth",
+    maxLogLevel: "Warn",
+    maxLogLevelPref: "mailnews.oauth.loglevel",
+  });
 }
 
 OAuth2.CODE_AUTHORIZATION = "authorization_code";

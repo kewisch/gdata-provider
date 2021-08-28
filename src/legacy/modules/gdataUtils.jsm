@@ -345,7 +345,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
   }
 
   setIf(itemData, "summary", aItem.title);
-  setIf(itemData, "description", aItem.getProperty("DESCRIPTION"));
+  setIf(itemData, "description", aItem.descriptionHTML);
   setIf(itemData, "location", aItem.getProperty("LOCATION"));
   setIf(
     itemData,
@@ -496,7 +496,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
         snoozeObj[name.substr(18)] = value;
       }
     }
-    if (Object.keys(snoozeObj).length > 0) {
+    if (Object.keys(snoozeObj).length) {
       snoozeValue = JSON.stringify(snoozeObj);
     }
   }
@@ -544,7 +544,7 @@ function TaskToJSON(aItem, aOfflineStorage, aIsImport) {
 
   setIf(itemData, "id", aItem.id);
   setIf(itemData, "title", aItem.title);
-  setIf(itemData, "notes", aItem.getProperty("DESCRIPTION"));
+  setIf(itemData, "notes", aItem.descriptionText);
   setIf(itemData, "position", aItem.getProperty("X-SORTKEY"));
   itemData.status = aItem.isCompleted ? "completed" : "needsAction";
 
@@ -585,9 +585,9 @@ function TaskToJSON(aItem, aOfflineStorage, aIsImport) {
  * @return              A JS Object representing the item.
  */
 function ItemToJSON(aItem, aOfflineStorage, aIsImport) {
-  if (cal.item.isEvent(aItem)) {
+  if (aItem.isEvent()) {
     return EventToJSON(aItem, aOfflineStorage, aIsImport);
-  } else if (cal.item.isToDo(aItem)) {
+  } else if (aItem.isTodo()) {
     return TaskToJSON(aItem, aOfflineStorage, aIsImport);
   } else {
     cal.ERROR("[calGoogleCalendar] Invalid item type: " + aItem.icalString);
@@ -752,7 +752,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
         ? cal.dtz.fromRFC3339(aEntry.created, calendarZone).getInTimezone(cal.dtz.UTC)
         : null
     );
-    item.setProperty("DESCRIPTION", aEntry.description);
+    item.descriptionHTML = aEntry.description;
     item.setProperty("LOCATION", aEntry.location);
     item.setProperty("TRANSP", aEntry.transparency ? aEntry.transparency.toUpperCase() : null);
     item.setProperty("SEQUENCE", aEntry.sequence);
@@ -918,7 +918,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
   try {
     item.id = aEntry.id;
     item.title = aEntry.title || "";
-    item.setProperty("DESCRIPTION", aEntry.notes);
+    item.descriptionText = aEntry.notes;
     item.setProperty("X-GOOGLE-SORTKEY", aEntry.position);
     item.isCompleted = aEntry.status == "completed";
 

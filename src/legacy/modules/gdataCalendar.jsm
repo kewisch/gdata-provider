@@ -9,6 +9,7 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
 var EXPORTED_SYMBOLS = ["calGoogleCalendar"]; /* exported calGoogleCalendar */
 
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
 
@@ -401,7 +402,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
 
       request.type = request.ADD;
       request.calendar = this;
-      if (cal.item.isEvent(aItem)) {
+      if (aItem.isEvent()) {
         if (isImport) {
           cal.LOG("[calGoogleCalendar] Adding invitation event " + aItem.title);
           request.uri = this.createEventsURI("events", "import");
@@ -413,7 +414,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
         if (Services.prefs.getBoolPref("calendar.google.sendEventNotifications", false)) {
           request.addQueryParameter("sendNotifications", "true");
         }
-      } else if (cal.item.isToDo(aItem)) {
+      } else if (aItem.isTodo()) {
         cal.LOG("[calGoogleCalendar] Adding task " + aItem.title);
         request.uri = this.createTasksURI("tasks");
         // Tasks sent with an id will cause a bad request
@@ -477,7 +478,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
     (async () => {
       request.type = request.MODIFY;
       request.calendar = this;
-      if (cal.item.isEvent(aNewItem)) {
+      if (aNewItem.isEvent()) {
         let googleId = getGoogleId(aNewItem, this.offlineStorage);
         request.uri = this.createEventsURI("events", googleId);
 
@@ -491,7 +492,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
         if (Services.prefs.getBoolPref("calendar.google.sendEventNotifications", false)) {
           request.addQueryParameter("sendNotifications", "true");
         }
-      } else if (cal.item.isToDo(aNewItem)) {
+      } else if (aNewItem.isTodo()) {
         request.uri = this.createTasksURI("tasks", aNewItem.id);
       }
 
@@ -586,12 +587,12 @@ class calGoogleCalendar extends cal.provider.BaseClass {
     (async () => {
       request.type = request.DELETE;
       request.calendar = this;
-      if (cal.item.isEvent(aItem)) {
+      if (aItem.isEvent()) {
         request.uri = this.createEventsURI("events", getGoogleId(aItem, this.offlineStorage));
         if (Services.prefs.getBoolPref("calendar.google.sendEventNotifications", false)) {
           request.addQueryParameter("sendNotifications", "true");
         }
-      } else if (cal.item.isToDo(aItem)) {
+      } else if (aItem.isTodo()) {
         request.uri = this.createTasksURI("tasks", aItem.id);
       }
 

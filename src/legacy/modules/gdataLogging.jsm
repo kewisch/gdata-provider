@@ -151,7 +151,7 @@ function LOGalarm(aAlarm) {
     "\n\t\tsummary: " +
     aAlarm.summary +
     "\n\t\tproperties: " +
-    (xpropstr.length > 0 ? "yes:" + xpropstr : "no")
+    (xpropstr.length ? "yes:" + xpropstr : "no")
   );
 }
 

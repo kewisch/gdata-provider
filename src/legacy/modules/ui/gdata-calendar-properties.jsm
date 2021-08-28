@@ -8,6 +8,9 @@ function gdataInitUI(window, document) {
   ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
     "ui/gdata-calendar-properties.jsm"
   );
+  const { monkeyPatch } = ChromeUtils.import(
+    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
+  );
 
   function gdataOnLoad() {
     let calendar = window.gCalendar;
@@ -19,6 +22,11 @@ function gdataInitUI(window, document) {
     let isReader = accessRole == "freeBusyReader" || accessRole == "reader";
     let isEventsCalendar = calendar.getProperty("capabilities.events.supported");
     let isDisabled = calendar.getProperty("disabled");
+
+    // Work around a bug where the notification is shown when imip is disabled
+    if (calendar.getProperty("imip.identity.disabled")) {
+      window.gIdentityNotification.removeAllNotifications();
+    }
 
     // Disable setting read-only if the calendar is readonly anyway
     document.getElementById("read-only").disabled = isDisabled || (isEventsCalendar && isReader);
@@ -32,10 +40,6 @@ function gdataInitUI(window, document) {
       }
     }
   }
-
-  const { monkeyPatch } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
-  );
 
   if (window.gCalendar) {
     gdataOnLoad();

@@ -38,7 +38,7 @@ function registerWindowListener(id, chromeURLs, record = true) {
 
 function register() {
   registerWindowListener("gdata-calendar-creation", [
-    "chrome://calendar/content/calendarCreation.xhtml",
+    "chrome://calendar/content/calendar-creation.xhtml",
   ]);
   registerWindowListener("gdata-calendar-properties", [
     "chrome://calendar/content/calendar-properties-dialog.xhtml",

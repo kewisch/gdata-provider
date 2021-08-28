@@ -59,14 +59,14 @@ function gdataInitUI(window, document) {
     );
   })();
 
-  monkeyPatch(window, "onLoadLightningItemPanel", (protofunc, passedFrameId, url) => {
+  monkeyPatch(window, "onLoadCalendarItemPanel", (protofunc, passedFrameId, url) => {
     let rv = protofunc(passedFrameId, url);
 
     let frameId;
     if (window.gTabMail) {
       frameId = passedFrameId || window.gTabmail.currentTabInfo.iframe.id;
     } else {
-      frameId = "lightning-item-panel-iframe";
+      frameId = "calendar-item-panel-iframe";
     }
 
     let frame = document.getElementById(frameId);
@@ -84,7 +84,8 @@ function gdataInitUI(window, document) {
   });
 
   window.addEventListener("message", aEvent => {
-    if (aEvent.origin !== "chrome://lightning") {
+    let validOrigin = window.gTabmail ? "chrome://messenger" : "chrome://calendar";
+    if (aEvent.origin !== validOrigin) {
       return;
     }
 

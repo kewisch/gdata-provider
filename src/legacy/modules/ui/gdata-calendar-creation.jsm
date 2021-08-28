@@ -41,24 +41,43 @@ function gdataInitUI(window, document) {
       #calendar-list .header-label {
         font-weight: bold;
       }
+
+      .calendar-color {
+        width: 20px;
+        border-radius: 5px;
+      }
+
+      #calendar-list {
+        height: 80vh;
+      }
     `;
-    document.documentElement.appendChild(style);
+    let calendarWizard = document.getElementById("calendar-creation-dialog");
+    calendarWizard.appendChild(style);
 
-    // <radiogroup id="calendar-format">
-    //   <radio value="gdata" label="&gdata-provider.label;"/>
-    // </radiogroup>
-    let format = document.getElementById("calendar-format");
-    let gdataRadioItem = format.appendChild(document.createXULElement("radio"));
-    gdataRadioItem.id = "gdata-calendar-format";
-    gdataRadioItem.value = "gdata";
-    gdataRadioItem.label = messenger.i18n.getMessage("gdata-provider.label");
+    window.registerCalendarType({
+      onSelected: () => {
+        window.selectPanel("gdata-session");
+        window.gdataSessionShow();
+      },
+      label: messenger.i18n.getMessage("gdata-provider.label"),
+    });
 
-    let calendarWizard = document.getElementById("calendar-wizard");
+    let localPanel = document.getElementById("panel-local-calendar-settings");
+    let netPanel = document.getElementById("panel-network-calendar-settings");
+    let selectPanel = document.getElementById("panel-select-calendars");
+    let findCalendarLabel =
+      `buttonlabelaccept="${netPanel.getAttribute("buttonlabelaccept")}"` +
+      ` buttonaccesskeyaccept="${netPanel.getAttribute("buttonaccesskeyaccept")}"`;
+    let subscribeLabel =
+      `buttonlabelaccept="${selectPanel.getAttribute("buttonlabelaccept")}"` +
+      ` buttonaccesskeyaccept="${selectPanel.getAttribute("buttonaccesskeyaccept")}"`;
+    let backLabel =
+      `buttonlabelextra2="${localPanel.getAttribute("buttonlabelextra2")}"` +
+      ` buttonaccesskeyextra2="${localPanel.getAttribute("buttonaccesskeyextra2")}"`;
+
     calendarWizard.appendChild(
       window.MozXULElement.parseXULToFragment(`
-        <wizardpage id="gdata-session"
-                    pageid="gdata-session"
-                    description="">
+        <vbox id="gdata-session" ${backLabel} ${findCalendarLabel}>
           <description>${messenger.i18n.getMessage(
             "gdata.wizard.session.description"
           )}</description>
@@ -72,39 +91,18 @@ function gdataInitUI(window, document) {
                           class="input-inline"/>
             </hbox>
           </radiogroup>
-        </wizardpage>
-        <wizardpage id="gdata-calendars"
-                    pageid="gdata-calendars"
-                    description="">
+        </vbox>
+        <vbox id="gdata-calendars" ${backLabel} ${subscribeLabel}>
           <description>${messenger.i18n.getMessage(
             "gdata.wizard.calendars.description"
           )}</description>
           <richlistbox id="calendar-list"
                        flex="1"
                        onclick="checkRequired();"/>
-        </wizardpage>
+        </vbox>
 `)
     );
-
-    // <description id="gdata-nextstep-description" hidden="true">&gdata.wizard.nextstep.description;</description>
-    let notificationLocation = document.getElementById("calendar-notification-location");
-
-    let nextStep = notificationLocation.parentNode.insertBefore(
-      document.createXULElement("description"),
-      notificationLocation.nextElementSibling
-    );
-    nextStep.id = "gdata-nextstep-description";
-    nextStep.setAttribute("hidden", "true");
-    nextStep.textContent = messenger.i18n.getMessage("gdata.wizard.nextstep.description");
   })();
-
-  function pageorder(anchor, ...pages) {
-    let page = document.getElementById(anchor);
-    for (let id of pages) {
-      page.next = id;
-      page = document.getElementById(id);
-    }
-  }
 
   function trycatch(func) {
     return function() {
@@ -117,62 +115,22 @@ function gdataInitUI(window, document) {
     };
   }
 
-  let previousUriValue = null;
-  function selectProvider(type) {
-    let isGdata = type == "gdata";
-    let curi = document.getElementById("calendar-uri");
+  window.gButtonHandlers.forNodeId["gdata-session"] = {
+    accept: event => {
+      event.preventDefault();
+      event.stopPropagation();
+      window.selectPanel("gdata-calendars");
+      window.gdataCalendarsShow();
+    },
+    extra2: () => window.selectPanel("panel-select-calendar-type"),
+  };
 
-    curi.closest("tr").style.visibility = isGdata ? "hidden" : "visible";
-    document.getElementById("cache").parentNode.style.visibility = isGdata ? "hidden" : "visible";
-
-    let nextStepDescr = document.getElementById("gdata-nextstep-description");
-    if (isGdata) {
-      pageorder("locationPage", "gdata-session", "gdata-calendars", "finishPage");
-      previousUriValue = curi.value;
-      curi.value = "googleapi://unknown";
-      nextStepDescr.removeAttribute("hidden");
-    } else {
-      nextStepDescr.setAttribute("hidden", "true");
-      pageorder("locationPage", "customizePage", "finishPage");
-      if (previousUriValue !== null) {
-        curi.value = previousUriValue;
-        previousUriValue = null;
-      }
-    }
-
-    window.checkRequired();
-  }
-  window.gdataSelectProvider = selectProvider;
-
-  if (typeof tmpCalendarCreation == "undefined") {
-    monkeyPatch(window, "onSelectProvider", (protofunc, type) => {
-      selectProvider(type);
-      return protofunc(type);
-    });
-  } else {
-    // The exchange provider overwrites the select handler, which causes
-    // our provider to fail. The exchange provider overwrites the select
-    // handler, which causes our provider to fail. Given the exchange
-    // provider is currently not maintained and we want them to work
-    // together, here is a workaround.
-
-    // eslint-disable-next-line no-undef
-    monkeyPatch(tmpCalendarCreation, "doRadioExchangeCalendar", (protofunc, target) => {
-      // We need to run our function first, otherwise resetting the
-      // pageorder will overwrite what the exchange provider does.
-      selectProvider(target.value);
-      let rv = protofunc(target);
-
-      // But then again, when switching to the gdata provider, the
-      // exchange provider overwrites the uri we set.
-      if (target.value == "gdata") {
-        let curi = document.getElementById("calendar-uri");
-        curi.value = "googleapi://unknown";
-        window.checkRequired();
-      }
-      return rv;
-    });
-  }
+  window.gButtonHandlers.forNodeId["gdata-calendars"] = {
+    accept: event => {
+      window.gdataCalendarsAdvance();
+    },
+    extra2: () => window.selectPanel("gdata-session"),
+  };
 
   monkeyPatch(window, "prepareCreateCalendar", protofunc => {
     let type = document.getElementById("calendar-format").selectedItem.value;
@@ -180,20 +138,38 @@ function gdataInitUI(window, document) {
   });
 
   monkeyPatch(window, "checkRequired", protofunc => {
-    let wizard = document.getElementById("calendar-wizard");
-    let currentPageId = wizard.currentPage && wizard.currentPage.pageid;
+    let dialog = document.getElementById("calendar-creation-dialog");
 
-    if (currentPageId == "gdata-session") {
+    let selectedPanel = null;
+    for (let element of dialog.children) {
+      if (!element.hidden) {
+        selectedPanel = element;
+      }
+    }
+
+    if (!selectedPanel) {
+      protofunc();
+      return;
+    }
+
+    let disabled;
+
+    if (selectedPanel.id == "gdata-session") {
       let sessionGroup = document.getElementById("gdata-session-group");
       let sessionName = document.getElementById("gdata-session-name");
-      wizard.canAdvance = sessionGroup.value || (sessionName.value && sessionName.validity.valid);
-    } else if (currentPageId == "gdata-calendars") {
+      disabled = !sessionGroup.value && !(sessionName.value && sessionName.validity.valid);
+    } else if (selectedPanel.id == "gdata-calendars") {
       let calendarList = document.getElementById("calendar-list");
-      wizard.canAdvance = !!calendarList.querySelector(
-        ".calendar-selected[checked]:not([readonly])"
-      );
+      disabled = !calendarList.querySelector(".calendar-selected[checked]:not([readonly])");
     } else {
       protofunc();
+      return;
+    }
+
+    if (disabled) {
+      dialog.setAttribute("buttondisabledaccept", "true");
+    } else {
+      dialog.removeAttribute("buttondisabledaccept");
     }
   });
 
@@ -201,7 +177,7 @@ function gdataInitUI(window, document) {
     let sessionMgr = getGoogleSessionManager();
     let sessionContainer = document.getElementById("gdata-session-group");
     let newSessionItem = document.getElementById("session-new");
-    let calendars = cal.getCalendarManager().getCalendars({});
+    let calendars = cal.getCalendarManager().getCalendars();
     let sessions = new Set(
       calendars.map(calendar => {
         return sessionMgr.getSessionByCalendar(calendar, true);
@@ -254,7 +230,7 @@ function gdataInitUI(window, document) {
       ([tasksLists, calendars]) => {
         let existing = new Set();
         let sessionPrefix = "googleapi://" + session.id;
-        for (let calendar of calMgr.getCalendars({})) {
+        for (let calendar of calMgr.getCalendars()) {
           let spec = calendar.uri.spec;
           if (calendar.type == "gdata" && spec.substr(0, sessionPrefix.length) == sessionPrefix) {
             let match;
@@ -323,7 +299,7 @@ function gdataInitUI(window, document) {
           checkbox.classList.add("calendar-selected");
           if (calendar.readOnly) {
             checkbox.checked = true;
-            checkbox.setAttribute("readonly", "true");
+            checkbox.disabled = true;
           }
           item.appendChild(checkbox);
 
@@ -351,8 +327,8 @@ function gdataInitUI(window, document) {
 
     let calMgr = cal.getCalendarManager();
     for (let item of calendarList.children) {
-      let checkbox = item.querySelector(".calendar-selected[checked]:not([readonly])");
-      if (checkbox) {
+      let checkbox = item.querySelector(".calendar-selected[checked]");
+      if (checkbox && !checkbox.disabled) {
         calMgr.registerCalendar(item.calendar);
       }
     }
@@ -362,16 +338,4 @@ function gdataInitUI(window, document) {
     let sessionContainer = document.getElementById("gdata-session-group");
     sessionContainer.value = "";
   });
-
-  let gdataSessionPage = document.getElementById("gdata-session");
-  gdataSessionPage.addEventListener("pageshow", () => {
-    window.gdataSessionShow();
-    window.checkRequired();
-  });
-  let gdataCalendarsPage = document.getElementById("gdata-calendars");
-  gdataCalendarsPage.addEventListener("pageshow", () => {
-    window.gdataCalendarsShow();
-    window.checkRequired();
-  });
-  gdataCalendarsPage.addEventListener("pageadvanced", window.gdataCalendarsAdvance);
 }
