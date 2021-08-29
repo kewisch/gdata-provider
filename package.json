@@ -45,7 +45,7 @@
     "lint": "commitlint -f origin/main && eslint --ext '.jsm' . || true"
   },
   "devDependencies": {
-    "@commitlint/cli": "^12.1.4",
+    "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^8.2.0",
     "@testing-library/dom": "^8.1.0",
     "@testing-library/jest-dom": "^5.14.1",
