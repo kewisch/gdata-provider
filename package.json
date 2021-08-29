@@ -31,7 +31,7 @@
     "action-thunderbird-tests": "github:kewisch/action-thunderbird-tests#master",
     "babel-eslint": "^10.1.0",
     "bump-file": "^2.0.0",
-    "conventional-changelog-cli": "^2.0.25",
+    "conventional-changelog-cli": "^2.1.1",
     "eslint": "6.2.2",
     "eslint-config-prettier": "6.1.0",
     "eslint-plugin-fetch-options": "0.0.5",
