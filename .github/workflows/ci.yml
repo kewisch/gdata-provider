@@ -18,7 +18,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: "npm ci"
         run: npm ci
@@ -36,13 +36,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: "Build"
         run: npm run build
 
       - name: "Upload"
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v2
         with:
           name: gdata-provider.xpi
           path: dist/gdata-provider.xpi
@@ -54,10 +54,10 @@ jobs:
 #    needs: build
 #    steps:
 #      - name: "Checkout"
-#        uses: actions/checkout@v1
+#        uses: actions/checkout@v2
 #
 #      - name: "Download Build Artifact"
-#        uses: actions/download-artifact@master
+#        uses: actions/download-artifact@v2
 #        with:
 #          name: gdata-provider.xpi
 #          path: dist
