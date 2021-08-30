@@ -16,9 +16,11 @@ beforeEach(() => {
     scope: "scope",
   });
 
+  /* eslint-disable jest/no-standalone-expect */
   expect(oauth.expired).toBe(true);
   expect(oauth.accessToken).toBe(null);
   expect(oauth.refreshToken).toBe(null);
+  /* eslint-enable jest/no-standalone-expect */
 
   jest.useFakeTimers("modern").setSystemTime(new Date("2021-01-01").getTime());
 });
@@ -173,18 +175,6 @@ describe("oauth flow", () => {
     expect(oauth.expires).toBe(null);
   });
 
-  test("force refresh response no json", async () => {
-    oauth.refreshToken = "refreshToken";
-
-    fetch.mockResponseOnce(null, { status: 500 });
-
-    await expect(oauth.refresh(true)).rejects.toEqual({ error: "request_error", code: 500 });
-
-    expect(oauth.accessToken).toBe(null);
-    expect(oauth.refreshToken).toBe("refreshToken");
-    expect(oauth.grantedScopes).toBe(null);
-    expect(oauth.expires).toBe(null);
-  });
   test("refresh not expired", async () => {
     oauth.refreshToken = "refreshToken";
 

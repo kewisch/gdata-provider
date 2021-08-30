@@ -695,6 +695,7 @@ describe("ItemSaver", () => {
     saver = new ItemSaver(calendar);
   });
   afterEach(() => {
+    // eslint-disable-next-line jest/no-standalone-expect
     expect(saver.missingParents.length).toBe(0);
   });
 

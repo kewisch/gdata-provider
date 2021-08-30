@@ -12,3 +12,4 @@ src/background/libs/**
 src/experiments/calendar/**
 
 test/xpcshell/**
+junk/**
