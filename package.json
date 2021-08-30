@@ -18,19 +18,19 @@
   },
   "scripts": {
     "test": "action-thunderbird-tests test/xpcshell/xpcshell.ini",
-    "build": "rm dist/gdata-provider.xpi; (cd src && zip -9r ../dist/gdata-provider.xpi *)",
-    "clean": "rm dist/gdata-provider.xpi",
+    "build": "rm -f dist/gdata-provider.xpi; (cd src && zip -9r ../dist/gdata-provider.xpi `git ls-files`)",
+    "clean": "rm -f dist/gdata-provider.xpi",
     "bump": "bumper() { bump package.json \"$1\"; bump src/manifest.json \"$1\"; }; bumper",
     "tag": "git tag v$(jq -r '.version' src/manifest.json)",
     "lint": "commitlint -f origin/master && eslint --ext '.jsm' . || true"
   },
-  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
-    "action-thunderbird-tests": "github:kewisch/action-thunderbird-tests#master",
+    "action-thunderbird-tests": "https://github.com/kewisch/action-thunderbird-tests#v1",
     "babel-eslint": "^10.1.0",
     "bump-file": "^2.0.0",
+    "conventional-changelog": "^3.1.24",
     "conventional-changelog-cli": "^2.0.25",
     "eslint": "6.2.2",
     "eslint-config-prettier": "6.1.0",
