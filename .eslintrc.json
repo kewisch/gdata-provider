@@ -15,12 +15,12 @@
     "ICAL": true
   },
 
-  "extends": [
-    "plugin:mozilla/recommended"
-  ],
   "plugins": [
     "mozilla",
     "jest"
+  ],
+  "extends": [
+    "plugin:mozilla/recommended"
   ],
 
   "rules": {
@@ -525,9 +525,11 @@
     {
       "files": ["test/jest/**/*.test.js"],
       "env": {
-        "jest/globals": true,
         "node": true
       },
+      "extends": [
+        "plugin:jest/recommended"
+      ],
       "rules": {
         "no-unsanitized/property": 0
       }

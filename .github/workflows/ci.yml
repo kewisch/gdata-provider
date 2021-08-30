@@ -49,24 +49,15 @@ jobs:
           name: gdata-provider.xpi
           path: dist/gdata-provider.xpi
 
-# Tests are currently broken, see head of test_gdata_provider.js
-#  test:
-#    name: "Tests"
-#    runs-on: ubuntu-latest
-#    needs: build
-#    steps:
-#      - name: "Checkout"
-#        uses: actions/checkout@v2
-#
-#      - name: "Download Build Artifact"
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: gdata-provider.xpi
-#          path: dist
-#
-#      - name: "Run Tests"
-#        uses: kewisch/action-thunderbird-tests@v1
-#        with:
-#          token: ${{ secrets.GITHUB_TOKEN }}
-#          channel: nightly
-#          xpcshell: test/xpcshell/xpcshell.ini
+  test:
+    name: "Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "npm ci"
+        run: npm ci
+
+      - name: "Run Tests"
+        run: npm run test

@@ -635,6 +635,7 @@ describe("onSync", () => {
     );
 
     if (accessRole == "freeBusyReader") {
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(messenger.calendar.calendars.update).toHaveBeenCalledWith("id1", { readOnly: true });
     }
   });
