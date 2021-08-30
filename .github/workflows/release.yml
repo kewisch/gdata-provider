@@ -18,12 +18,14 @@ jobs:
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: "npm ci"
         run: npm ci
 
       - name: "Commit lint"
-        run: npx commitlint --from $GITHUB_SHA^
+        uses: wagoid/commitlint-github-action@v4
 
       - name: "ESLint"
         uses: kewisch/action-yet-another-eslint@v1
@@ -76,8 +78,8 @@ jobs:
         with:
           fetch-depth: 0
 
-     - name: "npm ci"
-       run: npm ci
+      - name: "npm ci"
+        run: npm ci
 
       - name: "Download Build Artifact"
         uses: actions/download-artifact@v2
