@@ -2,6 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+var { MailE10SUtils } = ChromeUtils.import(
+  "resource:///modules/MailE10SUtils.jsm"
+);
+
 var wpl = Ci.nsIWebProgressListener;
 
 // Suppresses an error from LoginManagerPrompter where PopupNotifications is not defined. Taking it
@@ -81,7 +85,7 @@ window.loadRequestedUrl = function() {
   browser.addProgressListener(reporterListener, Ci.nsIWebProgress.NOTIFY_ALL);
   let url = request.url;
   if (url != "") {
-    browser.setAttribute("src", url);
+    MailE10SUtils.loadURI(browser, url);
     document.getElementById("headerMessage").textContent = url;
   }
 
