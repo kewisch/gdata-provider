@@ -12,6 +12,13 @@ var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm")
 
 var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
 
+XPCOMUtils.defineLazyGetter(this, "messenger", () => {
+  let { getMessenger } = ChromeUtils.import(
+    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
+  );
+  return getMessenger();
+});
+
 var API_BASE = {
   EVENTS: "https://www.googleapis.com/calendar/v3/",
   TASKS: "https://www.googleapis.com/tasks/v1/",
@@ -282,7 +289,7 @@ calGoogleRequest.prototype = {
     // Depending on the preference, we will use X-HTTP-Method-Override to
     // get around some proxies. This will default to true.
     if (
-      Services.prefs.getBoolPref("calendar.google.useHTTPMethodOverride", true) &&
+      messenger.gdataSyncPrefs.get("settings.useHTTPMethodOverride", true) &&
       (this.method == "PUT" || this.method == "DELETE")
     ) {
       aChannel.requestMethod = "POST";

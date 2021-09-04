@@ -376,7 +376,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
   addExtendedProperty("X-MOZ-CATEGORIES", categories);
 
   // Only parse attendees if they are enabled, due to bug 407961
-  if (Services.prefs.getBoolPref("calendar.google.enableAttendees", false)) {
+  if (getMessenger().gdataSyncPrefs.get("settings.enableAttendees", false)) {
     let createAttendee = function(attendee) {
       const statusMap = {
         "NEEDS-ACTION": "needsAction",
@@ -1423,7 +1423,14 @@ spinEventLoop.lastSpin = new Date();
 
 function getWXAPI(extension, name, sync = false) {
   function implementation(api) {
-    let impl = api.getAPI({ extension })[name];
+    let context = {
+      extension,
+      active: true,
+      unloaded: false,
+      callOnClose: () => {},
+      logActivity: () => {},
+    };
+    let impl = api.getAPI(context)[name];
 
     if (name == "storage") {
       impl.local.get = (...args) => impl.local.callMethodInParentProcess("get", args);
@@ -1444,6 +1451,27 @@ function getWXAPI(extension, name, sync = false) {
   }
 }
 
+class SyncPrefs {
+  prefs = {};
+
+  constructor(messenger) {
+    messenger.storage.onChanged.addListener(this.#onChanged.bind(this));
+    messenger.storage.local.get(null).then(prefs => {
+      this.prefs = prefs;
+    });
+  }
+
+  #onChanged(changes, area) {
+    for (let [key, change] of Object.entries(changes)) {
+      this.prefs[key] = change.newValue;
+    }
+  }
+
+  get(key, defaultValue = null) {
+    return key in this.prefs ? this.prefs[key] : defaultValue;
+  }
+}
+
 function getMessenger(extension) {
   if (!extension) {
     extension = ExtensionParent.GlobalManager.getExtension(
@@ -1454,5 +1482,6 @@ function getMessenger(extension) {
   let messenger = {};
   XPCOMUtils.defineLazyGetter(messenger, "i18n", () => getWXAPI(extension, "i18n", true));
   XPCOMUtils.defineLazyGetter(messenger, "storage", () => getWXAPI(extension, "storage", true));
+  XPCOMUtils.defineLazyGetter(messenger, "gdataSyncPrefs", () => new SyncPrefs(messenger));
   return messenger;
 }

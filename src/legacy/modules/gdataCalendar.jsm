@@ -33,7 +33,10 @@ var {
   deleteItemMetadata,
   migrateItemMetadata,
   JSONToAlarm,
+  getMessenger,
 } = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUtils.jsm");
+
+XPCOMUtils.defineLazyGetter(this, "messenger", () => getMessenger());
 
 var cIOL = Ci.calIOperationListener;
 
@@ -168,10 +171,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
       // Users that installed 1.0 had an issue where secondary calendars
       // were migrated to their own session. This code fixes that and
       // should be removed once 1.0.1 has been out for a while.
-      let googleUser = Services.prefs.getStringPref(
-        "calendar.google.calPrefs." + fullUser + ".googleUser",
-        null
-      );
+      let googleUser = messenger.gdataSyncPrefs.get(`settings.calPrefs.${fullUser}.googleUser`);
       if (googleUser && googleUser != fullUser) {
         let newUri = "googleapi://" + googleUser + "/" + path;
         cal.LOG("[calGoogleCalendar] Migrating url format from " + aUri.spec + " to " + newUri);
@@ -199,9 +199,8 @@ class calGoogleCalendar extends cal.provider.BaseClass {
       if (matches) {
         this.mCalendarName = decodeURIComponent(matches[2]);
 
-        let googleUser = Services.prefs.getStringPref(
-          "calendar.google.calPrefs." + this.mCalendarName + ".googleUser",
-          null
+        let googleUser = messenger.gdataSyncPrefs.get(
+          `settings.calPrefs.${this.mCalendarName}.googleUser`
         );
         let newUri =
           "googleapi://" + (googleUser || this.mCalendarName) + "/?calendar=" + matches[2];
@@ -328,7 +327,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
       case "itip.transport":
         if (
           !this.isDefaultCalendar ||
-          !Services.prefs.getBoolPref("calendar.google.enableEmailInvitations", false)
+          !messenger.gdataSyncPrefs.get("settings.enableEmailInvitations", false)
         ) {
           // If we explicitly return null here, then these calendars
           // will not be included in the list of calendars to accept
@@ -343,7 +342,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
         // invitations and if email invitations are generally disabled.
         if (
           !this.isDefaultCalendar ||
-          !Services.prefs.getBoolPref("calendar.google.enableEmailInvitations", false)
+          !messenger.gdataSyncPrefs.get("settings.enableEmailInvitations", false)
         ) {
           return true;
         }
@@ -411,7 +410,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
           request.uri = this.createEventsURI("events");
         }
 
-        if (Services.prefs.getBoolPref("calendar.google.sendEventNotifications", false)) {
+        if (messenger.gdataSyncPrefs.get("settings.sendEventNotifications", false)) {
           request.addQueryParameter("sendNotifications", "true");
         }
       } else if (aItem.isTodo()) {
@@ -489,7 +488,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
           request.type = request.PATCH;
         }
 
-        if (Services.prefs.getBoolPref("calendar.google.sendEventNotifications", false)) {
+        if (messenger.gdataSyncPrefs.get("settings.sendEventNotifications", false)) {
           request.addQueryParameter("sendNotifications", "true");
         }
       } else if (aNewItem.isTodo()) {
@@ -589,7 +588,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
       request.calendar = this;
       if (aItem.isEvent()) {
         request.uri = this.createEventsURI("events", getGoogleId(aItem, this.offlineStorage));
-        if (Services.prefs.getBoolPref("calendar.google.sendEventNotifications", false)) {
+        if (messenger.gdataSyncPrefs.get("settings.sendEventNotifications", false)) {
           request.addQueryParameter("sendNotifications", "true");
         }
       } else if (aItem.isTodo()) {
@@ -752,7 +751,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
       Cc["@mozilla.org/widget/useridleservice;1"]?.getService(Ci.nsIUserIdleService).idleTime ||
       Cc["@mozilla.org/widget/idleservice;1"]?.getService(Ci.nsIIdleService).idleTime;
 
-    let maxIdleTime = Services.prefs.getIntPref("calendar.google.idleTime", 300) * 1000;
+    let maxIdleTime = messenger.gdataSyncPrefs.get("settings.idleTime", 300) * 1000;
 
     if (maxIdleTime != 0 && idleTime > maxIdleTime) {
       cal.LOG("[calGoogleCalendar] Skipping refresh since user is idle");
@@ -761,7 +760,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
     }
 
     // Now that we've determined we are not idle we can continue with the sync.
-    let maxResults = Services.prefs.getIntPref("calendar.google.maxResultsPerRequest", null);
+    let maxResults = messenger.gdataSyncPrefs.get("settings.maxResultsPerRequest", 1000);
 
     // We are going to be making potentially lots of changes to the offline
     // storage, start a batch operation.
