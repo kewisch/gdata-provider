@@ -151,5 +151,19 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+
+  "settings.warning": {
+    "message": "These settings are will allow you to make use of email scheduling via Google Calendar, but there have also been reports about extraneous notification emails being sent. Please test with a small meeting first."
+  },
+
+  "settings.enableEmailInvitations": {
+    "message": "Enable email scheduling"
+  },
+  "settings.sendEventNotifications": {
+    "message": "Send email notifications to event guests"
+  },
+  "settings.enableAttendees": {
+    "message": "Synchronize event attendees"
   }
 }
