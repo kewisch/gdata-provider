@@ -23,7 +23,7 @@ var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 var { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm");
 
-var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
+ChromeUtils.defineModuleGetter(this, "cal", "resource:///modules/calendar/calUtils.jsm");
 
 var cIFBI = Ci.calIFreeBusyInterval;
 var nIPM = Ci.nsIPermissionManager;
@@ -502,9 +502,11 @@ calGoogleSession.prototype = {
 
     if (aRangeStart) {
       aRangeStart = aRangeStart.getInTimezone(cal.dtz.UTC);
+      aRangeStart.isDate = false;
     }
     if (aRangeEnd) {
       aRangeEnd = aRangeEnd.getInTimezone(cal.dtz.UTC);
+      aRangeEnd.isDate = false;
     }
 
     let rfcRangeStart = cal.dtz.toRFC3339(aRangeStart);
