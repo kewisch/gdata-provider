@@ -216,29 +216,16 @@ calGoogleSession.prototype = {
       enumerable: true,
     });
 
-    // If the user has disabled cookies, we need to add an exception for
-    // Google so authentication works. If the user has explicitly blocked
-    // google.com then we won't overwrite the rule though.
+    // If the user has disabled cookies, we need to add an exception for Google so authentication
+    // works. If the user has explicitly blocked google.com then we won't overwrite the rule though.
     if (Services.prefs.getIntPref("network.cookie.cookieBehavior") == 2) {
-      let found = null;
-      let perms = Services.perms.enumerator;
-      while (perms.hasMoreElements()) {
-        let perm = perms.getNext().QueryInterface(Ci.nsIPermission);
-        if (perm.type == "cookie" && perm.host == "google.com") {
-          found = perm;
-          break;
-        }
-      }
+      let googlePrincipal = Services.scriptSecurityManager.createContentPrincipalFromOrigin(
+        "https://google.com"
+      );
 
-      if (!found || found.capability != nIPM.DENY_ACTION) {
-        let uri = Services.io.newURI("http://google.com");
-        if (Services.vc.compare(Services.appinfo.platformVersion, 42) >= 0) {
-          Services.perms.remove(uri, "cookie");
-        } else {
-          // Earlier versions take a string argument instead of nsIURI.
-          Services.perms.remove(uri.host, "cookie");
-        }
-        Services.perms.add(uri, "cookie", nIPM.ALLOW_ACTION, nIPM.EXPIRE_SESSION);
+      let action = Services.perms.testPermissionFromPrincipal(googlePrincipal, "cookie");
+      if (action == nIPM.UNKNOWN_ACTION) {
+        Services.perms.addFromPrincipal(googlePrincipal, "cookie", nIPM.ALLOW_ACTION);
       }
     }
   },
