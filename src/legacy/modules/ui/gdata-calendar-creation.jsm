@@ -317,7 +317,11 @@ function gdataInitUI(window, document) {
         }
       },
       e => {
-        Cu.reportError(e);
+        if (e.message == "cancelled") {
+          window.selectPanel("gdata-session");
+        } else {
+          Cu.reportError(e);
+        }
       }
     );
   });
