@@ -3,11 +3,12 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 # Portions Copyright (C) Philipp Kewisch
 ---
-name: "WebExtension Checkin"
+name: "Checkin"
 on:
   push:
     branches:
-      - webextension
+      - main
+  pull_request:
 
 jobs:
   lint:
@@ -25,7 +26,8 @@ jobs:
       - name: "npm ci"
         run: npm ci
 
-      - name: "Commit lint"
+      - if: (github.actor!= 'dependabot[bot]') && (contains(github.head_ref, 'dependabot/') == false)
+        name: "Commit lint"
         uses: wagoid/commitlint-github-action@v4
         with:
           configFile: .commitlintrc.json

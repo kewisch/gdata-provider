@@ -3,12 +3,11 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 # Portions Copyright (C) Philipp Kewisch
 ---
-name: "Checkin"
+name: "Legacy Checkin"
 on:
   push:
     branches:
-      - main
-  pull_request:
+      - legacy
 
 jobs:
   lint:
@@ -25,7 +24,8 @@ jobs:
       - name: "npm ci"
         run: npm ci
 
-      - name: "Commit lint"
+      - if: (github.actor!= 'dependabot[bot]') && (contains(github.head_ref, 'dependabot/') == false)
+        name: "Commit lint"
         uses: wagoid/commitlint-github-action@v4
 
       - name: "ESLint"
