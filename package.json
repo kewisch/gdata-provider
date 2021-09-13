@@ -42,7 +42,7 @@
     "clean": "rm -f dist/gdata-provider.xpi",
     "bump": "bumper() { bump package.json \"$1\"; bump src/manifest.json \"$1\"; }; bumper",
     "tag": "git tag v$(jq -r '.version' src/manifest.json)",
-    "lint": "commitlint -f origin/main && eslint --ext '.jsm' . || true"
+    "lint": "commitlint -f origin/main && eslint src test || true"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
