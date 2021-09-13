@@ -1,7 +1,7 @@
 {
   "name": "gdata-provider",
   "description": "Provider for Google Calendar",
-  "version": "91.0.0pre",
+  "version": "91.1.0pre",
   "private": true,
   "type": "module",
   "author": "Philipp Kewisch <mozilla@kewis.ch>",
