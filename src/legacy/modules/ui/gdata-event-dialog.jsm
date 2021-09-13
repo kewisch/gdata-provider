@@ -85,7 +85,7 @@ function gdataInitUI(window, document) {
 
   window.addEventListener("message", aEvent => {
     let validOrigin = window.gTabmail ? "chrome://messenger" : "chrome://calendar";
-    if (aEvent.origin !== validOrigin) {
+    if (!aEvent.isTrusted && aEvent.origin !== validOrigin) {
       return;
     }
 
@@ -108,7 +108,11 @@ function gdataInitUI(window, document) {
             node.disabled = aEvent.data.isGoogleTask;
           }
         }
+        break;
       }
+      case "gdataSettingsMigrate":
+        messenger.storage.local.set({ "settings.migrate": aEvent.data.value });
+        break;
     }
   });
 }

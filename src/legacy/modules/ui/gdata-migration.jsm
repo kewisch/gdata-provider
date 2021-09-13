@@ -51,15 +51,17 @@ async function gdataInitUI(window, document) {
   showAgain.checked = prefs["settings.migrate"];
 
   // Set up listeners. Don't close the window until we are done.
-  document.getElementById("gdata-migration-dialog").addEventListener("dialogaccept", event => {
+  document.addEventListener("dialogaccept", event => {
     event.preventDefault();
-    (async function() {
-      let calendars = [];
-      for (let item of listbox.querySelectorAll("checkbox[checked]")) {
-        calendars.push(item.calendar);
-      }
-      migrateCalendars(calendars);
-      await messenger.storage.local.set({ "settings.migrate": showAgain.checked });
-    })().finally(() => window.close());
+    let calendars = [];
+    for (let item of listbox.querySelectorAll("checkbox[checked]")) {
+      calendars.push(item.calendar);
+    }
+    migrateCalendars(calendars);
+    window.opener.postMessage({ command: "gdataSettingsMigrate", value: showAgain.checked });
+    window.close();
+  });
+  document.addEventListener("dialogcancel", event => {
+    window.opener.postMessage({ command: "gdataSettingsMigrate", value: showAgain.checked });
   });
 }
