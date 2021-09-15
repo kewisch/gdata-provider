@@ -226,8 +226,18 @@ function gdataInitUI(window, document) {
       session = sessionMgr.getSessionById(newSessionItem.value, true);
     }
 
-    Promise.all([session.getTasksList(), session.getCalendarList()]).then(
-      ([tasksLists, calendars]) => {
+    Promise.allSettled([session.getTasksList(), session.getCalendarList()]).then(
+      ([
+        { value: tasksLists = [], reason: tasksError },
+        { value: calendars = [], reason: calendarError },
+      ]) => {
+        if (tasksError) {
+          Cu.reportError(tasksError);
+        }
+        if (calendarError) {
+          Cu.reportError(calendarError);
+        }
+
         let existing = new Set();
         let sessionPrefix = "googleapi://" + session.id;
         for (let calendar of calMgr.getCalendars()) {
@@ -268,26 +278,31 @@ function gdataInitUI(window, document) {
         });
 
         loadingItem.remove();
-        let header = document.createXULElement("richlistitem");
-        let headerLabel = document.createXULElement("label");
-        headerLabel.classList.add("header-label");
-        headerLabel.value = messenger.i18n.getMessage("calendarsHeader");
-        header.appendChild(headerLabel);
-        calendarList.appendChild(header);
+        let header, headerLabel;
+        if (calcals.length) {
+          header = document.createXULElement("richlistitem");
+          headerLabel = document.createXULElement("label");
+          headerLabel.classList.add("header-label");
+          headerLabel.value = messenger.i18n.getMessage("calendarsHeader");
+          header.appendChild(headerLabel);
+          calendarList.appendChild(header);
 
-        for (let calendar of calcals) {
-          addCalendarItem(calendar);
+          for (let calendar of calcals) {
+            addCalendarItem(calendar);
+          }
         }
 
-        header = document.createXULElement("richlistitem");
-        headerLabel = document.createXULElement("label");
-        headerLabel.classList.add("header-label");
-        headerLabel.value = messenger.i18n.getMessage("taskListsHeader");
-        header.appendChild(headerLabel);
-        calendarList.appendChild(header);
+        if (taskcals.length) {
+          header = document.createXULElement("richlistitem");
+          headerLabel = document.createXULElement("label");
+          headerLabel.classList.add("header-label");
+          headerLabel.value = messenger.i18n.getMessage("taskListsHeader");
+          header.appendChild(headerLabel);
+          calendarList.appendChild(header);
 
-        for (let calendar of taskcals) {
-          addCalendarItem(calendar);
+          for (let calendar of taskcals) {
+            addCalendarItem(calendar);
+          }
         }
 
         function addCalendarItem(calendar) {
