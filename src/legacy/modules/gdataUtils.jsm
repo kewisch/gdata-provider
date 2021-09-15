@@ -354,6 +354,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
   );
   setIf(itemData, "visibility", aItem.privacy && aItem.privacy.toLowerCase());
   setIf(itemData, "sequence", aItem.getProperty("SEQUENCE"));
+  setIf(itemData, "colorId", aItem.getProperty("X-GOOGLE-COLOR-ID"));
 
   // eventStatus
   let status = aItem.status && aItem.status.toLowerCase();
@@ -756,6 +757,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
     item.setProperty("LOCATION", aEntry.location);
     item.setProperty("TRANSP", aEntry.transparency ? aEntry.transparency.toUpperCase() : null);
     item.setProperty("SEQUENCE", aEntry.sequence);
+    item.setProperty("X-GOOGLE-COLOR-ID", aEntry.colorId);
     aMetadata.etag = aEntry.etag;
     aMetadata.path = aEntry.id;
 
