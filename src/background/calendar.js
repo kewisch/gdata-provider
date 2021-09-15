@@ -63,7 +63,17 @@ export default class calGoogleCalendar {
   static async onDetectCalendars(username, password, location, savePassword, extraProperties) {
     let session = sessions.byId(username, true);
 
-    let [calendars, tasks] = await Promise.all([session.getCalendarList(), session.getTasksList()]);
+    let [
+      { value: calendars = [], reason: calendarError },
+      { value: tasks = [], reason: tasksError },
+    ] = await Promise.allSettled([session.getCalendarList(), session.getTasksList()]);
+
+    if (calendarError) {
+      this.console.warn("Error retrieving calendar list:", calendarError);
+    }
+    if (tasksError) {
+      this.console.warn("Error retrieving task list:", tasksError);
+    }
 
     calendars = calendars.map(gcal => {
       return {

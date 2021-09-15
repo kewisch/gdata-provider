@@ -43,10 +43,11 @@ export async function initMessageListener() {
       let session = sessions.byId(message.sessionId, true);
       await session.ensureLogin();
 
-      let [calendars, tasks] = await Promise.all([
+      let [{ value: calendars = [] }, { value: tasks = [] }] = await Promise.allSettled([
         session.getCalendarList(),
         session.getTasksList(),
       ]);
+
       return { calendars, tasks };
     } else if (message.action == "createCalendars") {
       await Promise.all(
