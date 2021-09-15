@@ -169,7 +169,11 @@ OAuth2.prototype = {
             }
 
             if (aStateFlags & (wpl.STATE_START | wpl.STATE_IS_NETWORK)) {
-              this._checkForRedirect(aRequest.name);
+              try {
+                this._checkForRedirect(aRequest.QueryInterface(Ci.nsIChannel).URI.spec);
+              } catch (e) {
+                // Get rid of these annoying errors
+              }
             }
           },
           onLocationChange: function(aChangedWebProgress, aRequest, aLocation) {
