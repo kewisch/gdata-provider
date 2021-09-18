@@ -345,7 +345,12 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
   }
 
   setIf(itemData, "summary", aItem.title);
-  setIf(itemData, "description", aItem.descriptionHTML);
+  if (aItem.hasPropertyParameter("DESCRIPTION", "ALTREP")) {
+    setIf(itemData, "description", aItem.descriptionHTML);
+  } else {
+    setIf(itemData, "description", aItem.descriptionText);
+  }
+
   setIf(itemData, "location", aItem.getProperty("LOCATION"));
   setIf(
     itemData,
@@ -753,7 +758,15 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
         ? cal.dtz.fromRFC3339(aEntry.created, calendarZone).getInTimezone(cal.dtz.UTC)
         : null
     );
-    item.descriptionHTML = aEntry.description;
+
+    // Not pretty, but Google doesn't have a straightforward way to differentiate. As of writing,
+    // they even have bugs in their own UI about displaying the string properly.
+    if (aEntry.description?.[0] == "<" || aEntry.description?.match(/&(lt|gt|amp);/)) {
+      item.descriptionHTML = aEntry.description;
+    } else {
+      item.descriptionText = aEntry.description;
+    }
+
     item.setProperty("LOCATION", aEntry.location);
     item.setProperty("TRANSP", aEntry.transparency ? aEntry.transparency.toUpperCase() : null);
     item.setProperty("SEQUENCE", aEntry.sequence);
