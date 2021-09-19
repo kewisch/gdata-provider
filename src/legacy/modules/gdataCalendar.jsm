@@ -846,6 +846,8 @@ class calGoogleCalendar extends cal.provider.BaseClass {
     tasksRequest.type = tasksRequest.GET;
     tasksRequest.uri = this.createTasksURI("tasks");
     tasksRequest.addQueryParameter("maxResults", maxResults);
+    tasksRequest.addQueryParameter("showCompleted", "true");
+    tasksRequest.addQueryParameter("showHidden", "true");
     let lastUpdated = this.getUpdatedMin("tasks");
     if (lastUpdated) {
       tasksRequest.addQueryParameter("updatedMin", cal.dtz.toRFC3339(lastUpdated));
