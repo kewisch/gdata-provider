@@ -459,6 +459,8 @@ export default class calGoogleCalendar {
             params: {
               maxResults: prefs["settings.maxResultsPerRequest"],
               showDeleted: updatedMin ? "true" : "false",
+              showHidden: true,
+              showCompleted: true,
               updatedMin: updatedMin,
             },
           });
