@@ -48,7 +48,7 @@ OAuth2.prototype = {
   responseType: "code",
   consumerKey: null,
   consumerSecret: null,
-  completionURI: "http://localhost",
+  completionURI: "http://localhost/",
   completionRE: /^https?:\/\/localhost\//,
   requestWindowURI: "chrome://messenger/content/browserRequest.xhtml",
   requestWindowFeatures: "chrome,private,centerscreen,width=980,height=750",
