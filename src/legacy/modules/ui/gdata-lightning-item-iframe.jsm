@@ -227,4 +227,29 @@ function gdataInitUI(window, document) {
 
     return rv;
   });
+
+  const IGNORE_PROPS = [
+    "SEQUENCE",
+    "DTSTAMP",
+    "LAST-MODIFIED",
+    "X-MOZ-GENERATION",
+    "X-MICROSOFT-DISALLOW-COUNTER",
+    "X-MOZ-SEND-INVITATIONS",
+    "X-MOZ-SEND-INVITATIONS-UNDISCLOSED",
+    "X-DEFAULT-ALARM",
+  ];
+
+  monkeyPatch(window, "isItemChanged", function(protofunc, ...args) {
+    let calendar = window.getCurrentCalendar();
+    if (calendar.type == "gdata") {
+      let newItem = window.saveItem();
+      let oldItem = window.calendarItem;
+      return (
+        newItem.calendar.id != oldItem.calendar.id ||
+        !cal.item.compareContent(newItem, oldItem, IGNORE_PROPS)
+      );
+    } else {
+      return protofunc.apply(this, args);
+    }
+  });
 }
