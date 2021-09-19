@@ -49,6 +49,7 @@ OAuth2.prototype = {
   consumerKey: null,
   consumerSecret: null,
   completionURI: "http://localhost",
+  completionRE: /^https?:\/\/localhost\//,
   requestWindowURI: "chrome://messenger/content/browserRequest.xhtml",
   requestWindowFeatures: "chrome,private,centerscreen,width=980,height=750",
   requestWindowTitle: "",
@@ -137,7 +138,7 @@ OAuth2.prototype = {
           },
 
           _checkForRedirect: function(aURL) {
-            if (!aURL.startsWith(this._parent.completionURI)) {
+            if (!aURL.match(this._parent.completionRE)) {
               return;
             }
 
