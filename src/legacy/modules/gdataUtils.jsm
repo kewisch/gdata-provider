@@ -392,9 +392,6 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
       };
 
       let attendeeData = {};
-      if (aItem.organizer && aItem.organizer.id == attendee.id) {
-        needsOrganizer = false;
-      }
       let lowerId = attendee.id.toLowerCase();
       if (lowerId.startsWith("mailto:")) {
         attendeeData.email = attendee.id.replace(/^mailto:/i, "");
@@ -412,7 +409,13 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
     };
 
     let needsOrganizer = true;
-    let attendeeData = aItem.getAttendees({}).map(createAttendee);
+    let attendeeData = [];
+    for (let attendee of aItem.getAttendees()) {
+      attendeeData.push(createAttendee(attendee));
+      if (aItem.organizer && aItem.organizer.id == attendee.id) {
+        needsOrganizer = false;
+      }
+    }
 
     if (aItem.organizer) {
       itemData.organizer = createAttendee(aItem.organizer);
