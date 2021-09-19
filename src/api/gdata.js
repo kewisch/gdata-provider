@@ -36,16 +36,23 @@ this.gdata = class extends ExtensionAPI {
       ["content", "gdata-provider", "legacy/content/"],
     ]);
 
-    let { calGoogleCalendar } = ChromeUtils.import(
-      "resource://gdata-provider/legacy/modules/gdataCalendar.jsm"
+    // Load this early to get the messenger up and running for SyncPrefs
+    let { getMessenger } = ChromeUtils.import(
+      "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
     );
-    if (cal.getCalendarManager().wrappedJSObject.hasCalendarProvider("gdata")) {
-      cal.getCalendarManager().wrappedJSObject.unregisterCalendarProvider("gdata", true);
-    }
-    cal.getCalendarManager().wrappedJSObject.registerCalendarProvider("gdata", calGoogleCalendar);
 
-    let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
-    gdataUI.register();
+    getMessenger().gdataSyncPrefs.initComplete.then(() => {
+      let { calGoogleCalendar } = ChromeUtils.import(
+        "resource://gdata-provider/legacy/modules/gdataCalendar.jsm"
+      );
+      if (cal.getCalendarManager().wrappedJSObject.hasCalendarProvider("gdata")) {
+        cal.getCalendarManager().wrappedJSObject.unregisterCalendarProvider("gdata", true);
+      }
+      cal.getCalendarManager().wrappedJSObject.registerCalendarProvider("gdata", calGoogleCalendar);
+
+      let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
+      gdataUI.register();
+    });
   }
 
   onShutdown(isAppShutdown) {

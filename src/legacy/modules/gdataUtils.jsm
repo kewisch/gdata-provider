@@ -1471,8 +1471,12 @@ class SyncPrefs {
 
   constructor(messenger) {
     messenger.storage.onChanged.addListener(this.#onChanged.bind(this));
-    messenger.storage.local.get(null).then(prefs => {
-      this.prefs = prefs;
+
+    this.initComplete = new Promise((resolve, reject) => {
+      messenger.storage.local.get(null).then(prefs => {
+        this.prefs = prefs;
+        resolve(prefs);
+      }, reject);
     });
   }
 
@@ -1483,20 +1487,33 @@ class SyncPrefs {
   }
 
   get(key, defaultValue = null) {
+    if (!this.initComplete) {
+      cal.ERROR(
+        "[calGoogleCalendar] SyncPrefs called before initialization complete\n" + cal.STACK(10)
+      );
+    }
     return key in this.prefs ? this.prefs[key] : defaultValue;
   }
 }
 
+var messengerInstance;
+
 function getMessenger(extension) {
+  if (messengerInstance) {
+    return messengerInstance;
+  }
+
   if (!extension) {
     extension = ExtensionParent.GlobalManager.getExtension(
       "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}"
     );
   }
 
-  let messenger = {};
-  XPCOMUtils.defineLazyGetter(messenger, "i18n", () => getWXAPI(extension, "i18n", true));
-  XPCOMUtils.defineLazyGetter(messenger, "storage", () => getWXAPI(extension, "storage", true));
-  XPCOMUtils.defineLazyGetter(messenger, "gdataSyncPrefs", () => new SyncPrefs(messenger));
-  return messenger;
+  messengerInstance = {};
+  XPCOMUtils.defineLazyGetter(messengerInstance, "i18n", () => getWXAPI(extension, "i18n", true));
+  XPCOMUtils.defineLazyGetter(messengerInstance, "storage", () =>
+    getWXAPI(extension, "storage", true)
+  );
+  messengerInstance.gdataSyncPrefs = new SyncPrefs(messengerInstance);
+  return messengerInstance;
 }
