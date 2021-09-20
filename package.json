@@ -57,7 +57,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-fetch-options": "0.0.5",
     "eslint-plugin-html": "^6.0.0",
-    "eslint-plugin-jest": "^24.4.0",
+    "eslint-plugin-jest": "^24.4.2",
     "eslint-plugin-mozilla": "^2.1.0",
     "eslint-plugin-no-unsanitized": "^3.0.2",
     "eslint-plugin-prettier": "^3.4.1",
