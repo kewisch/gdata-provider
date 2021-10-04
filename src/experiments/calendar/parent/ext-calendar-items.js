@@ -25,6 +25,56 @@ this.calendar_items = class extends ExtensionAPI {
     return {
       calendar: {
         items: {
+          query: async function(queryProps) {
+            console.log(queryProps);
+            let calendars = [];
+            if (typeof queryProps.calendarId == "string") {
+              calendars = [getResolvedCalendarById(context.extension, queryProps.calendarId)];
+            } else if (Array.isArray(queryProps.calendarId)) {
+              calendars = queryProps.calendarId.map(calendarId => getResolvedCalendarById(context.extension, calendarId));
+            } else {
+              calendars = cal.getCalendarManager().getCalendars().filter(calendar => !calendar.getProperty("disabled"));
+            }
+
+
+            let calendarItems;
+            if (queryProps.id) {
+              calendarItems = await Promise.all(calendars.map(calendar => {
+                // TODO same hack as below. Proxies are strange.
+                let deferred = PromiseUtils.defer();
+                let listener = cal.async.promiseOperationListener(deferred);
+                console.log(calendar);
+                calendar.getItem(queryProps.id, listener);
+                return deferred.promise;
+              }));
+            } else {
+              calendarItems = await Promise.all(calendars.map(async calendar => {
+                let filter = Ci.calICalendar.ITEM_FILTER_COMPLETED_ALL;
+                if (queryProps.type == "event") {
+                  filter |= Ci.calICalendar.ITEM_FILTER_TYPE_EVENT;
+                } else if (queryProps.type == "task") {
+                  filter |= Ci.calICalendar.ITEM_FILTER_TYPE_TODO;
+                } else {
+                  filter |= Ci.calICalendar.ITEM_FILTER_TYPE_ALL;
+                }
+
+                if (queryProps.expand) {
+                  filter |= Ci.calICalendar.ITEM_FILTER_CLASS_OCCURRENCES;
+                }
+
+                let rangeStart = queryProps.rangeStart ? cal.createDateTime(queryProps.rangeStart) : null;
+                let rangeEnd = queryProps.rangeEnd ? cal.createDateTime(queryProps.rangeEnd) : null;
+
+                // TODO same hack as below. Proxies are strange.
+                let deferred = PromiseUtils.defer();
+                let listener = cal.async.promiseOperationListener(deferred);
+                calendar.getItems(filter, queryProps.limit ?? 0, rangeStart, rangeEnd, listener);
+                return deferred.promise;
+              }));
+            }
+
+            return calendarItems.flat().map(item => convertItem(item, queryProps, context.extension));
+          },
           get: async function(calendarId, id, options) {
             let calendar = getResolvedCalendarById(context.extension, calendarId);
 

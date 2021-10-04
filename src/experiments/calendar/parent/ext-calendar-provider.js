@@ -372,7 +372,7 @@ class ExtFreeBusyProvider {
       let attendee = aCalId.replace(/^mailto:/, "");
       let start = aRangeStart.icalString;
       let end = aRangeEnd.icalString;
-      let types = ["free", "busy", "unavailable", "tentative"].filter((type, index) => aBusyTypes & 1 << index);
+      let types = ["free", "busy", "unavailable", "tentative"].filter((type, index) => aBusyTypes & (1 << index));
       let results = await this.fire.async({ attendee, start, end, types });
       aListener.onResult({ status: Cr.NS_OK }, results.map(interval =>
         new cal.provider.FreeBusyInterval(aCalId,
@@ -392,9 +392,9 @@ this.calendar_provider = class extends ExtensionAPI {
       this.onManifestEntry("calendar_provider");
     }
 
-    const {
-      setupE10sBrowser
-    } = ChromeUtils.import(this.extension.rootURI.resolve("experiments/calendar/ext-calendar-utils.jsm"));
+    const { setupE10sBrowser } = ChromeUtils.import(this.extension.rootURI.resolve("experiments/calendar/ext-calendar-utils.jsm"));
+
+    ChromeUtils.registerWindowActor("CalendarProvider", { child: { moduleURI: this.extension.rootURI.resolve("experiments/calendar/child/ext-calendar-provider-actor.jsm") } });
 
     ExtensionSupport.registerWindowListener("ext-calendar-provider-" + this.extension.id, {
       chromeURLs: ["chrome://calendar/content/calendar-creation.xhtml"],
@@ -428,7 +428,8 @@ this.calendar_provider = class extends ExtensionAPI {
             onCreated: () => {
               // TODO temporary
               let browser = win.document.getElementById("panel-addon-calendar-settings").lastElementChild;
-              browser.contentWindow.postMessage("create", this.extension.getURL(""));
+              let actor = browser.browsingContext.currentWindowGlobal.getActor("CalendarProvider");
+              actor.sendAsyncMessage("postMessage", { message: "create", origin: this.extension.getURL("") });
             }
           });
         }
@@ -440,6 +441,7 @@ this.calendar_provider = class extends ExtensionAPI {
       return;
     }
     ExtensionSupport.unregisterWindowListener("ext-calendar-provider-" + this.extension.id);
+    ChromeUtils.unregisterWindowActor("CalendarProvider");
 
     if (this.extension.manifest.calendar_provider) {
       ExtCalendarProvider.unregister(this.extension);

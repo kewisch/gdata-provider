@@ -76,7 +76,33 @@
             }
           }
          ]
-       },
+      },
+      {
+        "name": "query",
+        "async": true,
+        "type": "function",
+        "parameters": [
+          {
+            "type": "object",
+            "name": "queryOptions",
+            "properties": {
+              "returnFormat": { "$ref": "ReturnFormat", "optional": true },
+              "id": { "type": "string", "optional": true },
+              "calendarId": {
+                "choices": [
+                  { "type": "string" },
+                  { "type": "array", "items": { "type": "string" } }
+                ],
+                "optional": true
+              },
+              "type": { "type": "string", "enum": ["event", "task"], "optional": true },
+              "rangeStart": { "type": "string", "optional": true },
+              "rangeEnd": { "type": "string", "optional": true },
+              "expand": { "type": "boolean", "optional": true }
+            }
+          }
+        ]
+      },
       {
         "name": "create",
         "async": true,
