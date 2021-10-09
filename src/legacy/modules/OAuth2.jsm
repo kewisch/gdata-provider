@@ -14,21 +14,10 @@ var EXPORTED_SYMBOLS = ["OAuth2"]; /* exported OAuth2 */
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { httpRequest } = ChromeUtils.import("resource://gre/modules/Http.jsm");
 
-function parseURLData(aData) {
-  let result = {};
-  aData
-    .split(/[?#]/, 2)[1]
-    .split("&")
-    .forEach(aParam => {
-      let [key, value] = aParam.split("=");
-      result[key] = decodeURIComponent(value);
-    });
-  return result;
-}
-
 function OAuth2(aBaseURI, aScope, aAppKey, aAppSecret) {
-  this.authURI = aBaseURI + "oauth2/auth";
-  this.tokenURI = aBaseURI + "oauth2/token";
+  // aBaseURI was used historically. Until we complete the MailExtensions rewrite, we'll use authURI
+  // and tokenURI directly.
+
   this.consumerKey = aAppKey;
   this.consumerSecret = aAppSecret;
   this.scope = aScope;
@@ -48,8 +37,12 @@ OAuth2.prototype = {
   responseType: "code",
   consumerKey: null,
   consumerSecret: null,
-  completionURI: "http://localhost:226/",
-  completionRE: /^https?:\/\/localhost\//,
+
+  authURI: "https://accounts.google.com/o/oauth2/v2/auth",
+  tokenURI: "https://oauth2.googleapis.com/token",
+  redirectURI: "urn:ietf:wg:oauth:2.0:oob:auto",
+  completionURI: "https://accounts.google.com/o/oauth2/approval/v2",
+
   requestWindowURI: "chrome://messenger/content/browserRequest.xhtml",
   requestWindowFeatures: "chrome,private,centerscreen,width=980,height=750",
   requestWindowTitle: "",
@@ -88,7 +81,7 @@ OAuth2.prototype = {
     let params = [
       ["response_type", this.responseType],
       ["client_id", this.consumerKey],
-      ["redirect_uri", this.completionURI],
+      ["redirect_uri", this.redirectURI],
     ];
     // The scope can be optional.
     if (this.scope) {
@@ -138,7 +131,7 @@ OAuth2.prototype = {
           },
 
           _checkForRedirect: function(aURL) {
-            if (!aURL.match(this._parent.completionRE)) {
+            if (!aURL.startsWith(this._parent.completionURI)) {
               return;
             }
 
@@ -207,11 +200,11 @@ OAuth2.prototype = {
 
   onAuthorizationReceived: function(aData) {
     this.log.info("authorization received" + aData);
-    let results = parseURLData(aData);
+    let params = new URL(aData).searchParams;
     if (this.responseType == "code") {
-      this.requestAccessToken(results.code, OAuth2.CODE_AUTHORIZATION);
+      this.requestAccessToken(params.get("approvalCode"), OAuth2.CODE_AUTHORIZATION);
     } else if (this.responseType == "token") {
-      this.onAccessTokenReceived(JSON.stringify(results));
+      this.onAccessTokenReceived(JSON.stringify(Object.fromEntries(params.entries())));
     }
   },
 
@@ -229,7 +222,7 @@ OAuth2.prototype = {
 
     if (aType == OAuth2.CODE_AUTHORIZATION) {
       params.push(["code", aCode]);
-      params.push(["redirect_uri", this.completionURI]);
+      params.push(["redirect_uri", this.redirectURI]);
     } else if (aType == OAuth2.CODE_REFRESH) {
       params.push(["refresh_token", aCode]);
     }
