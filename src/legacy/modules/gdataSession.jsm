@@ -244,7 +244,11 @@ calGoogleSession.prototype = {
    * Resets the access token, it will be re-retrieved on the next request.
    */
   invalidate: function() {
-    cal.LOG("[calGoogleSession] Invalidating session, will reauthenticate on next request");
+    cal.LOG(
+      "[calGoogleSession] Invalidating session " +
+        this.mId +
+        ", will reauthenticate on next request"
+    );
     this.oauth.accessToken = null;
   },
 

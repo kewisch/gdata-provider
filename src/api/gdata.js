@@ -41,6 +41,8 @@ this.gdata = class extends ExtensionAPI {
       "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
     );
 
+    Services.obs.addObserver(this, "passwordmgr-storage-changed");
+
     getMessenger().gdataSyncPrefs.initComplete.then(() => {
       let { calGoogleCalendar } = ChromeUtils.import(
         "resource://gdata-provider/legacy/modules/gdataCalendar.jsm"
@@ -64,6 +66,8 @@ this.gdata = class extends ExtensionAPI {
 
     let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
     gdataUI.unregister();
+
+    Services.obs.removeObserver(this, "passwordmgr-storage-changed");
 
     Services.io
       .getProtocolHandler("resource")
@@ -107,5 +111,25 @@ this.gdata = class extends ExtensionAPI {
         },
       },
     };
+  }
+
+  observe(subject, topic, data) {
+    if (
+      topic == "passwordmgr-storage-changed" &&
+      data == "removeLogin" &&
+      subject.httpRealm == "Google Calendar OAuth Token"
+    ) {
+      let { getGoogleSessionManager } = ChromeUtils.import(
+        "resource://gdata-provider/legacy/modules/gdataSession.jsm"
+      );
+
+      let session = getGoogleSessionManager().getSessionById(subject.username, false);
+      if (session) {
+        session.invalidate();
+        session.oauth.tokenExpires = 0;
+        session.oauth.refreshToken = null;
+        session.oauth.accessToken = null;
+      }
+    }
   }
 };
