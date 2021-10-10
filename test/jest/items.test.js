@@ -12,6 +12,18 @@ import { jest } from "@jest/globals";
 beforeEach(() => {
   global.messenger = createMessenger();
   jest.spyOn(global.console, "log").mockImplementation(() => {});
+
+  global.window = {
+    DOMParser: class {
+      parseFromString(html, type) {
+        return {
+          documentElement: {
+            textContent: html.replace(/<[^>]*>/g, ""),
+          },
+        };
+      }
+    },
+  };
 });
 
 // TODO test recurrence-id/ost, recurringEventId
@@ -165,6 +177,15 @@ describe("jsonToItem", () => {
 
       expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060626");
       expect(jcal.getFirstPropertyValue("recurrence-id").toICALString()).toBe("20060625");
+    });
+
+    test("html description", async () => {
+      let item = await jsonToItem(gcalItems.html_descr, calendar, [], null);
+      let jcal = new ICAL.Component(item.formats.jcal);
+
+      let descr = jcal.getFirstProperty("description");
+      expect(descr.getParameter("altrep")).toBe("data:text/html,%3Cb%3EBold%3C%2Fb%3E");
+      expect(descr.getFirstValue()).toBe("Bold");
     });
   });
 
@@ -415,6 +436,15 @@ describe("patchItem", () => {
       test("no changes", () => {
         changes = patchItem(item, oldItem);
         expect(changes).toEqual({});
+      });
+
+      test("html description", () => {
+        event
+          .getFirstProperty("description")
+          .setParameter("altrep", "data:text/html,<i>changed</i>");
+
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({ description: "<i>changed</i>" });
       });
 
       test.each([

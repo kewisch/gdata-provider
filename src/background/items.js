@@ -374,8 +374,22 @@ function patchEvent(item, oldItem) {
   }
 
   setIfFirstProperty(entry, "summary");
-  setIfFirstProperty(entry, "description");
   setIfFirstProperty(entry, "location");
+
+  let oldDesc = oldEvent?.getFirstProperty("description");
+  let newDesc = event?.getFirstProperty("description");
+  let newHTML = newDesc?.getParameter("altrep");
+
+  if (
+    oldDesc?.getFirstValue() != newDesc?.getFirstValue() ||
+    oldDesc?.getParameter("altrep") != newHTML
+  ) {
+    if (newHTML?.startsWith("data:text/html,")) {
+      entry.description = decodeURIComponent(newHTML.slice("data:text/html,".length));
+    } else {
+      entry.description = newDesc.getFirstValue();
+    }
+  }
 
   setIfDateChanged(entry, "start", "dtstart");
   setIfDateChanged(entry, "end", "dtend"); // TODO duration instead of end
@@ -520,7 +534,15 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   setIf("last-modified", "date-time", entry.updated);
   setIf("dtstamp", "date-time", entry.updated);
 
-  setIf("description", "text", entry.description);
+  if (entry.description?.[0] == "<" || entry.description?.match(/&(lt|gt|amp);/)) {
+    let altrep = "data:text/html," + encodeURIComponent(entry.description);
+    let parser = new window.DOMParser();
+    let plain = parser.parseFromString(entry.description, "text/html").documentElement.textContent;
+    veventprops.push(["description", { altrep }, "text", plain]);
+  } else {
+    veventprops.push(["description", {}, "text", entry.description]);
+  }
+
   setIf("location", "text", entry.location);
   setIf("status", "text", entry.status?.toUpperCase());
 
