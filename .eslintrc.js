@@ -4,32 +4,30 @@
  * Portions Copyright (C) Philipp Kewisch, 2019 */
 "use strict";
 
+/* eslint-env node */
+
 const xpcshellTestConfig = require("eslint-plugin-mozilla/lib/configs/xpcshell-test.js");
 const browserTestConfig = require("eslint-plugin-mozilla/lib/configs/browser-test.js");
 
 module.exports = {
-  "root": true,
-  "env": {
-    "es2021": true,
+  root: true,
+  env: {
+    es2021: true,
   },
-  "parser": "babel-eslint",
+  parser: "babel-eslint",
 
-  "parserOptions": {
-    "ecmaVersion": 12
-  },
-
-  "globals": {
-    "messenger": true
+  parserOptions: {
+    ecmaVersion: 12,
   },
 
-  "extends": [
-    "plugin:mozilla/recommended",
-  ],
-  "plugins": [
-    "mozilla",
-  ],
+  globals: {
+    messenger: true,
+  },
 
-  "rules": {
+  extends: ["plugin:mozilla/recommended"],
+  plugins: ["mozilla"],
+
+  rules: {
     // Enforce one true brace style (opening brace on the same line)
     // Allow single line (for now) because of the vast number of changes needed
     "brace-style": [2, "1tbs", { allowSingleLine: true }],
@@ -243,7 +241,7 @@ module.exports = {
     "mozilla/var-only-at-top-level": 1,
 
     // Disallow global and local variables that aren't used, but allow unused function arguments.
-    //"no-unused-vars": [2, { vars: "all", args: "none", varsIgnorePattern: "EXPORTED_SYMBOLS" }],
+    // "no-unused-vars": [2, { vars: "all", args: "none", varsIgnorePattern: "EXPORTED_SYMBOLS" }],
     "no-unused-vars": 0,
 
     "mozilla/mark-test-function-used": 1,
@@ -523,13 +521,15 @@ module.exports = {
     // easier updates in the future.
     "no-else-return": 0,
   },
-  overrides: [{
-    globals: xpcshellTestConfig.globals,
-    files: ["test/xpcshell/**"],
-    rules: {
-      ...xpcshellTestConfig.rules,
-      "func-names": "off",
-      "mozilla/import-headjs-globals": "error",
+  overrides: [
+    {
+      globals: xpcshellTestConfig.globals,
+      files: ["test/xpcshell/**"],
+      rules: {
+        ...xpcshellTestConfig.rules,
+        "func-names": "off",
+        "mozilla/import-headjs-globals": "error",
+      },
     },
-  }]
+  ],
 };
