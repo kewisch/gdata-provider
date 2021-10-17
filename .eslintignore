@@ -6,3 +6,4 @@
 # distribution paths
 build/**
 dist/**
+junk/**

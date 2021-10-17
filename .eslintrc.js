@@ -10,12 +10,12 @@ const browserTestConfig = require("eslint-plugin-mozilla/lib/configs/browser-tes
 module.exports = {
   "root": true,
   "env": {
-    "es6": true,
+    "es2021": true,
   },
   "parser": "babel-eslint",
 
   "parserOptions": {
-    "ecmaVersion": 11
+    "ecmaVersion": 12
   },
 
   "globals": {
