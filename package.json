@@ -59,7 +59,7 @@
     "eslint-plugin-html": "^6.2.0",
     "eslint-plugin-jest": "^25.2.2",
     "eslint-plugin-mozilla": "^2.11.1",
-    "eslint-plugin-no-unsanitized": "^3.0.2",
+    "eslint-plugin-no-unsanitized": "^3.2.0",
     "eslint-plugin-prettier": "^3.4.1",
     "ical.js": "^1.4.0",
     "jest": "^27.2.0",
