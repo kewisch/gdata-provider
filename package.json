@@ -48,7 +48,7 @@
     "@commitlint/cli": "^13.2.1",
     "@commitlint/config-conventional": "^14.1.0",
     "@testing-library/dom": "^8.11.1",
-    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/jest-dom": "^5.16.1",
     "babel-eslint": "^10.1.0",
     "bump-file": "^2.0.0",
     "conventional-changelog": "^3.1.24",
