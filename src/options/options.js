@@ -4,7 +4,7 @@
  * Portions Copyright (C) Philipp Kewisch */
 
 function changeSetting(id, event) {
-  messenger.storage.local.set({ ["settings." + id]: event.target.checked });
+  messenger.storage.local.set({ [id]: event.target.checked });
 }
 
 for (let node of document.querySelectorAll("[data-l10n-id]")) {
