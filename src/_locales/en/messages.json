@@ -165,5 +165,8 @@
   },
   "settings.enableAttendees": {
     "message": "Synchronize event attendees"
+  },
+  "settings.forcePlainText": {
+    "message": "Force use of plain text in event descriptions"
   }
 }

@@ -345,7 +345,9 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
   }
 
   setIf(itemData, "summary", aItem.title);
-  if (aItem.hasPropertyParameter("DESCRIPTION", "ALTREP")) {
+
+  let forcePlainText = getMessenger().gdataSyncPrefs.get("settings.forcePlainText", false);
+  if (!forcePlainText && aItem.hasPropertyParameter("DESCRIPTION", "ALTREP")) {
     setIf(itemData, "description", aItem.descriptionHTML);
   } else {
     setIf(itemData, "description", aItem.descriptionText);
