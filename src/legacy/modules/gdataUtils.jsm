@@ -1334,12 +1334,11 @@ ActivityShell.prototype = {
     if (!this.act) {
       return;
     }
-    let str = getMessenger().i18n.getMessage(
-      "syncProgress" + this.type,
+    let str = getMessenger().i18n.getMessage("syncProgress" + this.type, [
       this.calendar.name,
       cur,
-      total
-    );
+      total,
+    ]);
     this.act.setProgress(str, cur, total);
   },
 
