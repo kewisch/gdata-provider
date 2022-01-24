@@ -8,7 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event.issue.author_association != 'OWNER' && github.event.issue.author_association != 'COLLABORATOR'
+    if: |
+      github.event.comment.author_association != 'OWNER' &&
+      github.event.comment.author_association != 'COLLABORATOR'
     steps:
       - name: Remove needinfo label
         uses: octokit/request-action@v2.x
