@@ -47,7 +47,7 @@
   "devDependencies": {
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
-    "@testing-library/dom": "^8.11.2",
+    "@testing-library/dom": "^8.11.3",
     "@testing-library/jest-dom": "^5.16.1",
     "babel-eslint": "^10.1.0",
     "bump-file": "^2.0.0",
