@@ -90,16 +90,17 @@ jobs:
       - name: "Generate changelog"
         run: npx conventional-changelog -p angular -r 2 | tee dist/CHANGELOG.md
 
-      - name: "web-ext sign"
-        id: web-ext-sign
-        uses: kewisch/action-web-ext@v1
-        with:
-          cmd: sign
-          source: dist/gdata-provider.xpi
-          channel: listed
-          apiUrlPrefix: "https://addons.thunderbird.net/api/v3"
-          apiKey: ${{ secrets.ATN_SIGN_KEY }}
-          apiSecret: ${{ secrets.ATN_SIGN_SECRET }}
+# Don't feel comfortable auto-releasing right now due to API keys
+#      - name: "web-ext sign"
+#        id: web-ext-sign
+#        uses: kewisch/action-web-ext@v1
+#        with:
+#          cmd: sign
+#          source: dist/gdata-provider.xpi
+#          channel: listed
+#          apiUrlPrefix: "https://addons.thunderbird.net/api/v3"
+#          apiKey: ${{ secrets.ATN_SIGN_KEY }}
+#          apiSecret: ${{ secrets.ATN_SIGN_SECRET }}
 
       - name: "Create Release"
         uses: softprops/action-gh-release@v1
