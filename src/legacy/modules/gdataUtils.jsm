@@ -225,7 +225,7 @@ function JSONToDate(aEntry, aTimezone) {
 
   if ("timeZone" in aEntry) {
     // If a timezone was specified, convert to that zone
-    let zone = cal.getTimezoneService().getTimezone(aEntry.timeZone);
+    let zone = cal.timezoneService.getTimezone(aEntry.timeZone);
     if (zone) {
       dateTime = dateTime.getInTimezone(zone);
     }
@@ -626,7 +626,7 @@ function setupRecurrence(aItem, aRecurrence, aTimezone) {
   let rootComp;
   let vevent = "BEGIN:VEVENT\r\n" + aRecurrence.join("\r\n") + "\r\nEND:VEVENT";
   try {
-    rootComp = cal.getIcsService().parseICS(vevent, null);
+    rootComp = cal.icsService.parseICS(vevent, null);
   } catch (e) {
     cal.ERROR("[calGoogleCalendar] Unable to parse recurrence item: " + vevent);
   }
@@ -730,7 +730,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
     return null;
   }
 
-  let tzs = cal.getTimezoneService();
+  let tzs = cal.timezoneService;
   let calendarZoneName = aCalendar.getProperty("settings.timeZone");
   let calendarZone = calendarZoneName ? tzs.getTimezone(calendarZoneName) : cal.dtz.defaultTimezone;
 
@@ -931,7 +931,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
   let item = new CalTodo();
   item.calendar = aCalendar.superCalendar;
 
-  let tzs = cal.getTimezoneService();
+  let tzs = cal.timezoneService;
   let calendarZoneName = aCalendar.getProperty("settings.timeZone");
   let calendarZone = calendarZoneName ? tzs.getTimezone(calendarZoneName) : cal.dtz.defaultTimezone;
 

@@ -182,7 +182,7 @@ function gdataInitUI(window, document) {
     let sessionMgr = getGoogleSessionManager();
     let sessionContainer = document.getElementById("gdata-session-group");
     let newSessionItem = document.getElementById("session-new");
-    let calendars = cal.getCalendarManager().getCalendars();
+    let calendars = cal.manager.getCalendars();
     let sessions = new Set(
       calendars.map(calendar => {
         return sessionMgr.getSessionByCalendar(calendar, true);
@@ -213,7 +213,7 @@ function gdataInitUI(window, document) {
   });
 
   window.gdataCalendarsShow = trycatch(() => {
-    let calMgr = cal.getCalendarManager();
+    let calMgr = cal.manager;
     let sessionMgr = getGoogleSessionManager();
     let sessionContainer = document.getElementById("gdata-session-group");
 
@@ -362,7 +362,7 @@ function gdataInitUI(window, document) {
   window.gdataCalendarsAdvance = trycatch(() => {
     let calendarList = document.getElementById("calendar-list");
 
-    let calMgr = cal.getCalendarManager();
+    let calMgr = cal.manager;
     for (let item of calendarList.children) {
       let checkbox = item.querySelector(".calendar-selected[checked]");
       if (checkbox && !checkbox.disabled) {

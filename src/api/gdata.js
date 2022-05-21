@@ -5,6 +5,7 @@
 
 const { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+const { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 const { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
 
 const { ExtensionAPI } = ExtensionCommon;
@@ -36,6 +37,40 @@ this.gdata = class extends ExtensionAPI {
       ["content", "gdata-provider", "legacy/content/"],
     ]);
 
+    // Thunderbird 99 compat
+    if (!Object.prototype.hasOwnProperty.call(cal, "manager")) {
+      XPCOMUtils.defineLazyServiceGetter(
+        cal,
+        "manager",
+        "@mozilla.org/calendar/manager;1",
+        "calICalendarManager"
+      );
+    }
+    if (!Object.prototype.hasOwnProperty.call(cal, "freeBusyService")) {
+      XPCOMUtils.defineLazyServiceGetter(
+        cal,
+        "freeBusyService",
+        "@mozilla.org/calendar/freebusy-service;1",
+        "calIFreeBusyService"
+      );
+    }
+    if (!Object.prototype.hasOwnProperty.call(cal, "timezoneService")) {
+      XPCOMUtils.defineLazyServiceGetter(
+        cal,
+        "timezoneService",
+        "@mozilla.org/calendar/timezone-service;1",
+        "calITimezoneService"
+      );
+    }
+    if (!Object.prototype.hasOwnProperty.call(cal, "icsService")) {
+      XPCOMUtils.defineLazyServiceGetter(
+        cal,
+        "icsService",
+        "@mozilla.org/calendar/ics-service;1",
+        "calIICSService"
+      );
+    }
+
     // Load this early to get the messenger up and running for SyncPrefs
     let { getMessenger } = ChromeUtils.import(
       "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
@@ -47,10 +82,10 @@ this.gdata = class extends ExtensionAPI {
       let { calGoogleCalendar } = ChromeUtils.import(
         "resource://gdata-provider/legacy/modules/gdataCalendar.jsm"
       );
-      if (cal.getCalendarManager().wrappedJSObject.hasCalendarProvider("gdata")) {
-        cal.getCalendarManager().wrappedJSObject.unregisterCalendarProvider("gdata", true);
+      if (cal.manager.wrappedJSObject.hasCalendarProvider("gdata")) {
+        cal.manager.wrappedJSObject.unregisterCalendarProvider("gdata", true);
       }
-      cal.getCalendarManager().wrappedJSObject.registerCalendarProvider("gdata", calGoogleCalendar);
+      cal.manager.wrappedJSObject.registerCalendarProvider("gdata", calGoogleCalendar);
 
       let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
       gdataUI.register();
@@ -62,7 +97,7 @@ this.gdata = class extends ExtensionAPI {
       return;
     }
 
-    cal.getCalendarManager().wrappedJSObject.unregisterCalendarProvider("gdata", true);
+    cal.manager.wrappedJSObject.unregisterCalendarProvider("gdata", true);
 
     let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
     gdataUI.unregister();

@@ -111,7 +111,7 @@ function calGoogleSession(aId) {
   this.setupOAuth();
 
   // Register a freebusy provider for this session
-  cal.getFreeBusyService().addProvider(this);
+  cal.freeBusyService.addProvider(this);
 }
 
 calGoogleSession.prototype = {

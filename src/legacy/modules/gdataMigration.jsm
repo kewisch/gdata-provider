@@ -31,7 +31,7 @@ async function checkMigrateCalendars(window) {
 }
 
 function migrateCalendars(calendars) {
-  let calmgr = cal.getCalendarManager();
+  let calmgr = cal.manager;
   for (let calendar of calendars) {
     let newCalendar = calmgr.createCalendar("gdata", calendar.uri);
     newCalendar.name = calendar.name;
@@ -63,8 +63,7 @@ function getMigratableCalendars() {
       "attendees-only|free-busy|basic)(\\.ics)?$"
   );
 
-  return cal
-    .getCalendarManager()
-    .getCalendars({})
-    .filter(calendar => calendar.type == "ics" && calendar.uri.spec.match(re));
+  return cal.manager.getCalendars({}).filter(calendar => {
+    return calendar.type == "ics" && calendar.uri.spec.match(re);
+  });
 }

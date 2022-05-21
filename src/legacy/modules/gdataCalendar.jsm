@@ -50,11 +50,11 @@ class calGoogleCalendar extends cal.provider.BaseClass {
   static factory = null;
 
   static register() {
-    cal.getCalendarManager().registerCalendarProvider("gdata", calGoogleCalendar);
+    cal.manager.registerCalendarProvider("gdata", calGoogleCalendar);
   }
 
   static unregister() {
-    cal.getCalendarManager().unregisterCalendarProvider("gdata", true);
+    cal.manager.unregisterCalendarProvider("gdata", true);
   }
 
   QueryInterface = ChromeUtils.generateQI([
