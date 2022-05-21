@@ -140,13 +140,17 @@ OAuth2.prototype = {
             } else if (aURL.startsWith(this._parent.errorURI)) {
               let url = new URL(aURL);
               let authError = atob(url.searchParams.get("authError") || "");
+              // eslint-disable-next-line no-control-regex
               let authErrorCode = authError.match(/\x13(.*?)\x12/);
 
               this._parent.finishAuthorizationRequest();
-              this._parent.onAuthorizationFailed(null, JSON.stringify({
-                error: authErrorCode?.[1] || authError,
-                details: authError
-              }));
+              this._parent.onAuthorizationFailed(
+                null,
+                JSON.stringify({
+                  error: authErrorCode?.[1] || authError,
+                  details: authError,
+                })
+              );
             }
           },
 

@@ -415,7 +415,10 @@ calGoogleSession.prototype = {
         e => {
           // If the user cancelled the login dialog, or we've exceeded the rate limit, then disable
           // the calendar until the next startup or manual enable.
-          if (aRequest.calendar && (e.message == "cancelled" || e.message == "rate_limit_exceeded")) {
+          if (
+            aRequest.calendar &&
+            (e.message == "cancelled" || e.message == "rate_limit_exceeded")
+          ) {
             aRequest.calendar.setProperty("disabled", true);
             aRequest.calendar.setProperty("auto-enabled", true);
             aRequest.calendar.setProperty("currentStatus", Cr.NS_ERROR_FAILURE);
