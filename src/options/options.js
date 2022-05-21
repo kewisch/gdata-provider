@@ -16,6 +16,7 @@ for (let node of document.querySelectorAll("[data-l10n-id]")) {
     "settings.enableEmailInvitations": false,
     "settings.sendEventNotifications": false,
     "settings.enableAttendees": false,
+    "settings.forcePlainText": false,
   });
 
   for (let [id, value] of Object.entries(prefs)) {
