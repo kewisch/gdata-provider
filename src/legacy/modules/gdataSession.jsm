@@ -291,6 +291,9 @@ calGoogleSession.prototype = {
 
         if (error == "invalid_client" || error == "http_401") {
           this.notifyOutdated();
+        } else if (error == "rate_limit_exceeded") {
+          cal.ERROR(`[calGoogleSession] Rate limit for ${this.mId} exceeded`);
+          this.notifyQuotaExceeded();
         } else if (error == "unauthorized_client") {
           cal.ERROR("[calGoogleSession] Token for " + this.mId + " is no longer authorized");
           // We need to trigger a login without access token but want
@@ -410,9 +413,9 @@ calGoogleSession.prototype = {
           return aRequest.commit(this);
         },
         e => {
-          // If the user cancelled the login dialog, then disable the
-          // calendar until the next startup or manual enable.
-          if (aRequest.calendar && e.message == "cancelled") {
+          // If the user cancelled the login dialog, or we've exceeded the rate limit, then disable
+          // the calendar until the next startup or manual enable.
+          if (aRequest.calendar && (e.message == "cancelled" || e.message == "rate_limit_exceeded")) {
             aRequest.calendar.setProperty("disabled", true);
             aRequest.calendar.setProperty("auto-enabled", true);
             aRequest.calendar.setProperty("currentStatus", Cr.NS_ERROR_FAILURE);

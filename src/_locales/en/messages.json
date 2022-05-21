@@ -83,6 +83,17 @@
     "message": "This version of the provider has expired, please update to the latest version."
   },
 
+  "errors.rate_limit_exceeded": {
+    "message": "A lot of users are logging in right now, Google has indicated that the login quota has been exceeded. Please try again later.",
+    "description": "This is shown when the login quota has been exceeded (globally).",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+
   "reminderOutOfRange": {
     "message": "Google Calendar only allows reminders up to 4 weeks before the event starts."
   },

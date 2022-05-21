@@ -14,6 +14,8 @@ var EXPORTED_SYMBOLS = ["OAuth2"]; /* exported OAuth2 */
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { httpRequest } = ChromeUtils.import("resource://gre/modules/Http.jsm");
 
+Cu.importGlobalProperties(["URL"]);
+
 function OAuth2(aBaseURI, aScope, aAppKey, aAppSecret) {
   // aBaseURI was used historically. Until we complete the MailExtensions rewrite, we'll use authURI
   // and tokenURI directly.
@@ -42,6 +44,7 @@ OAuth2.prototype = {
   tokenURI: "https://oauth2.googleapis.com/token",
   redirectURI: "urn:ietf:wg:oauth:2.0:oob:auto",
   completionURI: "https://accounts.google.com/o/oauth2/approval/v2",
+  errorURI: "https://accounts.google.com/signin/oauth/error",
 
   requestWindowURI: "chrome://messenger/content/browserRequest.xhtml",
   requestWindowFeatures: "chrome,private,centerscreen,width=980,height=750",
@@ -131,12 +134,20 @@ OAuth2.prototype = {
           },
 
           _checkForRedirect: function(aURL) {
-            if (!aURL.startsWith(this._parent.completionURI)) {
-              return;
-            }
+            if (aURL.startsWith(this._parent.completionURI)) {
+              this._parent.finishAuthorizationRequest();
+              this._parent.onAuthorizationReceived(aURL);
+            } else if (aURL.startsWith(this._parent.errorURI)) {
+              let url = new URL(aURL);
+              let authError = atob(url.searchParams.get("authError") || "");
+              let authErrorCode = authError.match(/\x13(.*?)\x12/);
 
-            this._parent.finishAuthorizationRequest();
-            this._parent.onAuthorizationReceived(aURL);
+              this._parent.finishAuthorizationRequest();
+              this._parent.onAuthorizationFailed(null, JSON.stringify({
+                error: authErrorCode?.[1] || authError,
+                details: authError
+              }));
+            }
           },
 
           onStateChange: function(aChangedWebProgress, aRequest, aStateFlags, aStatus) {
