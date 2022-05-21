@@ -17,6 +17,7 @@ function gdataInitUI(window, document) {
 
   const FOUR_WEEKS_BEFORE = -2419200;
   const { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
+  const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
   const { monkeyPatch, getMessenger } = ChromeUtils.import(
     "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
   );
@@ -57,12 +58,21 @@ function gdataInitUI(window, document) {
     if (validated) {
       notificationbox.removeAllNotifications();
     } else if (!notificationbox.getNotificationWithValue("reminderNotification")) {
-      let notification = notificationbox.appendNotification(
-        reminderOutOfRange,
-        "reminderNotification",
-        null,
-        notificationbox.PRIORITY_CRITICAL_HIGH
-      );
+      let notification;
+      // Thunderbird 94 compat
+      if (Services.vc.compare(Services.appinfo.version, "95.0") < 0) {
+        notification = notificationbox.appendNotification(
+          reminderOutOfRange,
+          "reminderNotification",
+          null,
+          notificationbox.PRIORITY_CRITICAL_HIGH
+        );
+      } else {
+        notification = notificationbox.appendNotification("reminderNotification", {
+          label: reminderOutOfRange,
+          priority: notificationbox.PRIORITY_CRITICAL_HIGH,
+        });
+      }
 
       notification.closeButton.setAttribute("hidden", "true");
     }
