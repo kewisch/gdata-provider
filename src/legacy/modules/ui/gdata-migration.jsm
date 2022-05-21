@@ -18,7 +18,7 @@ async function gdataInitUI(window, document) {
   let messenger = getMessenger();
 
   // Strings. Doing these manually since there are just a few.
-  document.documentElement.title = messenger.i18n.getMessage("gdata.migration.title");
+  document.title = messenger.i18n.getMessage("gdata.migration.title");
   document.getElementById("gdata-migration-description").textContent = messenger.i18n.getMessage(
     "gdata.migration.description"
   );
