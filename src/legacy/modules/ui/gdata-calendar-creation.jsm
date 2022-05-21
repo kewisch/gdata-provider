@@ -33,6 +33,11 @@ function gdataInitUI(window, document) {
         }
       }
 
+      #calendar-list richlistitem[error] {
+        display: block;
+        padding: 22vh 20px;
+      }
+
       #calendar-list richlistitem[selected] {
         color: unset;
         background-color: unset;
@@ -302,6 +307,19 @@ function gdataInitUI(window, document) {
 
           for (let calendar of taskcals) {
             addCalendarItem(calendar);
+          }
+        }
+
+        if (!taskcals.length && !calcals.length && (calendarError || tasksError)) {
+          let errorItem = document.createXULElement("richlistitem");
+          errorItem.setAttribute("error", "true");
+          calendarList.appendChild(errorItem);
+
+          let error = (calendarError || tasksError)?.message;
+          try {
+            errorItem.textContent = messenger.i18n.getMessage("errors." + error);
+          } catch (e) {
+            errorItem.textContent = error;
           }
         }
 
