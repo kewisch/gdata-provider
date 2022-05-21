@@ -1024,8 +1024,6 @@ function JSONToItem(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
  */
 function ItemSaver(aCalendar) {
   this.calendar = aCalendar;
-  this.offlineStorage = this.calendar.offlineStorage;
-  this.promiseOfflineStorage = cal.async.promisifyCalendar(this.calendar.offlineStorage);
   this.missingParents = [];
   this.masterItems = Object.create(null);
   this.metaData = Object.create(null);
@@ -1153,7 +1151,7 @@ ItemSaver.prototype = {
       if (exc.id in this.masterItems) {
         item = this.masterItems[exc.id];
       } else {
-        item = (await this.promiseOfflineStorage.getItem(exc.id))[0];
+        item = await this.calendar.promiseOfflineStorage.getItem(exc.id);
       }
 
       // If an item was found, we can process this exception. Otherwise
@@ -1208,7 +1206,7 @@ ItemSaver.prototype = {
   commitException: function(exc) {
     // Make sure we also save the etag of the exception for a future request.
     if (exc.hashId in this.metaData) {
-      saveItemMetadata(this.offlineStorage, exc.hashId, this.metaData[exc.hashId]);
+      saveItemMetadata(this.calendar.offlineStorage, exc.hashId, this.metaData[exc.hashId]);
     }
   },
 
@@ -1224,14 +1222,14 @@ ItemSaver.prototype = {
     // relaxed mode of the destination calendar takes care of the latter
     // two cases.
     if (item.status == "CANCELLED") {
-      await this.promiseOfflineStorage.deleteItem(item);
+      await this.calendar.promiseOfflineStorage.deleteItem(item);
     } else {
-      await this.promiseOfflineStorage.modifyItem(item, null);
+      await this.calendar.promiseOfflineStorage.modifyItem(item, null);
     }
 
     if (item.hashId in this.metaData) {
       // Make sure the metadata is up to date for the next request
-      saveItemMetadata(this.offlineStorage, item.hashId, this.metaData[item.hashId]);
+      saveItemMetadata(this.calendar.offlineStorage, item.hashId, this.metaData[item.hashId]);
     }
   },
 
@@ -1253,7 +1251,7 @@ ItemSaver.prototype = {
    */
   processRemainingExceptions: async function() {
     for (let exc of this.missingParents) {
-      let item = (await this.promiseOfflineStorage.getItem(exc.id))[0];
+      let item = await this.calendar.promiseOfflineStorage.getItem(exc.id);
       if (item) {
         await this.processException(exc, item);
       } else if (exc.status != "CANCELLED") {

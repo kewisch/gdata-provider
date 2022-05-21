@@ -67,6 +67,86 @@ class calGoogleCalendar extends cal.provider.BaseClass {
     super();
     this.initProviderBase();
     this.mThrottle = Object.create(null);
+
+    // Thunderbird 91-95 compat
+    if (Services.vc.compare(Services.appinfo.version, "97.0") < 0) {
+      let promiseAdoptItem = this.adoptItem;
+      this.adoptItem = (aItem, aListener) => {
+        promiseAdoptItem.call(this, aItem).then(
+          item => {
+            this.notifyOperationComplete(aListener, Cr.NS_OK, cIOL.ADD, item.id, item);
+          },
+          e => {
+            let code = e.result || Cr.NS_ERROR_FAILURE;
+            this.notifyPureOperationComplete(aListener, code, cIOL.ADD, aItem.id, e.message);
+          }
+        );
+        return null;
+      };
+      this.addItem = (aItem, aListener) => {
+        return this.adoptItem(aItem.clone(), aListener);
+      };
+
+      let promiseModifyItem = this.modifyItem;
+      this.modifyItem = (aItem, aOldItem, aListener) => {
+        promiseModifyItem.call(this, aItem, aOldItem).then(
+          item => {
+            this.notifyOperationComplete(aListener, Cr.NS_OK, cIOL.MODIFY, item.id, item);
+          },
+          e => {
+            let code = e.result || Cr.NS_ERROR_FAILURE;
+            this.notifyPureOperationComplete(aListener, code, cIOL.MODIFY, aItem.id, e.message);
+          }
+        );
+        return null;
+      };
+
+      let promiseDeleteItem = this.deleteItem;
+      this.deleteItem = (aItem, aListener) => {
+        promiseDeleteItem.call(this, aItem).then(
+          () => {
+            this.notifyOperationComplete(aListener, Cr.NS_OK, cIOL.DELETE, aItem.id, aItem);
+          },
+          e => {
+            let code = e.result || Cr.NS_ERROR_FAILURE;
+            this.notifyPureOperationComplete(aListener, code, cIOL.DELETE, aItem.id, e.message);
+          }
+        );
+        return null;
+      };
+      this.promiseOfflineStorage = {
+        getItem: async aId => {
+          let items = await new Promise((resolve, reject) => {
+            this.mOfflineStorage.getItem(
+              aId,
+              cal.async.promiseOperationListener({ resolve, reject })
+            );
+          });
+          return items?.[0];
+        },
+        modifyItem: (aItem, aOldItem) => {
+          return new Promise((resolve, reject) => {
+            this.mOfflineStorage.modifyItem(
+              aItem,
+              aOldItem,
+              cal.async.promiseOperationListener({ resolve, reject })
+            );
+          });
+        },
+        deleteItem: aItem => {
+          return new Promise((resolve, reject) => {
+            this.mOfflineStorage.deleteItem(
+              aItem,
+              cal.async.promiseOperationListener({ resolve, reject })
+            );
+          });
+        },
+      };
+    } else {
+      Object.defineProperty(this, "promiseOfflineStorage", {
+        get: () => this.mOfflineStorage,
+      });
+    }
   }
 
   /* Used to reset the local cache between releases */
@@ -80,6 +160,8 @@ class calGoogleCalendar extends cal.provider.BaseClass {
     events: 30 * 1000,
     tasks: 30 * 1000,
   };
+  _cachedAdoptItemCallback = null;
+  _cachedModifyItemCallback = null;
 
   /* Public Members */
   session = null;
@@ -371,10 +453,10 @@ class calGoogleCalendar extends cal.provider.BaseClass {
     return this.__proto__.__proto__.setProperty.apply(this, arguments);
   }
 
-  addItem(aItem, aListener) {
-    return this.adoptItem(aItem.clone(), aListener);
+  addItem(aItem) {
+    return this.adoptItem(aItem.clone());
   }
-  adoptItem(aItem, aListener) {
+  async adoptItem(aItem) {
     function stackContains(part, max = 8) {
       let stack = Components.stack.caller;
       while (stack && --max) {
@@ -393,7 +475,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
     let isImport = aItem.id && (aItem.id == "xpcshell-import" || stackContains("calItipUtils.jsm"));
     let request = new calGoogleRequest();
 
-    (async () => {
+    try {
       let itemData = ItemToJSON(aItem, this.offlineStorage, isImport);
 
       // Add the calendar to the item, for later use.
@@ -442,28 +524,28 @@ class calGoogleCalendar extends cal.provider.BaseClass {
         // reset the wrong item. As a hack, delete the item with its
         // original id and complete the adoptItem call with the new
         // item. This will add the new item to the calendar.
-        let pcal = cal.async.promisifyCalendar(this.offlineStorage);
-        await pcal.deleteItem(aItem);
+        await this.promiseOfflineStorage.deleteItem(aItem);
+      }
+
+      cal.LOG("[calGoogleCalendar] Adding " + item.title + " succeeded");
+      this.observers.notify("onAddItem", [item]);
+      if (this._cachedAdoptItemCallback) {
+        await this._cachedAdoptItemCallback(this.superCalendar, Cr.NS_OK, cIOL.ADD, item.id, item);
       }
       return item;
-    })().then(
-      item => {
-        cal.LOG("[calGoogleCalendar] Adding " + item.title + " succeeded");
-        this.observers.notify("onAddItem", [item]);
-        this.notifyOperationComplete(aListener, Cr.NS_OK, cIOL.ADD, item.id, item);
-      },
-      e => {
-        let code = e.result || Cr.NS_ERROR_FAILURE;
-        cal.ERROR(
-          "[calGoogleCalendar] Adding Item " + aItem.title + " failed:" + code + ": " + e.message
-        );
-        this.notifyPureOperationComplete(aListener, code, cIOL.ADD, aItem.id, e.message);
+    } catch (e) {
+      let code = e.result || Cr.NS_ERROR_FAILURE;
+      cal.ERROR(
+        "[calGoogleCalendar] Adding Item " + aItem.title + " failed:" + code + ": " + e.message
+      );
+      if (this._cachedAdoptItemCallback) {
+        await this._cachedAdoptItemCallback(this.superCalendar, code, cIOL.ADD, aItem.id, aItem);
       }
-    );
-    return request;
+      throw e;
+    }
   }
 
-  modifyItem(aNewItem, aOldItem, aListener) {
+  async modifyItem(aNewItem, aOldItem) {
     cal.LOG(
       "[calGoogleCalendar] Modifying item " +
         aNewItem.title +
@@ -474,7 +556,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
 
     // Set up the request
     let request = new calGoogleRequest();
-    (async () => {
+    try {
       request.type = request.MODIFY;
       request.calendar = this;
       if (aNewItem.isEvent()) {
@@ -554,36 +636,48 @@ class calGoogleCalendar extends cal.provider.BaseClass {
         item = modifiedItem;
       }
 
-      return item;
-    })().then(
-      item => {
-        cal.LOG("[calGoogleCalendar] Modifying " + aNewItem.title + " succeeded");
-        this.observers.notify("onModifyItem", [item, aOldItem]);
-        this.notifyOperationComplete(aListener, Cr.NS_OK, cIOL.MODIFY, item.id, item);
-      },
-      e => {
-        let code = e.result || Cr.NS_ERROR_FAILURE;
-        if (code != Ci.calIErrors.OPERATION_CANCELLED) {
-          cal.ERROR(
-            "[calGoogleCalendar] Modifying item " +
-              aNewItem.title +
-              " failed:" +
-              code +
-              ": " +
-              e.message
-          );
-        }
-        this.notifyPureOperationComplete(aListener, code, cIOL.MODIFY, aNewItem.id, e.message);
+      cal.LOG("[calGoogleCalendar] Modifying " + aNewItem.title + " succeeded");
+      this.observers.notify("onModifyItem", [item, aOldItem]);
+      if (this._cachedModifyItemCallback) {
+        await this._cachedModifyItemCallback(
+          this.superCalendar,
+          Cr.NS_OK,
+          cIOL.MODIFY,
+          item.id,
+          item
+        );
       }
-    );
-    return request;
+      return item;
+    } catch (e) {
+      let code = e.result || Cr.NS_ERROR_FAILURE;
+      if (code != Ci.calIErrors.OPERATION_CANCELLED) {
+        cal.ERROR(
+          "[calGoogleCalendar] Modifying item " +
+            aNewItem.title +
+            " failed:" +
+            code +
+            ": " +
+            e.message
+        );
+      }
+      if (this._cachedModifyItemCallback) {
+        await this._cachedModifyItemCallback(
+          this.superCalendar,
+          code,
+          cIOL.MODIFY,
+          aNewItem.id,
+          aNewItem
+        );
+      }
+      throw e;
+    }
   }
 
-  deleteItem(aItem, aListener) {
+  async deleteItem(aItem) {
     cal.LOG("[calGoogleCalendar] Deleting item " + aItem.title + "(" + aItem.id + ")");
 
     let request = new calGoogleRequest();
-    (async () => {
+    try {
       request.type = request.DELETE;
       request.calendar = this;
       if (aItem.isEvent()) {
@@ -624,37 +718,25 @@ class calGoogleCalendar extends cal.provider.BaseClass {
 
       deleteItemMetadata(this.offlineStorage, aItem);
 
-      return aItem;
-    })().then(
-      item => {
-        cal.LOG("[calGoogleCalendar] Deleting " + aItem.title + " succeeded");
-        this.observers.notify("onDeleteItem", [item]);
-        this.notifyOperationComplete(aListener, Cr.NS_OK, cIOL.DELETE, item.id, item);
-      },
-      e => {
-        let code = e.result || Cr.NS_ERROR_FAILURE;
-        if (code != Ci.calIErrors.OPERATION_CANCELLED) {
-          cal.ERROR(
-            "[calGoogleCalendar] Deleting item " +
-              aItem.title +
-              " failed:" +
-              code +
-              ": " +
-              e.message
-          );
-        }
-        this.notifyPureOperationComplete(aListener, code, cIOL.DELETE, aItem.id, e.message);
+      cal.LOG("[calGoogleCalendar] Deleting " + aItem.title + " succeeded");
+      this.observers.notify("onDeleteItem", [aItem]);
+    } catch (e) {
+      let code = e.result || Cr.NS_ERROR_FAILURE;
+      if (code != Ci.calIErrors.OPERATION_CANCELLED) {
+        cal.ERROR(
+          "[calGoogleCalendar] Deleting item " + aItem.title + " failed:" + code + ": " + e.message
+        );
       }
-    );
-    return request;
+      throw e;
+    }
   }
 
-  getItem(aId, aListener) {
-    this.mOfflineStorage.getItem(...arguments);
+  getItem(aId) {
+    return this.mOfflineStorage.getItem(...arguments);
   }
 
-  getItems(aFilter, aCount, aRangeStart, aRangeEnd, aListener) {
-    this.mOfflineStorage.getItems(...arguments);
+  getItems(aFilter, aCount, aRangeStart, aRangeEnd) {
+    return this.mOfflineStorage.getItems(...arguments);
   }
 
   refresh() {
