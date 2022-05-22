@@ -28,9 +28,7 @@ jobs:
         run: npx commitlint --from $GITHUB_SHA^
 
       - name: "ESLint"
-        uses: kewisch/action-yet-another-eslint@v1
-        with:
-          extensions: "js,jsm"
+        run: npx eslint --ext jsm --ext js .
 
   build:
     name: "Build"
