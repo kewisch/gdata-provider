@@ -14,8 +14,6 @@ var EXPORTED_SYMBOLS = ["OAuth2"]; /* exported OAuth2 */
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { httpRequest } = ChromeUtils.import("resource://gre/modules/Http.jsm");
 
-Cu.importGlobalProperties(["URL"]);
-
 function OAuth2(aBaseURI, aScope, aAppKey, aAppSecret) {
   // aBaseURI was used historically. Until we complete the MailExtensions rewrite, we'll use authURI
   // and tokenURI directly.
