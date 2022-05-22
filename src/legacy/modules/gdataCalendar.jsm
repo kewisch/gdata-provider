@@ -957,7 +957,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
                 "(tasks) is now: " +
                 tasksRequest.requestDate.toString()
             );
-            this.setProperty("newLastUpdated.tasks", newLastUpdated);
+            this.setProperty("lastUpdated.tasks", newLastUpdated);
           });
         }
       );
