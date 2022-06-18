@@ -468,6 +468,9 @@ class calGoogleCalendar extends cal.provider.BaseClass {
       return false;
     }
 
+    // Need to save this early to avoid async effects overwriting it.
+    let cachedAdoptItemCallback = this._cachedAdoptItemCallback;
+
     // Now this sucks...both invitations and the offline cache send over
     // items with the id set, but we have no way to figure out which is
     // happening just by inspecting the item. Adding offline items should
@@ -529,8 +532,8 @@ class calGoogleCalendar extends cal.provider.BaseClass {
 
       cal.LOG("[calGoogleCalendar] Adding " + item.title + " succeeded");
       this.observers.notify("onAddItem", [item]);
-      if (this._cachedAdoptItemCallback) {
-        await this._cachedAdoptItemCallback(this.superCalendar, Cr.NS_OK, cIOL.ADD, item.id, item);
+      if (cachedAdoptItemCallback) {
+        await cachedAdoptItemCallback(this.superCalendar, Cr.NS_OK, cIOL.ADD, item.id, item);
       }
       return item;
     } catch (e) {
@@ -538,14 +541,17 @@ class calGoogleCalendar extends cal.provider.BaseClass {
       cal.ERROR(
         "[calGoogleCalendar] Adding Item " + aItem.title + " failed:" + code + ": " + e.message
       );
-      if (this._cachedAdoptItemCallback) {
-        await this._cachedAdoptItemCallback(this.superCalendar, code, cIOL.ADD, aItem.id, aItem);
+      if (cachedAdoptItemCallback) {
+        await cachedAdoptItemCallback(this.superCalendar, code, cIOL.ADD, aItem.id, aItem);
       }
       throw e;
     }
   }
 
   async modifyItem(aNewItem, aOldItem) {
+    // Need to save this early to avoid async effects overwriting it.
+    let cachedModifyItemCallback = this._cachedModifyItemCallback;
+
     cal.LOG(
       "[calGoogleCalendar] Modifying item " +
         aNewItem.title +
@@ -638,14 +644,8 @@ class calGoogleCalendar extends cal.provider.BaseClass {
 
       cal.LOG("[calGoogleCalendar] Modifying " + aNewItem.title + " succeeded");
       this.observers.notify("onModifyItem", [item, aOldItem]);
-      if (this._cachedModifyItemCallback) {
-        await this._cachedModifyItemCallback(
-          this.superCalendar,
-          Cr.NS_OK,
-          cIOL.MODIFY,
-          item.id,
-          item
-        );
+      if (cachedModifyItemCallback) {
+        await cachedModifyItemCallback(this.superCalendar, Cr.NS_OK, cIOL.MODIFY, item.id, item);
       }
       return item;
     } catch (e) {
@@ -660,8 +660,8 @@ class calGoogleCalendar extends cal.provider.BaseClass {
             e.message
         );
       }
-      if (this._cachedModifyItemCallback) {
-        await this._cachedModifyItemCallback(
+      if (cachedModifyItemCallback) {
+        await cachedModifyItemCallback(
           this.superCalendar,
           code,
           cIOL.MODIFY,
