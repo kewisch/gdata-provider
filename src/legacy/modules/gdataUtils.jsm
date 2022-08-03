@@ -1151,7 +1151,7 @@ ItemSaver.prototype = {
       if (exc.id in this.masterItems) {
         item = this.masterItems[exc.id];
       } else {
-        item = await this.calendar.promiseOfflineStorage.getItem(exc.id);
+        item = await this.calendar.mOfflineStorage.getItem(exc.id);
       }
 
       // If an item was found, we can process this exception. Otherwise
@@ -1222,9 +1222,9 @@ ItemSaver.prototype = {
     // relaxed mode of the destination calendar takes care of the latter
     // two cases.
     if (item.status == "CANCELLED") {
-      await this.calendar.promiseOfflineStorage.deleteItem(item);
+      await this.calendar.mOfflineStorage.deleteItem(item);
     } else {
-      await this.calendar.promiseOfflineStorage.modifyItem(item, null);
+      await this.calendar.mOfflineStorage.modifyItem(item, null);
     }
 
     if (item.hashId in this.metaData) {
@@ -1251,7 +1251,7 @@ ItemSaver.prototype = {
    */
   processRemainingExceptions: async function() {
     for (let exc of this.missingParents) {
-      let item = await this.calendar.promiseOfflineStorage.getItem(exc.id);
+      let item = await this.calendar.mOfflineStorage.getItem(exc.id);
       if (item) {
         await this.processException(exc, item);
       } else if (exc.status != "CANCELLED") {

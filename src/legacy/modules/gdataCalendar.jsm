@@ -67,86 +67,6 @@ class calGoogleCalendar extends cal.provider.BaseClass {
     super();
     this.initProviderBase();
     this.mThrottle = Object.create(null);
-
-    // Thunderbird 91-95 compat
-    if (Services.vc.compare(Services.appinfo.version, "97.0") < 0) {
-      let promiseAdoptItem = this.adoptItem;
-      this.adoptItem = (aItem, aListener) => {
-        promiseAdoptItem.call(this, aItem).then(
-          item => {
-            this.notifyOperationComplete(aListener, Cr.NS_OK, cIOL.ADD, item.id, item);
-          },
-          e => {
-            let code = e.result || Cr.NS_ERROR_FAILURE;
-            this.notifyPureOperationComplete(aListener, code, cIOL.ADD, aItem.id, e.message);
-          }
-        );
-        return null;
-      };
-      this.addItem = (aItem, aListener) => {
-        return this.adoptItem(aItem.clone(), aListener);
-      };
-
-      let promiseModifyItem = this.modifyItem;
-      this.modifyItem = (aItem, aOldItem, aListener) => {
-        promiseModifyItem.call(this, aItem, aOldItem).then(
-          item => {
-            this.notifyOperationComplete(aListener, Cr.NS_OK, cIOL.MODIFY, item.id, item);
-          },
-          e => {
-            let code = e.result || Cr.NS_ERROR_FAILURE;
-            this.notifyPureOperationComplete(aListener, code, cIOL.MODIFY, aItem.id, e.message);
-          }
-        );
-        return null;
-      };
-
-      let promiseDeleteItem = this.deleteItem;
-      this.deleteItem = (aItem, aListener) => {
-        promiseDeleteItem.call(this, aItem).then(
-          () => {
-            this.notifyOperationComplete(aListener, Cr.NS_OK, cIOL.DELETE, aItem.id, aItem);
-          },
-          e => {
-            let code = e.result || Cr.NS_ERROR_FAILURE;
-            this.notifyPureOperationComplete(aListener, code, cIOL.DELETE, aItem.id, e.message);
-          }
-        );
-        return null;
-      };
-      this.promiseOfflineStorage = {
-        getItem: async aId => {
-          let items = await new Promise((resolve, reject) => {
-            this.mOfflineStorage.getItem(
-              aId,
-              cal.async.promiseOperationListener({ resolve, reject })
-            );
-          });
-          return items?.[0];
-        },
-        modifyItem: (aItem, aOldItem) => {
-          return new Promise((resolve, reject) => {
-            this.mOfflineStorage.modifyItem(
-              aItem,
-              aOldItem,
-              cal.async.promiseOperationListener({ resolve, reject })
-            );
-          });
-        },
-        deleteItem: aItem => {
-          return new Promise((resolve, reject) => {
-            this.mOfflineStorage.deleteItem(
-              aItem,
-              cal.async.promiseOperationListener({ resolve, reject })
-            );
-          });
-        },
-      };
-    } else {
-      Object.defineProperty(this, "promiseOfflineStorage", {
-        get: () => this.mOfflineStorage,
-      });
-    }
   }
 
   /* Used to reset the local cache between releases */
@@ -527,7 +447,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
         // reset the wrong item. As a hack, delete the item with its
         // original id and complete the adoptItem call with the new
         // item. This will add the new item to the calendar.
-        await this.promiseOfflineStorage.deleteItem(aItem);
+        await this.mOfflineStorage.deleteItem(aItem);
       }
 
       cal.LOG("[calGoogleCalendar] Adding " + item.title + " succeeded");
@@ -828,10 +748,8 @@ class calGoogleCalendar extends cal.provider.BaseClass {
 
   replayChangesOn(aListener) {
     // Figure out if the user is idle, no need to synchronize if so.
-    // Use of nsIIdleService is Thunderbird 79 compat.
-    let idleTime =
-      Cc["@mozilla.org/widget/useridleservice;1"]?.getService(Ci.nsIUserIdleService).idleTime ||
-      Cc["@mozilla.org/widget/idleservice;1"]?.getService(Ci.nsIIdleService).idleTime;
+    let idleTime = Cc["@mozilla.org/widget/useridleservice;1"].getService(Ci.nsIUserIdleService)
+      .idleTime;
 
     let maxIdleTime = messenger.gdataSyncPrefs.get("settings.idleTime", 300) * 1000;
 
