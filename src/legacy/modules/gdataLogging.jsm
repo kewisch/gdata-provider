@@ -9,7 +9,8 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
 var EXPORTED_SYMBOLS = ["LOGitem", "LOGverbose", "LOGinterval", "stringException"];
 
 var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var Services =
+  globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
 
 function LOGverbose(aStr) {
   if (Services.prefs.getBoolPref("calendar.debug.log.verbose", false)) {

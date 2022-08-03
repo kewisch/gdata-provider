@@ -11,7 +11,8 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
  */
 var EXPORTED_SYMBOLS = ["OAuth2"]; /* exported OAuth2 */
 
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var Services =
+  globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
 var { httpRequest } = ChromeUtils.import("resource://gre/modules/Http.jsm");
 
 function OAuth2(aBaseURI, aScope, aAppKey, aAppSecret) {

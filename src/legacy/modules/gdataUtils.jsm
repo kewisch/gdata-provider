@@ -16,7 +16,8 @@ var { windowsTimezoneMap } = ChromeUtils.import(
   "resource://gdata-provider/legacy/modules/timezoneMap.jsm"
 );
 
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var Services =
+  globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 
