@@ -37,40 +37,6 @@ this.gdata = class extends ExtensionAPI {
       ["content", "gdata-provider", "legacy/content/"],
     ]);
 
-    // Thunderbird 99 compat
-    if (!Object.prototype.hasOwnProperty.call(cal, "manager")) {
-      XPCOMUtils.defineLazyServiceGetter(
-        cal,
-        "manager",
-        "@mozilla.org/calendar/manager;1",
-        "calICalendarManager"
-      );
-    }
-    if (!Object.prototype.hasOwnProperty.call(cal, "freeBusyService")) {
-      XPCOMUtils.defineLazyServiceGetter(
-        cal,
-        "freeBusyService",
-        "@mozilla.org/calendar/freebusy-service;1",
-        "calIFreeBusyService"
-      );
-    }
-    if (!Object.prototype.hasOwnProperty.call(cal, "timezoneService")) {
-      XPCOMUtils.defineLazyServiceGetter(
-        cal,
-        "timezoneService",
-        "@mozilla.org/calendar/timezone-service;1",
-        "calITimezoneService"
-      );
-    }
-    if (!Object.prototype.hasOwnProperty.call(cal, "icsService")) {
-      XPCOMUtils.defineLazyServiceGetter(
-        cal,
-        "icsService",
-        "@mozilla.org/calendar/ics-service;1",
-        "calIICSService"
-      );
-    }
-
     // Load this early to get the messenger up and running for SyncPrefs
     let { getMessenger } = ChromeUtils.import(
       "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
