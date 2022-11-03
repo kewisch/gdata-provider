@@ -78,7 +78,8 @@
 
     "https://www.googleapis.com/calendar/v3/*",
     "https://www.googleapis.com/tasks/v1/*",
-    "https://accounts.google.com/o/oauth2/approval/v2*"
+    "https://accounts.google.com/o/oauth2/approval/v2*",
+    "http://localhost/*"
   ],
 
   "experiment_apis": {
