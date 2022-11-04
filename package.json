@@ -62,7 +62,7 @@
     "eslint-plugin-no-unsanitized": "^3.2.0",
     "eslint-plugin-prettier": "^3.4.1",
     "ical.js": "^1.5.0",
-    "jest": "^27.4.7",
+    "jest": "^29.2.2",
     "jest-fetch-mock": "git+https://git@github.com/jefflau/jest-fetch-mock.git#46e09b9b43951370dcc27e0c0d60b05061da52d0",
     "prettier": "^1.19.1"
   }
