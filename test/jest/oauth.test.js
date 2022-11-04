@@ -47,7 +47,7 @@ describe("oauth flow", () => {
 
     expect(browser.webRequest.onBeforeRequest.addListener).toHaveBeenCalled();
     expect(browser.webRequest.onBeforeRequest.addListener.mock.calls[0][1]).toEqual({
-      urls: [oauth.APPROVAL_URL + "*"],
+      urls: [oauth.CALLBACK_URL + "*", oauth.APPROVAL_URL + "*"],
       windowId: "windowId",
     });
 
@@ -56,7 +56,7 @@ describe("oauth flow", () => {
       titlePreface: "preface",
       type: "popup",
       url:
-        "https://accounts.google.com/o/oauth2/v2/auth?client_id=clientId&scope=scope&response_type=code&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob%3Aauto&login_hint=hint&hl=klingon",
+        "https://accounts.google.com/o/oauth2/v2/auth?client_id=clientId&scope=scope&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%2F&login_hint=hint&hl=klingon",
       width: oauth.WINDOW_WIDTH,
       height: oauth.WINDOW_HEIGHT,
     });
@@ -83,7 +83,7 @@ describe("oauth flow", () => {
 
   test("response error", async () => {
     global.browser.webRequest.onBeforeRequest.mockResponse({
-      url: oauth.APPROVAL_URL + "?response=error%3DerrorCode",
+      url: oauth.APPROVAL_URL + "?error=errorCode",
     });
 
     await expect(oauth.login({})).rejects.toEqual({ error: "errorCode" });
