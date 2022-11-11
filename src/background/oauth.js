@@ -8,6 +8,7 @@ export default class OAuth2 {
   APPROVAL_URL = "https://accounts.google.com/o/oauth2/approval/v2";
   TOKEN_URL = "https://oauth2.googleapis.com/token";
   LOGOUT_URL = "https://oauth2.googleapis.com/revoke";
+  CALLBACK_URL = "http://localhost/";
 
   EXPIRE_GRACE_SECONDS = 60;
   WINDOW_WIDTH = 430;
@@ -71,7 +72,6 @@ export default class OAuth2 {
       let listener = details => {
         browser.webRequest.onBeforeRequest.removeListener(listener);
         browser.windows.onRemoved.removeListener(windowListener);
-
         resolve(new URL(details.url));
       };
 
@@ -85,7 +85,7 @@ export default class OAuth2 {
 
       browser.windows.onRemoved.addListener(windowListener);
       browser.webRequest.onBeforeRequest.addListener(listener, {
-        urls: [this.APPROVAL_URL + "*"],
+        urls: [this.CALLBACK_URL + "*", this.APPROVAL_URL + "*"],
         windowId: wnd.id,
       });
     });
@@ -97,7 +97,7 @@ export default class OAuth2 {
       client_id: this.clientId,
       scope: this.scope,
       response_type: "code",
-      redirect_uri: "urn:ietf:wg:oauth:2.0:oob:auto",
+      redirect_uri: this.CALLBACK_URL,
       login_hint: loginHint,
       hl: browser.i18n.getUILanguage(), // eslint-disable-line id-length
     });
@@ -117,11 +117,11 @@ export default class OAuth2 {
     await browser.windows.remove(wnd.id);
 
     // Turn the approval code into the refresh and access tokens
-    params = new URLSearchParams(approvalUrl.search.substr(1));
+    params = new URLSearchParams(approvalUrl.search);
 
-    if (params.get("response").startsWith("error=")) {
+    if (params.get("error")) {
       // eslint-disable-next-line no-throw-literal
-      throw { error: params.get("response").substr(6) };
+      throw { error: params.get("error") };
     }
 
     let response = await fetch(this.TOKEN_URL, {
@@ -130,9 +130,9 @@ export default class OAuth2 {
       body: new URLSearchParams({
         client_id: this.clientId,
         client_secret: this.clientSecret,
-        code: params.get("approvalCode"),
+        code: params.get("code"),
         grant_type: "authorization_code",
-        redirect_uri: "urn:ietf:wg:oauth:2.0:oob:auto",
+        redirect_uri: this.CALLBACK_URL,
       }),
     });
 
