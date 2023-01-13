@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^17.3.0",
-    "@commitlint/config-conventional": "^17.3.0",
+    "@commitlint/config-conventional": "^17.4.2",
     "@testing-library/dom": "^8.19.0",
     "@testing-library/jest-dom": "^5.16.5",
     "babel-eslint": "^10.1.0",
