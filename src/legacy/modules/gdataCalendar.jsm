@@ -493,7 +493,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
         // Updating invitations often causes a forbidden error because
         // some parts are not writable. Using PATCH ignores anything
         // that isn't allowed.
-        if (cal.itip.isInvitation(aNewItem)) {
+        if (cal.itip.isInvitation(aNewItem) || aNewItem.organizer.id != "mailto:" + this.mCalendarName) {
           request.type = request.PATCH;
         }
 
