@@ -380,9 +380,17 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
   }
   setIf(itemData, "status", status);
 
+  let categoryList = aItem.getCategories({});
+  // take the first category of the form "Color n" for 1 <= n <= 11 and turn it into a colorId;
+  // the rest are treated as categories
+  let colorCat = categoryList.findIndex((category) => /^Google Color (0[1-9]|1[01])$/.test(category));
+  if (colorCat > -1) {
+    itemData.colorId = parseInt(categoryList[colorCat].match(/^Google Color (0[1-9]|1[01])$/)[1]);
+    categoryList.splice(colorCat, 1);
+  }
   // Google does not support categories natively, but allows us to store data
   // as an "extendedProperty", so we do here
-  let categories = cal.category.arrayToString(aItem.getCategories({}));
+  let categories = cal.category.arrayToString(categoryList);
   addExtendedProperty("X-MOZ-CATEGORIES", categories);
 
   // Only parse attendees if they are enabled, due to bug 407961
@@ -893,10 +901,14 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
       }
     }
 
+    let categories = cal.category.stringToArray(sharedProps["X-MOZ-CATEGORIES"]);
+    if (aEntry.colorId) {
+        // Add color category at the beginning
+        categories.unshift("Google Color " + aEntry.colorId.toString().padStart(2,'0'));
+    }
     // Google does not support categories natively, but allows us to store
     // data as an "extendedProperty", and here it's going to be retrieved
     // again
-    let categories = cal.category.stringToArray(sharedProps["X-MOZ-CATEGORIES"]);
     item.setCategories(categories);
 
     // Conference data

@@ -57,6 +57,18 @@ this.gdata = class extends ExtensionAPI {
       let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
       gdataUI.register();
     });
+
+    const google_colors = ["#000", "#7986CB", "#33B679", "#8E24AA", "#E67C73", "#F6BF26",
+                    "#F4511E", "#039BE5", "#616161", "#3F51B5", "#0B8043", "#D50000"];
+    let calendar_categories = Services.prefs.getStringPref("calendar.categories.names");
+    if (!calendar_categories.includes("Google Color 01")) {
+      for (let i=1; i<=11; i++) {
+        let padded_index = i.toString().padStart(2,'0');
+        calendar_categories += ",Google Color " + padded_index;
+        Services.prefs.setStringPref("calendar.category.color.google_color_" + padded_index, google_colors[i]);
+      }
+      Services.prefs.setStringPref("calendar.categories.names", calendar_categories);
+    }
   }
 
   onShutdown(isAppShutdown) {
