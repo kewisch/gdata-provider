@@ -19,7 +19,9 @@
 
 var { HttpServer } = ChromeUtils.import("resource://testing-common/httpd.js");
 var { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var Services = globalThis.Services || ChromeUtils.import(
+  "resource://gre/modules/Services.jsm"
+).Services;
 
 Services.prefs.setBoolPref("javascript.options.showInConsole", true);
 Services.prefs.setBoolPref("browser.dom.window.dump.enabled", true);
