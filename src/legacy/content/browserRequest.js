@@ -12,10 +12,6 @@ window.PopupNotifications = window.opener?.PopupNotifications;
 
 var reporterListener = {
   _isBusy: false,
-  get securityButton() {
-    delete this.securityButton;
-    return (this.securityButton = document.getElementById("security-button"));
-  },
 
   QueryInterface: ChromeUtils.generateQI(["nsIWebProgressListener", "nsISupportsWeakReference"]),
 
@@ -31,32 +27,44 @@ var reporterListener = {
   ) {},
 
   onLocationChange: function(aWebProgress, aRequest, aLocation) {
-    document.getElementById("headerMessage").textContent = aLocation.spec;
+    document.getElementById("url-bar").textContent = aLocation.spec; // TB102 COMPAT
+    document.getElementById("url-bar").value = aLocation.spec;
   },
 
   onStatusChange: function(aWebProgress, aRequest, aStatus, aMessage) {},
 
   onSecurityChange: function(aWebProgress, aRequest, aState) {
     const wpl_security_bits = wpl.STATE_IS_SECURE | wpl.STATE_IS_BROKEN | wpl.STATE_IS_INSECURE;
-    let browser = document.getElementById("requestFrame");
+    let browser = document.getElementById("request-frame");
+    let icon = document.getElementById("security-icon");
     let level;
 
     switch (aState & wpl_security_bits) {
       case wpl.STATE_IS_SECURE:
-        level = "high";
+        icon.setAttribute(
+          "src",
+          "chrome://messenger/skin/icons/connection-secure.svg"
+        );
+        icon.hidden = false;
+        icon.setAttribute("level", "high");
+        icon.classList.add("secure-connection-icon");
         break;
       case wpl.STATE_IS_BROKEN:
-        level = "broken";
+        icon.setAttribute(
+          "src",
+          "chrome://messenger/skin/icons/connection-insecure.svg"
+        );
+        icon.hidden = false;
+        icon.setAttribute("level", "broken");
+        icon.classList.add("secure-connection-icon");
+        icon.classList.remove("secure-connection-icon");
+        break;
+      default:
+        icon.hidden = true;
+        icon.removeAttribute("src");
+        icon.classList.remove("secure-connection-icon");
         break;
     }
-    if (level) {
-      this.securityButton.setAttribute("level", level);
-      this.securityButton.hidden = false;
-    } else {
-      this.securityButton.hidden = true;
-      this.securityButton.removeAttribute("level");
-    }
-    this.securityButton.setAttribute("tooltiptext", browser.securityUI.tooltipText);
   },
 
   onContentBlockingEvent: function(aWebProgress, aRequest, aEvent) {},
@@ -74,20 +82,21 @@ window.reportUserClosed = function() {
 
 window.loadRequestedUrl = function() {
   let request = window.arguments[0].wrappedJSObject;
-  document.getElementById("headerMessage").textContent = request.promptText;
+  document.getElementById("url-bar").textContent = request.promptText;
   if (request.iconURI != "") {
-    document.getElementById("headerImage").src = request.iconURI;
+    document.getElementById("security-icon").src = request.iconURI;
   }
 
-  let browser = document.getElementById("requestFrame");
+  let browser = document.getElementById("request-frame");
   browser.addProgressListener(reporterListener, Ci.nsIWebProgress.NOTIFY_ALL);
   let url = request.url;
   if (url != "") {
     MailE10SUtils.loadURI(browser, url);
-    document.getElementById("headerMessage").textContent = url;
+    document.getElementById("url-bar").textContent = url; // TB102 COMPAT
+    document.getElementById("url-bar").value = url;
   }
 
-  let dialogMessage = document.getElementById("dialogMessage");
+  let dialogMessage = document.getElementById("dialog-message");
   if (request.description) {
     dialogMessage.textContent = request.description;
   } else {

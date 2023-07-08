@@ -24,27 +24,38 @@ function gdataInitUI(window, document) {
     /* initXUL */
     let style = document.createElement("style");
     style.textContent = `
-      #calendar-list richlistitem[loading="true"] {
+      #gdata-calendar-list richlistitem[loading="true"] {
         -moz-box-flex: 1;
         background: url("chrome://global/skin/icons/loading.png") center 33% / 16px no-repeat;
+        height: 75vh;
       }
       @media (min-resolution: 1.1dppx) {
-        #calendar-list richlistitem[loading="true"] {
+        #gdata-calendar-list richlistitem[loading="true"] {
           background-image: url("chrome://global/skin/icons/loading@2x.png");
         }
       }
 
-      #calendar-list richlistitem[error] {
-        display: block;
-        padding: 22vh 20px;
+      #gdata-calendar-list richlistitem[error] {
+        margin: 20px;
+        padding-inline-start: 20px;
+        position: relative;
+      }
+      #gdata-calendar-list richlistitem[error]::before {
+        content: " ";
+        background: url("chrome://global/skin/icons/error.svg");
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 16px;
+        width: 16px;
       }
 
-      #calendar-list richlistitem[selected] {
+      #gdata-calendar-list richlistitem[selected] {
         color: unset;
         background-color: unset;
       }
 
-      #calendar-list .header-label {
+      #gdata-calendar-list .header-label {
         font-weight: bold;
       }
 
@@ -53,8 +64,11 @@ function gdataInitUI(window, document) {
         border-radius: 5px;
       }
 
-      #calendar-list {
-        height: 80vh;
+      #gdata-calendar-list {
+        flex: 1 1 0;
+      }
+      #gdata-calendars {
+        flex: 1;
       }
     `;
     let calendarWizard = document.getElementById("calendar-creation-dialog");
@@ -102,9 +116,7 @@ function gdataInitUI(window, document) {
           <description>${messenger.i18n.getMessage(
             "gdata.wizard.calendars.description"
           )}</description>
-          <richlistbox id="calendar-list"
-                       flex="1"
-                       onclick="checkRequired();"/>
+          <richlistbox id="gdata-calendar-list" onclick="checkRequired();"/>
         </vbox>
 `)
     );
@@ -115,7 +127,7 @@ function gdataInitUI(window, document) {
       try {
         return func.apply(this, arguments);
       } catch (e) {
-        Cu.reportError(e);
+        console.log(e);
         throw e;
       }
     };
@@ -165,7 +177,7 @@ function gdataInitUI(window, document) {
       let sessionName = document.getElementById("gdata-session-name");
       disabled = !sessionGroup.value && !(sessionName.value && sessionName.validity.valid);
     } else if (selectedPanel.id == "gdata-calendars") {
-      let calendarList = document.getElementById("calendar-list");
+      let calendarList = document.getElementById("gdata-calendar-list");
       disabled = !calendarList.querySelector(".calendar-selected[checked]:not([readonly])");
     } else {
       protofunc();
@@ -218,7 +230,7 @@ function gdataInitUI(window, document) {
     let sessionMgr = getGoogleSessionManager();
     let sessionContainer = document.getElementById("gdata-session-group");
 
-    let calendarList = document.getElementById("calendar-list");
+    let calendarList = document.getElementById("gdata-calendar-list");
     while (calendarList.lastElementChild) {
       calendarList.lastElementChild.remove();
     }
@@ -317,11 +329,7 @@ function gdataInitUI(window, document) {
           calendarList.appendChild(errorItem);
 
           let error = (calendarError || tasksError)?.message;
-          try {
-            errorItem.textContent = messenger.i18n.getMessage("errors." + error);
-          } catch (e) {
-            errorItem.textContent = error;
-          }
+          errorItem.textContent = messenger.i18n.getMessage("errors." + error) || error;
         }
 
         function addCalendarItem(calendar) {
@@ -361,7 +369,7 @@ function gdataInitUI(window, document) {
   });
 
   window.gdataCalendarsAdvance = trycatch(() => {
-    let calendarList = document.getElementById("calendar-list");
+    let calendarList = document.getElementById("gdata-calendar-list");
 
     let calMgr = cal.manager;
     for (let item of calendarList.children) {

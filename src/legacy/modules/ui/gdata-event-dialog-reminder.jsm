@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/* globals suppressListUpdate */
+
 var EXPORTED_SYMBOLS = ["gdataInitUI"];
 
 function gdataInitUI(window, document) {
@@ -27,8 +29,26 @@ function gdataInitUI(window, document) {
   let reminderOutOfRange = messenger.i18n.getMessage("reminderOutOfRange");
   let notificationbox;
 
+  function calculateAlarmOffset(aItem, aAlarm, aRelated) {
+    let offset = aAlarm.offset;
+    if (aAlarm.related == Ci.calIAlarm.ALARM_RELATED_ABSOLUTE) {
+      let returnDate;
+      if (aRelated === undefined || aRelated == Ci.calIAlarm.ALARM_RELATED_START) {
+        returnDate = aItem[cal.dtz.startDateProp(aItem)];
+      } else if (aRelated == Ci.calIAlarm.ALARM_RELATED_END) {
+        returnDate = aItem[cal.dtz.endDateProp(aItem)];
+      }
+
+      if (returnDate && aAlarm.alarmDate) {
+        offset = aAlarm.alarmDate.subtractDate(returnDate);
+      }
+    }
+    return offset;
+  }
+
   function checkReminderRange(reminder) {
-    let offset = cal.alarms.calculateAlarmOffset(item, reminder);
+    let alarm;
+    let offset = calculateAlarmOffset(item, reminder);
     let seconds = offset.inSeconds;
     return seconds < 1 && seconds >= FOUR_WEEKS_BEFORE;
   }
@@ -71,8 +91,11 @@ function gdataInitUI(window, document) {
   monkeyPatch(window, "updateReminder", function(protofunc, event) {
     let rv = protofunc.apply(this, Array.from(arguments).slice(1));
     if (
-      event.explicitOriginalTarget.localName == "listitem" ||
-      event.explicitOriginalTarget.id == "reminder-remove-button" ||
+      suppressListUpdate ||
+      event.target.localName == "listitem" || // TB102 COMPAT
+      event.target.localName == "richlistitem" ||
+      event.target.parentNode.localName == "richlistitem" ||
+      event.target.id == "reminder-remove-button" ||
       !document.commandDispatcher.focusedElement
     ) {
       // Same hack from the original dialog

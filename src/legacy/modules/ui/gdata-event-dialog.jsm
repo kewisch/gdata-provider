@@ -4,6 +4,8 @@
 
 var EXPORTED_SYMBOLS = ["gdataInitUI"];
 
+const ITEM_IFRAME_URL = "chrome://calendar/content/calendar-item-iframe.xhtml";
+
 function gdataInitUI(window, document) {
   const { recordModule, recordWindow } = ChromeUtils.import(
     "resource://gdata-provider/legacy/modules/gdataUI.jsm"
@@ -38,33 +40,36 @@ function gdataInitUI(window, document) {
     toolbarPrivacyItem.id = "gdata-toolbar-privacy-default-menuitem";
 
     let privacyOptionsPopup = document.getElementById("options-privacy-menupopup");
-    if (privacyOptionsPopup) {
+    if (privacyOptionsPopup && !document.getElementById(optionsPrivacyItem.id)) {
       privacyOptionsPopup.insertBefore(optionsPrivacyItem, privacyOptionsPopup.firstElementChild);
     }
 
     let privacyToolbarPopup = document.getElementById("event-privacy-menupopup");
-    if (privacyToolbarPopup) {
+    if (privacyToolbarPopup && !document.getElementById(toolbarPrivacyItem.id)) {
       privacyToolbarPopup.insertBefore(toolbarPrivacyItem, privacyToolbarPopup.firstElementChild);
     }
 
     const gdataStatusPrivacyHbox = document.createXULElement("hbox");
-    gdataStatusPrivacyHbox.setAttribute("id", "gdata-status-privacy-default-box");
+    gdataStatusPrivacyHbox.id = "gdata-status-privacy-default-box";
     gdataStatusPrivacyHbox.setAttribute("privacy", "DEFAULT");
     gdataStatusPrivacyHbox.setAttribute("provider", "gdata");
 
     const statusPrivacy = document.getElementById("status-privacy");
-    statusPrivacy.insertBefore(
-      gdataStatusPrivacyHbox,
-      document.getElementById("status-privacy-public-box")
-    );
+    if (statusPrivacy && !document.getElementById(gdataStatusPrivacyHbox.id)) {
+      statusPrivacy.insertBefore(
+        gdataStatusPrivacyHbox,
+        document.getElementById("status-privacy-public-box")
+      );
+    }
   })();
 
   monkeyPatch(window, "onLoadCalendarItemPanel", (protofunc, passedFrameId, url) => {
     let rv = protofunc(passedFrameId, url);
+    let tabmail = window.tabmail || window.gTabMail; // TB102 COMPAT
 
     let frameId;
-    if (window.gTabMail) {
-      frameId = passedFrameId || window.gTabmail.currentTabInfo.iframe.id;
+    if (tabmail) {
+      frameId = passedFrameId || tabmail.currentTabInfo.iframe.id;
     } else {
       frameId = "calendar-item-panel-iframe";
     }
@@ -73,18 +78,27 @@ function gdataInitUI(window, document) {
     let frameScript = ChromeUtils.import(
       "resource://gdata-provider/legacy/modules/ui/gdata-lightning-item-iframe.jsm"
     );
-    if (frame.readyState == "complete") {
+
+    if (
+      frame.contentDocument.location == ITEM_IFRAME_URL &&
+      frame.contentDocument.readyState == "complete"
+    ) {
       frameScript.gdataInitUI(frame.contentWindow, frame.contentDocument);
     } else {
-      frame.contentWindow.addEventListener("load", () =>
-        frameScript.gdataInitUI(frame.contentWindow, frame.contentDocument)
-      );
+      let loader = function() {
+        if (frame.contentDocument.location == ITEM_IFRAME_URL) {
+          frameScript.gdataInitUI(frame.contentWindow, frame.contentDocument);
+          frame.removeEventListener("load", loader, { capture: true });
+        }
+      };
+      frame.addEventListener("load", loader, { capture: true });
     }
     return rv;
   });
 
   window.addEventListener("message", aEvent => {
-    let validOrigin = window.gTabmail ? "chrome://messenger" : "chrome://calendar";
+    let tabmail = window.tabmail || window.gTabMail; // TB102 COMPAT
+    let validOrigin = tabmail ? "chrome://messenger" : "chrome://calendar";
     if (!aEvent.isTrusted && aEvent.origin !== validOrigin) {
       return;
     }
