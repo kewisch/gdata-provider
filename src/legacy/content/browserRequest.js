@@ -41,19 +41,13 @@ var reporterListener = {
 
     switch (aState & wpl_security_bits) {
       case wpl.STATE_IS_SECURE:
-        icon.setAttribute(
-          "src",
-          "chrome://messenger/skin/icons/connection-secure.svg"
-        );
+        icon.setAttribute("src", "chrome://messenger/skin/icons/connection-secure.svg");
         icon.hidden = false;
         icon.setAttribute("level", "high");
         icon.classList.add("secure-connection-icon");
         break;
       case wpl.STATE_IS_BROKEN:
-        icon.setAttribute(
-          "src",
-          "chrome://messenger/skin/icons/connection-insecure.svg"
-        );
+        icon.setAttribute("src", "chrome://messenger/skin/icons/connection-insecure.svg");
         icon.hidden = false;
         icon.setAttribute("level", "broken");
         icon.classList.add("secure-connection-icon");
