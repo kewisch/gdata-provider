@@ -2,14 +2,73 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#header.contentTabAddress {
+  min-width: 0;
+  padding: 2px;
+  margin: 0;
+  border-block-end: 1px solid ThreeDShadow;
+}
+
+#dialog-message {
+  padding: 0.2em 0.8em
+}
+
+/* Remaining styles are TB102 COMPAT, they are part of the core stylesheets in 115 */
+
+* {
+  display: flex;
+  box-sizing: border-box;
+}
 
 #header {
   height: auto;
   width: 100vw;
   flex-wrap: wrap;
+  min-height: 9.0em;
 }
 
-#dialogMessage {
-  width: 100%;
+
+/* https://searchfox.org/comm-central/rev/5795cb7f0e3492636ae3c1dc041034ca7ab9edde/mail/themes/shared/mail/tabmail.css#409 */
+.contentTabAddress {
+  display: flex;
+  align-items: center;
 }
 
+.contentTabAddress > .contentTabSecurity {
+  flex: 0 0 auto;
+}
+
+.contentTabAddress > .contentTabUrlInput {
+  flex: 1 1 auto;
+}
+
+.contentTabSecurity {
+  height: 16px;
+  width: 16px;
+  -moz-context-properties: fill;
+  fill: currentColor;
+  /* Position within the input. */
+  position: relative;
+  /* Make sure we take up no width in the flow. */
+  margin-inline-end: -16px;
+  /* Move within the input. Input has a margin of 3px and border of 1px, so this
+   * is 5px within. */
+  inset-inline-start: 9px;
+}
+
+.contentTabSecurity.secure-connection-icon {
+  fill: #12bc00;
+}
+
+.contentTabSecurity:not([src]) {
+  display: none;
+}
+
+.contentTabSecurity[src] + .contentTabUrlInput {
+  /* 5px before the icon + 16px width + 4px after. */
+  padding-inline-start: 25px;
+}
+
+.contentTabSecurity:not([src]) + .contentTabUrlInput {
+  padding-inline-start: 4px;
+}
