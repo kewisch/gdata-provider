@@ -329,6 +329,10 @@ function gdataInitUI(window, document) {
           calendarList.appendChild(errorItem);
 
           let error = (calendarError || tasksError)?.message;
+          if (error == "cancelled") {
+            window.selectPanel("gdata-session");
+            return;
+          }
           errorItem.textContent = messenger.i18n.getMessage("errors." + error) || error;
         }
 
