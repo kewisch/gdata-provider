@@ -71,11 +71,21 @@ function register() {
     },
   });
 
-  let { doEnableColors, getMessenger } = ChromeUtils.import(
+  let { doEnableColors, doDisableColors, getMessenger } = ChromeUtils.import(
     "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
   );
-    
-  let enableColors = getMessenger().gdataSyncPrefs.get("settings.enableColors", false);
+
+  let messenger = getMessenger();
+  messenger.storage.onChanged.addListener((settings, _target) => {
+    if ("settings.enableColors" in settings) {
+      if (settings["settings.enableColors"].newValue) {
+        doEnableColors();
+      } else {
+        doDisableColors();
+      }
+    }
+  });
+  let enableColors = messenger.gdataSyncPrefs.get("settings.enableColors", false);
   if (enableColors) {
     doEnableColors();
   }
