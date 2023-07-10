@@ -181,7 +181,7 @@
     "message": "Force use of plain text in event descriptions"
   },
   "settings.enableColors": {
-    "message": "Enable support for event colors (experimental; calendars must be unsubscribed, Thunderbird restarted (?), and the calendars resubscribed)"
+    "message": "Enable support for event colors (experimental; enabling/disabling reloads all calendars)"
   },
 
   "eventdialog.conferenceLabel": {

@@ -71,20 +71,26 @@ function register() {
     },
   });
 
-  let { doEnableColors, doDisableColors, getMessenger } = ChromeUtils.import(
+  let { doEnableColors, doDisableColors, flushCache, getMessenger } = ChromeUtils.import(
     "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
   );
 
   let messenger = getMessenger();
   messenger.storage.onChanged.addListener((settings, _target) => {
     if ("settings.enableColors" in settings) {
-      if (settings["settings.enableColors"].newValue) {
+      // check for true and false explicitly, since `undefined` can also happen
+      if (settings["settings.enableColors"].newValue === true) {
         doEnableColors();
-      } else {
+      } else if (settings["settings.enableColors"].newValue === false) {
         doDisableColors();
       }
+      // We must delete the cache and reload all calendars from the source in order
+      // to add/remove the color categories. Restarting Thunderbird is insufficient
+      // because the locally cached calendar entries lack the color information.
+      flushCache();
     }
   });
+
   let enableColors = messenger.gdataSyncPrefs.get("settings.enableColors", false);
   if (enableColors) {
     doEnableColors();

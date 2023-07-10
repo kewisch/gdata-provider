@@ -55,6 +55,7 @@ var EXPORTED_SYMBOLS = [
   "spinEventLoop",
   "doEnableColors",
   "doDisableColors",
+  "flushCache",
   "getMessenger",
 ];
 
@@ -1523,6 +1524,18 @@ function doDisableColors() {
   let calendarCategories = Services.prefs.getStringPref("calendar.categories.names");
   calendarCategories = calendarCategories.replaceAll(/,Google\sColor\s\d\d/g, "")
   Services.prefs.setStringPref("calendar.categories.names", calendarCategories);
+}
+
+/**
+ * Deletes the local Google calendar cache and reloads all Google calendars from the source.
+ */
+function flushCache() {
+  let cals = cal.manager.wrappedJSObject.getCalendars();
+  for (let calendar of cals) {
+    if (calendar.type == "gdata") {
+      calendar.mUncachedCalendar.resetLog();
+    }
+  }
 }
 
 class SyncPrefs {
