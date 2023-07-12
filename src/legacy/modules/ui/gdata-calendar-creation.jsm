@@ -282,11 +282,28 @@ function gdataInitUI(window, document) {
           }
           return calendar;
         });
+
+        const roleOrder = ["owner", "writer", "reader", "freeBusyReader"];
+        calendars.sort((a, b) => {
+          if (a.primary != b.primary) {
+            return Number(b.primary ?? false) - Number(a.primary ?? false);
+          }
+
+          let roleA = roleOrder.indexOf(a.accessRole);
+          let roleB = roleOrder.indexOf(b.accessRole);
+
+          if (roleA != roleB) {
+            return roleA - roleB;
+          }
+
+          return 0;
+        });
+
         let calcals = calendars.map(calendarEntry => {
           let uri =
             "googleapi://" + session.id + "/?calendar=" + encodeURIComponent(calendarEntry.id);
           let calendar = calMgr.createCalendar("gdata", Services.io.newURI(uri));
-          calendar.name = calendarEntry.summary;
+          calendar.name = calendarEntry.summaryOverride || calendarEntry.summary;
           calendar.id = cal.getUUID();
           calendar.setProperty("color", calendarEntry.backgroundColor);
           if (existing.has("calendar=" + calendarEntry.id)) {
@@ -328,7 +345,11 @@ function gdataInitUI(window, document) {
           errorItem.setAttribute("error", "true");
           calendarList.appendChild(errorItem);
 
-          let error = (calendarError || tasksError)?.message;
+          let error = calendarError || tasksError;
+          if (error.message) {
+            error = error.message;
+          }
+
           if (error == "cancelled") {
             window.selectPanel("gdata-session");
             return;
