@@ -7,19 +7,26 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
 );
 
 /**
- * Provides OAuth 2.0 authentication
+ * Provides OAuth 2.0 authentication.
+ *
+ * @see RFC 6749
  */
 var EXPORTED_SYMBOLS = ["OAuth2"]; /* exported OAuth2 */
 
 var Services =
   globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
-var { httpRequest } = ChromeUtils.import("resource://gre/modules/Http.jsm");
 
+// Only allow one connecting window per endpoint.
+var gConnecting = {};
+
+/**
+ * Constructor for the OAuth2 object.
+ */
 function OAuth2(aBaseURI, aScope, aAppKey, aAppSecret) {
   // aBaseURI was used historically. Until we complete the MailExtensions rewrite, we'll use authURI
-  // and tokenURI directly.
+  // and tokenEndpoint directly.
 
-  this.consumerKey = aAppKey;
+  this.clientId = aAppKey;
   this.consumerSecret = aAppSecret;
   this.scope = aScope;
   this.extraAuthParams = [];
@@ -32,18 +39,14 @@ function OAuth2(aBaseURI, aScope, aAppKey, aAppSecret) {
   });
 }
 
-OAuth2.CODE_AUTHORIZATION = "authorization_code";
-OAuth2.CODE_REFRESH = "refresh_token";
-
 OAuth2.prototype = {
-  responseType: "code",
-  consumerKey: null,
+  clientId: null,
   consumerSecret: null,
 
-  authURI: "https://accounts.google.com/o/oauth2/v2/auth",
-  tokenURI: "https://oauth2.googleapis.com/token",
-  completionURI: "https://localhost:226/",
-  errorURI: "https://accounts.google.com/signin/oauth/error",
+  authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
+  tokenEndpoint: "https://oauth2.googleapis.com/token",
+  redirectionEndpoint: "https://localhost:226/",
+  errorEndpoint: "https://accounts.google.com/signin/oauth/error",
 
   requestWindowURI: "chrome://messenger/content/browserRequest.xhtml",
   requestWindowFeatures: "chrome,private,centerscreen,width=980,height=750",
@@ -54,62 +57,74 @@ OAuth2.prototype = {
   accessToken: null,
   refreshToken: null,
   tokenExpires: 0,
-  connecting: false,
 
-  connect: function(aSuccess, aFailure, aWithUI, aRefresh) {
-    if (this.connecting) {
-      return;
-    }
-
+  connect(aSuccess, aFailure, aWithUI, aRefresh) {
     this.connectSuccessCallback = aSuccess;
     this.connectFailureCallback = aFailure;
 
-    if (!aRefresh && this.accessToken) {
+    if (this.accessToken && !this.tokenExpired && !aRefresh) {
       aSuccess();
     } else if (this.refreshToken) {
-      this.connecting = true;
-      this.requestAccessToken(this.refreshToken, OAuth2.CODE_REFRESH);
+      this.requestAccessToken(this.refreshToken, true);
     } else {
       if (!aWithUI) {
         aFailure('{ "error": "auth_noui" }');
         return;
       }
-      this.connecting = true;
+      if (gConnecting[this.authorizationEndpoint]) {
+        aFailure("Window already open");
+        return;
+      }
       this.requestAuthorization();
     }
   },
 
-  randomizePort: function() {
-    let randomPort = Math.floor(Math.random() * (65535 - 49152 + 1) + 49152);
-    this.completionURI = `https://localhost:${randomPort}/`;
-    this.completionRE = new RegExp("^https?://localhost:" + randomPort + "/");
-    return this.completionURI;
+  /**
+   * True if the token has expired, or will expire within the grace time.
+   */
+  get tokenExpired() {
+    // 30 seconds to allow for network inefficiency, clock drift, etc.
+    const OAUTH_GRACE_TIME_MS = 30 * 1000;
+    return this.tokenExpires - OAUTH_GRACE_TIME_MS < Date.now();
   },
 
-  requestAuthorization: function() {
-    let params = [
-      ["response_type", this.responseType],
-      ["client_id", this.consumerKey],
-      ["redirect_uri", this.randomizePort()],
-    ];
-    // The scope can be optional.
+  randomizePort() {
+    let randomPort = Math.floor(Math.random() * (65535 - 49152 + 1) + 49152);
+    this.redirectionEndpoint = `https://localhost:${randomPort}/`;
+    this.completionRE = new RegExp("^https?://localhost:" + randomPort + "/");
+    return this.redirectionEndpoint;
+  },
+
+  requestAuthorization() {
+    let params = new URLSearchParams({
+      response_type: "code",
+      client_id: this.clientId,
+      redirect_uri: this.randomizePort(),
+    });
+
+    // The scope is optional.
     if (this.scope) {
-      params.push(["scope", this.scope]);
+      params.append("scope", this.scope);
     }
 
-    // Add extra parameters, if they exist
-    Array.prototype.push.apply(params, this.extraAuthParams);
+    for (let [name, value] of this.extraAuthParams) {
+      params.append(name, value);
+    }
 
-    // Now map the parameters to a string
-    params = params.map(([key, value]) => key + "=" + encodeURIComponent(value)).join("&");
+    let authEndpointURI = this.authorizationEndpoint + "?" + params.toString();
+    this.log.info(
+      "Interacting with the resource owner to obtain an authorization grant " +
+        "from the authorization endpoint: " +
+        authEndpointURI
+    );
 
     this._browserRequest = {
       account: this,
-      url: this.authURI + "?" + params,
+      url: authEndpointURI,
       description: this.requestWindowDescription,
       _active: true,
       iconURI: "",
-      cancelled: function() {
+      cancelled() {
         if (!this._active) {
           return;
         }
@@ -118,7 +133,7 @@ OAuth2.prototype = {
         this.account.onAuthorizationFailed(Cr.NS_ERROR_ABORT, '{ "error": "cancelled"}');
       },
 
-      loaded: function(aWindow, aWebProgress) {
+      loaded(aWindow, aWebProgress) {
         if (!this._active) {
           return;
         }
@@ -133,17 +148,17 @@ OAuth2.prototype = {
             "nsISupportsWeakReference",
           ]),
 
-          _cleanUp: function() {
+          _cleanUp() {
             this.webProgress.removeProgressListener(this);
             this.window.close();
             delete this.window;
           },
 
-          _checkForRedirect: function(aURL) {
+          _checkForRedirect(aURL) {
             if (aURL.match(this._parent.completionRE)) {
               this._parent.finishAuthorizationRequest();
               this._parent.onAuthorizationReceived(aURL);
-            } else if (aURL.startsWith(this._parent.errorURI)) {
+            } else if (aURL.startsWith(this._parent.errorEndpoint)) {
               let url = new URL(aURL);
               let authError = atob(url.searchParams.get("authError") || "");
               // eslint-disable-next-line no-control-regex
@@ -160,7 +175,7 @@ OAuth2.prototype = {
             }
           },
 
-          onStateChange: function(aChangedWebProgress, aRequest, aStateFlags, aStatus) {
+          onStateChange(aChangedWebProgress, aRequest, aStateFlags, aStatus) {
             const wpl = Ci.nsIWebProgressListener;
             if (aStateFlags & wpl.STATE_STOP) {
               try {
@@ -191,12 +206,12 @@ OAuth2.prototype = {
               }
             }
           },
-          onLocationChange: function(aChangedWebProgress, aRequest, aLocation) {
+          onLocationChange(aChangedWebProgress, aRequest, aLocation) {
             this._checkForRedirect(aLocation.spec);
           },
-          onProgressChange: function() {},
-          onStatusChange: function() {},
-          onSecurityChange: function() {},
+          onProgressChange() {},
+          onStatusChange() {},
+          onSecurityChange() {},
         };
         aWebProgress.addProgressListener(this._listener, Ci.nsIWebProgress.NOTIFY_ALL);
         aWindow.document.title = this.account.requestWindowTitle;
@@ -205,9 +220,11 @@ OAuth2.prototype = {
 
     this.wrappedJSObject = this._browserRequest;
     let parent = Services.wm.getMostRecentWindow("mail:3pane");
+    gConnecting[this.authorizationEndpoint] = true;
     Services.ww.openWindow(parent, this.requestWindowURI, null, this.requestWindowFeatures, this);
   },
-  finishAuthorizationRequest: function() {
+  finishAuthorizationRequest() {
+    gConnecting[this.authorizationEndpoint] = false;
     if (!("_browserRequest" in this)) {
       return;
     }
@@ -219,66 +236,99 @@ OAuth2.prototype = {
     delete this._browserRequest;
   },
 
-  onAuthorizationReceived: function(aData) {
-    this.log.info("authorization received" + aData);
-    let params = new URL(aData).searchParams;
-    if (this.responseType == "code") {
-      this.requestAccessToken(params.get("code"), OAuth2.CODE_AUTHORIZATION);
-    } else if (this.responseType == "token") {
-      this.onAccessTokenReceived(JSON.stringify(Object.fromEntries(params.entries())));
-    }
-  },
-
-  onAuthorizationFailed: function(aError, aData) {
-    this.connecting = false;
-    this.connectFailureCallback(aData);
-  },
-
-  requestAccessToken: function(aCode, aType) {
-    let params = [
-      ["client_id", this.consumerKey],
-      ["client_secret", this.consumerSecret],
-      ["grant_type", aType],
-    ];
-
-    if (aType == OAuth2.CODE_AUTHORIZATION) {
-      params.push(["code", aCode]);
-      params.push(["redirect_uri", this.completionURI]);
-    } else if (aType == OAuth2.CODE_REFRESH) {
-      params.push(["refresh_token", aCode]);
-    }
-
-    let options = {
-      postData: params,
-      onLoad: this.onAccessTokenReceived.bind(this),
-      onError: this.onAccessTokenFailed.bind(this),
-    };
-    httpRequest(this.tokenURI, options);
-  },
-
-  onAccessTokenFailed: function(aError, aData) {
-    if (aError != "offline") {
-      this.refreshToken = null;
-    }
-    this.connecting = false;
-    this.connectFailureCallback(aData);
-  },
-
-  onAccessTokenReceived: function(aData) {
-    let result = JSON.parse(aData);
-
-    this.accessToken = result.access_token;
-    if ("refresh_token" in result) {
-      this.refreshToken = result.refresh_token;
-    }
-    if ("expires_in" in result) {
-      this.tokenExpires = new Date().getTime() + result.expires_in * 1000;
+  // @see RFC 6749 section 4.1.2: Authorization Response
+  onAuthorizationReceived(aURL) {
+    this.log.info("OAuth2 authorization received: url=" + aURL);
+    const url = new URL(aURL);
+    if (url.searchParams.has("code")) {
+      this.requestAccessToken(url.searchParams.get("code"), false);
     } else {
-      this.tokenExpires = Number.MAX_VALUE;
+      this.onAuthorizationFailed(null, aURL);
     }
-    this.tokenType = result.token_type;
+  },
 
-    this.connecting = false;
-    this.connectSuccessCallback();
+  onAuthorizationFailed(aError, aData) {
+    this.connectFailureCallback(aData);
+  },
+
+  /**
+   * Request a new access token, or refresh an existing one.
+   *
+   * @param {string} aCode - The token issued to the client.
+   * @param {boolean} aRefresh - Whether it's a refresh of a token or not.
+   */
+  requestAccessToken(aCode, aRefresh) {
+    // @see RFC 6749 section 4.1.3. Access Token Request
+    // @see RFC 6749 section 6. Refreshing an Access Token
+
+    let data = new URLSearchParams();
+    data.append("client_id", this.clientId);
+    if (this.consumerSecret !== null) {
+      // Section 2.3.1. of RFC 6749 states that empty secrets MAY be omitted
+      // by the client. This OAuth implementation delegates this decision to
+      // the caller: If the secret is null, it will be omitted.
+      data.append("client_secret", this.consumerSecret);
+    }
+
+    if (aRefresh) {
+      this.log.info(`Making a refresh request to the token endpoint: ${this.tokenEndpoint}`);
+      data.append("grant_type", "refresh_token");
+      data.append("refresh_token", aCode);
+    } else {
+      this.log.info(`Making access token request to the token endpoint: ${this.tokenEndpoint}`);
+      data.append("grant_type", "authorization_code");
+      data.append("code", aCode);
+      data.append("redirect_uri", this.redirectionEndpoint);
+    }
+
+    fetch(this.tokenEndpoint, {
+      method: "POST",
+      cache: "no-cache",
+      body: data,
+    })
+      .then(response => response.json())
+      .then(result => {
+        let resultStr = JSON.stringify(result, null, 2);
+        if ("error" in result) {
+          // RFC 6749 section 5.2. Error Response
+          let err = result.error;
+          if ("error_description" in result) {
+            err += "; " + result.error_description;
+          }
+          if ("error_uri" in result) {
+            err += "; " + result.error_uri;
+          }
+          this.log.warn(`Error response from the authorization server: ${err}`);
+          this.log.info(`Error response details: ${resultStr}`);
+
+          // Typically in production this would be {"error": "invalid_grant"}.
+          // That is, the token expired or was revoked (user changed password?).
+          // Reset the tokens we have and call success so that the auth flow
+          // will be re-triggered.
+          this.accessToken = null;
+          this.refreshToken = null;
+          this.connectSuccessCallback();
+          return;
+        }
+
+        // RFC 6749 section 5.1. Successful Response
+        this.log.info(`Successful response from the authorization server: ${resultStr}`);
+
+        this.accessToken = result.access_token;
+        if ("refresh_token" in result) {
+          this.refreshToken = result.refresh_token;
+        }
+        if ("expires_in" in result) {
+          this.tokenExpires = new Date().getTime() + result.expires_in * 1000;
+        } else {
+          this.tokenExpires = Number.MAX_VALUE;
+        }
+
+        this.connectSuccessCallback();
+      })
+      .catch(err => {
+        this.log.info(`Connection to authorization server failed: ${err}`);
+        this.connectFailureCallback(err);
+      });
   },
 };

@@ -13,6 +13,7 @@ module.exports = {
   root: true,
   env: {
     es2021: true,
+    webextensions: true
   },
   parser: "babel-eslint",
 
@@ -22,6 +23,8 @@ module.exports = {
 
   globals: {
     messenger: true,
+    fetch: true,
+
   },
 
   extends: ["plugin:mozilla/recommended"],
