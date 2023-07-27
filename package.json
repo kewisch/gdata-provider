@@ -52,7 +52,7 @@
     "babel-eslint": "^10.1.0",
     "bump-file": "^2.0.0",
     "conventional-changelog": "^4.0.0",
-    "conventional-changelog-cli": "^2.2.2",
+    "conventional-changelog-cli": "^3.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-fetch-options": "0.0.5",
