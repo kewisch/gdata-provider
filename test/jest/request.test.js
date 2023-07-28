@@ -48,7 +48,7 @@ test("commit basics", async () => {
   fetch.mockResponseOnce(JSON.stringify({}), { headers: { "Content-Type": "application/json" } });
   res = await request.commit(session);
   expect(fetch.mock.calls[fetch.mock.calls.length - 1][1].body).toBe('{"foo":"bar"}');
-  expect(fetch).toBeCalledWith(
+  expect(fetch).toHaveBeenCalledWith(
     new URL("https://localhost/test?foo=bar"),
     expect.objectContaining({
       method: "POST",

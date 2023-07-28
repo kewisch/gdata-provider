@@ -112,7 +112,9 @@ this.gdata = class extends ExtensionAPI {
 
             try {
               wxprefs["googleUser." + pref] = branch.getStringPref(pref, "");
-            } catch (e) {}
+            } catch (e) {
+              // Ok not to set the wxpref if the stirng pref doesn't exist
+            }
           }
 
           return Object.keys(wxprefs).length ? wxprefs : null;

@@ -49,7 +49,6 @@
     "@commitlint/config-conventional": "^17.6.6",
     "@testing-library/dom": "^9.3.1",
     "@testing-library/jest-dom": "^5.16.5",
-    "babel-eslint": "^10.1.0",
     "bump-file": "^2.0.0",
     "conventional-changelog": "^4.0.0",
     "conventional-changelog-cli": "^3.0.0",

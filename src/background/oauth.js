@@ -140,7 +140,9 @@ export default class OAuth2 {
 
     try {
       details = await response.json();
-    } catch (e) {}
+    } catch (e) {
+      throw { error: "request_error", code: response.status };
+    }
 
     if (!response.ok) {
       // eslint-disable-next-line no-throw-literal
@@ -173,7 +175,9 @@ export default class OAuth2 {
 
     try {
       details = await response.json();
-    } catch (e) {}
+    } catch (e) {
+      throw { error: "request_error", code: response.status };
+    }
 
     if (!response.ok) {
       // eslint-disable-next-line no-throw-literal
