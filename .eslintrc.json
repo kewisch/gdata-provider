@@ -16,11 +16,7 @@
   },
 
   "plugins": [
-    "mozilla",
     "jest"
-  ],
-  "extends": [
-    "plugin:mozilla/recommended"
   ],
 
   "rules": {
@@ -234,13 +230,13 @@
     // We use var-only-at-top-level instead of no-var as we allow top level
     // vars.
     "no-var": 0,
-    "mozilla/var-only-at-top-level": 1,
+    // "mozilla/var-only-at-top-level": 1,
 
     // Disallow global and local variables that aren't used, but allow unused function arguments.
     //"no-unused-vars": [2, { "vars": "all", "args": "none", "varsIgnorePattern": "EXPORTED_SYMBOLS" }],
     "no-unused-vars": 0,
 
-    "mozilla/mark-test-function-used": 1,
+    // "mozilla/mark-test-function-used": 1,
 
     // Require padding inside curly braces
     "object-curly-spacing": [2, "always"],
