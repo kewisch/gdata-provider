@@ -22,7 +22,7 @@ test("getMigratableCalendars", async () => {
   expect(calendars[0].url).toBe(
     "https://calendar.google.com/calendar/ical/user@example.com/private/full.ics"
   );
-  expect(messenger.calendar.calendars.query).toBeCalledWith({
+  expect(messenger.calendar.calendars.query).toHaveBeenCalledWith({
     type: "ics",
     url: "*://*.google.com/calendar/ical/*",
   });
