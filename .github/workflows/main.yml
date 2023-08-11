@@ -28,11 +28,10 @@ jobs:
       - name: "npm ci"
         run: npm ci
 
-      - if: (github.actor!= 'dependabot[bot]') && (contains(github.head_ref, 'dependabot/') == false)
-        name: "Commit lint"
+      - name: "Commit lint"
         uses: wagoid/commitlint-github-action@v4
         with:
-          configFile: .commitlintrc.json
+          configFile: commitlint.config.cjs
           firstParent: true
           failOnWarnings: true
 
