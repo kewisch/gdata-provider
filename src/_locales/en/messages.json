@@ -179,5 +179,36 @@
   },
   "settings.forcePlainText": {
     "message": "Force use of plain text in event descriptions"
+  },
+
+  "eventdialog.conferenceLabel": {
+    "message": "Conference:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Join via video conferencing"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Phone"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "More conference information"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Meeting Code"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Access Code"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Passcode"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Password"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
   }
 }

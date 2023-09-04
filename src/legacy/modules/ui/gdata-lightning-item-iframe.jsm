@@ -18,6 +18,10 @@ function gdataInitUI(window, document) {
   const { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
   let messenger = getMessenger();
 
+  const { CONFERENCE_ROW_FRAGMENT, initConferenceRow } = ChromeUtils.import(
+    "resource://gdata-provider/legacy/modules/ui/gdata-dialog-utils.jsm"
+  );
+
   let { getCurrentCalendar } = window;
 
   (function() {
@@ -30,7 +34,17 @@ function gdataInitUI(window, document) {
 
     let separator = document.getElementById("reminder-none-separator");
     separator.parentNode.insertBefore(defaultReminderItem, separator);
+
+    let confFragment = window.MozXULElement.parseXULToFragment(CONFERENCE_ROW_FRAGMENT);
+    document
+      .getElementById("event-grid")
+      .insertBefore(confFragment, document.getElementById("event-grid-location-row").nextSibling);
   })();
+
+  monkeyPatch(window, "loadDialog", function(protofunc, aItem) {
+    initConferenceRow(document, messenger, aItem);
+    return protofunc.call(this, aItem);
+  });
 
   monkeyPatch(window, "updateCalendar", function(protofunc, ...args) {
     let rv = protofunc.apply(this, args);

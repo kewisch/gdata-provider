@@ -46,6 +46,9 @@ function register() {
   registerWindowListener("gdata-event-dialog-reminder", [
     "chrome://calendar/content/calendar-event-dialog-reminder.xhtml",
   ]);
+  registerWindowListener("gdata-summary-dialog", [
+    "chrome://calendar/content/calendar-summary-dialog.xhtml",
+  ]);
   registerWindowListener(
     "gdata-event-dialog",
     [

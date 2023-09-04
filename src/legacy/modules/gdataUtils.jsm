@@ -898,6 +898,15 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
     let categories = cal.category.stringToArray(sharedProps["X-MOZ-CATEGORIES"]);
     item.setCategories(categories);
 
+    // Conference data
+    if (aEntry.conferenceData) {
+      // rfc 7986 has a CONFERENCE property which would work perfectly for this, but unfortunately
+      // the Thunderbird code only allows setting one property value. I guess we'll have go migrate
+      // later on. See also bug 1851385 for multi property support and bug 1708371 for the
+      // CONFERENCE property specifically.
+      item.setProperty("X-GOOGLE-CONFDATA", JSON.stringify(aEntry.conferenceData));
+    }
+
     // updated (This must be set last!)
     if (aEntry.updated) {
       let updated = cal.dtz.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC);
