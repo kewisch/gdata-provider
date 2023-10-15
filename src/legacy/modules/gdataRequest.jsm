@@ -268,12 +268,11 @@ calGoogleRequest.prototype = {
 
     // Set upload Data
     if (this.mUploadData) {
-      let converter = Cc["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(
-        Ci.nsIScriptableUnicodeConverter
+      let stream = Cc["@mozilla.org/io/string-input-stream;1"].createInstance(
+        Ci.nsIStringInputStream
       );
-      converter.charset = "UTF-8";
+      stream.setUTF8Data(this.mUploadData, this.mUploadData.length);
 
-      let stream = converter.convertToInputStream(this.mUploadData);
       aChannel = aChannel.QueryInterface(Ci.nsIUploadChannel);
       aChannel.setUploadStream(stream, this.mUploadContent, -1);
 
