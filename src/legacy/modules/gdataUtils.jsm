@@ -36,6 +36,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
 });
 
 var FOUR_WEEKS_IN_MINUTES = 40320;
+var CONTAINS_HTML_RE = /^<|&(lt|gt|amp);|<(br|p)>/;
 
 var EXPORTED_SYMBOLS = [
   "ItemToJSON",
@@ -767,7 +768,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
 
     // Not pretty, but Google doesn't have a straightforward way to differentiate. As of writing,
     // they even have bugs in their own UI about displaying the string properly.
-    if (aEntry.description?.[0] == "<" || aEntry.description?.match(/&(lt|gt|amp);/)) {
+    if (aEntry.description?.match(CONTAINS_HTML_RE)) {
       item.descriptionHTML = aEntry.description;
     } else {
       item.descriptionText = aEntry.description;
