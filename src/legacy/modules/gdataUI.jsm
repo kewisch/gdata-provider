@@ -7,6 +7,9 @@ var EXPORTED_SYMBOLS = ["register", "unregister", "recordModule", "recordWindow"
 
 var { ExtensionSupport } = ChromeUtils.import("resource:///modules/ExtensionSupport.jsm");
 
+const Services =
+  globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
+
 var unregisterIds = [];
 var unregisterModules = new Set();
 var closeWindows = new Set();
@@ -67,9 +70,23 @@ function register() {
       checkMigrateCalendars(window);
     },
   });
+
+  let { doEnableColors, getMessenger } = ChromeUtils.import(
+    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
+  );
+    
+  let enableColors = getMessenger().gdataSyncPrefs.get("settings.enableColors", false);
+  if (enableColors) {
+    doEnableColors();
+  }
 }
 
 function unregister() {
+  let { doDisableColors } = ChromeUtils.import(
+    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
+  );
+  doDisableColors();
+
   for (let id of unregisterIds) {
     ExtensionSupport.unregisterWindowListener(id);
     Cu.unload(`resource://gdata-provider/legacy/modules/ui/${id}.jsm`);
