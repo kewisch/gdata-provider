@@ -52,7 +52,7 @@
     "bump-file": "^2.0.0",
     "conventional-changelog": "^5.0.0",
     "conventional-changelog-cli": "^4.1.0",
-    "eslint": "^8.51.0",
+    "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-fetch-options": "0.0.5",
     "eslint-plugin-html": "^7.1.0",
