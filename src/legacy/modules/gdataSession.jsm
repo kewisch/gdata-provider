@@ -21,8 +21,13 @@ var { calGoogleRequest, API_BASE } = ChromeUtils.import(
 
 var Services =
   globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
-var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 var { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm");
+
+// Thunderbird 120 compat
+if (!Promise.withResolvers) {
+  var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
+  Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
+}
 
 var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
 
@@ -260,7 +265,7 @@ calGoogleSession.prototype = {
     if (this.mLoginPromise) {
       return this.mLoginPromise;
     }
-    let deferred = PromiseUtils.defer();
+    let deferred = Promise.withResolvers();
 
     try {
       // Start logging in
