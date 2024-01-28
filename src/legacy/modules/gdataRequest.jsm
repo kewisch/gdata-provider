@@ -8,8 +8,13 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
 
 var Services =
   globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
-var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+
+// Thunderbird 120 compat
+if (!Promise.withResolvers) {
+  var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
+  Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
+}
 
 var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
 
@@ -180,7 +185,7 @@ calGoogleRequest.prototype = {
    */
   commit: function(aSession) {
     if (!this.mDeferred) {
-      this.mDeferred = PromiseUtils.defer();
+      this.mDeferred = Promise.withResolvers();
     }
     let promise = this.mDeferred.promise;
 

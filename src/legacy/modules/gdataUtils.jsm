@@ -19,7 +19,12 @@ var { windowsTimezoneMap } = ChromeUtils.import(
 var Services =
   globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
+
+// Thunderbird 120 compat
+if (!Promise.withResolvers) {
+  var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
+  Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
+}
 
 var { ExtensionParent } = ChromeUtils.import("resource://gre/modules/ExtensionParent.jsm");
 
@@ -1436,7 +1441,7 @@ function spinEventLoop() {
   }
   spinEventLoop.lastSpin = new Date();
 
-  let deferred = PromiseUtils.defer();
+  let deferred = Promise.withResolvers();
   Services.tm.currentThread.dispatch(
     {
       run: function() {
