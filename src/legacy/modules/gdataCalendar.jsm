@@ -155,7 +155,16 @@ class calGoogleCalendar extends cal.provider.BaseClass {
     this.mUri = aUri;
     if (aUri && aUri.schemeIs("googleapi")) {
       // new format:  googleapi://session-id/?calendar=calhash@group.calendar.google.com&tasks=taskhash
-      let [fullUser, path] = aUri.pathQueryRef.substr(2).split("/", 2);
+      let fullUser, path;
+
+      if (aUri.pathQueryRef.substr(0, 2) == "//") {
+        // Thunderbird 115 compat
+        [fullUser, path] = aUri.pathQueryRef.substr(2).split("/", 2);
+      } else {
+        [, fullUser] = aUri.prePath.split("//", 2);
+        path = aUri.pathQueryRef.substr(1);
+      }
+
       let keyvalues = path
         .substr(1)
         .split("&")
