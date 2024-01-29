@@ -68,8 +68,16 @@ var calGoogleSessionManager = {
     }
 
     if (uri.schemeIs("googleapi")) {
-      let parts = uri.pathQueryRef.substr(2).split("/", 2);
-      id = parts[0] || cal.getUUID();
+      let fullUser, path;
+      if (uri.pathQueryRef.substr(0, 2) == "//") {
+        // Thunderbird 115 compat
+        [fullUser, path] = uri.pathQueryRef.substr(2).split("/", 2);
+      } else {
+        [, fullUser] = uri.prePath.split("//", 2);
+        path = uri.pathQueryRef.substr(1);
+      }
+
+      id = fullUser || cal.getUUID();
     } else if (
       host == "www.google.com" &&
       uri.pathQueryRef.startsWith("/calendar/feeds") &&
