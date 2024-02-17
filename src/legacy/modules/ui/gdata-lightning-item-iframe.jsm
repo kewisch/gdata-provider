@@ -42,8 +42,9 @@ function gdataInitUI(window, document) {
   })();
 
   monkeyPatch(window, "loadDialog", function(protofunc, aItem) {
+    let rv = protofunc.call(this, aItem);
     initConferenceRow(document, messenger, aItem);
-    return protofunc.call(this, aItem);
+    return rv;
   });
 
   monkeyPatch(window, "updateCalendar", function(protofunc, ...args) {

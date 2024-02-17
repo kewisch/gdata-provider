@@ -63,13 +63,12 @@ function gdataInitUI(window, document) {
     }
   })();
 
-  monkeyPatch(window, "onLoadCalendarItemPanel", (protofunc, passedFrameId, url) => {
-    let rv = protofunc(passedFrameId, url);
+  function loadPanel(passedFrameId) {
     let tabmail = window.tabmail || window.gTabMail; // TB102 COMPAT
 
     let frameId;
     if (tabmail) {
-      frameId = passedFrameId || tabmail.currentTabInfo.iframe.id;
+      frameId = passedFrameId || tabmail.currentTabInfo.iframe?.id;
     } else {
       frameId = "calendar-item-panel-iframe";
     }
@@ -93,8 +92,17 @@ function gdataInitUI(window, document) {
       };
       frame.addEventListener("load", loader, { capture: true });
     }
-    return rv;
-  });
+  }
+
+  if (window.location.href == "chrome://calendar/content/calendar-event-dialog.xhtml") {
+    window.setTimeout(() => loadPanel(), 0);
+  } else {
+    monkeyPatch(window, "onLoadCalendarItemPanel", (protofunc, passedFrameId, ...args) => {
+      let rv = protofunc(passedFrameId, ...args);
+      loadPanel(passedFrameId);
+      return rv;
+    });
+  }
 
   window.addEventListener("message", aEvent => {
     let tabmail = window.tabmail || window.gTabMail; // TB102 COMPAT
