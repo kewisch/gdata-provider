@@ -115,6 +115,12 @@ function initConferenceRow(document, messenger, item) {
     return noconference();
   }
 
+  let eventType = item.getProperty("X-GOOGLE-EVENT-TYPE");
+
+  if (eventType == "outOfOffice" || eventType == "focusTime") {
+    return noconference();
+  }
+
   let confdata;
   try {
     confdata = JSON.parse(item.getProperty("X-GOOGLE-CONFDATA"));

@@ -201,7 +201,13 @@ calGoogleRequest.prototype = {
         let params = [];
 
         for (let [key, val] of this.mQueryParameters.entries()) {
-          params.push(key + "=" + encodeURIComponent(val));
+          if (Array.isArray(val)) {
+            for (let valval of val) {
+              params.push(key + "=" + encodeURIComponent(valval));
+            }
+          } else {
+            params.push(key + "=" + encodeURIComponent(val));
+          }
         }
         uristring += "?" + params.join("&");
       }

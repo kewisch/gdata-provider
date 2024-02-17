@@ -65,6 +65,8 @@ function LOGitem(item) {
     "[calGoogleCalendar] Logging calIEvent:" +
       "\n\tid:" +
       item.id +
+      "\n\ttype:" +
+      item.getProperty("X-GOOGLE-EVENT-TYPE") +
       "\n\tcreated:" +
       item.getProperty("CREATED") +
       "\n\tupdated:" +

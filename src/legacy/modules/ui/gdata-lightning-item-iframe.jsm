@@ -54,9 +54,14 @@ function gdataInitUI(window, document) {
     let isEvent = window.calendarItem.isEvent();
     let isGoogleTask = isGoogleCalendar && isTask;
     let isGoogleEvent = isGoogleCalendar && isEvent;
+    let isOooEvent =
+      isGoogleCalendar && window.calendarItem.getProperty("X-GOOGLE-EVENT-TYPE") == "outOfOffice";
+    let isFocusEvent =
+      isGoogleCalendar && window.calendarItem.getProperty("X-GOOGLE-EVENT-TYPE") == "focusTime";
 
     window.sendMessage({ command: "gdataIsTask", isGoogleTask: isGoogleTask });
 
+    // Hide elements not valid for tasks
     let hideForTaskIds = [
       "FormatToolbox",
       "event-grid-location-row",
@@ -86,6 +91,41 @@ function gdataInitUI(window, document) {
       let node = document.getElementById(id);
       if (node) {
         node.hidden = isGoogleTask;
+      }
+    }
+
+    // Show a notification to indicate OOO and focus time events
+    if (isOooEvent || isFocusEvent) {
+      window.gEventNotification.appendNotification("gdata-info-event-type", {
+        label: messenger.i18n.getMessage("eventdialog." + (isOooEvent ? "oooEvent" : "focusEvent")),
+        priority: window.gEventNotification.PRIORITY_INFO_LOW,
+      });
+    }
+
+    // Hide elements not valid in OOO events
+    let hideForOooIds = [
+      "event-grid-location-row",
+      "event-grid-category-row",
+      "event-grid-alarm-row",
+    ];
+    for (let id of hideForOooIds) {
+      let node = document.getElementById(id);
+      if (node) {
+        node.hidden = isOooEvent;
+      }
+    }
+    document.getElementById("event-grid-tab-box-row").style.visibility = isOooEvent ? "hidden" : "";
+
+    // Hide elements not valid in focus time events
+    let hideForFocusIds = [
+      "event-grid-tab-attendees",
+      "event-grid-tabpanel-attendees",
+      "notify-options",
+    ];
+    for (let id of hideForFocusIds) {
+      let node = document.getElementById(id);
+      if (node) {
+        node.hidden = isFocusEvent;
       }
     }
 

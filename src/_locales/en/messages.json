@@ -210,5 +210,11 @@
   },
   "eventdialog.codeType.pin": {
     "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Out of Office"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Focus Time"
   }
 }

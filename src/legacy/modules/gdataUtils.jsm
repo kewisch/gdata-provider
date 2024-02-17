@@ -783,6 +783,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
     item.setProperty("TRANSP", aEntry.transparency ? aEntry.transparency.toUpperCase() : null);
     item.setProperty("SEQUENCE", aEntry.sequence);
     item.setProperty("X-GOOGLE-COLOR-ID", aEntry.colorId);
+    item.setProperty("X-GOOGLE-EVENT-TYPE", aEntry.eventType);
     aMetadata.etag = aEntry.etag;
     aMetadata.path = aEntry.id;
 
