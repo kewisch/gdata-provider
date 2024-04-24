@@ -45,7 +45,7 @@
     "lint": "commitlint -f origin/main && eslint src test || true"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.6.0",
+    "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^18.6.0",
     "@testing-library/dom": "^10.0.0",
     "@testing-library/jest-dom": "^6.4.2",
