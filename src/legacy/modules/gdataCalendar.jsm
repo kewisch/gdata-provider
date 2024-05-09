@@ -10,6 +10,9 @@ var EXPORTED_SYMBOLS = ["calGoogleCalendar"]; /* exported calGoogleCalendar */
 
 var Services =
   globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
+
+var { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm");
+
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
@@ -765,8 +768,11 @@ class calGoogleCalendar extends cal.provider.BaseClass {
 
     if (maxIdleTime != 0 && idleTime > maxIdleTime) {
       cal.LOG("[calGoogleCalendar] Skipping refresh since user is idle");
-      aListener.onResult({ status: Cr.NS_OK }, null);
-      return Promise.resolve();
+
+      // calCachedCalendar.synchronize cannot handle callback being run synchronously
+      return new Promise(resolve => setTimeout(resolve, 1000)).then(() =>
+        aListener.onResult({ status: Cr.NS_OK }, null)
+      );
     }
 
     // Now that we've determined we are not idle we can continue with the sync.
