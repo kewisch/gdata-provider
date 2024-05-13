@@ -120,7 +120,6 @@ export default class OAuth2 {
     params = new URLSearchParams(approvalUrl.search);
 
     if (params.get("error")) {
-      // eslint-disable-next-line no-throw-literal
       throw { error: params.get("error") };
     }
 
@@ -145,7 +144,6 @@ export default class OAuth2 {
     }
 
     if (!response.ok) {
-      // eslint-disable-next-line no-throw-literal
       throw details || { error: "request_error", code: response.status };
     }
 
@@ -180,7 +178,6 @@ export default class OAuth2 {
     }
 
     if (!response.ok) {
-      // eslint-disable-next-line no-throw-literal
       throw details || { error: "request_error", code: response.status };
     }
 
