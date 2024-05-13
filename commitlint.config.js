@@ -1,9 +1,9 @@
-module.exports = {
-  "extends": ["@commitlint/config-conventional"],
-  "ignores": [
+export default {
+  extends: ["@commitlint/config-conventional"],
+  ignores: [
     (message) => message.startsWith("chore(deps")
   ],
-  "rules": {
+  rules: {
     "subject-case": [
       2,
       "always",
