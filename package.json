@@ -53,7 +53,7 @@
     "bump-file": "^2.0.0",
     "conventional-changelog": "^6.0.0",
     "conventional-changelog-cli": "^5.0.0",
-    "eslint": "^9.2.0",
+    "eslint": "^9.3.0",
     "eslint-plugin-jest": "^28.5.0",
     "ical.js": "^2.0.1",
     "jest": "^29.7.0",
