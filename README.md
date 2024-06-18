@@ -8,31 +8,24 @@ These are the sources for the [Provider for Google Calendar](https://addons.thun
 Development
 -----------
 
-The Provider for Google Calendar uses an xpcshell test originally from the Thunderbird test harness.
+The main ways to test the provider are the [manual testing plan](./TESTING.md) and the linters.
+While there is an automated test available, it is unfortunately not very reliable.
 
-To run the tests locally you can use this command. Note that the tests use the dist xpi, so you'll need to build first.
-
-```bash
-$ npm test
-```
-
-You should also run the linters. This will run eslint and check your commit messages. Please format
-your messages according to [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary):
 
 ```bash
-$ npm run lint
+# Creating the packaged build in dist/gdata-provider.xpi
+npm run build
+
+# Running the linters
+npm run lint
+
+# Running the automated test harness. Build first because it uses dist/gdata-provider.xpi
+npm run build
+npm test
+
+# Make sure you also run the manual test plan, or at least the parts you are changing
 ```
-
-You can then run the build step to package the xpi in `dist/gdata-provider.xpi`
-
-```bash
-$ npm run build 
-```
-
-Note that the tests will fail if something is up with the Thunderbird test harness, so best
-[check treeherder](https://treeherder.mozilla.org/#/jobs?repo=comm-central) first.
-
-This may also affect your pull request checks, as the test are also running via Github Actions CI
+Commit messages should follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) with sentence case.
 
 
 Report Issues
