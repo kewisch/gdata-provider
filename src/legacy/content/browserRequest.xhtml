@@ -3,26 +3,56 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this file,
    - You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
-<?xml-stylesheet href="chrome://messenger/skin/messenger.css" type="text/css"?>
-<?xml-stylesheet href="chrome://messenger/skin/tabmail.css" type="text/css"?>
-<?xml-stylesheet href="chrome://messenger/skin/searchBox.css" type="text/css"?>
-<?xml-stylesheet href="chrome://messenger/skin/browserRequest.css" type="text/css"?>
-<?xml-stylesheet href="chrome://gdata-provider/content/browserRequest.css" type="text/css"?>
 
-<!DOCTYPE window>
-<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        xmlns:html="http://www.w3.org/1999/xhtml"
-        id="browserRequest"
-        buttons=","
-        onload="loadRequestedUrl()"
-        onclose="reportUserClosed()"
-        title=""
-        width="800"
-        height="500"
-        orient="vertical">
+<!DOCTYPE html [
+<!ENTITY % brandDTD SYSTEM "chrome://branding/locale/brand.dtd">
+%brandDTD;
+<!ENTITY % messengerDTD SYSTEM "chrome://messenger/locale/messenger.dtd">
+%messengerDTD;
+]>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+      xmlns:html="http://www.w3.org/1999/xhtml"
+      id="browserRequest"
+      scrolling="false"
+      buttons=","
+      width="800"
+      height="500"
+      orient="vertical">
+<head>
+  <link rel="stylesheet" href="chrome://global/skin/global.css" />
+  <link rel="stylesheet" href="chrome://messenger/skin/messenger.css" />
+  <link rel="stylesheet" href="chrome://messenger/skin/tabmail.css" />
+  <link rel="stylesheet" href="chrome://messenger/skin/searchBox.css" />
+  <link rel="stylesheet" href="chrome://messenger/skin/browserRequest.css" />
+  <link rel="stylesheet" href="chrome://gdata-provider/content/browserRequest.css" />
+  <link rel="localization" href="messenger/messenger.ftl" />
+  <script defer="defer" src="chrome://messenger/content/globalOverlay.js"></script>
+  <script defer="defer" src="chrome://global/content/editMenuOverlay.js"></script>
+  <script defer="defer" src="chrome://messenger/content/viewZoomOverlay.js"></script>
 
-  <script src="chrome://gdata-provider/content/browserRequest.js"/>
+  <script defer="defer" src="chrome://gdata-provider/content/browserRequest.js"></script>
+</head>
+<html:body xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <popupset id="mainPopupSet">
+    <panel id="DateTimePickerPanel"
+           type="arrow"
+           orient="vertical"
+           noautofocus="true"
+           norolluponanchor="true"
+           consumeoutsideclicks="never"
+           level="top"
+           tabspecific="true">
+    </panel>
+    <menulist popuponly="true" id="ContentSelectDropdown" hidden="true">
+      <menupopup rolluponmousewheel="true"
+                 activateontab="true" position="after_start"
+                 level="parent"
+                 consumeoutsideclicks="false" ignorekeys="shortcuts"
+        />
+    </menulist>
+    <tooltip id="remoteBrowserTooltip"/>
+  </popupset>
 
   <keyset id="mainKeyset">
     <key id="key_close" key="w" modifiers="accel" oncommand="cancelRequest()"/>
@@ -31,7 +61,13 @@
   <html:div id="header" class="contentTabAddress">
     <html:p id="dialog-message"/>
     <html:img id="security-icon" class="contentTabSecurity" />
-    <html:input id="url-bar" class="contentTabUrlInput themableSearchBox" readonly="readonly"></html:input>
+    <html:input id="headerMessage" class="contentTabUrlInput themableSearchBox" readonly="readonly"></html:input>
   </html:div>
-  <browser type="content" src="about:blank" id="request-frame" flex="1"/>
-</window>
+  <browser id="requestFrame"
+           type="content"
+           nodefaultsrc="true"
+           maychangeremoteness="true"
+           flex="1"
+           autocompletepopup="PopupAutoComplete"/>
+</html:body>
+</html>
