@@ -102,7 +102,7 @@ function showOrHideItemURL(url) {
   return !handler || handler.externalAppExistsForScheme(uri.scheme);
 }
 
-function initConferenceRow(document, messenger, item) {
+function initConferenceRow(document, messenger, item, calendar) {
   function noconference() {
     document.getElementById("gdata-conference-row").style.display = "none";
     return null;
@@ -111,7 +111,10 @@ function initConferenceRow(document, messenger, item) {
     return messenger.i18n.getMessage("eventdialog." + str, subs);
   }
 
-  if (item.calendar.type != "gdata") {
+  document.getElementById("gdata-conf-entrypoints").replaceChildren();
+
+  let workingCalendar = calendar || item.calendar;
+  if (workingCalendar.type != "gdata") {
     return noconference();
   }
 
