@@ -2,8 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* globals suppressListUpdate */
-
 var EXPORTED_SYMBOLS = ["gdataInitUI"];
 
 function gdataInitUI(window, document) {
@@ -26,6 +24,7 @@ function gdataInitUI(window, document) {
   let messenger = getMessenger();
   let reminderOutOfRange = messenger.i18n.getMessage("reminderOutOfRange");
   let notificationbox;
+  let checkPending;
 
   function calculateAlarmOffset(aItem, aAlarm, aRelated) {
     let offset = aAlarm.offset;
@@ -52,10 +51,20 @@ function gdataInitUI(window, document) {
   }
 
   function checkAllReminders() {
+    if (checkAllReminders.pending) {
+      return checkAllReminders.pending;
+    }
+    checkAllReminders.pending = checkAllRemindersAsync().finally(() => {
+      checkAllReminders.pending = null;
+    });
+    return checkAllReminders.pending;
+  }
+
+  async function checkAllRemindersAsync() {
     let listbox = document.getElementById("reminder-listbox");
 
     let validated = true;
-    for (let node of listbox.childNodes) {
+    for (let node of listbox.querySelectorAll("richlistitem")) {
       validated = validated && checkReminderRange(node.reminder);
       if (!validated) {
         break;
@@ -77,12 +86,12 @@ function gdataInitUI(window, document) {
     if (validated) {
       notificationbox.removeAllNotifications();
     } else if (!notificationbox.getNotificationWithValue("reminderNotification")) {
-      let notification = notificationbox.appendNotification("reminderNotification", {
+      let notification = await notificationbox.appendNotification("reminderNotification", {
         label: reminderOutOfRange,
         priority: notificationbox.PRIORITY_CRITICAL_HIGH,
       });
 
-      notification.closeButton.setAttribute("hidden", "true");
+      notification.closeButton.style.display = "none";
     }
   }
 
