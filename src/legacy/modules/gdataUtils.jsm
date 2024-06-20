@@ -993,6 +993,10 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
       }
     }
 
+    if (aEntry.webViewLink) {
+      item.setProperty("URL", aEntry.webViewLink);
+    }
+
     // updated (This must be set last!)
     item.setProperty(
       "DTSTAMP",
