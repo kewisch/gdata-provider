@@ -19,11 +19,9 @@ var { calGoogleRequest, API_BASE } = ChromeUtils.import(
   "resource://gdata-provider/legacy/modules/gdataRequest.jsm"
 );
 
-var Services =
-  globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
 var { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm");
 
-// Thunderbird 120 compat
+// TB120 COMPAT
 if (!Promise.withResolvers) {
   var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
   Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
@@ -70,7 +68,7 @@ var calGoogleSessionManager = {
     if (uri.schemeIs("googleapi")) {
       let fullUser, path;
       if (uri.pathQueryRef.substr(0, 2) == "//") {
-        // Thunderbird 115 compat
+        // TB115 COMPAT
         [fullUser, path] = uri.pathQueryRef.substr(2).split("/", 2);
       } else {
         [, fullUser] = uri.prePath.split("//", 2);

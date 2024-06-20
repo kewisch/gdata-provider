@@ -24,6 +24,7 @@ module.exports = {
   globals: {
     messenger: true,
     fetch: true,
+    Services: true,
   },
 
   extends: ["plugin:mozilla/recommended"],

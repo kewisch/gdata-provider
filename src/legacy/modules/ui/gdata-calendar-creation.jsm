@@ -9,8 +9,6 @@ function gdataInitUI(window, document) {
     "ui/gdata-calendar-creation.jsm"
   );
 
-  const Services =
-    globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
   const { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
   const { getGoogleSessionManager } = ChromeUtils.import(
     "resource://gdata-provider/legacy/modules/gdataSession.jsm"

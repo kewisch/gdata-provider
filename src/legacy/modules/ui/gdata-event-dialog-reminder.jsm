@@ -19,8 +19,6 @@ function gdataInitUI(window, document) {
 
   const FOUR_WEEKS_BEFORE = -2419200;
   const { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
-  const Services =
-    globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
   const { monkeyPatch, getMessenger } = ChromeUtils.import(
     "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
   );
@@ -91,8 +89,7 @@ function gdataInitUI(window, document) {
   monkeyPatch(window, "updateReminder", function(protofunc, event) {
     let rv = protofunc.apply(this, Array.from(arguments).slice(1));
     if (
-      suppressListUpdate ||
-      event.target.localName == "listitem" || // TB102 COMPAT
+      window.suppressListUpdate ||
       event.target.localName == "richlistitem" ||
       event.target.parentNode.localName == "richlistitem" ||
       event.target.id == "reminder-remove-button" ||
