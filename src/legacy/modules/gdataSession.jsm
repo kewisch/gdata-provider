@@ -474,6 +474,10 @@ calGoogleSession.prototype = {
    * calIFreeBusyProvider Implementation
    */
   getFreeBusyIntervals: function(aCalId, aRangeStart, aRangeEnd, aBusyTypes, aListener) {
+    // For some unexplained reason, the global `cal` is not available in this function
+    // eslint-disable-next-line no-shadow
+    let { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
+
     let completeSync = aIntervals => {
       cal.LOG(
         "[calGoogleCalendar] Freebusy query for " +
