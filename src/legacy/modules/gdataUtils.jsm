@@ -16,11 +16,9 @@ var { windowsTimezoneMap } = ChromeUtils.import(
   "resource://gdata-provider/legacy/modules/timezoneMap.jsm"
 );
 
-var Services =
-  globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-// Thunderbird 120 compat
+// TB120 COMPAT
 if (!Promise.withResolvers) {
   var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
   Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
@@ -1529,8 +1527,8 @@ function getMessenger(extension) {
   }
 
   messengerInstance = {};
-  XPCOMUtils.defineLazyGetter(messengerInstance, "i18n", () => getWXAPI(extension, "i18n", true));
-  XPCOMUtils.defineLazyGetter(messengerInstance, "storage", () =>
+  ChromeUtils.defineLazyGetter(messengerInstance, "i18n", () => getWXAPI(extension, "i18n", true));
+  ChromeUtils.defineLazyGetter(messengerInstance, "storage", () =>
     getWXAPI(extension, "storage", true)
   );
   messengerInstance.gdataSyncPrefs = new SyncPrefs(messengerInstance);

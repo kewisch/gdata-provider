@@ -4,8 +4,6 @@
  * Portions Copyright (C) Philipp Kewisch, 2020 */
 
 const { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
-const Services =
-  globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
 const { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 const { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
 
