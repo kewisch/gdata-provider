@@ -390,7 +390,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
 
   // Only parse attendees if they are enabled, due to bug 407961
   if (getMessenger().gdataSyncPrefs.get("settings.enableAttendees", false)) {
-    let createAttendee = function(attendee) {
+    let createAttendee = function(attendee, isOrganizer) {
       const statusMap = {
         "NEEDS-ACTION": "needsAction",
         DECLINED: "declined",
@@ -407,27 +407,27 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
       }
 
       setIf(attendeeData, "displayName", attendee.commonName);
-      setIf(attendeeData, "optional", attendee.role && attendee.role != "REQ-PARTICIPANT");
-      setIf(attendeeData, "responseStatus", statusMap[attendee.participationStatus]);
-      setIf(attendeeData, "comment", attendee.getProperty("COMMENT"));
-      setIf(attendeeData, "resource", attendee.userType && attendee.userType != "INDIVIDUAL");
-      setIf(attendeeData, "additionalGuests", attendee.getProperty("X-NUM-GUESTS"));
+      if (!isOrganizer) {
+        setIf(attendeeData, "optional", attendee.role && attendee.role != "REQ-PARTICIPANT");
+        setIf(attendeeData, "responseStatus", statusMap[attendee.participationStatus]);
+        setIf(attendeeData, "comment", attendee.getProperty("COMMENT"));
+        setIf(attendeeData, "resource", attendee.userType && attendee.userType != "INDIVIDUAL");
+        setIf(attendeeData, "additionalGuests", attendee.getProperty("X-NUM-GUESTS"));
+      }
       return attendeeData;
     };
 
-    let needsOrganizer = true;
-    let attendeeData = [];
-    for (let attendee of aItem.getAttendees()) {
-      attendeeData.push(createAttendee(attendee));
-      if (aItem.organizer && aItem.organizer.id == attendee.id) {
-        needsOrganizer = false;
-      }
+    if (aItem.organizer) {
+      itemData.organizer = createAttendee(aItem.organizer, true);
     }
 
-    if (aItem.organizer) {
-      itemData.organizer = createAttendee(aItem.organizer);
-      if (needsOrganizer) {
-        attendeeData.push(itemData.organizer);
+    let attendeeData = [];
+    for (let attendee of aItem.getAttendees()) {
+      // Lightning sets the participation status on the organizer, not the attendee, need to work around.
+      if (aItem.organizer && aItem.organizer.id == attendee.id) {
+        attendeeData.push(createAttendee(aItem.organizer));
+      } else {
+        attendeeData.push(createAttendee(attendee));
       }
     }
 
