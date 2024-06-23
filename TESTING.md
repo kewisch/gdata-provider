@@ -13,7 +13,7 @@ Google Calendar.
 
 ## Subscribe to a new calendar
 * Ensure the login dialog looks ok, with the message at the top, including the email.
-* Ensure all event calendars and task lists are shown and you can select two to subscribe to at once.
+* Ensure all event calendars and task lists are shown and you can select at least two to subscribe to at once.
 * Ensure token is saved in the password manager
 
 ## Basic Event Operations
@@ -32,7 +32,7 @@ Google Calendar.
 
 ## Advanced Operations
 * Idle time
-  1. Open the console, disable screensaver, let the computer idle for at least 5 minutes.
+  1. Set refresh interval to 30 minutes, Open the console, disable screensaver, let the computer idle for at least 30 minutes.
   2. Ensure messages such as "Skipping refresh since user is idle"
   3. Move mouse and become active again, ensure next sync succeeds
 * Freebusy
@@ -56,11 +56,15 @@ Test both the dialog variant, and the in-tab variant.
   * In the menu  (options-->privacy)
   * In the toolbar (on by default)
   * In the status bar (if it is visible)
+  * Note that "Default" is not explicitly checked (due to bug)
 * Default Reminders
   * There is a "Default" item in the reminder dropdown
+  * If the calendar has default reminders, the "Default" item is selected on a new event
   * Saving a new event without changes keeps the default alarm (verify on Google as well)
   * Switching to the default alarm works
+  * Note that events created via drag have "No reminders" set, because we can't differentiate
 * When switching calendars, the dialog adapts based on calendar type (e.g. gdata vs local)
+  * The conference info doesn't show on other calendars
 * OOO and focus time events
   * both should show a notification that they are such events
   * Not shown in OOO: location, category, alarm
@@ -72,10 +76,9 @@ Test both the dialog variant, and the in-tab variant.
 * Creating reminders past the start of the event should not work
 
 ## Task Dialog
-* Ensure the task dialog is stripped down to just the supported fields. The following should not be visible:
-  * Attachments, attendees, privacy, priority, freebusy, urls
-  * Location, startdate, end timezone, link image, status, percent complete, recurrence, alarms
-  * Time in the due date, categories
+* Ensure the task dialog is stripped down to just the supported fields. Only the following should be visible:
+  * Calendar picker, title, description, status (needsAction or completed)
+  * due date (without time), completion date, attachments (links only)
 
 ## Preferences and Calendar Properties
 * Ensure that preferences are persisted
