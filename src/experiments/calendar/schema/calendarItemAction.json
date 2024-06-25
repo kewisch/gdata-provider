@@ -50,6 +50,13 @@
                 "description": "Currently unused.",
                 "type": "string",
                 "optional": true
+              },
+              "type": {
+                "description": "Specifies the type of the button. Default type is <var>button</var>.",
+                "type": "string",
+                "enum": ["button", "menu"],
+                "optional": true,
+                "default": "button"
               }
             },
             "optional": true

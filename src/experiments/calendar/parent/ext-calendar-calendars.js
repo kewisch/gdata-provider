@@ -2,37 +2,35 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* global Services */
+var {
+  ExtensionCommon: { ExtensionAPI, EventManager }
+} = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
+var {
+  ExtensionUtils: { ExtensionError }
+} = ChromeUtils.importESModule("resource://gre/modules/ExtensionUtils.sys.mjs");
 
-var { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
-var { ExtensionUtils } = ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
-
-var { ExtensionAPI, EventManager } = ExtensionCommon;
-var { ExtensionError } = ExtensionUtils;
-
-var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
+var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
 
 this.calendar_calendars = class extends ExtensionAPI {
   getAPI(context) {
-    const calmgr = cal.getCalendarManager();
     const {
       unwrapCalendar,
       getResolvedCalendarById,
       isOwnCalendar,
       convertCalendar,
-    } = ChromeUtils.import(this.extension.rootURI.resolve("experiments/calendar/ext-calendar-utils.jsm"));
+    } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
 
     return {
       calendar: {
         calendars: {
           query: async function({ type, url, name, color, readOnly, enabled }) {
-            let calendars = calmgr.getCalendars();
+            let calendars = cal.manager.getCalendars();
 
             let pattern = null;
             if (url) {
               try {
                 pattern = new MatchPattern(url, { restrictSchemes: false });
-              } catch (e) {
+              } catch {
                 throw new ExtensionError(`Invalid url pattern: ${url}`);
               }
             }
@@ -73,16 +71,16 @@ this.calendar_calendars = class extends ExtensionAPI {
           get: async function(id) {
             // TODO find a better way to determine cache id
             if (id.endsWith("#cache")) {
-              let calendar = unwrapCalendar(calmgr.getCalendarById(id.substring(0, id.length - 6)));
+              let calendar = unwrapCalendar(cal.manager.getCalendarById(id.substring(0, id.length - 6)));
               let own = calendar.offlineStorage && isOwnCalendar(calendar, context.extension);
               return own ? convertCalendar(context.extension, calendar.offlineStorage) : null;
             } else {
-              let calendar = calmgr.getCalendarById(id);
+              let calendar = cal.manager.getCalendarById(id);
               return convertCalendar(context.extension, calendar);
             }
           },
           create: async function(createProperties) {
-            let calendar = calmgr.createCalendar(
+            let calendar = cal.manager.createCalendar(
               createProperties.type,
               Services.io.newURI(createProperties.url)
             );
@@ -95,13 +93,13 @@ this.calendar_calendars = class extends ExtensionAPI {
               calendar.setProperty("color", createProperties.color);
             }
 
-            calmgr.registerCalendar(calendar);
+            cal.manager.registerCalendar(calendar);
 
-            calendar = calmgr.getCalendarById(calendar.id);
+            calendar = cal.manager.getCalendarById(calendar.id);
             return convertCalendar(context.extension, calendar);
           },
           update: async function(id, updateProperties) {
-            let calendar = calmgr.getCalendarById(id);
+            let calendar = cal.manager.getCalendarById(id);
             if (!calendar) {
               throw new ExtensionError(`Invalid calendar id: ${id}`);
             }
@@ -129,16 +127,27 @@ this.calendar_calendars = class extends ExtensionAPI {
 
             if (updateProperties.capabilities) {
               // TODO validate capability names
-              calendar.capabilities = Object.assign({}, calendar.capabilities, updateProperties.capabilities);
+              let unwrappedCalendar = calendar.wrappedJSObject.mUncachedCalendar.wrappedJSObject;
+              unwrappedCalendar.capabilities = Object.assign({}, unwrappedCalendar.capabilities, updateProperties.capabilities);
+            }
+
+            if (updateProperties.lastError !== undefined) {
+              if (updateProperties.lastError === null) {
+                calendar.setProperty("currentStatus", Cr.NS_ERROR_FAILURE);
+                calendar.setProperty("lastErrorMessage", updateProperties.lastError);
+              } else {
+                calendar.setProperty("currentStatus", Cr.NS_OK);
+                calendar.setProperty("lastErrorMessage", "");
+              }
             }
           },
           remove: async function(id) {
-            let calendar = calmgr.getCalendarById(id);
+            let calendar = cal.manager.getCalendarById(id);
             if (!calendar) {
               throw new ExtensionError(`Invalid calendar id: ${id}`);
             }
 
-            calmgr.unregisterCalendar(calendar);
+            cal.manager.unregisterCalendar(calendar);
           },
           clear: async function(id) {
             if (!id.endsWith("#cache")) {
@@ -146,7 +155,7 @@ this.calendar_calendars = class extends ExtensionAPI {
             }
 
             let offlineStorage = getResolvedCalendarById(context.extension, id);
-            let calendar = calmgr.getCalendarById(id.substring(0, id.length - 6));
+            let calendar = cal.manager.getCalendarById(id.substring(0, id.length - 6));
 
             if (!isOwnCalendar(calendar, context.extension)) {
               throw new ExtensionError("Cannot clear foreign calendar");
@@ -177,14 +186,14 @@ this.calendar_calendars = class extends ExtensionAPI {
                 ids = [ids];
               }
               for (let id of ids) {
-                let calendar = calmgr.getCalendarById(id);
+                let calendar = cal.manager.getCalendarById(id);
                 if (!calendar) {
                   throw new ExtensionError(`Invalid calendar id: ${id}`);
                 }
                 calendars.push(calendar);
               }
             } else {
-              for (let calendar of cal.getCalendarManager().getCalendars()) {
+              for (let calendar of cal.manager.getCalendars()) {
                 if (calendar.getProperty("calendar-main-in-composite")) {
                   calendars.push(calendar);
                 }
@@ -210,9 +219,9 @@ this.calendar_calendars = class extends ExtensionAPI {
                 onCalendarDeleting(calendar) {},
               };
 
-              cal.getCalendarManager().addObserver(observer);
+              cal.manager.addObserver(observer);
               return () => {
-                cal.getCalendarManager().removeObserver(observer);
+                cal.manager.removeObserver(observer);
               };
             },
           }).api(),
@@ -240,9 +249,9 @@ this.calendar_calendars = class extends ExtensionAPI {
                 },
               });
 
-              cal.getCalendarManager().addCalendarObserver(observer);
+              cal.manager.addCalendarObserver(observer);
               return () => {
-                cal.getCalendarManager().removeCalendarObserver(observer);
+                cal.manager.removeCalendarObserver(observer);
               };
             },
           }).api(),
@@ -260,9 +269,9 @@ this.calendar_calendars = class extends ExtensionAPI {
                 onCalendarDeleting(calendar) {},
               };
 
-              cal.getCalendarManager().addObserver(observer);
+              cal.manager.addObserver(observer);
               return () => {
-                cal.getCalendarManager().removeObserver(observer);
+                cal.manager.removeObserver(observer);
               };
             },
           }).api(),

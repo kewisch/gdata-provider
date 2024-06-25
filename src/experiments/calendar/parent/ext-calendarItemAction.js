@@ -2,30 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+var { ExtensionCommon: { makeWidgetId } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
 
-ChromeUtils.defineModuleGetter(
-  this,
-  "ToolbarButtonAPI",
-  "resource:///modules/ExtensionToolbarButtons.jsm"
-);
-ChromeUtils.defineModuleGetter(
-  this,
-  "ExtensionParent",
-  "resource://gre/modules/ExtensionParent.jsm"
-);
-
-ChromeUtils.defineModuleGetter(
-  this,
-  "ExtensionSupport",
-  "resource:///modules/ExtensionSupport.jsm",
-);
-
-
-var { ExtensionCommon } = ChromeUtils.import(
-  "resource://gre/modules/ExtensionCommon.jsm"
-);
-
-var { makeWidgetId } = ExtensionCommon;
+var { ExtensionParent } = ChromeUtils.importESModule("resource://gre/modules/ExtensionParent.sys.mjs");
+var { ExtensionSupport } = ChromeUtils.importESModule("resource:///modules/ExtensionSupport.sys.mjs");
+var { ToolbarButtonAPI } = ChromeUtils.importESModule("resource:///modules/ExtensionToolbarButtons.sys.mjs");
 
 const calendarItemActionMap = new WeakMap();
 

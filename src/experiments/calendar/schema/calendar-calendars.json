@@ -151,7 +151,8 @@
               "readOnly": { "type": "boolean", "optional": true },
               "enabled": { "type": "boolean", "optional": true },
               "color": { "type": "string", "optional": true },
-              "capabilities": { "$ref": "CalendarCapabilities", "optional": true }
+              "capabilities": { "$ref": "CalendarCapabilities", "optional": true },
+              "lastError": { "type": "string", "optional": true }
             }
           }
         ]

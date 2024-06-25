@@ -2,18 +2,35 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* global Services */
+var {
+  ExtensionCommon: { ExtensionAPI, EventManager }
+} = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
 
-var { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
-var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
+var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
+var { ExtensionSupport } = ChromeUtils.importESModule("resource:///modules/ExtensionSupport.sys.mjs");
 
-var { ExtensionAPI, EventManager } = ExtensionCommon;
+// TODO move me
+class ItemError extends Error {
+  static CONFLICT = "CONFLICT";
+  static READ_FAILED = "READ_FAILED";
+  static MODIFY_FAILED = "MODIFY_FAILED";
 
-ChromeUtils.defineModuleGetter(
-  this,
-  "ExtensionSupport",
-  "resource:///modules/ExtensionSupport.jsm",
-);
+  constructor(reason) {
+    super();
+    this.reason = reason;
+  }
+
+  get xpcomReason() {
+    switch (this.reason) {
+      case ItemError.READ_FAILED:
+        return Ci.calIErrors.READ_FAILED;
+      case ItemError.MODIFY_FAILED:
+        return Ci.calIErrors.MODIFICATION_FAILED;
+      default:
+        return Cr.NS_ERROR_FAILURE;
+    }
+  }
+}
 
 function convertProps(props, extension) {
   let calendar = new ExtCalendar(extension);
@@ -31,10 +48,9 @@ class ExtCalendarProvider {
   QueryInterface = ChromeUtils.generateQI(["calICalendarProvider"]);
 
   static register(extension) {
-    let calmgr = cal.getCalendarManager();
     let type = "ext-" + extension.id;
 
-    calmgr.registerCalendarProvider(
+    cal.manager.registerCalendarProvider(
       type,
       class extends ExtCalendar {
         constructor() {
@@ -48,9 +64,8 @@ class ExtCalendarProvider {
   }
 
   static unregister(extension) {
-    let calmgr = cal.getCalendarManager();
     let type = "ext-" + extension.id;
-    calmgr.unregisterCalendarProvider(type, true);
+    cal.manager.unregisterCalendarProvider(type, true);
     cal.provider.unregister(type);
   }
 
@@ -68,10 +83,10 @@ class ExtCalendarProvider {
   }
 
   createCalendar() {
-    throw new Error("Not implemented", Cr.NS_ERROR_NOT_IMPLEMENTED);
+    throw new Components.Exception("Not implemented", Cr.NS_ERROR_NOT_IMPLEMENTED);
   }
   deleteCalendar() {
-    throw new Error("Not implemented", Cr.NS_ERROR_NOT_IMPLEMENTED);
+    throw new Components.Exception("Not implemented", Cr.NS_ERROR_NOT_IMPLEMENTED);
   }
 
   getCalendar(url) {
@@ -159,7 +174,6 @@ class ExtCalendar extends cal.provider.BaseClass {
         }
         break;
 
-
       case "readOnly":
         if (this.capabilities.mutable === false) {
           return true;
@@ -206,10 +220,13 @@ class ExtCalendar extends cal.provider.BaseClass {
     return super.getProperty(name);
   }
 
-  addItem(aItem, aListener) {
-    return this.adoptItem(aItem.clone(), aListener);
+  _cachedAdoptItemCallback = null;
+
+  addItem(aItem) {
+    return this.adoptItem(aItem.clone());
   }
-  async adoptItem(aItem, aListener) {
+  async adoptItem(aItem) {
+    const adoptCallback = this._cachedAdoptItemCallback;
     try {
       let items = await this.extension.emit("calendar.provider.onItemCreated", this, aItem);
       let { item, metadata } = items.find(props => props.item) || {};
@@ -225,42 +242,68 @@ class ExtCalendar extends cal.provider.BaseClass {
         // The ID of the item has changed. We'll have to make sure that whatever old item is in the
         // cache is removed.
         // TODO Test this well or risk data loss
-        let pcal = cal.async.promisifyCalendar(this);
-        await pcal.deleteItem(aItem);
+        await this.offlineStorage.deleteItem(aItem);
       }
 
-      if (!item.calendar) {
-        item.calendar = this.superCalendar;
-      }
+      item.calendar = this.superCalendar;
+
       this.observers.notify("onAddItem", [item]);
-      this.notifyOperationComplete(
-        aListener,
-        Cr.NS_OK,
-        Ci.calIOperationListener.ADD,
-        item.id,
-        item
-      );
+
+      if (adoptCallback) {
+        await adoptCallback(item.calendar, Cr.NS_OK, Ci.calIOperationListener.ADD, item.id, item);
+      }
+      return item;
     } catch (e) {
-      let code = e.result || Cr.NS_ERROR_FAILURE;
-      this.notifyPureOperationComplete(
-        aListener,
-        code,
-        Ci.calIOperationListener.ADD,
-        aItem.id,
-        e.message
-      );
+      let code;
+      if (e instanceof ItemError) {
+        code = e.xpcomReason;
+      } else {
+        code = e.result || Cr.NS_ERROR_FAILURE;
+      }
+
+      throw new Components.Exception(e.message, code);
     }
   }
 
-  async modifyItem(aNewItem, aOldItem, aListener) {
+  discoverItem(results) {
+    let error, success;
+
+    for (let result of results) {
+      if (typeof result == "object" && result?.error) {
+        success = null;
+        error = result.error;
+        break;
+      }
+
+      if (typeof result == "object" && result?.item) {
+        success = result;
+      }
+      // TODO warn if two results?
+    }
+
+    if (error) {
+      throw new ItemError(error);
+    } else {
+      return success;
+    }
+  }
+
+  _cachedModifyItemCallback = null;
+
+  async modifyItem(aNewItem, aOldItem, aOptions = {}) {
+    const modifyCallback = this._cachedModifyItemCallback;
+
     try {
-      let items = await this.extension.emit(
+      let results = await this.extension.emit(
         "calendar.provider.onItemUpdated",
         this,
         aNewItem,
-        aOldItem
+        aOldItem,
+        aOptions
       );
-      let { item, metadata } = items.find(props => props.item) || {};
+
+      let { item, metadata } = this.discoverItem(results);
+
       if (!item) {
         throw new Components.Exception("Did not receive item from extension", Cr.NS_ERROR_FAILURE);
       }
@@ -273,28 +316,40 @@ class ExtCalendar extends cal.provider.BaseClass {
         item.calendar = this.superCalendar;
       }
       this.observers.notify("onModifyItem", [item, aOldItem]);
-      this.notifyOperationComplete(
-        aListener,
-        Cr.NS_OK,
-        Ci.calIOperationListener.MODIFY,
-        item.id,
-        item
-      );
+      if (modifyCallback) {
+        await modifyCallback(item.calendar, Cr.NS_OK, Ci.calIOperationListener.MODIFY, item.id, item);
+      }
+      return item;
     } catch (e) {
-      let code = e.result || Cr.NS_ERROR_FAILURE;
-      this.notifyPureOperationComplete(
-        aListener,
-        code,
-        Ci.calIOperationListener.MODIFY,
-        aNewItem.id,
-        e.message
-      );
+      let code;
+      if (e instanceof ItemError) {
+        if (e.reason == ItemError.CONFLICT) {
+          let overwrite = cal.provider.promptOverwrite("modify", aOldItem);
+          if (overwrite) {
+            return this.modifyItem(aNewItem, aOldItem, { force: true });
+          } else {
+            code = Ci.calIErrors.OPERATION_CANCELLED;
+            this.superCalendar.refresh();
+          }
+        } else {
+          code = e.xpcomReason;
+        }
+      } else {
+        code = e.result || Cr.NS_ERROR_FAILURE;
+      }
+      throw new Components.Exception(e.message, code);
     }
   }
 
-  async deleteItem(aItem, aListener) {
+  async deleteItem(aItem, aOptions = {}) {
     try {
-      let results = await this.extension.emit("calendar.provider.onItemRemoved", this, aItem);
+      let results = await this.extension.emit(
+        "calendar.provider.onItemRemoved",
+        this,
+        aItem,
+        aOptions
+      );
+
       if (!results.length) {
         throw new Components.Exception(
           "Extension did not consume item deletion",
@@ -302,32 +357,39 @@ class ExtCalendar extends cal.provider.BaseClass {
         );
       }
 
+      // This will discover errors and throw them
+      this.discoverItem(results);
+
       this.observers.notify("onDeleteItem", [aItem]);
-      this.notifyOperationComplete(
-        aListener,
-        Cr.NS_OK,
-        Ci.calIOperationListener.DELETE,
-        aItem.id,
-        aItem
-      );
     } catch (e) {
-      let code = e.result || Cr.NS_ERROR_FAILURE;
-      this.notifyPureOperationComplete(
-        aListener,
-        code,
-        Ci.calIOperationListener.DELETE,
-        aItem.id,
-        e.message
-      );
+      let code;
+      if (e instanceof ItemError) {
+        if (e.reason == ItemError.CONFLICT) {
+          let overwrite = cal.provider.promptOverwrite("delete", aItem);
+          if (overwrite) {
+            return this.deleteItem(aItem, { force: true });
+          } else {
+            code = Ci.calIErrors.OPERATION_CANCELLED;
+            this.superCalendar.refresh();
+          }
+        } else {
+          code = e.xpcomReason;
+        }
+      } else {
+        code = e.result || Cr.NS_ERROR_FAILURE;
+      }
+
+      throw new Components.Exception(e.message, code);
     }
+    return aItem;
   }
 
-  getItem(aId, aListener) {
-    this.offlineStorage.getItem(...arguments);
+  getItem(aId) {
+    return this.offlineStorage.getItem(...arguments);
   }
 
-  getItems(aFilter, aCount, aRangeStart, aRangeEnd, aListener) {
-    this.offlineStorage.getItems(...arguments);
+  getItems(aFilter, aCount, aRangeStart, aRangeEnd) {
+    return this.offlineStorage.getItems(...arguments);
   }
 
   refresh() {
@@ -393,9 +455,14 @@ this.calendar_provider = class extends ExtensionAPI {
       this.onManifestEntry("calendar_provider");
     }
 
-    const { setupE10sBrowser } = ChromeUtils.import(this.extension.rootURI.resolve("experiments/calendar/ext-calendar-utils.jsm"));
+    Services.io
+      .getProtocolHandler("resource")
+      .QueryInterface(Ci.nsIResProtocolHandler)
+      .setSubstitution("tb-experiments-calendar", this.extension.rootURI);
 
-    ChromeUtils.registerWindowActor("CalendarProvider", { child: { moduleURI: this.extension.rootURI.resolve("experiments/calendar/child/ext-calendar-provider-actor.jsm") } });
+    const { setupE10sBrowser } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
+
+    ChromeUtils.registerWindowActor("CalendarProvider", { child: { esModuleURI: "resource://tb-experiments-calendar/experiments/calendar/child/ext-calendar-provider-actor.sys.mjs" } });
 
     ExtensionSupport.registerWindowListener("ext-calendar-provider-" + this.extension.id, {
       chromeURLs: ["chrome://calendar/content/calendar-creation.xhtml"],
@@ -417,7 +484,9 @@ this.calendar_provider = class extends ExtensionAPI {
             }
 
             loadPromise.then(() => {
-              browser.loadURI(calendarType.panelSrc, { triggeringPrincipal: this.extension.principal });
+              browser.fixupAndLoadURIString(calendarType.panelSrc, {
+                triggeringPrincipal: this.extension.principal
+              });
             });
 
             win.gButtonHandlers.forNodeId["panel-addon-calendar-settings"].accept = calendarType.onCreated;
@@ -448,7 +517,11 @@ this.calendar_provider = class extends ExtensionAPI {
       ExtCalendarProvider.unregister(this.extension);
     }
 
-    Cu.unload(this.extension.rootURI.resolve("experiments/calendar/ext-calendar-utils.jsm"));
+    Cu.unload("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
+    Services.io
+      .getProtocolHandler("resource")
+      .QueryInterface(Ci.nsIResProtocolHandler)
+      .setSubstitution("tb-experiments-calendar", null);
     Services.obs.notifyObservers(null, "startupcache-invalidate", null);
   }
 
@@ -468,7 +541,7 @@ this.calendar_provider = class extends ExtensionAPI {
     // of listeners to be connected before we initialize.
     // TODO this works, but if there is an async IIFE then that doesn't have the provider registered
     // yet.
-    this.extension.on("background-page-started", () => {
+    this.extension.on("background-script-started", () => {
       ExtCalendarProvider.register(this.extension);
       let provider = new ExtCalendarProvider(this.extension);
       cal.provider.register(provider);
@@ -480,7 +553,7 @@ this.calendar_provider = class extends ExtensionAPI {
       propsToItem,
       convertItem,
       convertCalendar,
-    } = ChromeUtils.import(this.extension.rootURI.resolve("experiments/calendar/ext-calendar-utils.jsm"));
+    } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
 
     return {
       calendar: {
@@ -489,18 +562,24 @@ this.calendar_provider = class extends ExtensionAPI {
             context,
             name: "calendar.provider.onItemCreated",
             register: (fire, options) => {
-              let listener = async (event, calendar, item) => {
+              let listener = async (event, calendar, item, listenerOptions) => {
                 let props = await fire.async(
                   convertCalendar(context.extension, calendar),
-                  convertItem(item, options, context.extension)
+                  convertItem(item, options, context.extension),
+                  listenerOptions
                 );
-                if (props?.type) {
-                  item = propsToItem(props, item);
+
+                if (props?.error) {
+                  return { error: props.error };
+                } else {
+                  if (props?.type) {
+                    item = propsToItem(props, item);
+                  }
+                  if (!item.id) {
+                    item.id = cal.getUUID();
+                  }
+                  return { item, metadata: props?.metadata };
                 }
-                if (!item.id) {
-                  item.id = cal.getUUID();
-                }
-                return { item, metadata: props?.metadata };
               };
 
               context.extension.on("calendar.provider.onItemCreated", listener);
@@ -514,16 +593,21 @@ this.calendar_provider = class extends ExtensionAPI {
             context,
             name: "calendar.provider.onItemUpdated",
             register: (fire, options) => {
-              let listener = async (event, calendar, item, oldItem) => {
+              let listener = async (event, calendar, item, oldItem, listenerOptions) => {
                 let props = await fire.async(
                   convertCalendar(context.extension, calendar),
                   convertItem(item, options, context.extension),
-                  convertItem(oldItem, options, context.extension)
+                  convertItem(oldItem, options, context.extension),
+                  listenerOptions
                 );
-                if (props?.type) {
-                  item = propsToItem(props, item);
+                if (props?.error) {
+                  return { error: props.error };
+                } else {
+                  if (props?.type) {
+                    item = propsToItem(props, item);
+                  }
+                  return { item, metadata: props?.metadata };
                 }
-                return { item, metadata: props?.metadata };
               };
 
               context.extension.on("calendar.provider.onItemUpdated", listener);
@@ -537,11 +621,13 @@ this.calendar_provider = class extends ExtensionAPI {
             context,
             name: "calendar.provider.onItemRemoved",
             register: (fire, options) => {
-              let listener = (event, calendar, item) => {
-                return fire.async(
+              let listener = async (event, calendar, item, listenerOptions) => {
+                let res = await fire.async(
                   convertCalendar(context.extension, calendar),
-                  convertItem(item, options, context.extension)
+                  convertItem(item, options, context.extension),
+                  listenerOptions
                 );
+                return res;
               };
 
               context.extension.on("calendar.provider.onItemRemoved", listener);
@@ -601,10 +687,10 @@ this.calendar_provider = class extends ExtensionAPI {
             name: "calendar.provider.onFreeBusy",
             register: fire => {
               let provider = new ExtFreeBusyProvider(fire);
-              cal.getFreeBusyService().addProvider(provider);
+              cal.freeBusyService.addProvider(provider);
 
               return () => {
-                cal.getFreeBusyService().removeProvider(provider);
+                cal.freeBusyService.removeProvider(provider);
               };
             },
           }).api(),

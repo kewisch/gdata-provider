@@ -2,52 +2,22 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var EXPORTED_SYMBOLS = [
-  "isOwnCalendar",
-  "unwrapCalendar",
-  "getResolvedCalendarById",
-  "getCachedCalendar",
-  "isCachedCalendar",
-  "convertCalendar",
-  "propsToItem",
-  "convertItem",
-  "convertAlarm",
-  "setupE10sBrowser",
-];
+var {
+  ExtensionUtils: { ExtensionError, promiseEvent }
+} = ChromeUtils.importESModule("resource://gre/modules/ExtensionUtils.sys.mjs");
 
-var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
+var { CalEvent } = ChromeUtils.importESModule("resource:///modules/CalEvent.sys.mjs");
+var { CalTodo } = ChromeUtils.importESModule("resource:///modules/CalTodo.sys.mjs");
+var { ExtensionParent } = ChromeUtils.importESModule("resource://gre/modules/ExtensionParent.sys.mjs");
 
-XPCOMUtils.defineLazyModuleGetters(this, {
-  cal: "resource:///modules/calendar/calUtils.jsm",
-  ICAL: "resource:///modules/calendar/Ical.jsm",
-  CalEvent: "resource:///modules/CalEvent.jsm",
-  CalTodo: "resource:///modules/CalTodo.jsm",
-  ExtensionParent: "resource://gre/modules/ExtensionParent.jsm",
-});
+var { default: ICAL } = ChromeUtils.importESModule("resource:///modules/calendar/Ical.sys.mjs");
 
-var { ExtensionError, promiseEvent } = ChromeUtils.import(
-  "resource://gre/modules/ExtensionUtils.jsm"
-).ExtensionUtils;
-
-XPCOMUtils.defineLazyGetter(this, "standaloneStylesheets", () => {
-  let stylesheets = [];
-  let { AppConstants } = ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-
-  if (AppConstants.platform === "macosx") {
-    stylesheets.push("chrome://browser/content/extension-mac-panel.css");
-  } else if (AppConstants.platform === "win") {
-    stylesheets.push("chrome://browser/content/extension-win-panel.css");
-  } else if (AppConstants.platform === "linux") {
-    stylesheets.push("chrome://browser/content/extension-linux-panel.css");
-  }
-  return stylesheets;
-});
-
-function isOwnCalendar(calendar, extension) {
+export function isOwnCalendar(calendar, extension) {
   return calendar.superCalendar.type == "ext-" + extension.id;
 }
 
-function unwrapCalendar(calendar) {
+export function unwrapCalendar(calendar) {
   let unwrapped = calendar.wrappedJSObject;
 
   if (unwrapped.mUncachedCalendar) {
@@ -57,14 +27,13 @@ function unwrapCalendar(calendar) {
   return unwrapped;
 }
 
-function getResolvedCalendarById(extension, id) {
+export function getResolvedCalendarById(extension, id) {
   let calendar;
-  let calmgr = cal.getCalendarManager();
   if (id.endsWith("#cache")) {
-    let cached = calmgr.getCalendarById(id.substring(0, id.length - 6));
+    let cached = cal.manager.getCalendarById(id.substring(0, id.length - 6));
     calendar = cached && isOwnCalendar(cached, extension) && cached.wrappedJSObject.mCachedCalendar;
   } else {
-    calendar = calmgr.getCalendarById(id);
+    calendar = cal.manager.getCalendarById(id);
   }
 
   if (!calendar) {
@@ -73,16 +42,16 @@ function getResolvedCalendarById(extension, id) {
   return calendar;
 }
 
-function getCachedCalendar(calendar) {
+export function getCachedCalendar(calendar) {
   return calendar.wrappedJSObject.mCachedCalendar || calendar;
 }
 
-function isCachedCalendar(id) {
+export function isCachedCalendar(id) {
   // TODO make this better
   return id.endsWith("#cache");
 }
 
-function convertCalendar(extension, calendar) {
+export function convertCalendar(extension, calendar) {
   if (!calendar) {
     return null;
   }
@@ -106,7 +75,7 @@ function convertCalendar(extension, calendar) {
   return props;
 }
 
-function propsToItem(props, baseItem) {
+export function propsToItem(props, baseItem) {
   let item;
   if (baseItem) {
     item = baseItem;
@@ -123,7 +92,18 @@ function propsToItem(props, baseItem) {
   if (props.formats?.use == "ical") {
     item.icalString = props.formats.ical;
   } else if (props.formats?.use == "jcal") {
-    item.icalString = ICAL.stringify(props.formats.jcal);
+    try {
+      item.icalString = ICAL.stringify(props.formats.jcal);
+    } catch (e) {
+      let jsonstring;
+      try {
+        jsonstring = JSON.stringify(props.formats.jcal, null, 2);
+      } catch {
+        jsonstring = props.formats.jcal;
+      }
+
+      throw new ExtensionError("Could not parse jCal: " + e + "\n" + jsonstring);
+    }
   } else {
     if (props.id) {
       item.id = props.id;
@@ -156,7 +136,7 @@ function propsToItem(props, baseItem) {
   return item;
 }
 
-function convertItem(item, options, extension) {
+export function convertItem(item, options, extension) {
   if (!item) {
     return null;
   }
@@ -182,7 +162,7 @@ function convertItem(item, options, extension) {
     try {
       // TODO This is a sync operation. Not great. Can we optimize this?
       props.metadata = JSON.parse(cache.getMetaData(item.id)) ?? {};
-    } catch (e) {
+    } catch {
       // Ignore json parse errors
     }
   }
@@ -219,7 +199,7 @@ function convertItem(item, options, extension) {
   return props;
 }
 
-function convertAlarm(item, alarm) {
+export function convertAlarm(item, alarm) {
   const ALARM_RELATED_MAP = {
     [Ci.calIAlarm.ALARM_RELATED_ABSOLUTE]: "absolute",
     [Ci.calIAlarm.ALARM_RELATED_START]: "start",
@@ -235,7 +215,7 @@ function convertAlarm(item, alarm) {
   };
 }
 
-async function setupE10sBrowser(extension, browser, parent, initOptions={}) {
+export async function setupE10sBrowser(extension, browser, parent, initOptions={}) {
   browser.setAttribute("type", "content");
   browser.setAttribute("disableglobalhistory", "true");
   browser.setAttribute("messagemanagergroup", "webext-browsers");
@@ -268,9 +248,10 @@ async function setupE10sBrowser(extension, browser, parent, initOptions={}) {
   let sheets = [];
   if (initOptions.browser_style) {
     delete initOptions.browser_style;
-    sheets.push(...ExtensionParent.extensionStylesheets);
+    sheets.push("chrome://browser/content/extension.css");
   }
-  sheets.push(...standaloneStylesheets);
+  sheets.push("chrome://browser/content/extension-popup-panel.css");
+
 
   const initBrowser = () => {
     ExtensionParent.apiManager.emit("extension-browser-inserted", browser);
