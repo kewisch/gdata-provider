@@ -52,6 +52,7 @@ export async function clickAuth(event) {
 }
 
 export async function onCreate(event) {
+  console.log(event.data);
   if (event.data == "create") {
     let sessionId = document.getElementById("gdata-session-name").value; // TODO temporary
     let calendars = [...document.querySelectorAll("#calendar-list input:checked")].map(input => {

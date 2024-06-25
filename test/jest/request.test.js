@@ -124,7 +124,7 @@ test("status code 404", async () => {
     headers: { "Content-Length": 0 },
     status: 404,
   });
-  await expect(request.commit(session)).rejects.toThrow("CONFLICT_DELETED");
+  await expect(request.commit(session)).rejects.toThrow("RESOURCE_GONE");
   expect(request.response.status).toBe(404);
 });
 
@@ -137,7 +137,7 @@ test("status code 409", async () => {
     headers: { "Content-Length": 0 },
     status: 409,
   });
-  await expect(request.commit(session)).rejects.toThrow("CONFLICT_MODIFY");
+  await expect(request.commit(session)).rejects.toThrow("CONFLICT");
   expect(request.response.status).toBe(409);
 });
 
@@ -163,7 +163,7 @@ test("status code 412", async () => {
     headers: { "Content-Length": 0 },
     status: 412,
   });
-  await expect(request.commit(session)).rejects.toThrow("CONFLICT_MODIFY");
+  await expect(request.commit(session)).rejects.toThrow("CONFLICT");
   expect(request.response.status).toBe(412);
 });
 
@@ -183,7 +183,7 @@ test("status code 400 other", async () => {
     uri: "https://localhost/test",
   });
   mockErrorResponse(400, { message: "tests" });
-  await expect(request.commit(session)).rejects.toThrow("NS_ERROR_NOT_AVAILABLE");
+  await expect(request.commit(session)).rejects.toThrow("GENERAL_FAILURE");
   expect(request.response.status).toBe(400);
 });
 
@@ -305,7 +305,7 @@ describe("auth error", () => {
       uri: "https://localhost/test",
     });
     mockErrorResponse(403, { reason: "insufficientPermissions" });
-    await expect(request.commit(session)).rejects.toThrow("MODIFICATION_FAILED");
+    await expect(request.commit(session)).rejects.toThrow("MODIFY_FAILED");
     expect(request.response.status).toBe(403);
   });
 
@@ -360,7 +360,7 @@ describe("auth error", () => {
       uri: "https://localhost/test",
     });
     mockErrorResponse(403, { reason: "karma" });
-    await expect(request.commit(session)).rejects.toThrow("NS_ERROR_FAILURE");
+    await expect(request.commit(session)).rejects.toThrow("GENERAL_FAILURE");
     expect(request.response.status).toBe(403);
   });
 });

@@ -5,6 +5,7 @@
 
 import sessions from "./session.js";
 import calGoogleRequest from "./request.js";
+import { ItemError, ResourceGoneError } from "./errors.js";
 import Console from "./log.js";
 
 import { getGoogleId, sessionIdFromUrl, GCAL_PATH_RE, API_BASE } from "./utils.js";
@@ -28,20 +29,23 @@ export default class calGoogleCalendar {
 
   static initListeners() {
     messenger.calendar.provider.onItemCreated.addListener(
-      (calendar, item) => {
-        return this.get(calendar.id).then(instance => instance.onItemCreated(item));
+      (calendar, item, options) => {
+        return this.get(calendar.id).then(instance => instance.onItemCreated(item, options));
       },
       { returnFormat: "jcal" }
     );
     messenger.calendar.provider.onItemUpdated.addListener(
-      (calendar, item, oldItem) => {
-        return this.get(calendar.id).then(instance => instance.onItemUpdated(item, oldItem));
+      (calendar, item, oldItem, options) => {
+        return this.get(calendar.id).then(instance => instance.onItemUpdated(item, oldItem, options));
       },
       { returnFormat: "jcal" }
     );
-    messenger.calendar.provider.onItemRemoved.addListener((calendar, id) => {
-      return this.get(calendar.id).then(instance => instance.onItemRemoved(id));
-    });
+    messenger.calendar.provider.onItemRemoved.addListener(
+      (calendar, id, options) => {
+        return this.get(calendar.id).then(instance => instance.onItemRemoved(id, options));
+      },
+      { returnFormat: "jcal" }
+    );
 
     messenger.calendar.provider.onInit.addListener(calendar => {
       return this.get(calendar.id).then(instance => instance.onInit());
@@ -211,7 +215,7 @@ export default class calGoogleCalendar {
   // TODO throttle requests
   // TODO itip/imip
 
-  async onItemCreated(item) {
+  async onItemCreated(item, options = {}) {
     // TODO start
     // Now this sucks...both invitations and the offline cache send over
     // items with the id set, but we have no way to figure out which is
@@ -242,9 +246,12 @@ export default class calGoogleCalendar {
       method: "POST",
       uri,
       json: itemData,
+      calendar: this,
     });
 
     let data = await request.commit(this.session);
+
+    let metaData = {};
 
     let newItem = await jsonToItem(
       data,
@@ -263,12 +270,12 @@ export default class calGoogleCalendar {
       });
     }
 
-    this.console.log(`Adding ${item.title} succeeded`);
+    this.console.log(`Adding item ${item.id} ${item.title} succeeded`);
 
     return newItem;
   }
 
-  async onItemUpdated(item, oldItem) {
+  async onItemUpdated(item, oldItem, options = {}) {
     let uri;
 
     /* istanbul ignore else - caught in patchItem */
@@ -289,13 +296,21 @@ export default class calGoogleCalendar {
       uri,
       json: itemData,
       headers: {
-        "If-Match": (oldItem || item).metadata.etag || "*",
+        "If-Match": options.force ? "*" : ((oldItem || item).metadata.etag || "*"),
       },
+      calendar: this,
     });
 
-    // TODO resolve conflicts
+    let data;
 
-    let data = await request.commit(this.session);
+    try {
+      data = await request.commit(this.session);
+    } catch (e) {
+      if (e instanceof ItemError) {
+        return { error: e.itemErrorCode };
+      }
+      throw e;
+    }
 
     let newItem = await jsonToItem(
       data,
@@ -328,7 +343,7 @@ export default class calGoogleCalendar {
     return newItem;
   }
 
-  async onItemRemoved(item) {
+  async onItemRemoved(item, options = {}) {
     let uri;
     if (item.type == "event") {
       uri = this.createEventsURI("events", getGoogleId(item));
@@ -346,12 +361,24 @@ export default class calGoogleCalendar {
       method: "DELETE",
       uri,
       headers: {
-        "If-Match": item.metadata.etag || "*",
+        "If-Match": options.force ? "*" : (item.metadata.etag || "*"),
       },
+      calendar: this,
     });
 
-    await request.commit(this.session);
-    // TODO resolve conflict and try/catch
+    try {
+      await request.commit(this.session);
+    } catch (e) {
+      if (e instanceof ResourceGoneError) {
+        // The item was deleted on the server and locally, no need to notify the user about this.
+        return null;
+      } else if (e instanceof ItemError) {
+        return { error: e.itemErrorCode };
+      }
+      throw e;
+    }
+
+    return null;
   }
 
   async onResetSync() {
@@ -372,7 +399,7 @@ export default class calGoogleCalendar {
     let idleState = await messenger.idle.queryState(prefs["settings.idleTime"] * 1000);
 
     if (idleState != "active") {
-      console.log("Skipping refresh since user is idle");
+      this.console.log("Skipping refresh since user is idle");
       return;
     }
 
@@ -385,6 +412,7 @@ export default class calGoogleCalendar {
           let request = new calGoogleRequest({
             uri: this.createUsersURI("calendarList", this.calendarName),
             method: "GET",
+            calendar: this,
           });
           let data = await request.commit(this.session);
           this.defaultReminders = (data.defaultReminders || []).map(alarm =>
@@ -428,6 +456,7 @@ export default class calGoogleCalendar {
               showDeleted: syncToken ? "true" : "false",
               syncToken: syncToken,
             },
+            calendar: this,
           });
 
           let saver = new ItemSaver(this);
@@ -463,6 +492,7 @@ export default class calGoogleCalendar {
               showCompleted: true,
               updatedMin: updatedMin,
             },
+            calendar: this,
           });
 
           let saver = new ItemSaver(this);
@@ -486,7 +516,7 @@ export default class calGoogleCalendar {
     try {
       let res = await Promise.all(promises);
     } catch (e) {
-      if (e.message == "RESOURCE_GONE") {
+      if (e instanceof ResourceGoneError) {
         this.console.log("Server did not accept incremental update, resetting");
         await this.onResetSync();
         if (retry) {

@@ -190,21 +190,23 @@ test("initListeners", async () => {
   expect(messenger.calendar.provider.onResetSync.addListener).toHaveBeenCalled();
   expect(messenger.calendar.provider.onDetectCalendars.addListener).toHaveBeenCalled();
 
-  await messenger.calendar.provider.onItemCreated.mockResponse(rawId1, { id: "item" });
-  expect(calendar.onItemCreated).toHaveBeenCalledWith({ id: "item" });
+  await messenger.calendar.provider.onItemCreated.mockResponse(rawId1, { id: "item" }, {});
+  expect(calendar.onItemCreated).toHaveBeenCalledWith({ id: "item" }, {});
 
   await messenger.calendar.provider.onItemUpdated.mockResponse(
     rawId1,
     { id: "item", title: "new" },
-    { id: "item", title: "old" }
+    { id: "item", title: "old" },
+    {}
   );
   expect(calendar.onItemUpdated).toHaveBeenCalledWith(
     { id: "item", title: "new" },
-    { id: "item", title: "old" }
+    { id: "item", title: "old" },
+    {}
   );
 
-  await messenger.calendar.provider.onItemRemoved.mockResponse(rawId1, { id: "item" });
-  expect(calendar.onItemRemoved).toHaveBeenCalledWith({ id: "item" });
+  await messenger.calendar.provider.onItemRemoved.mockResponse(rawId1, { id: "item" }, {});
+  expect(calendar.onItemRemoved).toHaveBeenCalledWith({ id: "item" }, {});
 
   await messenger.calendar.provider.onInit.mockResponse(rawId1);
   expect(calendar.onInit).toHaveBeenCalledWith();
@@ -405,7 +407,7 @@ describe("item functions", () => {
         .getFirstProperty("summary")
         .setValue("changed");
 
-      let result = await calendar.onItemUpdated(newItem, oldItem);
+      let result = await calendar.onItemUpdated(newItem, oldItem, {});
 
       expect(fetch).toHaveBeenCalledWith(
         new URL(
@@ -448,7 +450,7 @@ describe("item functions", () => {
         delete removedItem.metadata.etag;
       }
 
-      let item = await calendar.onItemRemoved(removedItem);
+      let item = await calendar.onItemRemoved(removedItem, {});
 
       // vcalendar -> vevent
       expect(fetch).toHaveBeenCalledWith(
@@ -535,7 +537,7 @@ describe("item functions", () => {
         .getFirstProperty("summary")
         .setValue("changed");
 
-      let result = await calendar.onItemUpdated(newItem, oldItem);
+      let result = await calendar.onItemUpdated(newItem, oldItem, {});
 
       expect(fetch).toHaveBeenCalledWith(
         new URL(
@@ -564,7 +566,7 @@ describe("item functions", () => {
         throw new Error("Unhandled request " + req.url);
       });
 
-      let item = await calendar.onItemRemoved(jcalItems.simple_task);
+      let item = await calendar.onItemRemoved(jcalItems.simple_task, {});
 
       // vcalendar -> vevent
       expect(fetch).toHaveBeenCalledWith(
@@ -581,7 +583,7 @@ describe("item functions", () => {
   test("invalid", async () => {
     let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
     newItem.type = "wat";
-    await expect(calendar.onItemRemoved(newItem)).rejects.toThrow("Unknown item type: wat");
+    await expect(calendar.onItemRemoved(newItem, {})).rejects.toThrow("Unknown item type: wat");
   });
 });
 
@@ -593,7 +595,7 @@ describe("onSync", () => {
     messenger.idle._idleState = "inactive";
     await calendar.onSync();
     expect(console.log).toHaveBeenCalledWith(
-      "[calGoogleCalendar]",
+      "[calGoogleCalendar(id1)]",
       "Skipping refresh since user is idle"
     );
     expect(fetch).not.toHaveBeenCalled();

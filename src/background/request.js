@@ -3,6 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch */
 
+import Console from "./log.js";
+import {
+  TokenFailureError, QuotaFailureError, LoginFailedError, NotModifiedError, ResourceGoneError, ItemError,
+  ModifyFailedError, ReadFailedError, ConflictError
+} from "./errors.js";
+
 export default class calGoogleRequest {
   // static clockSkew = 0
 
@@ -10,6 +16,7 @@ export default class calGoogleRequest {
 
   constructor(options) {
     this.options = options;
+    this.console = new Console(`calGoogleRequest(${this.calendar?.id})`);
   }
 
   get firstError() {
@@ -20,36 +27,32 @@ export default class calGoogleRequest {
     switch (this.firstError?.reason) {
       case "invalid_client":
         session.notifyOutdated();
-        // TODO disable calendar and set currentStatus to TOKEN_FAILURE
-        throw new Error("TOKEN_FAILURE");
+        throw new TokenFailureError();
       case "unauthorized_client":
       case "invalid_grant":
         await session.invalidate();
         if (this.reauthenticate) {
-          console.log("The access token is not authorized, trying to refresh the token");
+          this.console.log("The access token is not authorized, trying to refresh the token");
           this.reauthenticate = false;
           return this.commit(session);
         } else {
-          console.log(
+          this.console.log(
             "Even the refreshed token is not authorized, looks like the client is outdated"
           );
           session.notifyOutdated();
-          // TODO disable calendar and set currentStatus to TOKEN_FAILURE
-          throw new Error("TOKEN_FAILURE");
+          throw new TokenFailureError();
         }
       case "variableTermLimitExceeded":
       case "userRateLimitExceeded":
       case "dailyLimitExceeded":
       case "quotaExceeded":
         session.notifyQuotaExceeded();
-        // TODO disable calendar and set currentStatus to QUOTA_FAILURE
-        throw new Error("QUOTA_FAILURE");
+        throw new QuotaFailureError();
       case "insufficientPermissions":
-        // TODO proppagate this to the calendar
         if (this.options.method == "GET") {
-          throw new Error("READ_FAILED");
+          throw new ReadFailedError();
         } else {
-          throw new Error("MODIFICATION_FAILED");
+          throw new ModifyFailedError();
         }
       case "authError":
       case "invalidCredentials":
@@ -58,14 +61,30 @@ export default class calGoogleRequest {
           this.reauthenticate = false;
           return this.commit(session);
         } else {
-          throw new Error("LOGIN_FAILED");
+          throw new LoginFailedError();
         }
       default:
-        throw new Error("NS_ERROR_FAILURE"); // TODO
+        throw new ItemError();
     }
   }
 
   async commit(session) {
+    try {
+      return this.#commit(session);
+    } catch (e) {
+      if (e instanceof calRequestError) {
+        if (this.options.calendar) {
+          await messenger.calendar.calendars.update(this.options.calendar.id, {
+            enabled: e.constructor.DISABLE ? false : undefined,
+            lastError: e.message
+          });
+        }
+      }
+      throw e;
+    }
+  }
+
+  async #commit(session) {
     await session.ensureLogin();
 
     this.options.headers = this.options.headers || {};
@@ -111,39 +130,43 @@ export default class calGoogleRequest {
       case 200: /* No error. */
       case 201: /* Creation of a resource was successful. */
       case 204 /* No content */:
-        // TODO set currentStatus on calendar
+        if (this.options.calendar) {
+          await messenger.calendar.calendars.update(this.options.calendar.id, {
+            lastError: null
+          });
+        }
         return this.json;
       case 304:
-        // TODO throw not modified?
-        throw new Error("NOT_MODIFIED");
+        throw new NotModifiedError();
       case 401:
       case 403:
         // Unsupported standard parameter, or authentication or Authorization failed.
-        console.log(
+        this.console.log(
           `Login failed for ${session.id}. Status: ${this.response.status}. Reason: ${this.firstError?.reason}`
         );
         return this.handleAuthError(session);
-      case 404:
-        //  404 NOT FOUND: Resource (such as a feed or entry) not found.
-        throw new Error("CONFLICT_DELETED");
       case 410:
         // 410 Gone: Happens when deleting an event that has already been deleted.
-        throw new Error("RESOURCE_GONE");
+        throw new ResourceGoneError();
+      case 404:
+        //  404 NOT FOUND: Resource (such as a feed or entry) not found.
+        // This happens when deleting an event that has already been deleted, fall through
+        throw new ResourceGoneError();
       case 409:
       case 412:
-        throw new Error("CONFLICT_MODIFY");
+        throw new ConflictError();
       case 400:
         if (this.firstError?.message == "Invalid sync token value.") {
-          throw new Error("RESOURCE_GONE");
+          throw new ResourceGoneError();
         }
       // Fall through intended
       default:
-        console.log(
+        this.console.log(
           `A request error occurred. Status: ${this.response.status} ${
             this.response.statusText
           }. Body: ${JSON.stringify(this.json, null, 2)}`
         );
-        throw new Error("NS_ERROR_NOT_AVAILABLE"); // TODO
+        throw new ItemError();
     }
   }
 }

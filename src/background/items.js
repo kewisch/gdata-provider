@@ -540,7 +540,7 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
     let plain = parser.parseFromString(entry.description, "text/html").documentElement.textContent;
     veventprops.push(["description", { altrep }, "text", plain]);
   } else {
-    veventprops.push(["description", {}, "text", entry.description]);
+    veventprops.push(["description", {}, "text", entry.description ?? ""]);
   }
 
   setIf("location", "text", entry.location);
@@ -641,7 +641,7 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   // Google does not support categories natively, but allows us to store data as an
   // "extendedProperty", and here it's going to be retrieved again
   let categories = categoriesStringToArray(sharedProps["X-MOZ-CATEGORIES"]);
-  if (categories) {
+  if (categories && categories.length) {
     veventprops.push(["categories", {}, "text", ...categories]);
   }
 
@@ -803,7 +803,8 @@ export class ItemSaver {
     let vcomp = vcalendar.getFirstSubcomponent("vevent") || vcalendar.getFirstSubcomponent("vtodo");
 
     if (vcomp.getFirstPropertyValue("status") == "CANCELLED") {
-      await messenger.calendar.items.remove(this.calendar.cacheId, item.id);
+      // Catch the error here if the event is already removed from the calendar
+      await messenger.calendar.items.remove(this.calendar.cacheId, item.id).catch(e => {});
     } else {
       await messenger.calendar.items.create(this.calendar.cacheId, item);
     }

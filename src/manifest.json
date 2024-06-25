@@ -2,16 +2,10 @@
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "91.1.0pre",
+  "version": "128.0.0",
   "author": "Philipp Kewisch",
   "homepage_url": "https://addons.thunderbird.net/thunderbird/addon/provider-for-google-calendar/",
   "default_locale": "en",
-  "applications": {
-    "gecko": {
-      "id": "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
-      "strict_min_version": "91.0"
-    }
-  },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "browser_specific_settings": {
     "gecko": {
@@ -51,7 +45,8 @@
   "calendar_item_action": {
     "default_icon": "icon.png",
     "default_popup": "content/calendar-item-action.html",
-    "default_title": "__MSG_extensionName__"
+    "default_title": "__MSG_extensionName__",
+    "type": "button"
   },
 
   "calendar_item_details": {
