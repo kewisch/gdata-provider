@@ -127,15 +127,26 @@ class calGoogleSession {
   }
 
   async onFreeBusy(user, rangeStart, rangeEnd, busyTypes) {
+    let unknown = [{
+      id: user,
+      start: rangeStart,
+      end: rangeEnd,
+      type: "unknown"
+    }];
+
     // If we are experiencing quota issues, disable freebusy lookups until back to normal
     if (this.#backoff > 0) {
-      return [];
+      this.console.log("Not answering freebusy request due to quota issues");
+      return unknown;
     }
 
-    // TODO what is busyTypes
-    let mailtoUser = user.substr(7);
-    if (!user.startsWith("mailto:") || !isEmail(mailtoUser)) {
-      return [];
+    if (busyTypes.length == 1 && busyTypes[0] == "free") {
+      // The only requested type is free, we're only returning busy intervals
+      return unknown;
+    }
+
+    if (!isEmail(user)) {
+      return unknown;
     }
 
     let request = new calGoogleRequest({
@@ -143,36 +154,35 @@ class calGoogleSession {
       method: "POST",
       reauthenticate: false,
       body: JSON.stringify({
-        timeMin: toRFC3339(rangeStart),
-        timeMax: toRFC3339(rangeEnd),
-        items: [{ id: mailtoUser }],
+        timeMin: rangeStart,
+        timeMax: rangeEnd,
+        items: [{ id: user }],
       }),
     });
 
     try {
       await request.commit(this);
     } catch (e) {
-      console.error("Failed freebusy request", e);
-      return [];
+      this.console.error("Failed freebusy request", e);
+      return unknown;
     }
 
     if (request.firstError?.reason) {
-      console.error(`Could not request freebusy for ${mailtoUser}: ${request.firstError?.reason}`);
-      return [];
+      this.console.error(`Could not request freebusy for ${user}: ${request.firstError?.reason}`);
+      return unknown;
     }
 
-    let caldata = request.json?.calendars?.[mailtoUser];
-    if (!caldata) {
-      console.error("Invalid freebusy response", request.json);
-      return [];
+    let caldata = request.json?.calendars?.[user];
+    if (!caldata || caldata.errors?.[0]?.reason == "notFound") {
+      return unknown;
     }
 
     return caldata.busy.map(entry => {
       return {
-        id: mailtoUser,
-        start: fromRFC3339(entry.start, UTC),
-        end: fromRFC3339(entry.end, UTC),
-        type: "BUSY",
+        id: user,
+        start: entry.start,
+        end: entry.end,
+        type: "busy",
       };
     });
   }

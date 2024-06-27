@@ -427,21 +427,24 @@ class ExtFreeBusyProvider {
   async getFreeBusyIntervals(aCalId, aRangeStart, aRangeEnd, aBusyTypes, aListener) {
     try {
       const TYPE_MAP = {
+        unknown: Ci.calIFreeBusyInterval.UNKNOWN,
         free: Ci.calIFreeBusyInterval.FREE,
         busy: Ci.calIFreeBusyInterval.BUSY,
         unavailable: Ci.calIFreeBusyInterval.BUSY_UNAVAILABLE,
         tentative: Ci.calIFreeBusyInterval.BUSY_TENTATIVE,
       };
       let attendee = aCalId.replace(/^mailto:/, "");
-      let start = aRangeStart.icalString;
-      let end = aRangeEnd.icalString;
+      let start = cal.dtz.toRFC3339(aRangeStart);
+      let end = cal.dtz.toRFC3339(aRangeEnd);
       let types = ["free", "busy", "unavailable", "tentative"].filter((type, index) => aBusyTypes & (1 << index));
-      let results = await this.fire.async({ attendee, start, end, types });
+      let results = await this.fire.async(attendee, start, end, types);
       aListener.onResult({ status: Cr.NS_OK }, results.map(interval =>
         new cal.provider.FreeBusyInterval(aCalId,
           TYPE_MAP[interval.type],
-          cal.createDateTime(interval.start),
-          cal.createDateTime(interval.end))));
+          cal.dtz.fromRFC3339(interval.start, cal.dtz.UTC),
+          cal.dtz.fromRFC3339(interval.end, cal.dtz.UTC)
+        )
+      ));
     } catch (e) {
       console.error(e);
       aListener.onResult({ status: e.result || Cr.NS_ERROR_FAILURE }, e.message || e);
