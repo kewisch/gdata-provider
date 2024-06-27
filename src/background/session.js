@@ -251,7 +251,7 @@ class calGoogleSession {
   async login() {
     this.oauth.accessToken = null;
 
-    console.log(`No access token for ${this.id}, refreshing token`);
+    this.console.log("No access token, refreshing");
 
     this.oauth.refreshToken = await messenger.gdata.getOAuthToken(this.id);
     await this.oauth.ensureLogin({
@@ -262,12 +262,12 @@ class calGoogleSession {
 
     /* TODO doing this in request already, find a good spot
     } catch (e) {
-      console.log("Failed to acquire a new OAuth token for", this.id, e);
+      this.console.error("Failed to acquire a new OAuth token:", e);
 
       if (error == "invalid_client" || error == "http_401") {
         this.notifyOutdated();
       } else if (error == "unauthorized_client" || error == "invalid_grant") {
-        console.error(`Token for ${this.id} is no longer authorized`);
+        this.console.error(`Token is no longer authorized`);
         this.invalidate();
         await this.login();
         return;

@@ -251,14 +251,11 @@ export default class calGoogleCalendar {
 
     let data = await request.commit(this.session);
 
-    let metaData = {};
-
     let newItem = await jsonToItem(
       data,
       this,
       this.defaultReminders,
-      null,
-      /* TODO metaData */ null
+      null
     );
 
     if (data.organizer?.self) {
@@ -316,8 +313,7 @@ export default class calGoogleCalendar {
       data,
       this,
       this.defaultReminders,
-      item,
-      /* TODO metaData */ null
+      item
     );
 
     // TODO

@@ -50,6 +50,7 @@ export function addVCalendar(vcomponent) {
 }
 
 export function getGoogleId(item) {
+  // TODO potentially take from parent item
   let baseId = item.metadata?.path || item.id.replace(/@google.com$/, "");
 
   let vevent = new ICAL.Component(item.formats.jcal);
