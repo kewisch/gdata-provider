@@ -5,7 +5,7 @@
 
 import sessions from "./session.js";
 import calGoogleRequest from "./request.js";
-import { ItemError, ResourceGoneError } from "./errors.js";
+import { ItemError, ResourceGoneError, QuotaFailureError } from "./errors.js";
 import Console from "./log.js";
 
 import { getGoogleId, sessionIdFromUrl, GCAL_PATH_RE, API_BASE } from "./utils.js";
@@ -406,7 +406,6 @@ export default class calGoogleCalendar {
     let promises = [];
 
     if (this.calendarName) {
-      // TODO checkThrottle
       promises.push(
         (async () => {
           let request = new calGoogleRequest({
@@ -461,7 +460,6 @@ export default class calGoogleCalendar {
 
           let saver = new ItemSaver(this);
 
-          // TODO checkThrottle("events");
           await this.session.paginatedRequest(
             request,
             null,
@@ -498,7 +496,6 @@ export default class calGoogleCalendar {
           let saver = new ItemSaver(this);
           let newLastUpdated;
 
-          // TODO checkThrottle("events");
           await this.session.paginatedRequest(
             request,
             data => (newLastUpdated = request.responseDate),
@@ -514,9 +511,12 @@ export default class calGoogleCalendar {
     }
 
     try {
-      let res = await Promise.all(promises);
+      await Promise.all(promises);
+      this.session.resetBackoff();
     } catch (e) {
-      if (e instanceof ResourceGoneError) {
+      if (e instanceof QuotaFailureError) {
+        this.session.backoff();
+      } else if (e instanceof ResourceGoneError) {
         this.console.log("Server did not accept incremental update, resetting");
         await this.onResetSync();
         if (retry) {

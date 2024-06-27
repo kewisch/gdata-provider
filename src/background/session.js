@@ -69,6 +69,7 @@ export default sessions;
 class calGoogleSession {
   constructor(id) {
     this.id = id;
+    this.console = new Console(`calGoogleSession(${id})`);
 
     // Before you spend time trying to find out what this means, please note that doing so and using
     // the information WILL cause Google to revoke this extension's privileges, which means not one
@@ -106,7 +107,31 @@ class calGoogleSession {
     return this.oauth.accessToken;
   }
 
+  #backoff = 0;
+
+  resetBackoff() {
+    this.#backoff = 0;
+  }
+
+  backoff() {
+    this.#backoff = Math.min(6, this.#backoff + 1);
+    return this.#backoff;
+  }
+
+  async waitForBackoff() {
+    if (this.#backoff) {
+      let backoffTime = 2 ** this.#backoff + Math.random();
+      this.console.log(`Waiting ${backoffTime} seconds before request due to previous quota failure`);
+      await new Promise((resolve) => setTimeout(resolve, backoffTime * 1000));
+    }
+  }
+
   async onFreeBusy(user, rangeStart, rangeEnd, busyTypes) {
+    // If we are experiencing quota issues, disable freebusy lookups until back to normal
+    if (this.#backoff > 0) {
+      return [];
+    }
+
     // TODO what is busyTypes
     let mailtoUser = user.substr(7);
     if (!user.startsWith("mailto:") || !isEmail(mailtoUser)) {

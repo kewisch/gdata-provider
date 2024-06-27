@@ -3,11 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch */
 
-export class calGoogleRequestError extends Error {
+export class GoogleRequestError extends Error {
 
 }
 
-export class TokenFailureError extends calGoogleRequestError {
+export class TokenFailureError extends GoogleRequestError {
   DISABLE = true;
 
   constructor() {
@@ -15,7 +15,7 @@ export class TokenFailureError extends calGoogleRequestError {
   }
 }
 
-export class QuotaFailureError extends calGoogleRequestError {
+export class QuotaFailureError extends GoogleRequestError {
   DISABLE = true;
 
   constructor() {
@@ -23,23 +23,23 @@ export class QuotaFailureError extends calGoogleRequestError {
   }
 }
 
-export class LoginFailedError extends calGoogleRequestError {
+export class LoginFailedError extends GoogleRequestError {
   constructor() {
     super("LOGIN_FAILED");
   }
 }
-export class NotModifiedError extends calGoogleRequestError {
+export class NotModifiedError extends GoogleRequestError {
   constructor() {
     super("NOT_MODIFIED");
   }
 }
-export class ResourceGoneError extends calGoogleRequestError {
+export class ResourceGoneError extends GoogleRequestError {
   constructor() {
     super("RESOURCE_GONE");
   }
 }
 
-export class ItemError extends calGoogleRequestError {
+export class ItemError extends GoogleRequestError {
   itemErrorCode = "GENERAL_FAILURE";
 
   get message() {

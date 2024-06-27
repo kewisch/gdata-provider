@@ -38,7 +38,9 @@
       "tasks": true,
       "events": true,
       "removeModes": ["unsubscribe"],
-      "requiresNetwork": true
+      "requiresNetwork": true,
+
+      "minimumRefresh": 5
     }
   },
 

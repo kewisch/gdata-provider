@@ -23,22 +23,8 @@ function gdataInitUI(window, document) {
     let isEventsCalendar = calendar.getProperty("capabilities.events.supported");
     let isDisabled = calendar.getProperty("disabled");
 
-    // Work around a bug where the notification is shown when imip is disabled
-    if (calendar.getProperty("imip.identity.disabled")) {
-      window.gIdentityNotification.removeAllNotifications();
-    }
-
     // Disable setting read-only if the calendar is readonly anyway
     document.getElementById("read-only").disabled = isDisabled || (isEventsCalendar && isReader);
-
-    // Don't allow setting refresh interval to less than 30 minutes
-    let refInterval = document.getElementById("calendar-refreshInterval-menupopup");
-    for (let node of [...refInterval.childNodes]) {
-      let nodeval = parseInt(node.getAttribute("value"), 10);
-      if (nodeval < 30 && nodeval != 0) {
-        node.remove();
-      }
-    }
   }
 
   if (window.gCalendar) {

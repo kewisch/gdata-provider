@@ -6,7 +6,7 @@
 import Console from "./log.js";
 import {
   TokenFailureError, QuotaFailureError, LoginFailedError, NotModifiedError, ResourceGoneError, ItemError,
-  ModifyFailedError, ReadFailedError, ConflictError
+  ModifyFailedError, ReadFailedError, ConflictError, GoogleRequestError
 } from "./errors.js";
 
 export default class calGoogleRequest {
@@ -69,10 +69,12 @@ export default class calGoogleRequest {
   }
 
   async commit(session) {
+    await session.waitForBackoff();
+
     try {
       return this.#commit(session);
     } catch (e) {
-      if (e instanceof calRequestError) {
+      if (e instanceof GoogleRequestError) {
         if (this.options.calendar) {
           await messenger.calendar.calendars.update(this.options.calendar.id, {
             enabled: e.constructor.DISABLE ? false : undefined,

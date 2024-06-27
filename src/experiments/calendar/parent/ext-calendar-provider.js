@@ -460,11 +460,39 @@ this.calendar_provider = class extends ExtensionAPI {
       .QueryInterface(Ci.nsIResProtocolHandler)
       .setSubstitution("tb-experiments-calendar", this.extension.rootURI);
 
-    const { setupE10sBrowser } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
+    const { setupE10sBrowser, unwrapCalendar } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
 
     ChromeUtils.registerWindowActor("CalendarProvider", { child: { esModuleURI: "resource://tb-experiments-calendar/experiments/calendar/child/ext-calendar-provider-actor.sys.mjs" } });
 
-    ExtensionSupport.registerWindowListener("ext-calendar-provider-" + this.extension.id, {
+    ExtensionSupport.registerWindowListener("ext-calendar-provider-properties-" + this.extension.id, {
+      chromeURLs: ["chrome://calendar/content/calendar-properties-dialog.xhtml"],
+      onLoadWindow: (win) => {
+        const calendar = unwrapCalendar(win.arguments[0].calendar);
+        console.log(calendar.type);
+        if (calendar.type != "ext-" + this.extension.id) {
+          return;
+        }
+
+        // Work around a bug where the notification is shown when imip is disabled
+        if (calendar.getProperty("imip.identity.disabled")) {
+          win.gIdentityNotification.removeAllNotifications();
+        }
+
+        let minRefresh = calendar.capabilities?.minimumRefresh
+
+        if (minRefresh) {
+          let refInterval = win.document.getElementById("calendar-refreshInterval-menupopup");
+          for (let node of [...refInterval.children]) {
+            let nodeval = parseInt(node.getAttribute("value"), 10);
+            if (nodeval < minRefresh && nodeval != 0) {
+              node.remove();
+            }
+          }
+        }
+      }
+    });
+
+    ExtensionSupport.registerWindowListener("ext-calendar-provider-creation-" + this.extension.id, {
       chromeURLs: ["chrome://calendar/content/calendar-creation.xhtml"],
       onLoadWindow: (win) => {
         let provider = this.extension.manifest.calendar_provider;
@@ -510,7 +538,8 @@ this.calendar_provider = class extends ExtensionAPI {
     if (isAppShutdown) {
       return;
     }
-    ExtensionSupport.unregisterWindowListener("ext-calendar-provider-" + this.extension.id);
+    ExtensionSupport.unregisterWindowListener("ext-calendar-provider-creation-" + this.extension.id);
+    ExtensionSupport.unregisterWindowListener("ext-calendar-provider-properties-" + this.extension.id);
     ChromeUtils.unregisterWindowActor("CalendarProvider");
 
     if (this.extension.manifest.calendar_provider) {
