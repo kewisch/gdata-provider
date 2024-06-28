@@ -114,6 +114,52 @@
        ]
     }
   },
+  "missing_id": {
+    "metadata" : {},
+    "title" : "New Event",
+    "type" : "event",
+    "formats" : {
+       "use" : "jcal",
+       "jcal" : [
+          "vcalendar",
+          [
+            ["calscale", {}, "text", "GREGORIAN"],
+            ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+            ["version", {}, "text", "2.0"]
+          ],
+          [
+            ["vevent",
+              [
+                [ "summary", {}, "text", "New Event" ]
+              ], []
+            ]
+          ]
+       ]
+    }
+  },
+  "missing_id_task": {
+    "metadata" : {},
+    "title" : "New Task",
+    "type" : "task",
+    "formats" : {
+       "use" : "jcal",
+       "jcal" : [
+          "vcalendar",
+          [
+            ["calscale", {}, "text", "GREGORIAN"],
+            ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+            ["version", {}, "text", "2.0"]
+          ],
+          [
+            ["vtodo",
+              [
+                [ "summary", {}, "text", "New Task" ]
+              ], []
+            ]
+          ]
+       ]
+    }
+  },
   "valarm_override": {
     "id": "swpefnfloqssxjdlbpyqlyqddb@google.com",
     "title": "busyTitle[calendarName]",

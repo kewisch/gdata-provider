@@ -462,6 +462,7 @@ export default class calGoogleCalendar {
             data => saver.parseItemStream(data),
             async data => {
               await saver.complete();
+              /* istanbul ignore else - being on the safe side, there should always be a token */
               if (data.nextSyncToken) {
                 this.console.log("New sync token is now " + data.nextSyncToken);
                 await this.setCalendarPref("eventSyncToken", data.nextSyncToken);

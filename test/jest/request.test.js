@@ -4,9 +4,20 @@ jestFetchMock.enableFetchMocks();
 import { jest } from "@jest/globals";
 
 import calGoogleRequest from "../../src/background/request";
+import createMessenger from "./webext-api";
 
 beforeEach(() => {
   jestFetchMock.doMock();
+  global.messenger = createMessenger();
+  global.messenger.calendar.calendars._calendars = [
+    {
+      id: "id1",
+      type: "ics",
+      name: "user@example.com",
+      color: "#FFFFFF",
+      url: "https://calendar.google.com/calendar/ical/user@example.com/private/full.ics",
+    },
+  ];
 });
 
 let session = {
@@ -15,6 +26,7 @@ let session = {
   notifyOutdated: jest.fn(),
   notifyQuotaExceeded: jest.fn(),
   invalidate: jest.fn(async () => {}),
+  waitForBackoff: jest.fn(async () => {}),
 };
 
 function mockErrorResponse(status, error) {
@@ -106,6 +118,7 @@ test("status code 304", async () => {
     method: "PUT",
     uri: "https://localhost/test",
     json: { foo: "bar" },
+    calendar: { id: "id1" },
   });
   fetch.mockResponseOnce(null, {
     headers: { "Content-Length": 0 },
@@ -113,6 +126,9 @@ test("status code 304", async () => {
   });
   await expect(request.commit(session)).rejects.toThrow("NOT_MODIFIED");
   expect(request.response.status).toBe(304);
+
+   expect(global.messenger.calendar.calendars._calendars[0].lastError).toBe("NOT_MODIFIED");
+   expect(global.messenger.calendar.calendars._calendars[0].enabled).toBe(undefined);
 });
 
 test("status code 404", async () => {
@@ -192,11 +208,15 @@ describe("auth error", () => {
     let request = new calGoogleRequest({
       method: "PUT",
       uri: "https://localhost/test",
+      calendar: { id: "id1" }
     });
     mockErrorResponse(401, { reason: "invalid_client" });
     await expect(request.commit(session)).rejects.toThrow("TOKEN_FAILURE");
     expect(session.notifyOutdated).toHaveBeenCalled();
     expect(request.response.status).toBe(401);
+
+    expect(global.messenger.calendar.calendars._calendars[0].lastError).toBe("TOKEN_FAILURE");
+    expect(global.messenger.calendar.calendars._calendars[0].enabled).toBe(false);
   });
 
   test("401 unauthorized_client", async () => {
@@ -226,6 +246,7 @@ describe("auth error", () => {
     let request = new calGoogleRequest({
       method: "PUT",
       uri: "https://localhost/test",
+      calendar: { id: "id1" }
     });
     jest.spyOn(global.console, "log").mockImplementation(() => {});
     fetch.mockResponses(
@@ -243,6 +264,9 @@ describe("auth error", () => {
     expect(request.response.status).toBe(403);
     expect(request.reauthenticate).toBe(false);
     expect(session.notifyOutdated).toHaveBeenCalled();
+
+    expect(global.messenger.calendar.calendars._calendars[0].lastError).toBe("TOKEN_FAILURE");
+    expect(global.messenger.calendar.calendars._calendars[0].enabled).toBe(false);
   });
 
   test("403 variableTermLimitExceeded", async () => {

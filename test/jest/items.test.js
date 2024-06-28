@@ -130,6 +130,18 @@ describe("jsonToItem", () => {
       expect(remaining.length).toBe(0);
     });
 
+    test("simple event no cn", async () => {
+      let defaultReminders = [{ method: "popup", minutes: 120 }];
+      let gcalItem = v8.deserialize(v8.serialize(gcalItems.simple_event));
+      delete gcalItem.organizer.displayName;
+
+      let item = await jsonToItem(gcalItem, calendar, defaultReminders, null);
+      let jcal = new ICAL.Component(item.formats.jcal);
+
+      expect(jcal.getFirstPropertyValue("organizer")).toBe("mailto:organizer@example.com");
+      expect(jcal.getFirstProperty("organizer").getParameter("cn")).toBe(undefined);
+    });
+
     test("valarm_default event", async () => {
       await messenger.storage.local.set({ "settings.accessRole": "freeBusyReader" });
       let item = await jsonToItem(gcalItems.valarm_default, calendar, [], null);
@@ -404,6 +416,18 @@ describe("itemToJson", () => {
     }).toThrow("NS_ERROR_LOSS_OF_SIGNIFICANT_DATA");
   });
 
+  test("no ids", () => {
+    let data = itemToJson(jcalItems.missing_id, calendar, false);
+    expect(data).toEqual({
+      summary: "New Event",
+    });
+
+    data = itemToJson(jcalItems.missing_id_task, calendar, false);
+    expect(data).toEqual({
+      title: "New Task",
+    });
+  });
+
   test("tasks", async () => {
     let data = itemToJson(jcalItems.simple_task, calendar, false);
     expect(data).toEqual({
@@ -519,6 +543,19 @@ describe("patchItem", () => {
         event.removeProperty("dtend");
         changes = patchItem(item, oldItem);
         expect(changes).toEqual({ endTimeUnspecified: true, reminders: expect.anything() });
+      });
+
+      test("duration instead of dtend", () => {
+        event.removeProperty("dtend");
+        event.addPropertyWithValue("duration", ICAL.Duration.fromSeconds(1));
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({
+          end: {
+            "dateTime": "2006-06-10T18:00:01",
+            "timeZone": "Europe/Berlin"
+          },
+          reminders: expect.anything()
+        });
       });
 
       test.each([

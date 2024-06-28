@@ -61,55 +61,132 @@ test("get session by id", () => {
   );
 });
 
+describe("backoff", () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+  afterEach(() => {
+    session.resetBackoff();
+  });
+
+  const flushPromises = () => new Promise(jest.requireActual("timers").setImmediate);
+
+  test("no backoff", async () => {
+    expect(jest.getTimerCount()).toEqual(0);
+    await session.waitForBackoff();
+    expect(jest.getTimerCount()).toEqual(0);
+  });
+
+  test("one backoff", async () => {
+    expect(jest.getTimerCount()).toEqual(0);
+    session.backoff();
+
+    let completed = jest.fn();
+    let waiting = session.waitForBackoff().then(completed);
+
+    jest.advanceTimersByTime(1000);
+    await flushPromises();
+    expect(completed).not.toHaveBeenCalled();
+
+    jest.advanceTimersByTime(2000);
+    await flushPromises();
+    expect(completed).toHaveBeenCalled();
+  });
+
+  test("max backoff", async () => {
+    expect(jest.getTimerCount()).toEqual(0);
+    session.backoff();
+    session.backoff();
+    session.backoff();
+    session.backoff();
+    session.backoff();
+    session.backoff();
+
+    let completed = jest.fn();
+    let waiting = session.waitForBackoff().then(completed);
+
+    jest.advanceTimersByTime(8000);
+    await flushPromises();
+    expect(completed).not.toHaveBeenCalled();
+
+    jest.advanceTimersByTime(57000);
+    await flushPromises();
+    expect(completed).toHaveBeenCalled();
+  });
+});
+
 describe("freebusy request", () => {
-  test("success", async () => {
-    fetch.mockResponseOnce(
-      JSON.stringify({
-        calendars: {
-          "user@example.com": {
-            busy: [{ start: "2021-01-01T00:00:00", end: "2021-01-02T00:00:00" }],
-          },
-        },
-      }),
-      { headers: { "Content-Type": "application/json" } }
-    );
+  const DEFAULT_RESPONSE = {
+    id: "user@example.com",
+    start: "2021-01-01T00:00:00",
+    end: "2021-01-02T00:00:00",
+    type: "busy"
+  };
 
+  test("free intervals only", async () => {
     let busy = await session.onFreeBusy(
-      "mailto:user@example.com",
-      "20210101T000000",
-      "20210102T000000",
-      null
+      "user@example.com",
+      "2021-01-01T00:00:00",
+      "2021-01-02T00:00:00",
+      ["free"]
     );
 
-    expect(busy).toEqual([
-      {
-        id: "user@example.com",
-        start: undefined,
-        end: undefined,
-        type: "BUSY",
-      },
-    ]);
+    expect(busy).toEqual([{
+      ...DEFAULT_RESPONSE,
+      type: "unknown",
+    }]);
+  });
+
+  test("backoff enabled", async () => {
+    session.backoff();
+    try {
+      let busy = await session.onFreeBusy(
+        "user@example.com",
+        "2021-01-01T00:00:00",
+        "2021-01-02T00:00:00",
+        ["busy"]
+      );
+
+      expect(busy).toEqual([{
+        ...DEFAULT_RESPONSE,
+        type: "unknown",
+      }]);
+    } finally {
+      session.resetBackoff();
+    }
   });
 
   test("result no email", async () => {
     let busy = await session.onFreeBusy(
       "urn:id:d35c674d-d677-4e41-81a8-de28fe0c6b64",
-      "20210101T000000",
-      "20210102T000000",
-      null
+      "2021-01-01T00:00:00",
+      "2021-01-02T00:00:00",
+      ["busy"]
     );
-    expect(busy).toEqual([]);
+
+    expect(busy).toEqual([{
+      ...DEFAULT_RESPONSE,
+      id: "urn:id:d35c674d-d677-4e41-81a8-de28fe0c6b64",
+      type: "unknown",
+    }]);
   });
 
   test("failed", async () => {
     fetch.mockResponseOnce("{}", { status: 500 });
     let busy = await session.onFreeBusy(
-      "mailto:user@example.com",
-      "20210101T000000",
-      "20210102T000000",
-      null
+      "user@example.com",
+      "2021-01-01T00:00:00",
+      "2021-01-02T00:00:00",
+      ["busy"]
     );
-    expect(busy).toEqual([]);
+
+    expect(busy).toEqual([{
+      ...DEFAULT_RESPONSE,
+      type: "unknown",
+    }]);
   });
 
   test("api error", async () => {
@@ -117,12 +194,43 @@ describe("freebusy request", () => {
       headers: { "Content-Type": "application/json" },
     });
     let busy = await session.onFreeBusy(
-      "mailto:user@example.com",
-      "20210101T000000",
-      "20210102T000000",
-      null
+      "user@example.com",
+      "2021-01-01T00:00:00",
+      "2021-01-02T00:00:00",
+      ["busy"]
     );
-    expect(busy).toEqual([]);
+
+    expect(busy).toEqual([{
+      ...DEFAULT_RESPONSE,
+      type: "unknown",
+    }]);
+  });
+
+  test("calendar user not found error", async () => {
+    fetch.mockResponseOnce(
+      JSON.stringify({
+        calendars: {
+          "user@example.com": {
+            busy: [],
+            errors: [{
+              reason: "notFound"
+            }],
+          },
+        },
+      }),
+      { headers: { "Content-Type": "application/json" } },
+    );
+    let busy = await session.onFreeBusy(
+      "user@example.com",
+      "2021-01-01T00:00:00",
+      "2021-01-02T00:00:00",
+      ["busy"]
+    );
+
+    expect(busy).toEqual([{
+      ...DEFAULT_RESPONSE,
+      type: "unknown",
+    }]);
   });
 
   test("missing user", async () => {
@@ -138,12 +246,38 @@ describe("freebusy request", () => {
     );
 
     let busy = await session.onFreeBusy(
-      "mailto:user@example.com",
-      "20210101T000000",
-      "20210102T000000",
-      null
+      "user@example.com",
+      "2021-01-01T00:00:00",
+      "2021-01-02T00:00:00",
+      ["busy"]
     );
-    expect(busy).toEqual([]);
+
+    expect(busy).toEqual([{
+      ...DEFAULT_RESPONSE,
+      type: "unknown",
+    }]);
+  });
+
+  test("success", async () => {
+    fetch.mockResponseOnce(
+      JSON.stringify({
+        calendars: {
+          "user@example.com": {
+            busy: [{ start: "2021-01-01T00:00:00", end: "2021-01-02T00:00:00" }],
+          },
+        },
+      }),
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    let busy = await session.onFreeBusy(
+      "user@example.com",
+      "2021-01-01T00:00:00",
+      "2021-01-02T00:00:00",
+      ["busy"]
+    );
+
+    expect(busy).toEqual([DEFAULT_RESPONSE]);
   });
 });
 

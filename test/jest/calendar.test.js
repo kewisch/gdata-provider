@@ -148,10 +148,23 @@ beforeEach(() => {
       type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
       url: "wat://",
     },
+    {
+      id: "id7",
+      cacheId: "cached-id7",
+      type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      url: "googleapi://sessionId/?calendar=id7%40calendar.google.com",
+    },
+    {
+      id: "id8",
+      cacheId: "cached-id8",
+      type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      url: "googleapi://sessionId/?tasks=taskhash",
+    },
   ];
 
   jest.spyOn(global.console, "log").mockImplementation(() => {});
   jest.spyOn(global.console, "error").mockImplementation(() => {});
+  jest.spyOn(global.console, "warn").mockImplementation(() => {});
 });
 
 test("static init", async () => {
@@ -318,153 +331,385 @@ describe("item functions", () => {
     authenticate(calendar.session);
   });
   describe("events", () => {
-    test.each([false, true])("onItemCreated success sendUpdates=%s", async sendUpdates => {
-      await messenger.storage.local.set({ "settings.sendEventNotifications": sendUpdates });
+    describe("onItemCreated", () => {
+      test.each([false, true])("onItemCreated success sendUpdates=%s", async sendUpdates => {
+        await messenger.storage.local.set({ "settings.sendEventNotifications": sendUpdates });
 
-      fetch.mockResponse(req => {
-        if (
-          req.url.startsWith(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events"
-          )
-        ) {
-          // remove alarms in response
-          let gcalItemResponse = v8.deserialize(v8.serialize(gcalItems.simple_event));
-          delete gcalItemResponse.reminders.overrides;
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events"
+            )
+          ) {
+            // remove alarms in response
+            let gcalItemResponse = v8.deserialize(v8.serialize(gcalItems.simple_event));
+            delete gcalItemResponse.reminders.overrides;
 
-          return {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(gcalItemResponse),
-          };
-        }
-        throw new Error("Unhandled request " + req.url);
+            return {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(gcalItemResponse),
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
+
+        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let expected = v8.deserialize(v8.serialize(jcalItems.simple_event));
+
+        // remove alarms
+        new ICAL.Component(newItem.formats.jcal)
+          .getFirstSubcomponent("vevent")
+          .removeAllSubcomponents("valarm");
+        new ICAL.Component(expected.formats.jcal)
+          .getFirstSubcomponent("vevent")
+          .removeAllSubcomponents("valarm");
+
+        // vcalendar -> vevent
+        expected.formats.jcal = expected.formats.jcal[2][0];
+
+        let item = await calendar.onItemCreated(newItem);
+
+        expect(item).toEqual(expected);
+        expect(fetch).toHaveBeenCalledWith(
+          new URL(
+            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events" +
+              (sendUpdates ? "?sendUpdates=all" : "")
+          ),
+          expect.objectContaining({
+            method: "POST",
+          })
+        );
+        expect(messenger.calendar.calendars.update).toHaveBeenLastCalledWith("id1", {
+          capabilities: {
+            organizerName: "Eggs P. Seashell",
+          },
+        });
       });
 
-      let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
-      let expected = v8.deserialize(v8.serialize(jcalItems.simple_event));
+      test("invitation", async () => {
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events"
+            )
+          ) {
+            return {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: "{}"
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
 
-      // remove alarms
-      new ICAL.Component(newItem.formats.jcal)
-        .getFirstSubcomponent("vevent")
-        .removeAllSubcomponents("valarm");
-      new ICAL.Component(expected.formats.jcal)
-        .getFirstSubcomponent("vevent")
-        .removeAllSubcomponents("valarm");
+        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        await calendar.onItemCreated(newItem, { invitation: true });
 
-      // vcalendar -> vevent
-      expected.formats.jcal = expected.formats.jcal[2][0];
-
-      let item = await calendar.onItemCreated(newItem);
-
-      expect(item).toEqual(expected);
-      expect(fetch).toHaveBeenCalledWith(
-        new URL(
-          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events" +
-            (sendUpdates ? "?sendUpdates=all" : "")
-        ),
-        expect.objectContaining({
-          method: "POST",
-        })
-      );
-      expect(messenger.calendar.calendars.update).toHaveBeenLastCalledWith("id1", {
-        capabilities: {
-          organizerName: "Eggs P. Seashell",
-        },
+        expect(fetch).toHaveBeenCalledWith(
+          new URL(
+            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/import"
+          ),
+          expect.objectContaining({
+            method: "POST",
+          })
+        );
       });
     });
 
-    test.each([false, true])("onItemUpdated success sendUpdates=%s", async sendUpdates => {
-      await messenger.storage.local.set({ "settings.sendEventNotifications": sendUpdates });
+    describe("onItemUpdated", () => {
+      test.each([false, true])("onItemUpdated success sendUpdates=%s", async sendUpdates => {
+        await messenger.storage.local.set({ "settings.sendEventNotifications": sendUpdates });
 
-      fetch.mockResponse(req => {
-        if (
-          req.url.startsWith(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
-          )
-        ) {
-          return {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(gcalItems.simple_event),
-          };
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+            )
+          ) {
+            return {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(gcalItems.simple_event),
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
+
+        let oldItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+
+        if (!sendUpdates) {
+          // Using this condition also to check the branch without an etag
+          delete oldItem.metadata.etag;
         }
-        throw new Error("Unhandled request " + req.url);
+
+        let vevent = new ICAL.Component(newItem.formats.jcal);
+        vevent
+          .getFirstSubcomponent("vevent")
+          .getFirstProperty("summary")
+          .setValue("changed");
+
+        let result = await calendar.onItemUpdated(newItem, oldItem, {});
+
+        expect(fetch).toHaveBeenCalledWith(
+          new URL(
+            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo" +
+              (sendUpdates ? "?sendUpdates=all" : "")
+          ),
+          expect.objectContaining({
+            method: "PATCH",
+            body: '{"summary":"changed"}',
+            headers: expect.objectContaining({
+              "If-Match": sendUpdates ? '"2299601498276000"' : "*",
+            }),
+          })
+        );
       });
 
-      let oldItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
-      let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+      test("onItemUpdated conflict", async () => {
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+            )
+          ) {
+            return {
+              status: 412,
+              headers: {
+                "Content-Length": 0
+              }
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
 
-      if (!sendUpdates) {
-        // Using this condition also to check the branch without an etag
-        delete oldItem.metadata.etag;
-      }
+        let oldItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
 
-      let vevent = new ICAL.Component(newItem.formats.jcal);
-      vevent
-        .getFirstSubcomponent("vevent")
-        .getFirstProperty("summary")
-        .setValue("changed");
+        let vevent = new ICAL.Component(newItem.formats.jcal);
+        vevent
+          .getFirstSubcomponent("vevent")
+          .getFirstProperty("summary")
+          .setValue("changed");
 
-      let result = await calendar.onItemUpdated(newItem, oldItem, {});
+        let result = await calendar.onItemUpdated(newItem, oldItem, {});
+        expect(result).toEqual({ error: "CONFLICT" });
 
-      expect(fetch).toHaveBeenCalledWith(
-        new URL(
-          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo" +
-            (sendUpdates ? "?sendUpdates=all" : "")
-        ),
-        expect.objectContaining({
-          method: "PATCH",
-          body: '{"summary":"changed"}',
-          headers: expect.objectContaining({
-            "If-Match": sendUpdates ? '"2299601498276000"' : "*",
-          }),
-        })
-      );
+        expect(fetch).toHaveBeenCalledWith(
+          new URL(
+            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+          ),
+          expect.objectContaining({
+            method: "PATCH",
+            body: '{"summary":"changed"}',
+            headers: expect.objectContaining({
+              "If-Match": '"2299601498276000"'
+            }),
+          })
+        );
+
+        result = await calendar.onItemUpdated(newItem, oldItem, { force: true });
+        expect(result).toEqual({ error: "CONFLICT" });
+
+        expect(fetch).toHaveBeenCalledWith(
+          new URL(
+            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+          ),
+          expect.objectContaining({
+            method: "PATCH",
+            body: '{"summary":"changed"}',
+            headers: expect.objectContaining({
+              "If-Match": "*"
+            }),
+          })
+        );
+      });
+
+      test("onItemUpdated hard error", async () => {
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+            )
+          ) {
+            return {
+              status: 403,
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                error: {
+                  errors: [{
+                    reason: "quotaExceeded"
+                  }]
+                }
+              })
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
+
+        let oldItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+
+        let vevent = new ICAL.Component(newItem.formats.jcal);
+        vevent
+          .getFirstSubcomponent("vevent")
+          .getFirstProperty("summary")
+          .setValue("changed");
+
+        await expect(calendar.onItemUpdated(newItem, oldItem)).rejects.toThrow("QUOTA_FAILURE");
+      });
     });
 
-    test.each([false, true])("onItemRemoved success sendUpdates=%s", async sendUpdates => {
-      await messenger.storage.local.set({ "settings.sendEventNotifications": sendUpdates });
+    describe("onItemRemoved", () => {
+      test.each([false, true])("onItemRemoved success sendUpdates=%s", async sendUpdates => {
+        await messenger.storage.local.set({ "settings.sendEventNotifications": sendUpdates });
 
-      fetch.mockResponse(req => {
-        if (
-          req.url.startsWith(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
-          )
-        ) {
-          return {
-            status: 204,
-            headers: {
-              "Content-Length": 0,
-            },
-          };
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+            )
+          ) {
+            return {
+              status: 204,
+              headers: {
+                "Content-Length": 0,
+              },
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
+
+        let removedItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+
+        if (!sendUpdates) {
+          // Using this also to check the branch without an etag
+          delete removedItem.metadata.etag;
         }
-        throw new Error("Unhandled request " + req.url);
+
+        let item = await calendar.onItemRemoved(removedItem, {});
+
+        // vcalendar -> vevent
+        expect(fetch).toHaveBeenCalledWith(
+          new URL(
+            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo" +
+              (sendUpdates ? "?sendUpdates=all" : "")
+          ),
+          expect.objectContaining({
+            method: "DELETE",
+            headers: expect.objectContaining({
+              "If-Match": sendUpdates ? '"2299601498276000"' : "*",
+            }),
+          })
+        );
       });
 
-      let removedItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+      test("onItemRemoved resource gone", async () => {
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+            )
+          ) {
+            return {
+              status: 410,
+              headers: {
+                "Content-Length": 0,
+              },
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
 
-      if (!sendUpdates) {
-        // Using this also to check the branch without an etag
-        delete removedItem.metadata.etag;
-      }
+        let removedItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
 
-      let item = await calendar.onItemRemoved(removedItem, {});
+        let item = await calendar.onItemRemoved(removedItem, {});
 
-      // vcalendar -> vevent
-      expect(fetch).toHaveBeenCalledWith(
-        new URL(
-          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo" +
-            (sendUpdates ? "?sendUpdates=all" : "")
-        ),
-        expect.objectContaining({
-          method: "DELETE",
-          headers: expect.objectContaining({
-            "If-Match": sendUpdates ? '"2299601498276000"' : "*",
-          }),
-        })
-      );
+        expect(item).toBe(null);
+      });
+
+      test("onItemRemoved conflict", async () => {
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+            )
+          ) {
+            return {
+              status: 412,
+              headers: {
+                "Content-Length": 0,
+              },
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
+
+        let removedItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+
+        let error = await calendar.onItemRemoved(removedItem, {});
+        expect(error).toEqual({ error: "CONFLICT" });
+        expect(fetch).toHaveBeenCalledWith(
+          new URL(
+            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+          ),
+          expect.objectContaining({
+            method: "DELETE",
+            headers: expect.objectContaining({
+              "If-Match": '"2299601498276000"'
+            }),
+          })
+        );
+
+        error = await calendar.onItemRemoved(removedItem, { force: true });
+        expect(error).toEqual({ error: "CONFLICT" });
+        expect(fetch).toHaveBeenCalledWith(
+          new URL(
+            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+          ),
+          expect.objectContaining({
+            method: "DELETE",
+            headers: expect.objectContaining({
+              "If-Match": "*"
+            }),
+          })
+        );
+      });
+
+      test("onItemRemoved hard error", async () => {
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+            )
+          ) {
+            return {
+              status: 403,
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                error: {
+                  errors: [{
+                    reason: "quotaExceeded"
+                  }]
+                }
+              })
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
+
+        let removedItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+
+        await expect(calendar.onItemRemoved(removedItem)).rejects.toThrow("QUOTA_FAILURE");
+      });
     });
   });
 
@@ -735,69 +980,308 @@ describe("onSync", () => {
 
     expect(messenger.calendar.calendars.clear).not.toHaveBeenCalled();
   });
-});
 
-test("onDetectCalendars", async () => {
-  fetch.mockResponse(req => {
-    if (req.url.startsWith("https://www.googleapis.com/calendar/v3/users/me/calendarList")) {
-      return {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          items: [
-            {
-              id: "calid",
-              summary: "calendar summary",
-              accessRole: "owner",
-              backgroundColor: "#FF0000",
-            },
-          ],
-        }),
-      };
-    } else if (req.url.startsWith("https://www.googleapis.com/tasks/v1/users/@me/lists")) {
-      return {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          items: [
-            {
-              id: "taskid",
-              title: "task summary",
-            },
-          ],
-        }),
-      };
-    }
-    return null;
+  test("sync just events", async () => {
+    let calendar = await calGoogleCalendar.get("id7");
+    await calendar.onInit();
+
+    fetch.mockResponse(req => {
+      let response;
+
+      if ((response = mockCalendarRequest(req)) !== null) {
+        return response;
+      }
+      if ((response = mockCalendarListRequest(req, { defaultReminders: null })) !== null) {
+        return response;
+      }
+      if (mockTaskRequest(req) !== null) {
+        throw new Error("Unexpected tasks request");
+      }
+
+      throw new Error("Unhandled request " + req.url);
+    });
+
+    calendar.session.oauth.accessToken = "accessToken";
+    calendar.session.oauth.expires = new Date(new Date().getTime() + 10000);
+    await expect(calendar.onSync()).resolves.toBe(undefined);
   });
 
-  let session = sessions.byId("username@example.com", true);
-  authenticate(session);
+  test("sync just tasks", async () => {
+    let calendar = await calGoogleCalendar.get("id8");
+    await calendar.onInit();
 
-  let calendars = await calGoogleCalendar.onDetectCalendars(
-    "username@example.com",
-    "password",
-    "example.com",
-    false,
-    {}
-  );
-  expect(calendars).toEqual(
-    expect.arrayContaining([
-      {
-        name: "calendar summary",
-        type: "ext-" + messenger.runtime.id,
-        url: "googleapi://username@example.com/?calendar=calid",
-        readOnly: false,
-        color: "#FF0000",
-      },
-      {
-        name: "task summary",
-        type: "ext-" + messenger.runtime.id,
-        url: "googleapi://username@example.com/?tasks=taskid",
-      },
-    ])
-  );
-  expect(calendars.length).toBe(2);
+    fetch.mockResponse(req => {
+      let response;
+
+      if (mockCalendarRequest(req) !== null) {
+        throw new Error("Calendar request should not trigger");
+      }
+      if (mockCalendarListRequest(req, { accessRole: "owner" }) !== null) {
+        throw new Error("Calendar list request should not trigger");
+      }
+      if ((response = mockTaskRequest(req)) !== null) {
+        return response;
+      }
+
+      throw new Error("Unhandled request " + req.url);
+    });
+
+    calendar.session.oauth.accessToken = "accessToken";
+    calendar.session.oauth.expires = new Date(new Date().getTime() + 10000);
+    await expect(calendar.onSync()).resolves.toBe(undefined);
+  });
+
+  test("subsequent sync", async () => {
+    let calendar = await calGoogleCalendar.get("id7");
+    await calendar.onInit();
+
+    let urls = [];
+
+    fetch.mockResponse(req => {
+      let response;
+      urls.push(req.url);
+
+      if ((response = mockCalendarRequest(req)) !== null) {
+        return response;
+      }
+      if ((response = mockCalendarListRequest(req)) !== null) {
+        return response;
+      }
+      throw new Error("Unhandled request " + req.url);
+    });
+
+    calendar.session.oauth.accessToken = "accessToken";
+    calendar.session.oauth.expires = new Date(new Date().getTime() + 10000);
+    await calendar.onSync();
+
+    expect(await calendar.getCalendarPref("eventSyncToken")).toBe("nextSyncToken");
+    expect(urls).toContain("https://www.googleapis.com/calendar/v3/calendars/id7%40calendar.google.com/events?showDeleted=false");
+
+    await calendar.onSync();
+    expect(urls).toContain("https://www.googleapis.com/calendar/v3/calendars/id7%40calendar.google.com/events?showDeleted=true&syncToken=nextSyncToken");
+  });
+
+  test("sync quota failure", async () => {
+    let calendar = await calGoogleCalendar.get("id7");
+    await calendar.onInit();
+
+    fetch.mockResponse(req => {
+      let response;
+
+      if (req.url.startsWith("https://www.googleapis.com/calendar/v3/calendars")) {
+        return {
+          status: 403,
+          headers: {
+            Date: new Date(),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            error: {
+              errors: [{
+                reason: "quotaExceeded"
+              }]
+            }
+          })
+        };
+      }
+
+      if ((response = mockCalendarListRequest(req)) !== null) {
+        return response;
+      }
+      throw new Error("Unhandled request " + req.url);
+    });
+
+    calendar.session.oauth.accessToken = "accessToken";
+    calendar.session.oauth.expires = new Date(new Date().getTime() + 10000);
+    await expect(calendar.onSync()).rejects.toThrow("QUOTA_FAILURE");
+
+    // Make sure backoff has been called
+    const flushPromises = () => new Promise(jest.requireActual("timers").setImmediate);
+
+    jest.useFakeTimers();
+    try {
+      let completed = jest.fn();
+      let waiting = calendar.session.waitForBackoff().then(completed);
+
+      jest.advanceTimersByTime(1000);
+      await flushPromises();
+      expect(completed).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(2000);
+      await flushPromises();
+      expect(completed).toHaveBeenCalled();
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+});
+
+describe("onDetectCalendars", () => {
+  test("success", async () => {
+    fetch.mockResponse(req => {
+      if (req.url.startsWith("https://www.googleapis.com/calendar/v3/users/me/calendarList")) {
+        return {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            items: [
+              {
+                id: "calid",
+                summary: "calendar summary",
+                accessRole: "owner",
+                backgroundColor: "#FF0000",
+              },
+            ],
+          }),
+        };
+      } else if (req.url.startsWith("https://www.googleapis.com/tasks/v1/users/@me/lists")) {
+        return {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            items: [
+              {
+                id: "taskid",
+                title: "task summary",
+              },
+            ],
+          }),
+        };
+      }
+      return null;
+    });
+
+    let session = sessions.byId("username@example.com", true);
+    authenticate(session);
+
+    let calendars = await calGoogleCalendar.onDetectCalendars(
+      "username@example.com",
+      "password",
+      "example.com",
+      false,
+      {}
+    );
+    expect(calendars).toEqual(
+      expect.arrayContaining([
+        {
+          name: "calendar summary",
+          type: "ext-" + messenger.runtime.id,
+          url: "googleapi://username@example.com/?calendar=calid",
+          readOnly: false,
+          color: "#FF0000",
+        },
+        {
+          name: "task summary",
+          type: "ext-" + messenger.runtime.id,
+          url: "googleapi://username@example.com/?tasks=taskid",
+        },
+      ])
+    );
+    expect(calendars.length).toBe(2);
+  });
+
+  test("fail calendar", async () => {
+    fetch.mockResponse(req => {
+      if (req.url.startsWith("https://www.googleapis.com/calendar/v3/users/me/calendarList")) {
+        return {
+          status: 500,
+          headers: {
+            "Content-Length": 0
+          }
+        };
+      } else if (req.url.startsWith("https://www.googleapis.com/tasks/v1/users/@me/lists")) {
+        return {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            items: [
+              {
+                id: "taskid",
+                title: "task summary",
+              },
+            ],
+          }),
+        };
+      }
+      return null;
+    });
+
+    let session = sessions.byId("username@example.com", true);
+    authenticate(session);
+
+    let calendars = await calGoogleCalendar.onDetectCalendars(
+      "username@example.com",
+      "password",
+      "example.com",
+      false,
+      {}
+    );
+    expect(calendars).toEqual(
+      expect.arrayContaining([
+        {
+          name: "task summary",
+          type: "ext-" + messenger.runtime.id,
+          url: "googleapi://username@example.com/?tasks=taskid",
+        },
+      ])
+    );
+    expect(calendars.length).toBe(1);
+    expect(console.warn).toHaveBeenCalledWith("[calGoogleCalendar]", "Error retrieving calendar list:", expect.anything());
+  });
+  test("fail tasks", async () => {
+    fetch.mockResponse(req => {
+      if (req.url.startsWith("https://www.googleapis.com/calendar/v3/users/me/calendarList")) {
+        return {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            items: [
+              {
+                id: "calid",
+                summary: "calendar summary",
+                accessRole: "owner",
+                backgroundColor: "#FF0000",
+              },
+            ],
+          }),
+        };
+      } else if (req.url.startsWith("https://www.googleapis.com/tasks/v1/users/@me/lists")) {
+        return {
+          status: 500,
+          headers: {
+            "Content-Length": 0
+          }
+        };
+      }
+      return null;
+    });
+
+    let session = sessions.byId("username@example.com", true);
+    authenticate(session);
+
+    let calendars = await calGoogleCalendar.onDetectCalendars(
+      "username@example.com",
+      "password",
+      "example.com",
+      false,
+      {}
+    );
+    expect(calendars).toEqual(
+      expect.arrayContaining([
+        {
+          name: "calendar summary",
+          type: "ext-" + messenger.runtime.id,
+          url: "googleapi://username@example.com/?calendar=calid",
+          readOnly: false,
+          color: "#FF0000",
+        },
+      ])
+    );
+    expect(calendars.length).toBe(1);
+    expect(console.warn).toHaveBeenCalledWith("[calGoogleCalendar]", "Error retrieving task list:", expect.anything());
+  });
 });
