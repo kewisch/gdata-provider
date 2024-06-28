@@ -222,17 +222,16 @@ export default class calGoogleCalendar {
     // happening just by inspecting the item. Adding offline items should
     // not be an import, but invitations should.
     // let isImport = aItem.id && (aItem.id == "xpcshell-import" || stackContains("calItipUtils.jsm"));
+    // TODO now only in the experiment
     // TODO end
-    let isImport = false;
-
-    let itemData = itemToJson(item, this, isImport);
+    let itemData = itemToJson(item, this, options.invitation);
 
     let uri;
-    this.console.log(`Adding ${isImport ? "invitation" : "regular"} ${item.type} ${item.title}`);
+    this.console.log(`Adding ${options.invitation ? "invitation" : "regular"} ${item.type} ${item.title}`);
 
     /* istanbul ignore else - unreachable */
     if (item.type == "event") {
-      uri = this.createEventsURI("events", isImport && "import");
+      uri = this.createEventsURI("events", options.invitation && "import");
       let prefs = await messenger.storage.local.get({ "settings.sendEventNotifications": false });
       if (prefs["settings.sendEventNotifications"]) {
         uri += "?sendUpdates=all";
