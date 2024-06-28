@@ -72,14 +72,15 @@ export default class calGoogleRequest {
     await session.waitForBackoff();
 
     try {
-      return this.#commit(session);
+      return await this.#commit(session);
     } catch (e) {
       if (e instanceof GoogleRequestError) {
         if (this.options.calendar) {
-          await messenger.calendar.calendars.update(this.options.calendar.id, {
-            enabled: e.constructor.DISABLE ? false : undefined,
-            lastError: e.message
-          });
+          let updateProps = { lastError: e.message };
+          if (e.DISABLE) {
+            updateProps.enabled = false;
+          }
+          await messenger.calendar.calendars.update(this.options.calendar.id, updateProps);
         }
       }
       throw e;
