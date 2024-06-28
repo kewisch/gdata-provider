@@ -292,7 +292,7 @@ export default class calGoogleCalendar {
       uri,
       json: itemData,
       headers: {
-        "If-Match": options.force ? "*" : ((oldItem || item).metadata.etag || "*"),
+        "If-Match": options.force ? "*" : oldItem.metadata.etag || "*",
       },
       calendar: this,
     });
