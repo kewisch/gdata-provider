@@ -73,10 +73,10 @@ export default class calGoogleCalendar {
     ] = await Promise.allSettled([session.getCalendarList(), session.getTasksList()]);
 
     if (calendarError) {
-      this.console.warn("Error retrieving calendar list:", calendarError);
+      console.warn("Error retrieving calendar list:", calendarError);
     }
     if (tasksError) {
-      this.console.warn("Error retrieving task list:", tasksError);
+      console.warn("Error retrieving task list:", tasksError);
     }
 
     calendars = calendars.map(gcal => {
