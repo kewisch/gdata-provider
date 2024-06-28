@@ -352,9 +352,36 @@ function patchEvent(item, oldItem) {
     }
   }
 
+  function getActualEnd(endEvent) {
+    let endProp = endEvent.getFirstProperty("dtend");
+    let end = endProp?.getFirstValue("dtend");
+    let duration = endEvent.getFirstPropertyValue("duration");
+    if (!end && duration) {
+      let startProp = endEvent.getFirstProperty("dtstart");
+      let start = startProp.getFirstValue();
+      end = start.clone();
+      end.addDuration(duration);
+
+      return new ICAL.Property(["dtend", startProp.jCal[1], startProp.jCal[2], end.toString()]);
+    }
+    return endProp;
+  }
+
   function setIfDateChanged(obj, prop, jprop) {
     let oldProp = oldEvent.getFirstProperty(jprop);
     let newProp = event.getFirstProperty(jprop);
+
+    let oldDate = oldProp?.getFirstValue();
+    let newDate = newProp?.getFirstValue();
+
+    if (!oldDate ^ !newDate || (oldDate && newDate && oldDate.compare(newDate) != 0)) {
+      obj[prop] = dateToJson(newProp);
+    }
+  }
+
+  function setIfEndDateChanged(obj, prop) {
+    let oldProp = getActualEnd(oldEvent);
+    let newProp = getActualEnd(event);
 
     let oldDate = oldProp?.getFirstValue();
     let newDate = newProp?.getFirstValue();
@@ -392,7 +419,8 @@ function patchEvent(item, oldItem) {
   }
 
   setIfDateChanged(entry, "start", "dtstart");
-  setIfDateChanged(entry, "end", "dtend"); // TODO duration instead of end
+  setIfEndDateChanged(entry, "end");
+
   if (entry.end === null) {
     delete entry.end;
     entry.endTimeUnspecified = true;
