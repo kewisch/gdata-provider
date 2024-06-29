@@ -78,7 +78,8 @@
             }
           },
           "requires_network": { "type": "boolean", "optional": true },
-          "minimum_refresh_interval": { "type": "integer", "minimum": -1, "optional": true }
+          "minimum_refresh_interval": { "type": "integer", "minimum": -1, "optional": true },
+          "mutable": { "type": "boolean", "optional": true, "default": true }
         }
       }
     ],

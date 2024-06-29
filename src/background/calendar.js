@@ -84,7 +84,9 @@ export default class calGoogleCalendar {
         name: gcal.summary,
         type: "ext-" + messenger.runtime.id,
         url: `googleapi://${username}/?calendar=${encodeURIComponent(gcal.id)}`,
-        readOnly: gcal.accessRole == "freeBusyReader" || gcal.accessRole == "reader",
+        capabilities: {
+          mutable: gcal.accessRole != "freeBusyReader" && gcal.accessRole != "reader",
+        },
         color: gcal.backgroundColor,
       };
     });
@@ -433,9 +435,12 @@ export default class calGoogleCalendar {
             JSON.stringify(data.defaultReminders)
           );
 
-          if (data.accessRole == "freeBusyReader" || data.accessRole == "reader") {
-            await messenger.calendar.calendars.update(this.id, { readOnly: true });
-          }
+          let isReadOnly = data.accessRole == "freeBusyReader" || data.accessRole == "reader";
+          await messenger.calendar.calendars.update(this.id, {
+            capabilities: {
+              mutable: !isReadOnly
+            }
+          });
         })()
       );
 

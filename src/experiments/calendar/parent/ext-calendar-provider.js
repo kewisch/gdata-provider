@@ -38,6 +38,7 @@ function convertProps(props, extension) {
   calendar.setProperty("readOnly", props.readOnly);
   calendar.setProperty("disabled", props.enabled === false);
   calendar.setProperty("color", props.color || "#A8C2E1");
+  calendar.capabilities = props.capabilities; // TODO validation necessary?
 
   calendar.uri = Services.io.newURI(props.url);
 
@@ -491,6 +492,12 @@ this.calendar_provider = class extends ExtensionAPI {
               node.remove();
             }
           }
+        }
+
+        let mutable = calendar.capabilities?.mutable;
+
+        if (!mutable) {
+          win.document.getElementById("read-only").disabled = true;
         }
       }
     });

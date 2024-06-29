@@ -881,10 +881,8 @@ describe("onSync", () => {
       '[{"method":"popup","minutes":120}]'
     );
 
-    if (accessRole == "freeBusyReader") {
-      // eslint-disable-next-line jest/no-conditional-expect
-      expect(messenger.calendar.calendars.update).toHaveBeenCalledWith("id1", { readOnly: true });
-    }
+    let isReadOnly = (accessRole == "freeBusyReader");
+    expect(messenger.calendar.calendars.update).toHaveBeenCalledWith("id1", { capabilities: { mutable: !isReadOnly } });
   });
 
   test("reset sync", async () => {
@@ -1132,6 +1130,12 @@ describe("onDetectCalendars", () => {
                 accessRole: "owner",
                 backgroundColor: "#FF0000",
               },
+              {
+                id: "calid2",
+                summary: "calendar readonly",
+                accessRole: "reader",
+                backgroundColor: "#00FF00",
+              },
             ],
           }),
         };
@@ -1169,8 +1173,19 @@ describe("onDetectCalendars", () => {
           name: "calendar summary",
           type: "ext-" + messenger.runtime.id,
           url: "googleapi://username@example.com/?calendar=calid",
-          readOnly: false,
           color: "#FF0000",
+          capabilities: {
+            mutable: true
+          }
+        },
+        {
+          name: "calendar readonly",
+          type: "ext-" + messenger.runtime.id,
+          url: "googleapi://username@example.com/?calendar=calid2",
+          color: "#00FF00",
+          capabilities: {
+            mutable: false
+          }
         },
         {
           name: "task summary",
@@ -1179,7 +1194,7 @@ describe("onDetectCalendars", () => {
         },
       ])
     );
-    expect(calendars.length).toBe(2);
+    expect(calendars.length).toBe(3);
   });
 
   test("fail calendar", async () => {
@@ -1276,8 +1291,10 @@ describe("onDetectCalendars", () => {
           name: "calendar summary",
           type: "ext-" + messenger.runtime.id,
           url: "googleapi://username@example.com/?calendar=calid",
-          readOnly: false,
           color: "#FF0000",
+          capabilities: {
+            mutable: true
+          },
         },
       ])
     );
