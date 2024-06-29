@@ -214,7 +214,6 @@ export default class calGoogleCalendar {
     return updatedMin;
   }
 
-  // TODO throttle requests
   // TODO itip/imip
 
   async onItemCreated(item, options = {}) {
@@ -382,7 +381,6 @@ export default class calGoogleCalendar {
     this.console.log("Resetting last updated counter");
     await this.setCalendarPref("eventsSyncToken", null);
     await this.setCalendarPref("tasksLastUpdated", null);
-    // TODO reset throttle
 
     await messenger.calendar.calendars.clear(this.cacheId);
   }

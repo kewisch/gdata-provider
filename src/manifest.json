@@ -66,6 +66,10 @@
     "page": "background/index.html"
   },
 
+  "options_ui": {
+    "page": "options/options.html"
+  },
+
   "permissions": [
     "storage",
     "identity",

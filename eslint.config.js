@@ -401,6 +401,7 @@ export default [
   {
     files: [
       "src/content/**/*.js",
+      "src/options/**/*.js",
       "src/background/**/*.js",
     ],
     languageOptions: {

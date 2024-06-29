@@ -157,5 +157,12 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+
+  "settings.sendEventNotifications": {
+    "message": "Send email notifications to event guests"
+  },
+  "settings.forcePlainText": {
+    "message": "Force use of plain text in event descriptions"
   }
 }

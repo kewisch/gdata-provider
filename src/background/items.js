@@ -460,11 +460,9 @@ function patchEvent(item, oldItem) {
   }
 
   // Attendees
-  // TODO if (Services.prefs.getBoolPref("calendar.google.enableAttendees", false)) {
   if (haveAttendeesChanged(event, oldEvent)) {
     entry.attendees = convertAttendees(event);
   }
-  // }
 
   let oldReminders = convertReminders(oldEvent);
   let reminders = convertReminders(event);
