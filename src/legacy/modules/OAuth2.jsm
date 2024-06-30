@@ -13,9 +13,6 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
  */
 var EXPORTED_SYMBOLS = ["OAuth2"]; /* exported OAuth2 */
 
-var Services =
-  globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
-
 // Only allow one connecting window per endpoint.
 var gConnecting = {};
 

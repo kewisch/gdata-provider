@@ -8,9 +8,6 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
 
 var EXPORTED_SYMBOLS = ["calGoogleCalendar"]; /* exported calGoogleCalendar */
 
-var Services =
-  globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
-
 var { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm");
 
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
@@ -161,7 +158,7 @@ class calGoogleCalendar extends cal.provider.BaseClass {
       let fullUser, path;
 
       if (aUri.pathQueryRef.substr(0, 2) == "//") {
-        // Thunderbird 115 compat
+        // TB115 COMPAT
         [fullUser, path] = aUri.pathQueryRef.substr(2).split("/", 2);
       } else {
         [, fullUser] = aUri.prePath.split("//", 2);
@@ -429,7 +426,9 @@ class calGoogleCalendar extends cal.provider.BaseClass {
         }
 
         if (messenger.gdataSyncPrefs.get("settings.sendEventNotifications", false)) {
-          request.addQueryParameter("sendNotifications", "true");
+          request.addQueryParameter("sendUpdates", "all");
+        } else {
+          request.addQueryParameter("sendUpdates", "none");
         }
       } else if (aItem.isTodo()) {
         cal.LOG("[calGoogleCalendar] Adding task " + aItem.title);
@@ -510,7 +509,9 @@ class calGoogleCalendar extends cal.provider.BaseClass {
         }
 
         if (messenger.gdataSyncPrefs.get("settings.sendEventNotifications", false)) {
-          request.addQueryParameter("sendNotifications", "true");
+          request.addQueryParameter("sendUpdates", "all");
+        } else {
+          request.addQueryParameter("sendUpdates", "none");
         }
       } else if (aNewItem.isTodo()) {
         request.uri = this.createTasksURI("tasks", aNewItem.id);
@@ -616,7 +617,9 @@ class calGoogleCalendar extends cal.provider.BaseClass {
       if (aItem.isEvent()) {
         request.uri = this.createEventsURI("events", getGoogleId(aItem, this.offlineStorage));
         if (messenger.gdataSyncPrefs.get("settings.sendEventNotifications", false)) {
-          request.addQueryParameter("sendNotifications", "true");
+          request.addQueryParameter("sendUpdates", "all");
+        } else {
+          request.addQueryParameter("sendUpdates", "none");
         }
       } else if (aItem.isTodo()) {
         request.uri = this.createTasksURI("tasks", aItem.id);

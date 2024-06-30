@@ -41,12 +41,6 @@ function gdataInitUI(window, document) {
       .insertBefore(confFragment, document.getElementById("event-grid-location-row").nextSibling);
   })();
 
-  monkeyPatch(window, "loadDialog", function(protofunc, aItem) {
-    let rv = protofunc.call(this, aItem);
-    initConferenceRow(document, messenger, aItem);
-    return rv;
-  });
-
   monkeyPatch(window, "updateCalendar", function(protofunc, ...args) {
     let rv = protofunc.apply(this, args);
     let calendar = getCurrentCalendar();
@@ -62,128 +56,133 @@ function gdataInitUI(window, document) {
 
     window.sendMessage({ command: "gdataIsTask", isGoogleTask: isGoogleTask });
 
-    // Hide elements not valid for tasks
-    let hideForTaskIds = [
-      "FormatToolbox",
-      "event-grid-location-row",
-
-      "event-grid-startdate-row",
-      "timezone-endtime",
-      "link-image-bottom",
-
-      "event-grid-tab-attendees",
-      "event-grid-tabpanel-attendees",
-
-      "todo-status-none-menuitem",
-      "todo-status-inprogress-menuitem",
-      "todo-status-canceled-menuitem",
-
-      "percent-complete-textbox",
-      "percent-complete-label",
-
-      "event-grid-recurrence-row",
-      "event-grid-recurrence-separator",
-
-      "event-grid-alarm-row",
-      "event-grid-alarm-separator",
-    ];
-
-    for (let id of hideForTaskIds) {
-      let node = document.getElementById(id);
-      if (node) {
-        node.hidden = isGoogleTask;
-      }
-    }
-
-    // Show a notification to indicate OOO and focus time events
-    if (isOooEvent || isFocusEvent) {
-      window.gEventNotification.appendNotification("gdata-info-event-type", {
-        label: messenger.i18n.getMessage("eventdialog." + (isOooEvent ? "oooEvent" : "focusEvent")),
-        priority: window.gEventNotification.PRIORITY_INFO_LOW,
-      });
-    }
-
-    // Hide elements not valid in OOO events
-    let hideForOooIds = [
-      "event-grid-location-row",
-      "event-grid-category-row",
-      "event-grid-alarm-row",
-    ];
-    for (let id of hideForOooIds) {
-      let node = document.getElementById(id);
-      if (node) {
-        node.hidden = isOooEvent;
-      }
-    }
-    document.getElementById("event-grid-tab-box-row").style.visibility = isOooEvent ? "hidden" : "";
-
-    // Hide elements not valid in focus time events
-    let hideForFocusIds = [
-      "event-grid-tab-attendees",
-      "event-grid-tabpanel-attendees",
-      "notify-options",
-    ];
-    for (let id of hideForFocusIds) {
-      let node = document.getElementById(id);
-      if (node) {
-        node.hidden = isFocusEvent;
-      }
-    }
-
-    document
-      .getElementById("todo-duedate")
-      .querySelector(".datetimepicker-timepicker").style.display = isGoogleTask ? "none" : "";
-
-    if (window.gEndTime) {
-      if (isGoogleTask) {
-        let floating = cal.dtz.floating;
-        if (window.gEndTimezone != floating) {
-          window.gOldEndTimezone = window.gEndTimezone;
-        }
-        window.gEndTimezone = cal.dtz.floating;
-        window.gEndTime = window.gEndTime.getInTimezone(window.gEndTimezone);
-        window.gEndTime.isDate = true;
-      } else {
-        if (window.gOldEndTimezone) {
-          window.gEndTimezone = window.gOldEndTimezone;
-        }
-        window.gEndTime.isDate = false;
-        window.gEndTime = window.gEndTime.getInTimezone(window.gEndTimezone);
-      }
-      window.updateDateTime();
-    }
-
+    // Hide/show all elements with provider="gdata"
     for (let elem of document.getElementsByAttribute("provider", "gdata")) {
       elem.style.display = isGoogleCalendar ? "" : "none";
     }
 
-    let reminderList = document.getElementById("item-alarm");
-    let hasDefaultReminders = isGoogleEvent && calendar.getProperty("settings.defaultReminders");
-    if (isGoogleCalendar && !hasDefaultReminders && reminderList.value == "default") {
-      reminderList.value = "none";
+    if (isEvent) {
+      // Show a notification to indicate OOO and focus time events
+      if (isOooEvent || isFocusEvent) {
+        window.gEventNotification.appendNotification("gdata-info-event-type", {
+          label: messenger.i18n.getMessage(
+            "eventdialog." + (isOooEvent ? "oooEvent" : "focusEvent")
+          ),
+          priority: window.gEventNotification.PRIORITY_INFO_LOW,
+        });
+      }
+
+      // Hide elements not valid in OOO events
+      let hideForOooIds = [
+        "event-grid-location-row",
+        "event-grid-category-row",
+        "event-grid-alarm-row",
+      ];
+      for (let id of hideForOooIds) {
+        let node = document.getElementById(id);
+        if (node) {
+          node.hidden = isOooEvent;
+        }
+      }
+      document.getElementById("event-grid-tab-box-row").style.visibility = isOooEvent
+        ? "hidden"
+        : "";
+
+      // Hide elements not valid in focus time events
+      let hideForFocusIds = [
+        "event-grid-tab-attendees",
+        "event-grid-tabpanel-attendees",
+        "notify-options",
+      ];
+      for (let id of hideForFocusIds) {
+        let node = document.getElementById(id);
+        if (node) {
+          node.hidden = isFocusEvent;
+        }
+      }
+
+      // Update conference row
+      initConferenceRow(document, messenger, window.calendarItem, calendar);
+
+      // Set up default reminder items
+      let reminderList = document.getElementById("item-alarm");
+      let hasDefaultReminders = isGoogleEvent && calendar.getProperty("settings.defaultReminders");
+      if (isGoogleCalendar && !hasDefaultReminders && reminderList.value == "default") {
+        reminderList.value = "none";
+      }
+
+      let defaultReminderItem = document.getElementById("gdata-reminder-default-menuitem");
+      defaultReminderItem.style.display = hasDefaultReminders ? "" : "none";
+    } else if (isTask) {
+      // Hide elements not valid for tasks
+      let hideForTaskIds = [
+        "FormatToolbox",
+        "event-grid-location-row",
+
+        "event-grid-startdate-row",
+        "timezone-endtime",
+        "link-image-bottom",
+
+        "event-grid-tab-attendees",
+        "event-grid-tabpanel-attendees",
+
+        "todo-status-none-menuitem",
+        "todo-status-inprogress-menuitem",
+        "todo-status-canceled-menuitem",
+
+        "percent-complete-textbox",
+        "percent-complete-label",
+
+        "event-grid-recurrence-row",
+        "event-grid-recurrence-separator",
+
+        "event-grid-alarm-row",
+        "event-grid-alarm-separator",
+      ];
+
+      for (let id of hideForTaskIds) {
+        let node = document.getElementById(id);
+        if (node) {
+          node.hidden = isGoogleTask;
+        }
+      }
+      // Hide end time for the tasks due date picker
+      document
+        .getElementById("todo-duedate")
+        .querySelector(".datetimepicker-timepicker").style.display = isGoogleTask ? "none" : "";
+
+      // Adjust timezones for Google Tasks
+      if (window.gEndTime) {
+        if (isGoogleTask) {
+          let floating = cal.dtz.floating;
+          if (window.gEndTimezone != floating) {
+            window.gOldEndTimezone = window.gEndTimezone;
+          }
+          window.gEndTimezone = cal.dtz.floating;
+          window.gEndTime = window.gEndTime.getInTimezone(window.gEndTimezone);
+          window.gEndTime.isDate = true;
+        } else {
+          if (window.gOldEndTimezone) {
+            window.gEndTimezone = window.gOldEndTimezone;
+          }
+          window.gEndTime.isDate = false;
+          window.gEndTime = window.gEndTime.getInTimezone(window.gEndTimezone);
+        }
+        window.updateDateTime();
+      }
+
+      // Remove categories for Google Tasks
+      let categoriesLabel = document.getElementById("item-categories-label");
+      let itemCategories = document.getElementById("item-categories");
+
+      if (isGoogleTask) {
+        itemCategories.setAttribute("hidden", "true");
+        categoriesLabel.setAttribute("hidden", "true");
+      } else {
+        itemCategories.removeAttribute("hidden");
+        categoriesLabel.removeAttribute("hidden");
+      }
     }
-
-    let defaultReminderItem = document.getElementById("gdata-reminder-default-menuitem");
-    defaultReminderItem.style.display = hasDefaultReminders ? "" : "none";
-
-    // Remove categories for Google Tasks
-    let categoriesLabel = document.getElementById("item-categories-label");
-    let calendarLabel = document.getElementById("item-calendar-label");
-    if (!categoriesLabel.origLabel) {
-      categoriesLabel.origLabel = categoriesLabel.value;
-    }
-
-    let itemCategories = document.getElementById("item-categories");
-
-    if (isGoogleTask) {
-      itemCategories.setAttribute("hidden", "true");
-      calendarLabel.setAttribute("hidden", "true");
-    } else {
-      itemCategories.removeAttribute("hidden");
-      calendarLabel.removeAttribute("hidden");
-    }
-
-    categoriesLabel.value = isGoogleTask ? calendarLabel.value : categoriesLabel.origLabel;
 
     return rv;
   });

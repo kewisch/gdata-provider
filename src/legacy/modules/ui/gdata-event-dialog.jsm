@@ -64,11 +64,9 @@ function gdataInitUI(window, document) {
   })();
 
   function loadPanel(passedFrameId) {
-    let tabmail = window.tabmail || window.gTabMail; // TB102 COMPAT
-
     let frameId;
-    if (tabmail) {
-      frameId = passedFrameId || tabmail.currentTabInfo.iframe?.id;
+    if (window.tabmail) {
+      frameId = passedFrameId || window.tabmail.currentTabInfo.iframe?.id;
     } else {
       frameId = "calendar-item-panel-iframe";
     }
@@ -105,8 +103,7 @@ function gdataInitUI(window, document) {
   }
 
   window.addEventListener("message", aEvent => {
-    let tabmail = window.tabmail || window.gTabMail; // TB102 COMPAT
-    let validOrigin = tabmail ? "chrome://messenger" : "chrome://calendar";
+    let validOrigin = window.tabmail ? "chrome://messenger" : "chrome://calendar";
     if (!aEvent.isTrusted && aEvent.origin !== validOrigin) {
       return;
     }
