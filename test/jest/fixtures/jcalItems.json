@@ -137,10 +137,10 @@
        ]
     }
   },
-  "missing_id_task": {
+  "organizer_partstat": {
     "metadata" : {},
-    "title" : "New Task",
-    "type" : "task",
+    "title" : "New Event",
+    "type" : "event",
     "formats" : {
        "use" : "jcal",
        "jcal" : [
@@ -151,9 +151,13 @@
             ["version", {}, "text", "2.0"]
           ],
           [
-            ["vtodo",
+            ["vevent",
               [
-                [ "summary", {}, "text", "New Task" ]
+                [ "uid", {}, "text", "swpefnfloqssxjdlbpyqlyqddb@google.com" ],
+                [ "summary", {}, "text", "New Event" ],
+                [ "organizer", { "cn" : "Eggs P. Seashell", "partstat": "TENTATIVE" }, "uri", "mailto:organizer@example.com" ],
+                [ "attendee", { "cn" : "Eggs P. Seashell", "partstat": "NEEDS-ACTION" }, "uri", "mailto:organizer@example.com" ],
+                [ "attendee", { "cn" : "Eggs P. Seashell Jr.", "partstat": "ACCEPTED" }, "uri", "mailto:attendee@example.com" ]
               ], []
             ]
           ]
@@ -196,7 +200,7 @@
               [ "url", {}, "text", "https://example.com/calendar/event?eid=eventhash" ],
               [ "transp", {}, "text", "TRANSPARENT" ],
               [ "dtstart", {}, "date", "2006-06-10" ],
-              [ "organizer", { "cn": "Eggs P. Seashell" }, "uri", "urn:id:b4d9b3a9-b537-47bd-92a1-fb40c0c1c7fc"],
+              [ "organizer", { "cn": "Eggs P. Seashell", "email": "mailto:organizer@example.com" }, "uri", "urn:id:b4d9b3a9-b537-47bd-92a1-fb40c0c1c7fc"],
               [ "attendee", { "role": "OPT-PARTICIPANT", "partstat": "TENTATIVE", "cutype": "INDIVIDUAL", "cn": "attendee name" }, "uri", "mailto:attendee@example.com" ],
               [ "x-moz-lastack", {}, "date-time", "2014-01-01T01:01:01Z" ],
               [ "x-moz-snooze-time", {}, "date-time", "2014-01-01T02:02:02Z" ],
@@ -360,6 +364,29 @@
           ]
         ]
       ]
+    }
+  },
+  "missing_id_task": {
+    "metadata" : {},
+    "title" : "New Task",
+    "type" : "task",
+    "formats" : {
+       "use" : "jcal",
+       "jcal" : [
+          "vcalendar",
+          [
+            ["calscale", {}, "text", "GREGORIAN"],
+            ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+            ["version", {}, "text", "2.0"]
+          ],
+          [
+            ["vtodo",
+              [
+                [ "summary", {}, "text", "New Task" ]
+              ], []
+            ]
+          ]
+       ]
     }
   }
 }

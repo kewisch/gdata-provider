@@ -12,6 +12,7 @@ import { jest } from "@jest/globals";
 beforeEach(() => {
   global.messenger = createMessenger();
   jest.spyOn(global.console, "log").mockImplementation(() => {});
+  jest.spyOn(global.console, "warn").mockImplementation(() => {});
 
   global.window = {
     DOMParser: class {
@@ -288,6 +289,10 @@ describe("itemToJson", () => {
       location: "Hard Drive",
       start: { dateTime: "2006-06-10T18:00:00", timeZone: "Europe/Berlin" },
       end: { dateTime: "2006-06-10T20:00:00", timeZone: "Europe/Berlin" },
+      organizer: {
+        "displayName": "Eggs P. Seashell",
+        "email": "organizer@example.com"
+      },
       attendees: [
         {
           displayName: "attendee name",
@@ -332,6 +337,10 @@ describe("itemToJson", () => {
       description: "Description",
       location: "Hard Drive",
       start: { date: "2006-06-10" },
+      organizer: {
+        "displayName": "Eggs P. Seashell",
+        "email": "organizer@example.com"
+      },
       attendees: [
         {
           displayName: "attendee name",
@@ -459,7 +468,7 @@ describe("itemToJson", () => {
 
 describe("patchItem", () => {
   describe("patchEvent", () => {
-    let item, oldItem, event, changes;
+    let item, oldItem, event, oldEvent, changes;
 
     describe("simple event", () => {
       beforeEach(() => {
@@ -597,6 +606,7 @@ describe("patchItem", () => {
         changes = patchItem(item, oldItem);
         expect(changes).toEqual({ attendees: [] });
       });
+
       test("attendee added", () => {
         event.addProperty(
           new ICAL.Property([
@@ -640,6 +650,52 @@ describe("patchItem", () => {
           extendedProperties: { shared: { "X-MOZ-CATEGORIES": "foo,bar,baz" } },
         });
       });
+    });
+
+    test("organizer partstat change", () => {
+        item = v8.deserialize(v8.serialize(jcalItems.organizer_partstat));
+        oldItem = v8.deserialize(v8.serialize(item));
+
+        oldEvent = new ICAL.Component(oldItem.formats.jcal).getFirstSubcomponent("vevent");
+        event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+        event.getFirstProperty("organizer").setParameter("partstat", "ACCEPTED");
+
+        // Ensure organizer partstat is propagated to attendee (to work around a Thunderbird bug)
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({
+          "attendees": [
+            {
+              "displayName": "Eggs P. Seashell",
+              "email": "organizer@example.com",
+              "optional": false,
+              "resource": false,
+              "responseStatus": "accepted",
+            },
+            {
+              "displayName": "Eggs P. Seashell Jr.",
+              "email": "attendee@example.com",
+              "optional": false,
+              "resource": false,
+              "responseStatus": "accepted",
+            }
+          ],
+        });
+
+        // Shouldn't be able to change organizer if there was one set before
+        event.getFirstProperty("organizer").setValue("mailto:organizer2@example.com");
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({});
+        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("Changing organizer requires a move"));
+
+        // But should be able to if there was not one before
+        oldEvent.removeProperty("organizer");
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({
+          organizer: {
+            displayName: "Eggs P. Seashell",
+            email: "organizer2@example.com",
+          }
+        });
     });
 
     describe("reminders", () => {

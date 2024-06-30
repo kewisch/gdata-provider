@@ -210,6 +210,8 @@ function haveAttendeesChanged(event, oldEvent) {
   );
   let newAttendees = event.getAllProperties("attendee");
   let needsAttendeeUpdate = newAttendees.length != oldAttendees.size;
+  let organizer = event.getFirstProperty("organizer");
+  let organizerId = organizer?.getFirstParameter("partstat") ? organizer?.getFirstValue() : null;
 
   if (!needsAttendeeUpdate) {
     for (let attendee of newAttendees) {
@@ -218,6 +220,12 @@ function haveAttendeesChanged(event, oldEvent) {
       if (!oldAttendee) {
         needsAttendeeUpdate = true;
         break;
+      }
+
+      if (attendeeId == organizerId) {
+        // Thunderbird sets the participation status on the organizer, not the attendee
+        attendee = organizer;
+        oldAttendee = oldEvent.getFirstProperty("organizer");
       }
 
       if (
@@ -239,25 +247,31 @@ function haveAttendeesChanged(event, oldEvent) {
   return needsAttendeeUpdate;
 }
 
-function convertAttendees(vevent) {
+function convertAttendee(attendee, organizer, isOrganizer) {
   function setIf(att, prop, value) {
     if (value) {
       att[prop] = value;
     }
   }
 
-  let attendees = [];
+  let att = {};
+  let attendeeId = attendee.getFirstValue();
+  let organizerId = organizer?.getFirstValue();
 
-  for (let attendee of vevent.getAllProperties("attendee")) {
-    let att = {};
-    let name = attendee.getFirstParameter("cn");
-    if (name) {
-      att.displayName = name;
-    }
+  if (attendeeId == organizerId) {
+    // Thunderbird sets the participation status on the organizer, not the attendee.
+    attendee = organizer;
+  }
 
-    let value = attendee.getFirstValue();
-    att.email = value.startsWith("mailto:") ? value.substr(7) : attendee.getFirstParameter("email");
+  att.email = attendeeId.startsWith("mailto:") ? attendeeId.substr(7) : null;
+  let emailParam = attendee.getFirstParameter("email");
+  if (!att.email && emailParam) {
+    att.email = emailParam.startsWith("mailto:") ? emailParam.substr(7) : emailParam;
+  }
 
+  setIf(att, "displayName", attendee.getFirstParameter("cn"));
+
+  if (!isOrganizer) {
     att.optional = attendee.getFirstParameter("role") == "OPT-PARTICIPANT";
     att.resource = attendee.getFirstParameter("cutype") == "RESOURCE";
     att.responseStatus =
@@ -265,11 +279,9 @@ function convertAttendees(vevent) {
 
     setIf(att, "comment", attendee.getFirstParameter("comment"));
     setIf(att, "additionalGuests", attendee.getFirstParameter("x-num-guests"));
-    setIf(att, "displayName", attendee.getFirstParameter("cn"));
-
-    attendees.push(att);
   }
-  return attendees;
+
+  return att;
 }
 
 function convertRecurrence(vevent) {
@@ -416,7 +428,7 @@ function patchEvent(item, oldItem) {
     if (newHTML?.startsWith("data:text/html,")) {
       entry.description = decodeURIComponent(newHTML.slice("data:text/html,".length));
     } else {
-      entry.description = newDesc.getFirstValue();
+      entry.description = newDesc?.getFirstValue();
     }
   }
 
@@ -461,9 +473,21 @@ function patchEvent(item, oldItem) {
     delete entry.status;
   }
 
+  // Organizer
+  let organizer = event.getFirstProperty("organizer");
+  let organizerId = organizer?.getFirstValue();
+  let oldOrganizerId = oldEvent.getFirstPropertyValue("organizer");
+  if (!oldOrganizerId && organizerId) {
+    // This can be an import, add the organizer
+    entry.organizer = convertAttendee(organizer, organizer, true);
+  } else if (oldOrganizerId != organizerId) {
+    // Google requires a move() operation to do this, which is not yet implemented
+    console.warn(`[calGoogleCalendar(${entry.summary})] Changing organizer requires a move, which is not implemented`);
+  }
+
   // Attendees
   if (haveAttendeesChanged(event, oldEvent)) {
-    entry.attendees = convertAttendees(event);
+    entry.attendees = event.getAllProperties("attendee").map(attendee => convertAttendee(attendee, organizer));
   }
 
   let oldReminders = convertReminders(oldEvent);
