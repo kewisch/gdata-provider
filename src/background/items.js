@@ -26,6 +26,8 @@ const ALARM_ACTION_MAP_REV = reverseObject(ALARM_ACTION_MAP);
 
 const FOUR_WEEKS_IN_MINUTES = 40320;
 
+const CONTAINS_HTML_RE = /^<|&(lt|gt|amp);|<(br|p)>/;
+
 export function itemToJson(item, calendar, isImport) {
   if (item.type == "event") {
     return eventToJson(item, calendar, isImport);
@@ -560,7 +562,9 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   setIf("last-modified", "date-time", entry.updated);
   setIf("dtstamp", "date-time", entry.updated);
 
-  if (entry.description?.[0] == "<" || entry.description?.match(/&(lt|gt|amp);/)) {
+  // Not pretty, but Google doesn't have a straightforward way to differentiate. As of writing,
+  // they even have bugs in their own UI about displaying the string properly.
+  if (entry.description?.match(CONTAINS_HTML_RE)) {
     let altrep = "data:text/html," + encodeURIComponent(entry.description);
     let parser = new window.DOMParser();
     let plain = parser.parseFromString(entry.description, "text/html").documentElement.textContent;
