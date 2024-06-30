@@ -53,7 +53,7 @@ test("commit basics", async () => {
   request = new calGoogleRequest({
     method: "POST",
     uri: "https://localhost/test",
-    params: { undef: null, foo: "bar" },
+    params: { undef: null, foo: "bar", arr: ["one", "two"] },
     json: { foo: "bar" },
   });
 
@@ -61,7 +61,7 @@ test("commit basics", async () => {
   res = await request.commit(session);
   expect(fetch.mock.calls[fetch.mock.calls.length - 1][1].body).toBe('{"foo":"bar"}');
   expect(fetch).toHaveBeenCalledWith(
-    new URL("https://localhost/test?foo=bar"),
+    new URL("https://localhost/test?foo=bar&arr=one&arr=two"),
     expect.objectContaining({
       method: "POST",
       body: '{"foo":"bar"}',

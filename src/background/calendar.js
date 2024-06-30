@@ -450,6 +450,7 @@ export default class calGoogleCalendar {
             uri: this.createEventsURI("events"),
             params: {
               maxResults: prefs["settings.maxResultsPerRequest"],
+              eventTypes: ["default", "focusTime", "outOfOffice"],
               showDeleted: syncToken ? "true" : "false",
               syncToken: syncToken,
             },

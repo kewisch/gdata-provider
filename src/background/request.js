@@ -107,9 +107,14 @@ export default class calGoogleRequest {
     }
 
     let uri = new URL(this.options.uri);
-    if (Object.keys(this.options.params).length) {
-      uri.search = new URLSearchParams(this.options.params);
-    }
+    uri.search = new URLSearchParams(Object.entries(this.options.params).reduce((acc, param) => {
+      if (Array.isArray(param[1])) {
+        acc.push(...param[1].map(arrayParamValue => [param[0], arrayParamValue]));
+      } else {
+        acc.push(param);
+      }
+      return acc;
+    }, []));
 
     this.response = await fetch(uri, this.options);
     try {

@@ -125,7 +125,7 @@ describe("jsonToItem", () => {
       });
       let remaining = jcal.getAllProperties().map(prop => prop.name);
       if (remaining.length) {
-        console.warn("Remaining props:", remaining);
+        console.debug("Remaining props:", remaining);
       }
       expect(remaining.length).toBe(0);
     });
@@ -163,6 +163,7 @@ describe("jsonToItem", () => {
       expect(jcal.getFirstPropertyValue("uid")).toBe("uasfsingergnenedfwiefefgjk@google.com");
       expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610T010203Z");
     });
+
     test("recur rule", async () => {
       let item = await jsonToItem(gcalItems.recur_rrule, calendar, [], null);
       let jcal = new ICAL.Component(item.formats.jcal);
@@ -198,6 +199,16 @@ describe("jsonToItem", () => {
       let descr = jcal.getFirstProperty("description");
       expect(descr.getParameter("altrep")).toBe("data:text/html,%3Cb%3EBold%3C%2Fb%3E");
       expect(descr.getFirstValue()).toBe("Bold");
+    });
+
+    test("non-standard event types", async () => {
+      let item = await jsonToItem(gcalItems.ooo_event, calendar, [], null);
+      let jcal = new ICAL.Component(item.formats.jcal);
+      expect(jcal.getFirstPropertyValue("x-google-event-type")).toBe("outOfOffice");
+
+      item = await jsonToItem(gcalItems.focus_event, calendar, [], null);
+      jcal = new ICAL.Component(item.formats.jcal);
+      expect(jcal.getFirstPropertyValue("x-google-event-type")).toBe("focusTime");
     });
   });
 

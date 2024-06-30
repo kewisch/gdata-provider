@@ -590,6 +590,10 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   setIf("url", "text", entry.htmlLink);
   setIf("transp", "text", entry.transparency?.toUpperCase());
 
+  if (entry.eventType != "default") {
+    setIf("x-google-event-type", "text", entry.eventType);
+  }
+
   /* Let's only support this when we can really do it in UI
   for (let entryPoint of (entry.conferenceData?.entryPoints || [])) {
     // TODO ignoring name, label, etc.
