@@ -222,7 +222,7 @@ describe("jsonToItem", () => {
       expect(jcal.getFirstPropertyValue("dtstamp")?.toICALString()).toBe("20060608T210549");
       expect(jcal.getFirstPropertyValue("description")).toBe("description");
       expect(jcal.getFirstPropertyValue("url")).toBe(
-        "https://example.com/calendar/task?eid=taskhash"
+        "https://example.com/calendar/view/task?eid=taskhash"
       );
       expect(jcal.getFirstProperty("related-to")?.jCal).toEqual([
         "related-to",

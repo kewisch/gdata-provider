@@ -200,6 +200,7 @@
     "title": "New Task",
     "updated": "2006-06-08T21:05:49.138Z",
     "selfLink": "https://example.com/calendar/task?eid=taskhash",
+    "webViewLink": "https://example.com/calendar/view/task?eid=taskhash",
     "parent": "parentId",
     "position": 12312,
     "notes": "description",
@@ -221,6 +222,7 @@
     "title": "New Task",
     "updated": "2006-06-08T21:05:49.138Z",
     "selfLink": "https://example.com/calendar/task?eid=taskhash",
+    "webViewLink": "https://example.com/calendar/view/task?eid=taskhash",
     "status": "completed",
     "deleted": true,
     "hidden": false
@@ -232,6 +234,7 @@
     "title": "New Task",
     "updated": "2006-06-08T21:05:49.138Z",
     "selfLink": "https://example.com/calendar/task?eid=taskhash",
+    "webViewLink": "https://example.com/calendar/view/task?eid=taskhash",
     "status": "needsAction",
     "deleted": false,
     "hidden": false

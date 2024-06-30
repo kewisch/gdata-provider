@@ -740,7 +740,7 @@ describe("item functions", () => {
       expect(jcal.getFirstPropertyValue("last-modified").toICALString()).toBe("20060608T210549"); // TODO this is floating, ical.js bug?
       expect(jcal.getFirstPropertyValue("dtstamp").toICALString()).toBe("20060608T210549"); // TODO this is floating, ical.js bug?
       expect(jcal.getFirstPropertyValue("url")).toBe(
-        "https://example.com/calendar/task?eid=taskhash"
+        "https://example.com/calendar/view/task?eid=taskhash"
       );
       expect(jcal.getFirstPropertyValue("related-to")).toBe("parentId");
       expect(jcal.getFirstProperty("related-to").getParameter("reltype")).toBe("PARENT");

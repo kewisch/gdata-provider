@@ -95,7 +95,7 @@ function jsonToTask(entry, calendar, referenceItem) {
 
   setIf("summary", "text", entry.title);
   setIf("description", "text", entry.notes);
-  setIf("url", "text", entry.selfLink);
+  setIf("url", "uri", entry.webViewLink);
 
   setIf("related-to", "text", entry.parent, { reltype: "PARENT" });
   setIf("x-google-sortkey", "integer", entry.position);
