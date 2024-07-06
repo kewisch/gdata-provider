@@ -618,12 +618,7 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
     setIf("x-google-event-type", "text", entry.eventType);
   }
 
-  /* Let's only support this when we can really do it in UI
-  for (let entryPoint of (entry.conferenceData?.entryPoints || [])) {
-    // TODO ignoring name, label, etc.
-    setIf("attach", "text", entryPoint.uri);
-  }
-  */
+  setIf("x-google-confdata", "text", entry.conferenceData ? JSON.stringify(entry.conferenceData) : null);
 
   veventprops.push(jsonToDate("dtstart", entry.start));
   if (!entry.endTimeUnspecified) {

@@ -1,0 +1,72 @@
+* {
+  box-sizing: border-box;
+}
+html, body {
+  background: -moz-Dialog;
+  color: -moz-DialogText;
+  font-family: -apple-system;
+  font-size: 11px;
+  margin: 0;
+  padding: 0;
+}
+
+body.area-summary .editable {
+  display: none;
+}
+
+#conf-info {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+#conf-entrypoints {
+  padding-inline-start: 0;
+  margin-block-end: 0;
+}
+#conf-entrypoints li {
+  list-style-type: none;
+  margin-block-end: 10px;
+}
+#conf-entrypoints li:last-child {
+  margin-block-end: 0;
+}
+#conf-entrypoints li .join-button:empty,
+#conf-entrypoints li .text-link:empty,
+#conf-entrypoints li .label:empty {
+  display: none;
+}
+#conf-entrypoints li .join-button,
+#conf-entrypoints li .text-link {
+  margin: 0;
+}
+#conf-entrypoints li .pinvalue,
+#conf-entrypoints li .label,
+#conf-entrypoints li .text-link {
+  user-select: text;
+}
+
+.join-button {
+  appearance: button;
+}
+
+a:visited {
+  color: LinkText;
+}
+
+#event-type-banner {
+  width: 100%;
+  border-radius: 4px;
+  background: light-dark(#fff, #333);
+  color: light-dark(rgba(0, 0, 0, 0.847), #fff);
+  padding: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#event-type-banner:not([data-event-type]),
+#event-type-banner[data-event-type="focusTime"] .text-container:not(.focusTime),
+#event-type-banner[data-event-type="outOfOffice"] .text-container:not(.outOfOffice) {
+  display: none;
+}

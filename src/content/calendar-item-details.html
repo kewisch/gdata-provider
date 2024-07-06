@@ -7,11 +7,38 @@
   <head>
     <meta charset="utf-8">
     <script defer type="module" src="calendar-item-details.js"></script>
+    <link rel="stylesheet" href="calendar-item-details.css">
   </head>
   <body>
-    <div class="browser-style">
+    <div id="event-type-banner">
+      <img src="/images/info-filled.svg">
+      <span class="text-container focusTime" data-l10n-id="eventdialog.focusEvent"></span>
+      <span class="text-container outOfOffice" data-l10n-id="eventdialog.oooEvent"></span>
+    </div>
+    <div class="editable">
       <input type="checkbox" id="use-default-alarms">
       <label for="use-default-alarm">Use Default Alarm</label>
+    </div>
+    <hr class="editable">
+    <div id="conference-row">
+      <div id="conf-info">
+        <img width="24" height="24" id="conf-logo">
+        <span id="conf-name"></span>
+      </div>
+      <ul id="conf-entrypoints">
+      </ul>
+      <template id="conf-entrypoint-template">
+        <li class="conf-entrypoint">
+          <button class="join-button"></button>
+          <div>
+            <span class="label"></span>
+            <a class="text-link"></a>
+          </div>
+          <div class="pin">
+            <span class="pin-label"></span>: <span class="pin-value"></span>
+          </div>
+        </li>
+      </template>
     </div>
   </body>
 </html>
