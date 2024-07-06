@@ -532,6 +532,10 @@ function patchEvent(item, oldItem) {
 }
 
 function jsonToDate(propName, dateobj) {
+  if (!dateobj) {
+    return null;
+  }
+
   let params = {};
 
   if (dateobj.timeZone) {
@@ -565,6 +569,11 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   function setIf(prop, type, value, params = {}) {
     if (value) {
       veventprops.push([prop, params, type, value]);
+    }
+  }
+  function pushPropIf(prop) {
+    if (prop) {
+      veventprops.push(prop);
     }
   }
 
@@ -620,7 +629,7 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
 
   setIf("x-google-confdata", "text", entry.conferenceData ? JSON.stringify(entry.conferenceData) : null);
 
-  veventprops.push(jsonToDate("dtstart", entry.start));
+  pushPropIf(jsonToDate("dtstart", entry.start));
   if (!entry.endTimeUnspecified) {
     veventprops.push(jsonToDate("dtend", entry.end));
   }

@@ -481,7 +481,7 @@ this.calendar_provider = class extends ExtensionAPI {
           win.gIdentityNotification.removeAllNotifications();
         }
 
-        let minRefresh = calendar.capabilities?.minimumRefresh
+        let minRefresh = calendar.capabilities?.minimumRefresh;
 
         if (minRefresh) {
           let refInterval = win.document.getElementById("calendar-refreshInterval-menupopup");
