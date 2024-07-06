@@ -145,6 +145,17 @@ this.calendar_items = class extends ExtensionAPI {
             await calendar.deleteItem(item);
           },
 
+          getCurrent: async function(options) {
+            try {
+              // This seems risky, could be null depending on remoteness
+              let item = context.browsingContext.embedderElement.ownerGlobal.calendarItem;
+              return convertItem(item, options, context.extension);
+            } catch (e) {
+              console.error(e);
+              return null;
+            }
+          },
+
           onCreated: new EventManager({
             context,
             name: "calendar.items.onCreated",

@@ -170,6 +170,21 @@
           { "type": "string", "name": "calendarId" },
           { "type": "string", "name": "id" }
         ]
+      },
+      {
+        "name": "getCurrent",
+        "async": true,
+        "type": "function",
+        "parameters": [
+          {
+            "type": "object",
+            "name": "getOptions",
+            "optional": true,
+            "properties": {
+              "returnFormat": { "$ref": "ReturnFormat", "optional": true }
+            }
+          }
+        ]
       }
     ],
     "events": [
