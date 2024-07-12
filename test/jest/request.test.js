@@ -27,6 +27,10 @@ let session = {
   notifyQuotaExceeded: jest.fn(),
   invalidate: jest.fn(async () => {}),
   waitForBackoff: jest.fn(async () => {}),
+  oauth: {
+    accessToken: null,
+    invalidate: jest.fn(async () => {})
+  }
 };
 
 function mockErrorResponse(status, error) {
@@ -353,7 +357,7 @@ describe("auth error", () => {
     expect(request.response.status).toBe(200);
     expect(request.reauthenticate).toBe(false);
     expect(res).toEqual({ result: 1 });
-    expect(session.invalidate).toHaveBeenCalled();
+    expect(session.oauth.accessToken).toBe(null);
   });
 
   test("401 authError and login failed", async () => {

@@ -154,13 +154,13 @@ export default function createMessenger() {
       },
     },
     gdata: {
-      _token: "token",
-      getOAuthToken: jest.fn(async () => {
-        return messenger.gdata._token;
+      _token: {},
+      getOAuthToken: jest.fn(async (sid) => {
+        return messenger.gdata._token[sid];
       }),
 
-      setOAuthToken: jest.fn(async val => {
-        messenger.gdata._token = val;
+      setOAuthToken: jest.fn(async (sid, val) => {
+        messenger.gdata._token[sid] = val;
       }),
     },
     runtime: {

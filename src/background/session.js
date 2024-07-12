@@ -64,6 +64,10 @@ var sessions = {
   get ids() {
     return [...sessionMap.keys()];
   },
+
+  reset() {
+    sessionMap = new Map();
+  }
 };
 export default sessions;
 
@@ -106,6 +110,9 @@ class calGoogleSession {
 
   get accessToken() {
     return this.oauth.accessToken;
+  }
+  get refreshToken() {
+    return this.oauth.refreshToken;
   }
 
   #backoff = 0;
@@ -245,18 +252,20 @@ class calGoogleSession {
     await messenger.gdata.setOAuthToken(this.id, this.oauth.refreshToken);
   }
 
+  #loggingIn = null;
+
   async ensureLogin() {
     if (this.oauth.accessToken) {
       return null;
     }
 
-    if (!this._loggingIn) {
-      this._loggingIn = this.login().finally(() => {
-        this._loggingIn = null;
+    if (!this.#loggingIn) {
+      this.#loggingIn = this.refreshAccessToken().finally(() => {
+        this.#loggingIn = null;
       });
     }
 
-    return this._loggingIn;
+    return this.#loggingIn;
   }
 
   async handleAuthError(e, repeat) {

@@ -32,14 +32,15 @@ export default class calGoogleRequest {
       case "invalidCredentials":
       case "unauthorized_client":
       case "invalid_grant":
-        await session.invalidate();
         if (this.reauthenticate) {
-          this.console.log("The access token is not authorized, trying to refresh the token");
+          session.oauth.accessToken = null;
+          this.console.log("The access token is not authorized, trying to refresh");
           this.reauthenticate = false;
           return this.commit(session);
         } else {
+          await session.invalidate();
           this.console.log(
-            "Even the refreshed token is not authorized, looks like the client is outdated"
+            "Even the new access token is not authorized, looks like the client is outdated"
           );
           session.notifyOutdated();
           throw new TokenFailureError();

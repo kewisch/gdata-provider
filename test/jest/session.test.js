@@ -8,15 +8,70 @@ import createMessenger from "./webext-api";
 
 let session;
 
+/* eslint-disable jest/no-standalone-expect */
+class FetchMocks {
+  requestCount = 0;
+
+  constructor(data) {
+    fetch.mockResponse(this.request.bind(this));
+    this.data = data;
+  }
+
+  async request(req) {
+    this.requestCount++;
+
+    let reqdata = this.data[this.requestCount - 1];
+    // console.debug(`Checking request ${this.requestCount -1}`, reqdata, req);
+
+    if (!reqdata) {
+      throw new Error(`Unhandled Request:\n${req.method} ${req.url}\n\n${await req.text()}`);
+    }
+
+    expect(req.url.toString()).toEqual(reqdata.request.url);
+    expect(req.method).toEqual(reqdata.request.method);
+
+    let normalizedHeaders = Object.entries((reqdata.request.headers || {})).reduce((acc, [key, value]) => {
+      acc[key.toLowerCase()] = value;
+      return acc;
+    }, {});
+
+    expect(Object.fromEntries(req.headers)).toEqual(expect.objectContaining(normalizedHeaders));
+
+    let body = req.body;
+    if (req.body instanceof URLSearchParams) {
+      body = Object.fromEntries(req.body.entries());
+    } else if (req.headers.get("Content-Type") == "application/json") {
+      body = await req.json();
+    } else if (req.headers.get("Content-Type") == "application/x-www-form-urlencoded;charset=utf-8") {
+      body = Object.fromEntries(new URLSearchParams(await req.text()));
+    }
+
+    expect(body).toEqual(reqdata.request.body ?? null);
+
+    return reqdata.response;
+  }
+
+  expectFetchCount() {
+    expect(this.requestCount).toEqual(this.data.length);
+  }
+}
+/* eslint-enable jest/no-standalone-expect */
+
+
 beforeEach(() => {
-  global.messenger = createMessenger();
+  global.messenger = global.browser = createMessenger();
   jest.spyOn(global.console, "log").mockImplementation(() => {});
   jest.spyOn(global.console, "error").mockImplementation(() => {});
   session = sessions.byId("sessionId", true);
   session.oauth.accessToken = "accessToken";
   session.oauth.expires = new Date(new Date().getTime() + 10000);
+  session.oauth.clientId = "test_id";
+  session.oauth.clientSecret = "test_secret";
 
   jestFetchMock.doMock();
+});
+afterEach(() => {
+  sessions.reset();
 });
 
 test("get session ids", () => {
@@ -126,7 +181,7 @@ describe("freebusy request", () => {
     type: "busy"
   };
 
-  test("free intervals only", async () => {
+  test("just free intervals", async () => {
     let busy = await session.onFreeBusy(
       "user@example.com",
       "2021-01-01T00:00:00",
@@ -318,6 +373,534 @@ test("login", async () => {
     loginHint: "sessionId",
   });
   expect(messenger.gdata.setOAuthToken).toHaveBeenCalledWith("sessionId", "refreshToken");
+});
+
+describe("login paths", () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  const REQUEST_LOGIN = {
+    method: "POST",
+    url: "https://oauth2.googleapis.com/token",
+    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" },
+    body: {
+      client_secret: "test_secret",
+      client_id: "test_id",
+      code: "authCode",
+      grant_type: "authorization_code",
+      redirect_uri: "http://localhost/"
+    }
+  };
+
+  const REQUEST_REFRESH_TOKEN = {
+    method: "POST",
+    url: "https://oauth2.googleapis.com/token",
+    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" },
+    body: {
+      client_secret: "test_secret",
+      client_id: "test_id",
+      grant_type: "refresh_token",
+      refresh_token: "refreshToken"
+    }
+  };
+
+  const RESPONSE_LOGIN_SUCCESS = {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      access_token: "1/fFAGRNJru1FTz70BzhT3Zg",
+      refresh_token: "refreshToken",
+      expires_in: 300,
+      scope: "https://www.googleapis.com/auth/calendar",
+      token_type: "Bearer"
+    }),
+  };
+  const RESPONSE_REFRESH_TOKEN_SUCCESS = {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      access_token: "1/fFAGRNJru1FTz70BzhT3Zg",
+      expires_in: 300,
+      scope: "https://www.googleapis.com/auth/calendar",
+      token_type: "Bearer"
+    }),
+  };
+
+  const RESPONSE_INVALID_ACCESS_TOKEN = {
+    status: 401,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      error: {
+        errors: [{
+          reason: "unauthorized_client"
+        }]
+      }
+    }),
+  };
+  const RESPONSE_INVALID_REFRESH_TOKEN = {
+    status: 400,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      error: "invalid_grant",
+      error_description: "The refresh token is invalid"
+    }),
+  };
+  const RESPONSE_INVALID_CLIENT = {
+    status: 400,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      error: "invalid_client",
+      error_description: "The OAuth client was not found"
+    }),
+  };
+  const RESPONSE_RATE_LIMIT = {
+    status: 400,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      error: "userRateLimitExceeded",
+      error_description: "The OAuth client was not found"
+    }),
+  };
+  const RESPONSE_LOGIN_FAILED = {
+    status: 400,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      error: "invalid_grant",
+      error_description: "Malformed auth code"
+    })
+  };
+
+
+  test("refresh expired access token", async () => {
+    jest.setSystemTime(new Date("2024-01-01T00:00:00Z"));
+    session.oauth.expires = new Date("2023-12-31T23:59:59Z");
+    messenger.gdata.setOAuthToken(session.id, "refreshToken");
+
+    expect(session.oauth.expired).toBe(true);
+    expect(session.oauth.accessToken).toBe(null);
+
+    let fetchMocks = new FetchMocks([{
+      request: REQUEST_REFRESH_TOKEN,
+      response: RESPONSE_REFRESH_TOKEN_SUCCESS
+    }]);
+
+    await session.ensureLogin();
+
+    jest.setSystemTime(new Date("2024-01-01T00:03:00Z"));
+
+    fetchMocks.expectFetchCount();
+    expect(session.accessToken).toBe("1/fFAGRNJru1FTz70BzhT3Zg");
+    expect(session.oauth.grantedScopes).toBe("https://www.googleapis.com/auth/calendar");
+
+    // 5 Minutes, minus 60 seconds grace time
+    expect(session.oauth.expires).toEqual(new Date("2024-01-01T00:04:00Z"));
+  });
+
+  test("expired access token and no refresh token", async () => {
+    jest.setSystemTime(new Date("2024-01-01T00:00:00Z"));
+    session.oauth.expires = new Date("2023-12-31T23:59:59Z");
+    messenger.gdata.setOAuthToken(session.id, null);
+
+    expect(session.oauth.expired).toBe(true);
+    expect(session.oauth.accessToken).toBe(null);
+    expect(session.oauth.refreshToken).toBe(null);
+
+    let fetchMocks = new FetchMocks([{
+      request: REQUEST_LOGIN,
+      response: RESPONSE_LOGIN_SUCCESS
+    }]);
+
+    messenger.webRequest.onBeforeRequest.mockResponse({ url: "http://foo/?code=authCode" });
+
+    await session.ensureLogin();
+
+    fetchMocks.expectFetchCount();
+    expect(session.accessToken).toBe("1/fFAGRNJru1FTz70BzhT3Zg");
+    expect(session.refreshToken).toBe("refreshToken");
+    expect(session.oauth.grantedScopes).toBe("https://www.googleapis.com/auth/calendar");
+
+    // 5 Minutes, minus 60 seconds grace time
+    expect(session.oauth.expires).toEqual(new Date("2024-01-01T00:04:00Z"));
+  });
+
+
+  test("unauthorized client on the access token, refresh succeeded", async () => {
+    session.oauth.refreshToken = "refreshToken";
+    messenger.gdata.setOAuthToken(session.id, "refreshToken");
+
+    expect(session.oauth.expired).toBe(false);
+    expect(session.oauth.accessToken).toBeTruthy();
+    expect(session.oauth.refreshToken).toBeTruthy();
+
+    let request = new calGoogleRequest({
+      method: "GET",
+      uri: "http://localhost/test"
+    });
+
+
+    let fetchMocks = new FetchMocks([
+      // First request fails due to invalid access token
+      {
+        request: {
+          method: "GET",
+          url: "http://localhost/test",
+        },
+        response: RESPONSE_INVALID_ACCESS_TOKEN,
+      },
+
+      // Second request succeeds to refresh the access token
+      {
+        request: REQUEST_REFRESH_TOKEN,
+        response: RESPONSE_REFRESH_TOKEN_SUCCESS
+      },
+      // Third request is the actual test GET request
+      {
+        request: {
+          method: "GET",
+          url: "http://localhost/test",
+        },
+        response: {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ response: "response" }),
+        }
+      }
+    ]);
+
+    let response = await request.commit(session);
+
+    fetchMocks.expectFetchCount();
+    expect(response).toEqual({
+      response: "response"
+    });
+  });
+
+  test("unauthorized client on the access token, refresh failed, login succeeded", async () => {
+    session.oauth.refreshToken = "refreshToken";
+    messenger.gdata.setOAuthToken(session.id, "refreshToken");
+
+    expect(session.oauth.expired).toBe(false);
+    expect(session.oauth.accessToken).toBeTruthy();
+    expect(session.oauth.refreshToken).toBeTruthy();
+
+    let request = new calGoogleRequest({
+      method: "GET",
+      uri: "http://localhost/test"
+    });
+
+    let fetchMocks = new FetchMocks([
+      // First request fails due to invalid access token
+      {
+        request: {
+          method: "GET",
+          url: "http://localhost/test",
+        },
+        response: RESPONSE_INVALID_ACCESS_TOKEN
+      },
+      // Second request is the refresh which fails due to invalid refresh token
+      {
+        request: REQUEST_REFRESH_TOKEN,
+        response: RESPONSE_INVALID_REFRESH_TOKEN
+      },
+      // Third request is the login which succeeds
+      {
+        request: REQUEST_LOGIN,
+        response: RESPONSE_LOGIN_SUCCESS,
+      },
+      // Fourth request is the actual test GET request
+      {
+        request: {
+          method: "GET",
+          url: "http://localhost/test",
+        },
+        response: {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ response: "response" }),
+        }
+      }
+    ]);
+
+    messenger.webRequest.onBeforeRequest.mockResponse({ url: "http://foo/?code=authCode" });
+
+    let response = await request.commit(session);
+
+    fetchMocks.expectFetchCount();
+    expect(response).toEqual({
+      response: "response"
+    });
+  });
+
+  test("unauthorized client on the access token, refresh failed, login failed", async () => {
+    session.oauth.refreshToken = "refreshToken";
+    messenger.gdata.setOAuthToken(session.id, "refreshToken");
+
+    expect(session.oauth.expired).toBe(false);
+    expect(session.oauth.accessToken).toBeTruthy();
+    expect(session.oauth.refreshToken).toBeTruthy();
+
+    let request = new calGoogleRequest({
+      method: "GET",
+      uri: "http://localhost/test"
+    });
+
+    let fetchMocks = new FetchMocks([
+      // First request fails due to invalid access token
+      {
+        request: {
+          method: "GET",
+          url: "http://localhost/test",
+        },
+        response: RESPONSE_INVALID_ACCESS_TOKEN
+      },
+      // Second request succeeds to refresh the access token
+      {
+        request: REQUEST_REFRESH_TOKEN,
+        response: RESPONSE_INVALID_REFRESH_TOKEN
+      },
+      // Third request is the login which fails
+      {
+        request: REQUEST_LOGIN,
+        response: RESPONSE_LOGIN_FAILED
+      }
+    ]);
+
+    messenger.webRequest.onBeforeRequest.mockResponse({ url: "http://foo/?code=authCode" });
+
+    await expect(request.commit(session)).rejects.toThrow("TOKEN_FAILURE");
+    fetchMocks.expectFetchCount();
+  });
+
+  test("unauthorized client on the access token, refresh failed, login wrong response", async () => {
+    session.oauth.refreshToken = "refreshToken";
+    messenger.gdata.setOAuthToken(session.id, "refreshToken");
+
+    expect(session.oauth.expired).toBe(false);
+    expect(session.oauth.accessToken).toBeTruthy();
+    expect(session.oauth.refreshToken).toBeTruthy();
+
+    let request = new calGoogleRequest({
+      method: "GET",
+      uri: "http://localhost/test"
+    });
+
+    let fetchMocks = new FetchMocks([
+      // First request fails due to invalid access token
+      {
+        request: {
+          method: "GET",
+          url: "http://localhost/test",
+        },
+        response: RESPONSE_INVALID_ACCESS_TOKEN
+      },
+      // Second request succeeds to refresh the access token
+      {
+        request: REQUEST_REFRESH_TOKEN,
+        response: RESPONSE_INVALID_REFRESH_TOKEN
+      },
+      // Third request is the login which fails
+      {
+        request: REQUEST_LOGIN,
+        response: {
+          ...RESPONSE_LOGIN_FAILED,
+          body: "{}"
+        }
+      }
+    ]);
+
+    messenger.webRequest.onBeforeRequest.mockResponse({ url: "http://foo/?code=authCode" });
+
+    await expect(request.commit(session)).rejects.toThrow("request_error");
+    fetchMocks.expectFetchCount();
+  });
+
+  test("unauthorized client on the access token, refresh invalid_client", async () => {
+    session.oauth.refreshToken = "refreshToken";
+    messenger.gdata.setOAuthToken(session.id, "refreshToken");
+
+    expect(session.oauth.expired).toBe(false);
+    expect(session.oauth.accessToken).toBeTruthy();
+    expect(session.oauth.refreshToken).toBeTruthy();
+
+    let request = new calGoogleRequest({
+      method: "GET",
+      uri: "http://localhost/test"
+    });
+
+    let fetchMocks = new FetchMocks([
+      // First request fails due to invalid access token
+      {
+        request: {
+          method: "GET",
+          url: "http://localhost/test",
+        },
+        response: RESPONSE_INVALID_ACCESS_TOKEN
+      },
+      // Second request is the refresh which fails with invalid_client
+      {
+        request: REQUEST_REFRESH_TOKEN,
+        response: RESPONSE_INVALID_CLIENT
+      },
+    ]);
+
+
+    await expect(request.commit(session)).rejects.toThrow("TOKEN_FAILURE");
+    fetchMocks.expectFetchCount();
+  });
+
+  test("unauthorized client on the access token, refresh userRateLimitExceeded", async () => {
+    session.oauth.refreshToken = "refreshToken";
+    messenger.gdata.setOAuthToken(session.id, "refreshToken");
+
+    expect(session.oauth.expired).toBe(false);
+    expect(session.oauth.accessToken).toBeTruthy();
+    expect(session.oauth.refreshToken).toBeTruthy();
+
+    let request = new calGoogleRequest({
+      method: "GET",
+      uri: "http://localhost/test"
+    });
+
+    let fetchMocks = new FetchMocks([
+      // First request fails due to invalid access token
+      {
+        request: {
+          method: "GET",
+          url: "http://localhost/test",
+        },
+        response: RESPONSE_INVALID_ACCESS_TOKEN
+      },
+      // Second request is the refresh which fails with userRateLimitExceeded
+      {
+        request: REQUEST_REFRESH_TOKEN,
+        response: RESPONSE_RATE_LIMIT
+      },
+    ]);
+
+
+    await expect(request.commit(session)).rejects.toThrow("userRateLimitExceeded");
+    fetchMocks.expectFetchCount();
+  });
+
+  test("unauthorized client on the access token, refresh error 503", async () => {
+    session.oauth.refreshToken = "refreshToken";
+    messenger.gdata.setOAuthToken(session.id, "refreshToken");
+
+    expect(session.oauth.expired).toBe(false);
+    expect(session.oauth.accessToken).toBeTruthy();
+    expect(session.oauth.refreshToken).toBeTruthy();
+
+    let request = new calGoogleRequest({
+      method: "GET",
+      uri: "http://localhost/test"
+    });
+
+    let fetchMocks = new FetchMocks([
+      // First request fails due to invalid access token
+      {
+        request: {
+          method: "GET",
+          url: "http://localhost/test",
+        },
+        response: RESPONSE_INVALID_ACCESS_TOKEN
+      },
+      // Second request is the refresh which we'll fail with a 503 error
+      {
+        request: REQUEST_REFRESH_TOKEN,
+        response: {
+          status: 503,
+          body: "Internal Server Error"
+        }
+      },
+    ]);
+
+
+    await expect(request.commit(session)).rejects.toThrow("request_error");
+    fetchMocks.expectFetchCount();
+  });
+
+  test("unauthorized client on the access token, error 503 with json", async () => {
+    session.oauth.refreshToken = "refreshToken";
+    messenger.gdata.setOAuthToken(session.id, "refreshToken");
+
+    expect(session.oauth.expired).toBe(false);
+    expect(session.oauth.accessToken).toBeTruthy();
+    expect(session.oauth.refreshToken).toBeTruthy();
+
+    let request = new calGoogleRequest({
+      method: "GET",
+      uri: "http://localhost/test"
+    });
+
+    let fetchMocks = new FetchMocks([
+      // First request fails due to invalid access token
+      {
+        request: {
+          method: "GET",
+          url: "http://localhost/test",
+        },
+        response: RESPONSE_INVALID_ACCESS_TOKEN
+      },
+      // Second request is the refresh which we'll fail with a 503 error
+      {
+        request: REQUEST_REFRESH_TOKEN,
+        response: {
+          status: 503,
+          body: "{}"
+        }
+      },
+    ]);
+
+
+    await expect(request.commit(session)).rejects.toThrow("request_error");
+    fetchMocks.expectFetchCount();
+  });
+
+  test("unauthorized client on the access token, login works, new token fails again", async () => {
+    session.oauth.refreshToken = "refreshToken";
+    messenger.gdata.setOAuthToken(session.id, "refreshToken");
+
+    expect(session.oauth.expired).toBe(false);
+    expect(session.oauth.accessToken).toBeTruthy();
+    expect(session.oauth.refreshToken).toBeTruthy();
+
+    let request = new calGoogleRequest({
+      method: "GET",
+      uri: "http://localhost/test"
+    });
+
+    let fetchMocks = new FetchMocks([
+      // First request fails due to invalid access token
+      {
+        request: {
+          method: "GET",
+          url: "http://localhost/test",
+        },
+        response: RESPONSE_INVALID_ACCESS_TOKEN
+      },
+      // Second request is the refresh which we'll succeed
+      {
+        request: REQUEST_REFRESH_TOKEN,
+        response: RESPONSE_REFRESH_TOKEN_SUCCESS
+      },
+      // Now we fail the access token again
+      {
+        request: {
+          method: "GET",
+          url: "http://localhost/test",
+        },
+        response: RESPONSE_INVALID_ACCESS_TOKEN
+      },
+    ]);
+
+
+    await expect(request.commit(session)).rejects.toThrow("TOKEN_FAILURE");
+    fetchMocks.expectFetchCount();
+  });
 });
 
 test("ensureLogin", async () => {

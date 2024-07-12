@@ -27,12 +27,12 @@ export default class OAuth2 {
   }
 
   get expired() {
-    return !this.expires || Date.now() > this.expires;
+    return !this.expires || Date.now() > this.expires.getTime();
   }
 
   get accessToken() {
     if (this.expired) {
-      this._accessToken = null;
+      return null;
     }
 
     return this._accessToken;
@@ -201,6 +201,8 @@ export default class OAuth2 {
   async ensureLogin(loginOptions) {
     if (this.expired && this.refreshToken) {
       await this.refresh();
+    } else if (!this.accessToken && this.refreshToken) {
+      await this.refresh(true);
     }
 
     if (!this.accessToken) {
