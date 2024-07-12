@@ -3,7 +3,8 @@ jestFetchMock.enableFetchMocks();
 
 import OAuth2 from "../../src/background/oauth";
 import { jest } from "@jest/globals";
-import createMessenger from "./webext-api";
+import createMessenger from "./helpers/webext-api.js";
+import FetchMocks from "./helpers/fetch-mocks.js";
 
 var oauth;
 
@@ -27,17 +28,35 @@ beforeEach(() => {
 
 describe("oauth flow", () => {
   test("success", async () => {
-    fetch.mockResponseOnce(
-      JSON.stringify({
-        access_token: "accessToken",
-        refresh_token: "refreshToken",
-        scope: "scope",
-        expires_in: 86400,
-      })
-    );
+    let fetchMocks = new FetchMocks([
+      {
+        request: {
+          method: "POST",
+          url: "https://oauth2.googleapis.com/token",
+          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" },
+          body: {
+            client_secret: "clientSecret",
+            client_id: "clientId",
+            code: "authCode",
+            grant_type: "authorization_code",
+            redirect_uri: "http://localhost/"
+          }
+        },
+        response: {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            access_token: "accessToken",
+            refresh_token: "refreshToken",
+            scope: "scope",
+            expires_in: 86400,
+          })
+        }
+      }
+    ]);
 
     global.browser.webRequest.onBeforeRequest.mockResponse({
-      url: oauth.APPROVAL_URL + "?response=ok&approvalCode=approvalCode",
+      url: oauth.APPROVAL_URL + "?response=ok&code=authCode",
     });
 
     await oauth.login({
@@ -67,6 +86,8 @@ describe("oauth flow", () => {
     expect(oauth.expires).toEqual(
       new Date(new Date("2021-01-02") - 1000 * oauth.EXPIRE_GRACE_SECONDS)
     );
+
+    fetchMocks.expectFetchCount();
   });
 
   test("cancel", async () => {
@@ -246,24 +267,75 @@ describe("ensureLogin", () => {
 describe("logout", () => {
   test("/w refreshToken", async () => {
     oauth.refreshToken = "refreshToken";
-    fetch.mockResponseOnce(null);
 
-    await oauth.logout();
+    let fetchMocks = new FetchMocks([{
+      request: {
+        method: "POST",
+        url: "https://oauth2.googleapis.com/revoke",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" },
+        body: {
+          token: "refreshToken"
+        }
+      },
+      response: {
+        status: 200
+      }
+    }]);
 
-    expect(fetch).toHaveBeenCalled();
-    expect(fetch.mock.calls[0][0]).toBe(oauth.LOGOUT_URL);
-    expect(fetch.mock.calls[0][1].body.toString()).toEqual("token=refreshToken");
+    await expect(oauth.logout()).resolves.toEqual(true);
+    expect(oauth.accessToken).toBeNull();
+    expect(oauth.refreshToken).toBeNull();
+    expect(oauth.grantedScopes).toBeNull();
+    expect(oauth.expires).toBeNull();
+    fetchMocks.expectFetchCount();
   });
 
   test("/w accessToken", async () => {
     oauth.accessToken = "accessToken";
     oauth.expires = new Date("2021-12-31");
-    fetch.mockResponseOnce(null);
 
-    await oauth.logout();
+    let fetchMocks = new FetchMocks([{
+      request: {
+        method: "POST",
+        url: "https://oauth2.googleapis.com/revoke",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" },
+        body: {
+          token: "accessToken"
+        }
+      },
+      response: {
+        status: 200
+      }
+    }]);
 
-    expect(fetch).toHaveBeenCalled();
-    expect(fetch.mock.calls[0][0]).toBe(oauth.LOGOUT_URL);
-    expect(fetch.mock.calls[0][1].body.toString()).toEqual("token=accessToken");
+    await expect(oauth.logout()).resolves.toEqual(true);
+    expect(oauth.accessToken).toBeNull();
+    expect(oauth.refreshToken).toBeNull();
+    expect(oauth.grantedScopes).toBeNull();
+    expect(oauth.expires).toBeNull();
+    fetchMocks.expectFetchCount();
+  });
+
+  test("error", async () => {
+    let fetchMocks = new FetchMocks([{
+      request: {
+        method: "POST",
+        url: "https://oauth2.googleapis.com/revoke",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" },
+        body: {
+          token: "null"
+        }
+      },
+      response: {
+        status: 400
+      }
+    }]);
+
+    await expect(oauth.logout()).resolves.toEqual(false);
+    expect(oauth.accessToken).toBeNull();
+    expect(oauth.refreshToken).toBeNull();
+    expect(oauth.grantedScopes).toBeNull();
+    expect(oauth.expires).toBeNull();
+    fetchMocks.expectFetchCount();
   });
 });

@@ -4,7 +4,7 @@
 
 import fs from "fs";
 import { jest } from "@jest/globals";
-import createMessenger from "./webext-api";
+import createMessenger from "./helpers/webext-api.js";
 import { main as creationMain, clickAuth, onCreate } from "../../src/content/calendar-creation.js";
 import { initMessageListener } from "../../src/background/index.js";
 import sessions from "../../src/background/session.js";

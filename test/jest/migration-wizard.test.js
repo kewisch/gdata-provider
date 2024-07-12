@@ -4,7 +4,7 @@
 
 import fs from "fs";
 import { jest } from "@jest/globals";
-import createMessenger from "./webext-api";
+import createMessenger from "./helpers/webext-api.js";
 import "@testing-library/jest-dom";
 import {
   main as migrateMain,

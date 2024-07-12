@@ -4,7 +4,7 @@ jestFetchMock.enableFetchMocks();
 import { jest } from "@jest/globals";
 
 import calGoogleRequest from "../../src/background/request";
-import createMessenger from "./webext-api";
+import createMessenger from "./helpers/webext-api.js";
 
 beforeEach(() => {
   jestFetchMock.doMock();

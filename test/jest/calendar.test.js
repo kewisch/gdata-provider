@@ -3,7 +3,7 @@ jestFetchMock.enableFetchMocks();
 
 import { jest } from "@jest/globals";
 
-import createMessenger from "./webext-api";
+import createMessenger from "./helpers/webext-api.js";
 
 import calGoogleCalendar from "../../src/background/calendar";
 import sessions from "../../src/background/session";

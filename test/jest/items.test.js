@@ -5,7 +5,7 @@ import { jsonToItem, itemToJson, patchItem, ItemSaver } from "../../src/backgrou
 import calGoogleCalendar from "../../src/background/calendar";
 import ICAL from "ical.js";
 import v8 from "v8";
-import createMessenger from "./webext-api";
+import createMessenger from "./helpers/webext-api.js";
 
 import { jest } from "@jest/globals";
 

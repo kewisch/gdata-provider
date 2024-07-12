@@ -1,5 +1,5 @@
 import { jest } from "@jest/globals";
-import createMessenger from "./webext-api";
+import createMessenger from "./helpers/webext-api.js";
 import { migrate, initMessageListener } from "../../src/background/index";
 
 beforeEach(() => {

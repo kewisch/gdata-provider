@@ -1,6 +1,6 @@
 import { jest } from "@jest/globals";
 import { getMigratableCalendars, migrateCalendars } from "../../src/background/migrate";
-import createMessenger from "./webext-api";
+import createMessenger from "./helpers/webext-api.js";
 
 beforeEach(() => {
   global.messenger = createMessenger();
