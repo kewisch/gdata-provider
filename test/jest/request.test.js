@@ -372,7 +372,7 @@ describe("auth error", () => {
         { status: 403, headers: { "Content-Type": "application/json" } },
       ]
     );
-    await expect(request.commit(session)).rejects.toThrow("LOGIN_FAILED");
+    await expect(request.commit(session)).rejects.toThrow("TOKEN_FAILURE");
     expect(request.response.status).toBe(403);
     expect(request.reauthenticate).toBe(false);
     expect(session.invalidate).toHaveBeenCalled();

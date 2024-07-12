@@ -312,7 +312,7 @@ test("login", async () => {
     session.oauth.refreshToken = "refreshToken";
   });
 
-  await session.login();
+  await session.refreshAccessToken();
   expect(session.oauth.ensureLogin).toHaveBeenCalledWith({
     titlePreface: "requestWindowTitle[sessionId] - ",
     loginHint: "sessionId",
@@ -323,21 +323,21 @@ test("login", async () => {
 test("ensureLogin", async () => {
   let completeLogin = null;
 
-  session.login = jest.fn(() => {
+  session.refreshAccessToken = jest.fn(() => {
     return new Promise(resolve => {
       completeLogin = resolve;
     });
   });
 
   await session.ensureLogin();
-  expect(session.login).not.toHaveBeenCalled();
+  expect(session.refreshAccessToken).not.toHaveBeenCalled();
 
   session.oauth.accessToken = null;
   let loginPromise = session.ensureLogin();
-  expect(session.login).toHaveBeenCalledTimes(1);
+  expect(session.refreshAccessToken).toHaveBeenCalledTimes(1);
 
   let loginPromise2 = session.ensureLogin();
-  expect(session.login).toHaveBeenCalledTimes(1);
+  expect(session.refreshAccessToken).toHaveBeenCalledTimes(1);
 
   completeLogin("loginResult");
   let result = await loginPromise;
@@ -347,7 +347,7 @@ test("ensureLogin", async () => {
   expect(result).toBe("loginResult");
 
   let loginPromise3 = session.ensureLogin();
-  expect(session.login).toHaveBeenCalledTimes(2);
+  expect(session.refreshAccessToken).toHaveBeenCalledTimes(2);
   completeLogin("loginResult2");
   result = await loginPromise3;
   expect(result).toBe("loginResult2");

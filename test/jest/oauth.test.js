@@ -86,7 +86,7 @@ describe("oauth flow", () => {
       url: oauth.APPROVAL_URL + "?error=errorCode",
     });
 
-    await expect(oauth.login({})).rejects.toEqual({ error: "errorCode" });
+    await expect(oauth.login({})).rejects.toThrow("oauth_error");
 
     expect(fetch).not.toHaveBeenCalled();
 
@@ -108,7 +108,10 @@ describe("oauth flow", () => {
         titlePreface: "preface",
         loginHint: "hint",
       })
-    ).rejects.toEqual({ error: "request_error", code: 500 });
+    ).rejects.toThrow(expect.objectContaining({
+      message: "request_error",
+      error: { reason: "request_error", code: 500 }
+    }));
 
     expect(oauth.accessToken).toBe(null);
     expect(oauth.refreshToken).toBe(null);
@@ -117,7 +120,7 @@ describe("oauth flow", () => {
   });
 
   test("fetch response error json detail", async () => {
-    fetch.mockResponseOnce(JSON.stringify({ error: "from_response" }), { status: 500 });
+    fetch.mockResponseOnce(JSON.stringify({ error: "from_response", error_description: "From Response" }), { status: 500 });
 
     global.browser.webRequest.onBeforeRequest.mockResponse({
       url: oauth.APPROVAL_URL + "?response=ok&approvalCode=approvalCode",
@@ -128,7 +131,10 @@ describe("oauth flow", () => {
         titlePreface: "preface",
         loginHint: "hint",
       })
-    ).rejects.toEqual({ error: "from_response" });
+    ).rejects.toThrow(expect.objectContaining({
+      message: "from_response",
+      error: { reason: "from_response", "message": "From Response" },
+    }));
 
     expect(oauth.accessToken).toBe(null);
     expect(oauth.refreshToken).toBe(null);
@@ -167,7 +173,9 @@ describe("oauth flow", () => {
 
     fetch.mockResponseOnce(JSON.stringify({ error: "error" }), { status: 500 });
 
-    await expect(oauth.refresh(true)).rejects.toEqual({ error: "error" });
+    await expect(oauth.refresh(true)).rejects.toThrow(expect.objectContaining({
+      message: "error"
+    }));
 
     expect(oauth.accessToken).toBe(null);
     expect(oauth.refreshToken).toBe("refreshToken");
@@ -194,7 +202,7 @@ describe("oauth flow", () => {
 
     fetch.mockResponseOnce(null, { status: 500 });
 
-    await expect(oauth.refresh(true)).rejects.toEqual({ error: "request_error", code: 500 });
+    await expect(oauth.refresh(true)).rejects.toThrow("request_error");
 
     expect(oauth.accessToken).toBe(null);
     expect(oauth.refreshToken).toBe("refreshToken");

@@ -7,6 +7,14 @@ export class GoogleRequestError extends Error {
 
 }
 
+export class AuthFailedError extends GoogleRequestError {
+  constructor(error, details) {
+    super(error?.reason);
+    this.error = error;
+    this.details = details;
+  }
+}
+
 export class TokenFailureError extends GoogleRequestError {
   DISABLE = true;
 
@@ -23,11 +31,6 @@ export class QuotaFailureError extends GoogleRequestError {
   }
 }
 
-export class LoginFailedError extends GoogleRequestError {
-  constructor() {
-    super("LOGIN_FAILED");
-  }
-}
 export class NotModifiedError extends GoogleRequestError {
   constructor() {
     super("NOT_MODIFIED");

@@ -3,6 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch */
 
+import { AuthFailedError } from "./errors.js";
+
 export default class OAuth2 {
   AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
   APPROVAL_URL = "https://accounts.google.com/o/oauth2/approval/v2";
@@ -120,7 +122,7 @@ export default class OAuth2 {
     params = new URLSearchParams(approvalUrl.search);
 
     if (params.get("error")) {
-      throw { error: params.get("error") };
+      throw new AuthFailedError({ reason: "oauth_error", code: params.get("error") }, params);
     }
 
     let response = await fetch(this.TOKEN_URL, {
@@ -136,15 +138,20 @@ export default class OAuth2 {
     });
 
     let details;
+    let textResponse = await response.text();
 
     try {
-      details = await response.json();
+      details = JSON.parse(textResponse);
     } catch (e) {
-      throw { error: "request_error", code: response.status };
+      throw new AuthFailedError({ reason: "request_error", code: response.status }, textResponse);
     }
 
-    if (!response.ok) {
-      throw details || { error: "request_error", code: response.status };
+    if (details?.error) {
+      throw new AuthFailedError({ reason: details.error, message: details.error_description }, details);
+    }
+
+    if (!response.ok || !details || !details.access_token || !details.refresh_token || !details.scope) {
+      throw new AuthFailedError({ reason: "request_error", code: response.status }, details);
     }
 
     this.accessToken = details.access_token;
@@ -170,15 +177,20 @@ export default class OAuth2 {
     });
 
     let details;
+    let textResponse = await response.text();
 
     try {
-      details = await response.json();
+      details = JSON.parse(textResponse);
     } catch (e) {
-      throw { error: "request_error", code: response.status };
+      throw new AuthFailedError({ reason: "request_error", code: response.status }, textResponse);
     }
 
-    if (!response.ok) {
-      throw details || { error: "request_error", code: response.status };
+    if (details?.error) {
+      throw new AuthFailedError({ reason: details.error, message: details.error_description }, details);
+    }
+
+    if (!response.ok || !details || !details.access_token || !details.expires_in || !details.scope) {
+      throw new AuthFailedError({ reason: "request_error", code: response.status }, textResponse);
     }
 
     this.accessToken = details.access_token;

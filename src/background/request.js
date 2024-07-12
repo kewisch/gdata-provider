@@ -5,8 +5,8 @@
 
 import Console from "./log.js";
 import {
-  TokenFailureError, QuotaFailureError, LoginFailedError, NotModifiedError, ResourceGoneError, ItemError,
-  ModifyFailedError, ReadFailedError, ConflictError, GoogleRequestError
+  TokenFailureError, QuotaFailureError, NotModifiedError, ResourceGoneError, ItemError,
+  ModifyFailedError, ReadFailedError, ConflictError, GoogleRequestError, AuthFailedError
 } from "./errors.js";
 
 export default class calGoogleRequest {
@@ -28,6 +28,8 @@ export default class calGoogleRequest {
       case "invalid_client":
         session.notifyOutdated();
         throw new TokenFailureError();
+      case "authError":
+      case "invalidCredentials":
       case "unauthorized_client":
       case "invalid_grant":
         await session.invalidate();
@@ -53,15 +55,6 @@ export default class calGoogleRequest {
           throw new ReadFailedError();
         } else {
           throw new ModifyFailedError();
-        }
-      case "authError":
-      case "invalidCredentials":
-        await session.invalidate();
-        if (this.reauthenticate) {
-          this.reauthenticate = false;
-          return this.commit(session);
-        } else {
-          throw new LoginFailedError();
         }
       default:
         throw new ItemError();

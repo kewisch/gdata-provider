@@ -6,6 +6,7 @@
 import Console from "./log.js";
 import OAuth2 from "./oauth.js";
 import calGoogleRequest from "./request.js";
+import { AuthFailedError, TokenFailureError } from "./errors.js";
 
 import {
   isEmail,
@@ -258,34 +259,44 @@ class calGoogleSession {
     return this._loggingIn;
   }
 
-  async login() {
+  async handleAuthError(e, repeat) {
+    let reason = e.error?.reason;
+    switch (reason) {
+      case "invalid_client":
+        this.console.log("The client_id and client_secret are invalid, best upgrade to the latest Thunderbird/Provider");
+        this.notifyOutdated();
+        throw new TokenFailureError();
+      case "invalid_grant":
+        this.console.log("The refresh token is invalid, need to start over with authentication");
+        await this.invalidate();
+        if (repeat) {
+          await this.refreshAccessToken(false);
+        } else {
+          this.notifyOutdated();
+          throw new TokenFailureError();
+        }
+        break;
+      default:
+        throw e;
+    }
+  }
+
+  async refreshAccessToken(repeat = true) {
     this.oauth.accessToken = null;
 
-    this.console.log("No access token, refreshing");
+    this.console.log("Refreshing access token");
 
     this.oauth.refreshToken = await messenger.gdata.getOAuthToken(this.id);
-    await this.oauth.ensureLogin({
-      titlePreface: messenger.i18n.getMessage("requestWindowTitle", this.id) + " - ",
-      loginHint: this.id,
-    });
-    await messenger.gdata.setOAuthToken(this.id, this.oauth.refreshToken);
-
-    /* TODO doing this in request already, find a good spot
+    try {
+      await this.oauth.ensureLogin({
+        titlePreface: messenger.i18n.getMessage("requestWindowTitle", this.id) + " - ",
+        loginHint: this.id,
+      });
     } catch (e) {
-      this.console.error("Failed to acquire a new OAuth token:", e);
-
-      if (error == "invalid_client" || error == "http_401") {
-        this.notifyOutdated();
-      } else if (error == "unauthorized_client" || error == "invalid_grant") {
-        this.console.error(`Token is no longer authorized`);
-        this.invalidate();
-        await this.login();
-        return;
-      }
-
-      throw e;
+      await this.handleAuthError(e, repeat);
+    } finally {
+      await messenger.gdata.setOAuthToken(this.id, this.oauth.refreshToken);
     }
-    */
   }
 
   async paginatedRequest(request, onFirst, onEach, onLast) {
