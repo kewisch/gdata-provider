@@ -14,7 +14,7 @@
     }
   },
   "icons": {
-    "256": "icon.png"
+    "256": "images/icon.png"
   },
 
   "calendar_provider": {
