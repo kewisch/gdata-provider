@@ -7,15 +7,7 @@
   <head>
     <meta charset="utf-8">
     <style>
-      #gdata-calendars {
-        display: flex;
-        flex-direction: column;
-      }
-
-      #calendar-list {
-        flex: 1;
-      }
-      #calendar-list li {
+      #calendar-list li, #tasklist-list li {
         list-style-type: none;
       }
       
@@ -35,7 +27,10 @@
     </section>
     <section id="gdata-calendars" hidden="true">
       <p data-l10n-id="gdata.wizard.calendars.description"></p>
-      <ul id="calendar-list"></div>
+      <h2>Calendars</h2>
+      <ul id="calendar-list"></ul>
+      <h2>Task Lists</h2>
+      <ul id="tasklist-list"></ul>
     </section>
     <script type="module" src="calendar-creation.js"></script>
   </body>

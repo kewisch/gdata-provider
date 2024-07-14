@@ -109,9 +109,17 @@ async function main() {
 
   let vcalendar = new ICAL.Component(item.formats.jcal);
   let vevent = vcalendar.getFirstSubcomponent("vevent");
+  let vtodo = vcalendar.getFirstSubcomponent("vtodo");
 
-  initConferenceRow(vevent);
-  initEventTypeBanner(vevent);
+
+  if (vevent) {
+    initConferenceRow(vevent);
+    initEventTypeBanner(vevent);
+  } else if (vtodo) {
+    document.getElementById("conference-row").style.display = "none";
+
+    // TODO need to devise item-level capabilities
+  }
 }
 
 main();

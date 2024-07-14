@@ -55,7 +55,7 @@ export async function initMessageListener() {
           let calendar = {
             name: data.name,
             type: "ext-" + messenger.runtime.id,
-            url: `googleapi://${message.sessionId}/?calendar=${encodeURIComponent(data.id)}`,
+            url: `googleapi://${message.sessionId}/?${data.type}=${encodeURIComponent(data.id)}`,
           };
           return messenger.calendar.calendars.create(calendar);
         })

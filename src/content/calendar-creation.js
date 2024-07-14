@@ -36,29 +36,42 @@ export async function clickAuth(event) {
   });
   document.getElementById("gdata-session").setAttribute("hidden", "true");
   document.getElementById("gdata-calendars").removeAttribute("hidden");
-  let list = document.getElementById("calendar-list");
+  let calendarList = document.getElementById("calendar-list");
+  let tasklistList = document.getElementById("tasklist-list");
 
   for (let calendar of calendars) {
-    let listItem = list.appendChild(document.createElement("li"));
+    let listItem = calendarList.appendChild(document.createElement("li"));
     let label = listItem.appendChild(document.createElement("label"));
 
     let check = document.createElement("input");
     check.type = "checkbox";
     check.value = calendar.id;
+    check.dataset.listType = "calendar";
     label.appendChild(check);
     label.appendChild(document.createTextNode(calendar.summary));
   }
-  // TODO we don't have the tasks list yet
+
+  for (let tasklist of tasks) {
+    let listItem = tasklistList.appendChild(document.createElement("li"));
+    let label = listItem.appendChild(document.createElement("label"));
+
+    let check = document.createElement("input");
+    check.type = "checkbox";
+    check.value = tasklist.id;
+    check.dataset.listType = "tasks";
+    label.appendChild(check);
+    label.appendChild(document.createTextNode(tasklist.title));
+  }
 }
 
 export async function onCreate(event) {
-  console.log(event.data);
   if (event.data == "create") {
     let sessionId = document.getElementById("gdata-session-name").value; // TODO temporary
-    let calendars = [...document.querySelectorAll("#calendar-list input:checked")].map(input => {
+    let calendars = [...document.querySelectorAll("#calendar-list input:checked, #tasklist-list input:checked")].map(input => {
       return {
         name: input.nextSibling.nodeValue,
         id: input.value,
+        type: input.dataset.listType,
       };
     });
     await messenger.runtime.sendMessage({ action: "createCalendars", sessionId, calendars });
