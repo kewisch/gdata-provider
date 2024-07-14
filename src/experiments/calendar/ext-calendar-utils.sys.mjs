@@ -143,10 +143,12 @@ export function convertItem(item, options, extension) {
 
   let props = {};
 
-  if (item instanceof Ci.calIEvent) {
+  if (item.isEvent()) {
     props.type = "event";
-  } else if (item instanceof Ci.calITodo) {
+  } else if (item.isTodo()) {
     props.type = "task";
+  } else {
+    throw new ExtensionError(`Encountered unknown item type for ${item.calendar.id}/${item.id}`);
   }
 
   props.id = item.id;
