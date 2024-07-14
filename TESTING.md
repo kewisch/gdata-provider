@@ -19,10 +19,10 @@ Google Calendar.
 ## Basic Event Operations
 * Create an event in the calendar
   * It should have the "Default" privacy class
-  * And the reminder value should also be "Default"
+  * And the reminder value should also be "Default" if default reminders are set on the calendar
 * Move the event to a different time
-* Delete the event
 * Create server-side conflicts for modify and delete and make sure they are handled
+* Delete the event
 
 ## Basic Task Operations
 * Create a task in the your task list
@@ -43,7 +43,6 @@ Google Calendar.
 * Recurring Events
   1. Create a recurring event
   2. Modify an instance of the event (e.g. move to different time)
-  3. Further modifications to the same instance should not throw up a dialog to ask if single/all events should be changed.
 
 ## Event Summary Dialog
 * Check if the conference information is being displayed (only on standard events)
