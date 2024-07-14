@@ -885,7 +885,9 @@ export class ItemSaver {
         let item = await messenger.calendar.items.get(this.calendar.cacheId, exc.id, {
           returnFormat: "jcal",
         });
+
         if (item) {
+          delete item.calendarId;
           await this.processException(exc, item);
         } else if (excEvent.getFirstPropertyValue("status") != "CANCELLED") {
           // If the item could not be found, it could be that the user is invited to an instance of
