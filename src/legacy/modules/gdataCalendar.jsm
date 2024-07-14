@@ -8,36 +8,32 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
 
 var EXPORTED_SYMBOLS = ["calGoogleCalendar"]; /* exported calGoogleCalendar */
 
-var { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm");
+var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
 
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
+XPCOMUtils.defineLazyModuleGetters(this, {
+  setTimeout: "resource://gre/modules/Timer.jsm",
+  stringException: "resource://gdata-provider/legacy/modules/gdataLogging.jsm",
+  getGoogleSessionManager: "resource://gdata-provider/legacy/modules/gdataSession.jsm",
+  calGoogleRequest: "resource://gdata-provider/legacy/modules/gdataRequest.jsm",
+  API_BASE: "resource://gdata-provider/legacy/modules/gdataRequest.jsm",
+  getCorrectedDate: "resource://gdata-provider/legacy/modules/gdataRequest.jsm",
 
-var { stringException } = ChromeUtils.import(
-  "resource://gdata-provider/legacy/modules/gdataLogging.jsm"
-);
-var { calGoogleRequest, getCorrectedDate, API_BASE } = ChromeUtils.import(
-  "resource://gdata-provider/legacy/modules/gdataRequest.jsm"
-);
-var { getGoogleSessionManager } = ChromeUtils.import(
-  "resource://gdata-provider/legacy/modules/gdataSession.jsm"
-);
-var {
-  ItemToJSON,
-  JSONToItem,
-  ItemSaver,
-  checkResolveConflict,
-  getGoogleId,
-  getItemMetadata,
-  saveItemMetadata,
-  deleteItemMetadata,
-  migrateItemMetadata,
-  JSONToAlarm,
-  getMessenger,
-} = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUtils.jsm");
+  ItemToJSON: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  JSONToItem: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  ItemSaver: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  checkResolveConflict: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  getGoogleId: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  getItemMetadata: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  saveItemMetadata: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  deleteItemMetadata: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  migrateItemMetadata: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  JSONToAlarm: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+});
 
-XPCOMUtils.defineLazyGetter(this, "messenger", () => getMessenger());
+ChromeUtils.defineLazyGetter(this, "messenger", () => getMessenger());
 
 var cIOL = Ci.calIOperationListener;
 

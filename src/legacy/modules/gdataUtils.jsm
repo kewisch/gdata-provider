@@ -6,27 +6,7 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
   "gdataUtils.jsm"
 );
 
-var { LOGitem, LOGverbose, stringException } = ChromeUtils.import(
-  "resource://gdata-provider/legacy/modules/gdataLogging.jsm"
-);
-var { calGoogleRequest } = ChromeUtils.import(
-  "resource://gdata-provider/legacy/modules/gdataRequest.jsm"
-);
-var { windowsTimezoneMap } = ChromeUtils.import(
-  "resource://gdata-provider/legacy/modules/timezoneMap.jsm"
-);
-
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-// TB120 COMPAT
-if (!Promise.withResolvers) {
-  var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
-  Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
-}
-
-var { ExtensionParent } = ChromeUtils.import("resource://gre/modules/ExtensionParent.jsm");
-
-var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   CalAlarm: "resource:///modules/CalAlarm.jsm",
@@ -36,7 +16,24 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   CalRecurrenceInfo: "resource:///modules/CalRecurrenceInfo.jsm",
   CalRelation: "resource:///modules/CalRelation.jsm",
   CalTodo: "resource:///modules/CalTodo.jsm",
+
+  cal: "resource:///modules/calendar/calUtils.jsm",
+
+  LOGitem: "resource://gdata-provider/legacy/modules/gdataLogging.jsm",
+  LOGverbose: "resource://gdata-provider/legacy/modules/gdataLogging.jsm",
+  stringException: "resource://gdata-provider/legacy/modules/gdataLogging.jsm",
+
+  calGoogleRequest: "resource://gdata-provider/legacy/modules/gdataRequest.jsm",
+  windowsTimezoneMap: "resource://gdata-provider/legacy/modules/timezoneMap.jsm",
+
+  ExtensionParent: "resource://gre/modules/ExtensionParent.jsm",
 });
+
+// TB120 COMPAT
+if (!Promise.withResolvers) {
+  var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
+  Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
+}
 
 var FOUR_WEEKS_IN_MINUTES = 40320;
 var CONTAINS_HTML_RE = /^<|&(lt|gt|amp);|<(br|p)>/;

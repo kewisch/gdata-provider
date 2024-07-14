@@ -6,17 +6,19 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
   "gdataRequest.jsm"
 );
 
-var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
 // TB120 COMPAT
 if (!Promise.withResolvers) {
   var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
   Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
 }
 
-var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
+ChromeUtils.defineModuleGetter(
+  this,
+  "cal",
+  "resource:///modules/calendar/calUtils.jsm"
+); /* global cal */
 
-XPCOMUtils.defineLazyGetter(this, "messenger", () => {
+ChromeUtils.defineLazyGetter(this, "messenger", () => {
   let { getMessenger } = ChromeUtils.import(
     "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
   );
@@ -334,7 +336,9 @@ calGoogleRequest.prototype = {
    * @see nsIInterfaceRequestor
    * @see calProviderUtils.jsm
    */
-  getInterface: cal.provider.InterfaceRequestor_getInterface,
+  getInterface: function(aIID) {
+    return cal.provider.InterfaceRequestor_getInterface.call(this, aIID);
+  },
 
   /**
    * @see nsIChannelEventSink

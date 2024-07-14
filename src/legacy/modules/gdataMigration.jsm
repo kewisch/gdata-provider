@@ -8,13 +8,21 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
 
 var EXPORTED_SYMBOLS = ["migrateCalendars", "getMigratableCalendars", "checkMigrateCalendars"];
 
-var { getMessenger } = ChromeUtils.import(
-  "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
-);
-var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
+ChromeUtils.defineLazyGetter(this, "messenger", () => {
+  let { getMessenger } = ChromeUtils.import(
+    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
+  );
+
+  return getMessenger();
+});
+
+ChromeUtils.defineModuleGetter(
+  this,
+  "cal",
+  "resource:///modules/calendar/calUtils.jsm"
+); /* global cal */
 
 async function checkMigrateCalendars(window) {
-  let messenger = getMessenger();
   let prefs = await messenger.storage.local.get({ "settings.migrate": true });
   let calendars = getMigratableCalendars();
 

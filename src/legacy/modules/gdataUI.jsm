@@ -5,7 +5,11 @@
 
 var EXPORTED_SYMBOLS = ["register", "unregister", "recordModule", "recordWindow"];
 
-var { ExtensionSupport } = ChromeUtils.import("resource:///modules/ExtensionSupport.jsm");
+ChromeUtils.defineModuleGetter(
+  this,
+  "ExtensionSupport",
+  "resource:///modules/ExtensionSupport.jsm"
+); /* global ExtensionSupport */
 
 var unregisterIds = [];
 var unregisterModules = new Set();

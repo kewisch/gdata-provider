@@ -2,21 +2,25 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+var { recordModule, recordWindow } = ChromeUtils.import(
+  "resource://gdata-provider/legacy/modules/gdataUI.jsm"
+);
+recordModule("ui/gdata-event-dialog.jsm");
+
 var EXPORTED_SYMBOLS = ["gdataInitUI"];
+
+var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+
+XPCOMUtils.defineLazyModuleGetters(this, {
+  monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+});
+
+ChromeUtils.defineLazyGetter(this, "messenger", () => getMessenger());
 
 const ITEM_IFRAME_URL = "chrome://calendar/content/calendar-item-iframe.xhtml";
 
 function gdataInitUI(window, document) {
-  const { recordModule, recordWindow } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataUI.jsm"
-  );
-  recordModule("ui/gdata-event-dialog.jsm");
-
-  const { monkeyPatch, getMessenger } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
-  );
-  let messenger = getMessenger();
-
   // For event dialogs, record the window so it is closed when the extension is unloaded
   if (
     window.location.href == "chrome://calendar/content/calendar-event-dialog.xhtml" &&
