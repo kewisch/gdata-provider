@@ -8,10 +8,11 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
   "ui/gdata-dialog-utils.jsm"
 );
 
-const Services =
-  globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services;
-
-const { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
+ChromeUtils.defineModuleGetter(
+  this,
+  "cal",
+  "resource:///modules/calendar/calUtils.jsm"
+); /* global cal */
 
 const CODE_TYPES = ["meetingCode", "accessCode", "passcode", "password", "pin"];
 

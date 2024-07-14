@@ -2,26 +2,25 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
+  "ui/gdata-lightning-item-iframe.jsm"
+);
+
 var EXPORTED_SYMBOLS = ["gdataInitUI"];
 
+var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+
+XPCOMUtils.defineLazyModuleGetters(this, {
+  cal: "resource:///modules/calendar/calUtils.jsm",
+  monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  CONFERENCE_ROW_FRAGMENT: "resource://gdata-provider/legacy/modules/ui/gdata-dialog-utils.jsm",
+  initConferenceRow: "resource://gdata-provider/legacy/modules/ui/gdata-dialog-utils.jsm",
+});
+
+ChromeUtils.defineLazyGetter(this, "messenger", () => getMessenger());
+
 function gdataInitUI(window, document) {
-  ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-    "ui/gdata-lightning-item-iframe.jsm"
-  );
-
-  const { getMessenger } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
-  );
-  const { monkeyPatch } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
-  );
-  const { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
-  let messenger = getMessenger();
-
-  const { CONFERENCE_ROW_FRAGMENT, initConferenceRow } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/ui/gdata-dialog-utils.jsm"
-  );
-
   let { getCurrentCalendar } = window;
 
   (function() {
@@ -182,6 +181,9 @@ function gdataInitUI(window, document) {
         itemCategories.removeAttribute("hidden");
         categoriesLabel.removeAttribute("hidden");
       }
+
+      // Update conference row (to hide it)
+      initConferenceRow(document, messenger, window.calendarItem, calendar);
     }
 
     return rv;

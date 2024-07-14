@@ -2,13 +2,23 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
+  "ui/gdata-event-dialog-reminder.jsm"
+);
+
 var EXPORTED_SYMBOLS = ["gdataInitUI"];
 
-function gdataInitUI(window, document) {
-  ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-    "ui/gdata-event-dialog-reminder.jsm"
-  );
+var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
+XPCOMUtils.defineLazyModuleGetters(this, {
+  cal: "resource:///modules/calendar/calUtils.jsm",
+  monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+});
+
+ChromeUtils.defineLazyGetter(this, "messenger", () => getMessenger());
+
+function gdataInitUI(window, document) {
   let item = window.arguments[0].item;
   let calendar = window.arguments[0].calendar;
   if (calendar.type != "gdata") {
@@ -16,12 +26,7 @@ function gdataInitUI(window, document) {
   }
 
   const FOUR_WEEKS_BEFORE = -2419200;
-  const { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
-  const { monkeyPatch, getMessenger } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
-  );
 
-  let messenger = getMessenger();
   let reminderOutOfRange = messenger.i18n.getMessage("reminderOutOfRange");
   let notificationbox;
   let checkPending;

@@ -2,21 +2,29 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
+  "ui/gdata-migration.jsm"
+);
+
 var EXPORTED_SYMBOLS = ["gdataInitUI"];
 
-async function gdataInitUI(window, document) {
-  ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-    "ui/gdata-migration.jsm"
-  );
+var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-  const { getMessenger } = ChromeUtils.import(
+XPCOMUtils.defineLazyModuleGetters(this, {
+  cal: "resource:///modules/calendar/calUtils.jsm",
+  migrateCalendars: "resource://gdata-provider/legacy/modules/gdataMigration.jsm",
+  getMigratableCalendars: "resource://gdata-provider/legacy/modules/gdataMigration.jsm",
+});
+
+ChromeUtils.defineLazyGetter(this, "messenger", () => {
+  let { getMessenger } = ChromeUtils.import(
     "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
   );
-  const { migrateCalendars, getMigratableCalendars } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataMigration.jsm"
-  );
-  let messenger = getMessenger();
 
+  return getMessenger();
+});
+
+async function gdataInitUI(window, document) {
   // Strings. Doing these manually since there are just a few.
   document.title = messenger.i18n.getMessage("gdata.migration.title");
   document.getElementById("gdata-migration-description").textContent = messenger.i18n.getMessage(

@@ -8,7 +8,11 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
 
 var EXPORTED_SYMBOLS = ["LOGitem", "LOGverbose", "LOGinterval", "stringException"];
 
-var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
+ChromeUtils.defineModuleGetter(
+  this,
+  "cal",
+  "resource:///modules/calendar/calUtils.jsm"
+); /* global cal */
 
 function LOGverbose(aStr) {
   if (Services.prefs.getBoolPref("calendar.debug.log.verbose", false)) {

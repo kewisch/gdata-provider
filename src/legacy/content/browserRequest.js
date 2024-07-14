@@ -101,7 +101,6 @@ function loadRequestedUrl() {
     document.getElementById("headerMessage").value = url;
   }
 
-  console.log("COMPLETED");
   request.loaded(window, browser.webProgress);
 }
 

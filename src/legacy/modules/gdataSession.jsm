@@ -8,18 +8,24 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
   "gdataSession.jsm"
 );
 
-var { OAuth2 } = ChromeUtils.import("resource://gdata-provider/legacy/modules/OAuth2.jsm");
-var { getMessenger } = ChromeUtils.import(
-  "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
-);
-var { LOGinterval } = ChromeUtils.import(
-  "resource://gdata-provider/legacy/modules/gdataLogging.jsm"
-);
-var { calGoogleRequest, API_BASE } = ChromeUtils.import(
-  "resource://gdata-provider/legacy/modules/gdataRequest.jsm"
-);
+var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-var { setTimeout } = ChromeUtils.import("resource://gre/modules/Timer.jsm");
+XPCOMUtils.defineLazyModuleGetters(this, {
+  calGoogleRequest: "resource://gdata-provider/legacy/modules/gdataRequest.jsm",
+  API_BASE: "resource://gdata-provider/legacy/modules/gdataRequest.jsm",
+  cal: "resource:///modules/calendar/calUtils.jsm",
+  setTimeout: "resource://gre/modules/Timer.jsm",
+  LOGinterval: "resource://gdata-provider/legacy/modules/gdataLogging.jsm",
+  OAuth2: "resource://gdata-provider/legacy/modules/OAuth2.jsm",
+});
+
+ChromeUtils.defineLazyGetter(this, "messenger", () => {
+  let { getMessenger } = ChromeUtils.import(
+    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
+  );
+
+  return getMessenger();
+});
 
 // TB120 COMPAT
 if (!Promise.withResolvers) {
@@ -27,16 +33,9 @@ if (!Promise.withResolvers) {
   Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
 }
 
-var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
-
-var cIFBI = Ci.calIFreeBusyInterval;
-var nIPM = Ci.nsIPermissionManager;
-
 var NOTIFY_TIMEOUT = 60 * 1000;
 
 var EXPORTED_SYMBOLS = ["getGoogleSessionManager"];
-
-var messenger = getMessenger();
 
 var gdataSessionMap = new Map();
 var calGoogleSessionManager = {
@@ -130,6 +129,8 @@ calGoogleSession.prototype = {
   mId: null,
   mSessionID: null,
   mLoginPromise: null,
+
+  QueryInterface: ChromeUtils.generateQI(["calIFreeBusyProvider"]),
 
   get id() {
     return this.mId;
@@ -236,8 +237,12 @@ calGoogleSession.prototype = {
       );
 
       let action = Services.perms.testPermissionFromPrincipal(googlePrincipal, "cookie");
-      if (action == nIPM.UNKNOWN_ACTION) {
-        Services.perms.addFromPrincipal(googlePrincipal, "cookie", nIPM.ALLOW_ACTION);
+      if (action == Ci.nsIPermissionManager.UNKNOWN_ACTION) {
+        Services.perms.addFromPrincipal(
+          googlePrincipal,
+          "cookie",
+          Ci.nsIPermissionManager.ALLOW_ACTION
+        );
       }
     }
   },
@@ -474,10 +479,6 @@ calGoogleSession.prototype = {
    * calIFreeBusyProvider Implementation
    */
   getFreeBusyIntervals: function(aCalId, aRangeStart, aRangeEnd, aBusyTypes, aListener) {
-    // For some unexplained reason, the global `cal` is not available in this function
-    // eslint-disable-next-line no-shadow
-    let { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
-
     let completeSync = aIntervals => {
       cal.LOG(
         "[calGoogleCalendar] Freebusy query for " +
@@ -562,7 +563,12 @@ calGoogleSession.prototype = {
             let busyRanges = calData.busy.map(entry => {
               let start = cal.dtz.fromRFC3339(entry.start, utcZone);
               let end = cal.dtz.fromRFC3339(entry.end, utcZone);
-              let interval = new cal.provider.FreeBusyInterval(aCalId, cIFBI.BUSY, start, end);
+              let interval = new cal.provider.FreeBusyInterval(
+                aCalId,
+                Ci.calIFreeBusyInterval.BUSY,
+                start,
+                end
+              );
               LOGinterval(interval);
               return interval;
             });
