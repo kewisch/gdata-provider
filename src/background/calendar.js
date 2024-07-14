@@ -195,25 +195,6 @@ export default class calGoogleCalendar {
     await messenger.storage.local.set({ [prefName]: value });
   }
 
-  async getUpdatedMin() {
-    let updatedMin;
-    let lastUpdated = await this.getCalendarPref("tasksLastUpdated");
-    if (lastUpdated) {
-      updatedMin = new Date(lastUpdated);
-      let lastWeek = new Date();
-      lastWeek.setDate(lastWeek.getDate() - 7);
-
-      if (updatedMin <= lastWeek) {
-        this.console.log("Last updated time for tasks is more than a week ago, doing full sync");
-        // TODO a calendar that is both tasks and calendars may fail if both RESOURCE_GONE and no
-        // updated min. calendars would be cleared twice.
-        await messenger.calendar.calendars.clear(this.cacheId);
-        updatedMin = null;
-      }
-    }
-    return updatedMin;
-  }
-
   // TODO itip/imip
 
   async onItemCreated(item, options = {}) {
@@ -479,7 +460,7 @@ export default class calGoogleCalendar {
     if (this.tasklistName) {
       promises.push(
         (async () => {
-          let updatedMin = await this.getUpdatedMin();
+          let updatedMin = await this.getCalendarPref("tasksLastUpdated");
           let request = new calGoogleRequest({
             method: "GET",
             uri: this.createTasksURI("tasks"),

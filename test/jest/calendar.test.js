@@ -307,21 +307,6 @@ test("calendar prefs", async () => {
   expect(await calendar.getCalendarPref("foo", "default")).toBe("bar");
 });
 
-test("updated min", async () => {
-  let calendar = await calGoogleCalendar.get("id1");
-
-  expect(await calendar.getUpdatedMin()).toBeFalsy();
-
-  let newUpdate = new Date();
-  await calendar.setCalendarPref("tasksLastUpdated", newUpdate.toISOString());
-  expect(await calendar.getUpdatedMin()).toEqual(newUpdate);
-
-  newUpdate = new Date(new Date() - 86400 * 8 * 1000);
-  await calendar.setCalendarPref("tasksLastUpdated", newUpdate.toISOString());
-  expect(await calendar.getUpdatedMin()).toBe(null);
-  expect(messenger.calendar.calendars.clear).toHaveBeenCalledWith("cached-id1");
-});
-
 describe("item functions", () => {
   let calendar;
 
