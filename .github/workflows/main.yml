@@ -1,0 +1,68 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+# Portions Copyright (C) Philipp Kewisch
+---
+name: "Checkin"
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "Setup node"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+
+      - name: "npm ci"
+        run: npm ci
+
+      - name: "Commit lint"
+        run: npx commitlint --from $GITHUB_SHA^
+
+      - name: "ESLint"
+        run: npx eslint
+
+  build-and-test:
+    name: "Build & Test"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup node"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+
+      - name: "npm ci"
+        run: npm ci
+
+      - name: "Build"
+        run: npm run build
+
+      - name: "Upload Build"
+        uses: actions/upload-artifact@v4
+        with:
+          name: gdata-provider.xpi
+          path: dist/gdata-provider.xpi
+          if-no-files-found: error
+
+      - name: "Run Tests"
+        run: npm run test
+
+      - name: "Coveralls"
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

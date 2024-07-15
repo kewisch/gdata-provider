@@ -1,14 +1,13 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-# Portions Copyright (C) Philipp Kewisch, 2019
+# Portions Copyright (C) Philipp Kewisch
 ---
-name: "Checkin"
+name: "Legacy Checkin"
 on:
   push:
     branches:
-      - main
-  pull_request:
+      - legacy
 
 jobs:
   lint:
@@ -18,7 +17,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 2
 
@@ -36,13 +35,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: "Build"
         run: npm run build
 
       - name: "Upload"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: gdata-provider.xpi
           path: dist/gdata-provider.xpi
@@ -54,10 +53,10 @@ jobs:
 #    needs: build
 #    steps:
 #      - name: "Checkout"
-#        uses: actions/checkout@v1
+#        uses: actions/checkout@v4
 #
 #      - name: "Download Build Artifact"
-#        uses: actions/download-artifact@v2
+#        uses: actions/download-artifact@v4
 #        with:
 #          name: gdata-provider.xpi
 #          path: dist
