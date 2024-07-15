@@ -15,11 +15,6 @@ module.exports = {
     es2021: true,
     webextensions: true,
   },
-  parser: "babel-eslint",
-
-  parserOptions: {
-    ecmaVersion: 12,
-  },
 
   globals: {
     messenger: true,
@@ -248,6 +243,12 @@ module.exports = {
     "no-unused-vars": 0,
 
     "mozilla/mark-test-function-used": 1,
+
+    // Legacy is not esmified
+    "mozilla/reject-chromeutils-import": 0,
+
+    // This needs to be investigated, using this broadly in 128+
+    "mozilla/reject-global-this": 0,
 
     // Require padding inside curly braces
     "object-curly-spacing": [2, "always"],
@@ -534,5 +535,11 @@ module.exports = {
         "mozilla/import-headjs-globals": "error",
       },
     },
+    {
+      files: ["commitlint.config.js"],
+      env: {
+        node: true
+      }
+    }
   ],
 };

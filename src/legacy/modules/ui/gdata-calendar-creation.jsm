@@ -125,7 +125,7 @@ function gdataInitUI(window, document) {
       try {
         return func.apply(this, arguments);
       } catch (e) {
-        console.log(e);
+        console.log(e); // eslint-disable-line no-console
         throw e;
       }
     };
@@ -248,10 +248,10 @@ function gdataInitUI(window, document) {
         { value: calendars = [], reason: calendarError },
       ]) => {
         if (tasksError) {
-          Cu.reportError(tasksError);
+          console.error(tasksError); // eslint-disable-line no-console
         }
         if (calendarError) {
-          Cu.reportError(calendarError);
+          console.error(calendarError); // eslint-disable-line no-console
         }
 
         let existing = new Set();
@@ -385,7 +385,7 @@ function gdataInitUI(window, document) {
         if (e.message == "cancelled") {
           window.selectPanel("gdata-session");
         } else {
-          Cu.reportError(e);
+          console.error(e); // eslint-disable-line no-console
         }
       }
     );
