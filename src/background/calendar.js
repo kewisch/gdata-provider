@@ -8,7 +8,7 @@ import calGoogleRequest from "./request.js";
 import { ItemError, ResourceGoneError, QuotaFailureError } from "./errors.js";
 import Console from "./log.js";
 
-import { getGoogleId, sessionIdFromUrl, GCAL_PATH_RE, API_BASE } from "./utils.js";
+import { getGoogleId, sessionIdFromUrl, isEmail, GCAL_PATH_RE, API_BASE } from "./utils.js";
 import { itemToJson, jsonToItem, jsonToAlarm, patchItem, ItemSaver } from "./items.js";
 
 var console = new Console("calGoogleCalendar");
@@ -123,9 +123,11 @@ export default class calGoogleCalendar {
       this.calendarName = this.url.searchParams.get("calendar");
       this.tasklistName = this.url.searchParams.get("tasks");
       if (!this.calendarName && !this.tasklistName) {
-        // TODO this could be a random id and it will fail
-        this.calendarName = sessionIdFromUrl(this.url);
-        this.tasklistName = this.isDefaultCalendar ? "@default" : null;
+        let urlSession = sessionIdFromUrl(this.url);
+        if (isEmail(urlSession)) {
+          this.calendarName = urlSession;
+          this.tasklistName = this.isDefaultCalendar ? "@default" : null;
+        }
       }
     } else if (
       ["http:", "https:", "webcal:", "webcals:"].includes(this.url.protocol) &&

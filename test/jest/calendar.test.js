@@ -122,7 +122,7 @@ beforeEach(() => {
       id: "id2",
       cacheId: "cached-id2",
       type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
-      url: "googleapi://sessionId/",
+      url: "googleapi://sessionId@example.com/",
     },
     {
       id: "id3",
@@ -159,6 +159,12 @@ beforeEach(() => {
       cacheId: "cached-id8",
       type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
       url: "googleapi://sessionId/?tasks=taskhash",
+    },
+    {
+      id: "id9",
+      cacheId: "cached-id9",
+      type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      url: "googleapi://9caa24c2-2cb1-4ac6-98ad-eaa1fd7656fb/?test=bar"
     },
   ];
 
@@ -249,7 +255,7 @@ test("onInit", async () => {
 
   calendar = await calGoogleCalendar.get("id2");
   await calendar.onInit();
-  expect(calendar.calendarName).toBe("sessionId");
+  expect(calendar.calendarName).toBe("sessionId@example.com");
   expect(calendar.tasklistName).toBe("@default");
 
   calendar = await calGoogleCalendar.get("id3");
@@ -269,6 +275,11 @@ test("onInit", async () => {
   expect(calendar.tasklistName).toEqual("@default");
 
   calendar = await calGoogleCalendar.get("id6");
+  await calendar.onInit();
+  expect(calendar.calendarName).toBeFalsy();
+  expect(calendar.tasklistName).toBeFalsy();
+
+  calendar = await calGoogleCalendar.get("id9");
   await calendar.onInit();
   expect(calendar.calendarName).toBeFalsy();
   expect(calendar.tasklistName).toBeFalsy();
