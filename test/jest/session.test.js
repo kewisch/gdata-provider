@@ -65,6 +65,10 @@ test("get session by id", () => {
     "[calGoogleSession]",
     "Attempting to get session for invalid calendar url: wat://otherSessionId"
   );
+
+  calendar = { url: new URL("https://calendar.google.com/calendar/ical/user%40example.com/public/basic.ics") };
+  let session7 = sessions.byCalendar(calendar, true);
+  expect(session7.id).toEqual("user@example.com");
 });
 
 describe("backoff", () => {

@@ -32,17 +32,10 @@ var sessions = {
       sessionId = sessionIdFromUrl(url);
     } else if (
       ["http:", "https:", "webcal:", "webcals:"].includes(url.protocol) &&
-      url.host == "www.google.com" &&
+      (url.host == "www.google.com" || url.host == "calendar.google.com") &&
       matchpath
     ) {
-      // TODO we need some sort of session id here, this is used for migrating ics calendars
-      // let googleCalendarName = aCalendar.getProperty("googleCalendarName");
-      // let googleUser = Services.prefs.getStringPref(
-      //  "calendar.google.calPrefs." + googleCalendarName + ".googleUser",
-      //  null
-      // );
-      // sessionId = googleUser || googleCalendarName || cal.getUUID();
-      sessionId = null;
+      sessionId = decodeURIComponent(matchpath[2]);
     } else {
       console.error("Attempting to get session for invalid calendar url: " + url);
     }
