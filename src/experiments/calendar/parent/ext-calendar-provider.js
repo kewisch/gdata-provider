@@ -270,7 +270,9 @@ class ExtCalendar extends cal.provider.BaseClass {
       return item;
     } catch (e) {
       let code;
-      if (e instanceof ItemError) {
+      if (e.message.startsWith("NetworkError")) {
+        code = Cr.NS_ERROR_NET_INTERRUPT;
+      } else if (e instanceof ItemError) {
         code = e.xpcomReason;
       } else {
         code = e.result || Cr.NS_ERROR_FAILURE;
@@ -344,7 +346,9 @@ class ExtCalendar extends cal.provider.BaseClass {
       return item;
     } catch (e) {
       let code;
-      if (e instanceof ItemError) {
+      if (e.message.startsWith("NetworkError")) {
+        code = Cr.NS_ERROR_NET_INTERRUPT;
+      } else if (e instanceof ItemError) {
         if (e.reason == ItemError.CONFLICT) {
           let overwrite = cal.provider.promptOverwrite("modify", aOldItem);
           if (overwrite) {
@@ -393,7 +397,9 @@ class ExtCalendar extends cal.provider.BaseClass {
       this.observers.notify("onDeleteItem", [aItem]);
     } catch (e) {
       let code;
-      if (e instanceof ItemError) {
+      if (e.message.startsWith("NetworkError")) {
+        code = Cr.NS_ERROR_NET_INTERRUPT;
+      } else if (e instanceof ItemError) {
         if (e.reason == ItemError.CONFLICT) {
           let overwrite = cal.provider.promptOverwrite("delete", aItem);
           if (overwrite) {
