@@ -60,7 +60,7 @@
   },
   {
     "namespace": "calendarItemDetails",
-    "description": "TODO",
+    "description": "Describes the area(s) where the item details should be displayed",
     "permissions": ["manifest:calendar_item_details"],
     "types": [
       {
