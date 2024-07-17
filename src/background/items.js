@@ -140,13 +140,13 @@ function jsonToTask(entry, calendar, referenceItem) {
 function haveRemindersChanged(remindersEntry, oldRemindersEntry) {
   if (
     remindersEntry.useDefault != oldRemindersEntry.useDefault ||
-    remindersEntry.overrides.length != oldRemindersEntry.overrides.length
+    remindersEntry.overrides?.length != oldRemindersEntry.overrides?.length
   ) {
     return true;
   }
 
-  let reminderMap = new Set(remindersEntry.overrides.map(entry => entry.method + entry.minutes));
-  if (oldRemindersEntry.overrides.some(entry => !reminderMap.has(entry.method + entry.minutes))) {
+  let reminderMap = new Set(remindersEntry.overrides?.map(entry => entry.method + entry.minutes) ?? []);
+  if (oldRemindersEntry.overrides?.some(entry => !reminderMap.has(entry.method + entry.minutes))) {
     return true;
   }
 
