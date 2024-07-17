@@ -200,18 +200,13 @@ export default class calGoogleCalendar {
   // TODO itip/imip
 
   async onItemCreated(item, options = {}) {
-    // TODO start
-    // Now this sucks...both invitations and the offline cache send over
-    // items with the id set, but we have no way to figure out which is
-    // happening just by inspecting the item. Adding offline items should
-    // not be an import, but invitations should.
-    // let isImport = aItem.id && (aItem.id == "xpcshell-import" || stackContains("calItipUtils.jsm"));
-    // TODO now only in the experiment
-    // TODO end
-    let itemData = itemToJson(item, this, options.invitation);
+    this.console.log(
+      `Adding ${options.offline ? "offline " : ""}${options.invitation ? "invitation" : "regular"} ` +
+      `${item.type} ${item.title}`
+    );
 
     let uri;
-    this.console.log(`Adding ${options.invitation ? "invitation" : "regular"} ${item.type} ${item.title}`);
+    let itemData = itemToJson(item, this, options.invitation);
 
     /* istanbul ignore else - unreachable */
     if (item.type == "event") {
@@ -250,7 +245,7 @@ export default class calGoogleCalendar {
       });
     }
 
-    this.console.log(`Adding item ${item.id} ${item.title} succeeded`);
+    this.console.log(`Adding item ${newItem.id || item.id} (${item.title}) succeeded`);
 
     return newItem;
   }
