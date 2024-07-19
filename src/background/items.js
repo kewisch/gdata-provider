@@ -388,7 +388,10 @@ function patchEvent(item, oldItem) {
     let oldDate = oldProp?.getFirstValue();
     let newDate = newProp?.getFirstValue();
 
-    if (!oldDate ^ !newDate || (oldDate && newDate && oldDate.compare(newDate) != 0)) {
+    let oldZone = oldProp?.getFirstParameter("tzid");
+    let newZone = newProp?.getFirstParameter("tzid");
+
+    if (oldZone != newZone || !oldDate ^ !newDate || (oldDate && newDate && oldDate.compare(newDate) != 0)) {
       obj[prop] = dateToJson(newProp);
     }
   }
@@ -400,7 +403,10 @@ function patchEvent(item, oldItem) {
     let oldDate = oldProp?.getFirstValue();
     let newDate = newProp?.getFirstValue();
 
-    if (!oldDate ^ !newDate || (oldDate && newDate && oldDate.compare(newDate) != 0)) {
+    let oldZone = oldProp?.getFirstParameter("tzid");
+    let newZone = newProp?.getFirstParameter("tzid");
+
+    if (oldZone != newZone || !oldDate ^ !newDate || (oldDate && newDate && oldDate.compare(newDate) != 0)) {
       obj[prop] = dateToJson(newProp);
     }
   }

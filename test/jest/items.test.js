@@ -556,7 +556,25 @@ describe("patchItem", () => {
       ])("date prop %s", (jprop, prop, jchanged, changed) => {
         event.updatePropertyWithValue(jprop, jchanged);
         changes = patchItem(item, oldItem);
+        // TODO why are we expecting reminders to change here?
         expect(changes).toEqual({ [prop]: changed, reminders: expect.anything() });
+      });
+
+      test.each([
+        [
+          "dtstart",
+          "start",
+          { dateTime: "2006-06-10T18:00:00", timeZone: "America/Los_Angeles" },
+        ],
+        [
+          "dtend",
+          "end",
+          { dateTime: "2006-06-10T20:00:00", timeZone: "America/Los_Angeles" },
+        ],
+      ])("date prop %s timezone change", (jprop, prop, changed) => {
+        event.getFirstProperty(jprop).setParameter("tzid", "America/Los_Angeles");
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({ [prop]: changed });
       });
 
       test("dtend unspecified", () => {
