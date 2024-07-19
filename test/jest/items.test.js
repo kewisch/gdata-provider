@@ -3,7 +3,7 @@ import jcalItems from "./fixtures/jcalItems.json";
 
 import { jsonToItem, itemToJson, patchItem, ItemSaver } from "../../src/background/items";
 import calGoogleCalendar from "../../src/background/calendar";
-import ICAL from "ical.js";
+import ICAL from "../../src/background/libs/ical.js";
 import v8 from "v8";
 import createMessenger from "./helpers/webext-api.js";
 

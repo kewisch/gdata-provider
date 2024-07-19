@@ -8,7 +8,7 @@ import {
   isTesting,
 } from "../../src/background/utils";
 
-import ICAL from "ical.js";
+import ICAL from "../../src/background/libs/ical.js";
 
 test("isEmail", () => {
   expect(isEmail("test@example.com")).toBe(true);
