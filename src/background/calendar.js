@@ -357,7 +357,7 @@ export default class calGoogleCalendar {
 
   async onResetSync() {
     this.console.log("Resetting last updated counter");
-    await this.setCalendarPref("eventsSyncToken", null);
+    await this.setCalendarPref("eventSyncToken", null);
     await this.setCalendarPref("tasksLastUpdated", null);
 
     await messenger.calendar.calendars.clear(this.cacheId);

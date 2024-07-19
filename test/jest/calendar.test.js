@@ -923,6 +923,39 @@ describe("onSync", () => {
     expect(hasCalledTwice).toBe(true);
   });
 
+  test("reset sync independently", async () => {
+    let calendar = await calGoogleCalendar.get("id1");
+    await calendar.onInit();
+
+    fetch.mockResponse(req => {
+      let response;
+
+      if ((response = mockCalendarRequest(req)) !== null) {
+        return response;
+      }
+      if ((response = mockCalendarListRequest(req)) !== null) {
+        return response;
+      }
+      if ((response = mockTaskRequest(req)) !== null) {
+        return response;
+      }
+
+      throw new Error("Unhandled request " + req.url);
+    });
+
+    calendar.session.oauth.accessToken = "accessToken";
+    calendar.session.oauth.expires = new Date(new Date().getTime() + 10000);
+    await calendar.onSync();
+
+    await expect(calendar.getCalendarPref("eventSyncToken")).resolves.not.toBeNull();
+    await expect(calendar.getCalendarPref("tasksLastUpdated")).resolves.not.toBeNull();
+
+    await calendar.onResetSync();
+
+    await expect(calendar.getCalendarPref("eventSyncToken")).resolves.toBeNull();
+    await expect(calendar.getCalendarPref("tasksLastUpdated")).resolves.toBeNull();
+  });
+
   test("resource gone twice", async () => {
     let calendar = await calGoogleCalendar.get("id1");
     await calendar.onInit();
