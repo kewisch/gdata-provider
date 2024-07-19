@@ -1,0 +1,20 @@
+
+[
+  {
+    "namespace": "calendar.timezones",
+    "functions": [
+      {
+        "name": "getDefinition",
+        "async": true,
+        "type": "function",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "tzid",
+            "description": "The timezone id to retrieve defintiion for"
+          }
+        ]
+      }
+    ]
+  }
+]

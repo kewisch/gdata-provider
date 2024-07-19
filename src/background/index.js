@@ -7,6 +7,7 @@ import { getMigratableCalendars } from "./migrate.js";
 import { isTesting } from "./utils.js";
 import calGoogleCalendar from "./calendar.js";
 import sessions from "./session.js";
+import TimezoneService from "./timezone.js";
 
 export async function migrate() {
   let legacyprefs = await messenger.gdata.getLegacyPrefs();
@@ -70,6 +71,9 @@ export async function initMessageListener() {
   if (await isTesting()) {
     return;
   }
+
+  // Do this early to augment ICAL.js TimezoneService
+  TimezoneService.init();
 
   initMessageListener();
   calGoogleCalendar.initListeners();
