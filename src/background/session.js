@@ -10,10 +10,7 @@ import { AuthFailedError, TokenFailureError } from "./errors.js";
 
 import {
   isEmail,
-  fromRFC3339,
-  toRFC3339,
   sessionIdFromUrl,
-  UTC,
   GCAL_PATH_RE,
   NOTIFY_TIMEOUT,
   API_BASE,

@@ -17,18 +17,8 @@ export const API_BASE = {
   TASKS: "https://www.googleapis.com/tasks/v1/",
 };
 
-export const UTC = "UTC"; // TODO
-
 export function isEmail(email) {
   return !!email.match(EMAIL_REGEX);
-}
-
-export function fromRFC3339(entry, zone) {
-  // TODO
-}
-
-export function toRFC3339(entry) {
-  // TODO
 }
 
 export function addVCalendar(vcomponent) {

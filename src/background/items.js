@@ -505,17 +505,18 @@ function patchEvent(item, oldItem) {
     entry.extendedProperties.shared["X-MOZ-CATEGORIES"] = arrayToCategoriesString(item.categories);
   }
 
+  // Last ack and snooze time are always in UTC, when serialized they'll contain a Z
   setIfFirstProperty(
     entry.extendedProperties.private,
     "X-MOZ-LASTACK",
     "x-moz-lastack",
-    ack => ack?.toICALString() // TODO this should be toRFC3339
+    ack => ack?.toString()
   );
   setIfFirstProperty(
     entry.extendedProperties.private,
     "X-MOZ-SNOOZE-TIME",
     "x-moz-snooze-time",
-    snooze => snooze?.toICALString() // TODO this should be toRFC3339
+    snooze => snooze?.toString()
   );
 
   if (!Object.keys(entry.extendedProperties.shared).length) {
@@ -682,6 +683,8 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   }
 
   // TODO reminders and default reminders
+
+  // We can set these directly as they are UTC RFC3339 timestamps, which works with jCal date-times
   setIf("x-moz-lastack", "date-time", privateProps["X-MOZ-LASTACK"]);
   setIf("x-moz-snooze-time", "date-time", privateProps["X-MOZ-SNOOZE-TIME"]);
 

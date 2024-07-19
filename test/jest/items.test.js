@@ -94,9 +94,9 @@ describe("jsonToItem", () => {
       expect(attendees[1].getParameter("cutype")).toBe("RESOURCE");
 
       expect(jcal.getFirstProperty("categories").getValues()).toEqual(["foo", "bar"]);
-      expect(jcal.getFirstPropertyValue("x-moz-lastack").toICALString()).toBe("20140101T010101Z");
-      expect(jcal.getFirstPropertyValue("x-moz-snooze-time").toICALString()).toBe(
-        "20140101T020202Z"
+      expect(jcal.getFirstPropertyValue("x-moz-lastack").toString()).toBe("2014-01-01T01:01:01Z");
+      expect(jcal.getFirstPropertyValue("x-moz-snooze-time").toString()).toBe(
+        "2014-01-01T02:02:02Z"
       );
 
       // Remove the properties we consumed and see if we forgot anything
@@ -280,7 +280,7 @@ describe("itemToJson", () => {
 
     expect(data).toEqual({
       extendedProperties: {
-        private: { "X-MOZ-LASTACK": "20140101T010101Z", "X-MOZ-SNOOZE-TIME": "20140101T020202Z" },
+        private: { "X-MOZ-LASTACK": "2014-01-01T01:01:01Z", "X-MOZ-SNOOZE-TIME": "2014-01-01T02:02:02Z" },
         shared: { "X-MOZ-CATEGORIES": "foo,bar" },
       },
       icalUID: "go6ijb0b46hlpbu4eeu92njevo@google.com",
@@ -329,7 +329,7 @@ describe("itemToJson", () => {
     let data = itemToJson(jcalItems.valarm_override, calendar, false);
     expect(data).toEqual({
       extendedProperties: {
-        private: { "X-MOZ-LASTACK": "20140101T010101Z", "X-MOZ-SNOOZE-TIME": "20140101T020202Z" },
+        private: { "X-MOZ-LASTACK": "2014-01-01T01:01:01Z", "X-MOZ-SNOOZE-TIME": "2014-01-01T02:02:02Z" },
         shared: { "X-MOZ-CATEGORIES": "foo,bar" },
       },
       icalUID: "swpefnfloqssxjdlbpyqlyqddb@google.com",
@@ -502,14 +502,14 @@ describe("patchItem", () => {
         [
           "x-moz-lastack",
           "extendedProperties",
-          "2006-06-10T19:00:00",
-          { private: { "X-MOZ-LASTACK": "20060610T190000" } },
+          "2006-06-10T19:00:00Z",
+          { private: { "X-MOZ-LASTACK": "2006-06-10T19:00:00Z" } },
         ],
         [
           "x-moz-snooze-time",
           "extendedProperties",
-          "2006-06-10T19:00:00",
-          { private: { "X-MOZ-SNOOZE-TIME": "20060610T190000" } },
+          "2006-06-10T19:00:00Z",
+          { private: { "X-MOZ-SNOOZE-TIME": "2006-06-10T19:00:00Z" } },
         ],
         [
           "attendee",
