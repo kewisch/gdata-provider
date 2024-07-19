@@ -48,9 +48,9 @@ describe("jsonToItem", () => {
       expect(jcal.getFirstPropertyValue("url")).toBe(
         "https://example.com/calendar/event?eid=eventhash"
       );
-      expect(jcal.getFirstPropertyValue("created").toICALString()).toBe("20060608T210452"); // TODO this is floating, ical.js bug?
-      expect(jcal.getFirstPropertyValue("last-modified").toICALString()).toBe("20060608T210549"); // TODO this is floating, ical.js bug?
-      expect(jcal.getFirstPropertyValue("dtstamp").toICALString()).toBe("20060608T210549"); // TODO this is floating, ical.js bug?
+      expect(jcal.getFirstPropertyValue("created").toICALString()).toBe("20060608T210452Z");
+      expect(jcal.getFirstPropertyValue("last-modified").toICALString()).toBe("20060608T210549Z");
+      expect(jcal.getFirstPropertyValue("dtstamp").toICALString()).toBe("20060608T210549Z");
       expect(jcal.getFirstPropertyValue("summary")).toBe("New Event");
       expect(jcal.getFirstPropertyValue("description")).toBe("Description");
       expect(jcal.getFirstPropertyValue("location")).toBe("Hard Drive");
@@ -219,8 +219,8 @@ describe("jsonToItem", () => {
       let jcal = new ICAL.Component(item.formats.jcal);
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("lqohjsbhqoztdkusnpruvooacn");
-      expect(jcal.getFirstPropertyValue("last-modified")?.toICALString()).toBe("20060608T210549");
-      expect(jcal.getFirstPropertyValue("dtstamp")?.toICALString()).toBe("20060608T210549");
+      expect(jcal.getFirstPropertyValue("last-modified")?.toICALString()).toBe("20060608T210549Z");
+      expect(jcal.getFirstPropertyValue("dtstamp")?.toICALString()).toBe("20060608T210549Z");
       expect(jcal.getFirstPropertyValue("description")).toBe("description");
       expect(jcal.getFirstPropertyValue("url")).toBe(
         "https://example.com/calendar/view/task?eid=taskhash"

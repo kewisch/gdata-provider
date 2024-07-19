@@ -8,6 +8,7 @@ import {
   arrayToCategoriesString,
   reverseObject,
   addVCalendar,
+  stripFractional,
 } from "./utils.js";
 import ICAL from "./libs/ical.js";
 
@@ -90,8 +91,8 @@ function jsonToTask(entry, calendar, referenceItem) {
   let vtodo = ["vtodo", vtodoprops, vtodocomps];
 
   setIf("uid", "text", entry.id);
-  setIf("last-modified", "date-time", entry.updated);
-  setIf("dtstamp", "date-time", entry.updated);
+  setIf("last-modified", "date-time", stripFractional(entry.updated));
+  setIf("dtstamp", "date-time", stripFractional(entry.updated));
 
   setIf("summary", "text", entry.title);
   setIf("description", "text", entry.notes);
@@ -112,8 +113,8 @@ function jsonToTask(entry, calendar, referenceItem) {
   if (status == "COMPLETED") {
     vtodoprops.push(["percent-complete", {}, "integer", 100]);
   }
-  setIf("completed", "date-time", entry.completed);
-  setIf("due", "date-time", entry.due);
+  setIf("completed", "date-time", stripFractional(entry.completed));
+  setIf("due", "date-time", stripFractional(entry.due));
 
   for (let link of entry.links || []) {
     vtodoprops.push([
@@ -552,7 +553,7 @@ function jsonToDate(propName, dateobj) {
   if (dateobj.date) {
     return [propName, params, "date", dateobj.date];
   } else {
-    return [propName, params, "date-time", dateobj.dateTime.substr(0, dateobj.timeZone ? 19 : 20)];
+    return [propName, params, "date-time", stripFractional(dateobj.dateTime)];
   }
 }
 
@@ -598,9 +599,9 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   // TODO json to date: start/end/recurrence-id - these use settings.timeZone as their default zone
 
   setIf("uid", "text", uid);
-  setIf("created", "date-time", entry.created);
-  setIf("last-modified", "date-time", entry.updated);
-  setIf("dtstamp", "date-time", entry.updated);
+  setIf("created", "date-time", stripFractional(entry.created));
+  setIf("last-modified", "date-time", stripFractional(entry.updated));
+  setIf("dtstamp", "date-time", stripFractional(entry.updated));
 
   // Not pretty, but Google doesn't have a straightforward way to differentiate. As of writing,
   // they even have bugs in their own UI about displaying the string properly.
@@ -691,8 +692,8 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   // TODO reminders and default reminders
 
   // We can set these directly as they are UTC RFC3339 timestamps, which works with jCal date-times
-  setIf("x-moz-lastack", "date-time", privateProps["X-MOZ-LASTACK"]);
-  setIf("x-moz-snooze-time", "date-time", privateProps["X-MOZ-SNOOZE-TIME"]);
+  setIf("x-moz-lastack", "date-time", stripFractional(privateProps["X-MOZ-LASTACK"]));
+  setIf("x-moz-snooze-time", "date-time", stripFractional(privateProps["X-MOZ-SNOOZE-TIME"]));
 
   let snoozeObj;
   try {

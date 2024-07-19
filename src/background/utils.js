@@ -21,6 +21,17 @@ export function isEmail(email) {
   return !!email.match(EMAIL_REGEX);
 }
 
+export function stripFractional(value) {
+  if (!value) {
+    return null;
+  } else if (value[19] == ".") {
+    return value.slice(0, 19) + (value[23] == "Z" ? "Z" : "");
+  } else {
+    return value.slice(0, 19) + (value[19] == "Z" ? "Z" : "");
+  }
+}
+
+
 export function addVCalendar(vcomponent) {
   if (vcomponent?.[0] == "vevent" || vcomponent?.[0] == "vtodo") {
     return [

@@ -1,5 +1,6 @@
 import {
   isEmail,
+  stripFractional,
   addVCalendar,
   getGoogleId,
   categoriesStringToArray,
@@ -12,6 +13,14 @@ import ICAL from "ical.js";
 test("isEmail", () => {
   expect(isEmail("test@example.com")).toBe(true);
   expect(isEmail("example.com")).toBe(false);
+});
+
+test("stripFractional", () => {
+  expect(stripFractional(false)).toBeNull();
+  expect(stripFractional("2024-01-01T02:03:04")).toEqual("2024-01-01T02:03:04");
+  expect(stripFractional("2024-01-01T02:03:04Z")).toEqual("2024-01-01T02:03:04Z");
+  expect(stripFractional("2024-01-01T02:03:04.123")).toEqual("2024-01-01T02:03:04");
+  expect(stripFractional("2024-01-01T02:03:04.123Z")).toEqual("2024-01-01T02:03:04Z");
 });
 
 test("addVCalendar", () => {

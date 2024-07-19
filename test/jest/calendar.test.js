@@ -765,8 +765,8 @@ describe("item functions", () => {
       expect(item.metadata.path).toBe("lqohjsbhqoztdkusnpruvooacn");
       expect(item.title).toBe("New Task");
       expect(jcal.getFirstPropertyValue("summary")).toBe("New Task");
-      expect(jcal.getFirstPropertyValue("last-modified").toICALString()).toBe("20060608T210549"); // TODO this is floating, ical.js bug?
-      expect(jcal.getFirstPropertyValue("dtstamp").toICALString()).toBe("20060608T210549"); // TODO this is floating, ical.js bug?
+      expect(jcal.getFirstPropertyValue("last-modified").toICALString()).toBe("20060608T210549Z");
+      expect(jcal.getFirstPropertyValue("dtstamp").toICALString()).toBe("20060608T210549Z");
       expect(jcal.getFirstPropertyValue("url")).toBe(
         "https://example.com/calendar/view/task?eid=taskhash"
       );
@@ -775,8 +775,8 @@ describe("item functions", () => {
       expect(jcal.getFirstPropertyValue("x-google-sortkey")).toBe(12312);
       expect(jcal.getFirstPropertyValue("description")).toBe("description");
       expect(jcal.getFirstPropertyValue("status")).toBe("COMPLETED");
-      expect(jcal.getFirstPropertyValue("due").toICALString()).toBe("20060610T180000"); // TODO this is floating, ical.js bug?
-      expect(jcal.getFirstPropertyValue("completed").toICALString()).toBe("20060611T180000"); // TODO this is floating, ical.js bug?
+      expect(jcal.getFirstPropertyValue("due").toICALString()).toBe("20060610T180000");
+      expect(jcal.getFirstPropertyValue("completed").toICALString()).toBe("20060611T180000");
       expect(jcal.getFirstPropertyValue("attach")).toBe("https://example.com/filename.pdf");
       expect(jcal.getFirstProperty("attach").getParameter("filename")).toBe("filename.pdf");
       expect(jcal.getFirstProperty("attach").getParameter("x-google-type")).toBe("href");
