@@ -395,7 +395,7 @@ describe("item functions", () => {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: "{}"
+              body: JSON.stringify(gcalItems.simple_event)
             };
           }
           throw new Error("Unhandled request " + req.url);
@@ -412,6 +412,38 @@ describe("item functions", () => {
             method: "POST",
           })
         );
+      });
+
+      test("invalid body", async () => {
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events"
+            )
+          ) {
+            return {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: "{}"
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
+
+        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let createdItem = await calendar.onItemCreated(newItem);
+
+        expect(fetch).toHaveBeenCalledWith(
+          new URL(
+            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events"
+          ),
+          expect.objectContaining({
+            method: "POST",
+          })
+        );
+
+        expect(createdItem).toBeNull();
       });
     });
 

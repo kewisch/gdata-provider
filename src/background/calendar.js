@@ -245,7 +245,11 @@ export default class calGoogleCalendar {
       });
     }
 
-    this.console.log(`Adding item ${newItem.id || item.id} (${item.title}) succeeded`);
+    if (newItem) {
+      this.console.log(`Adding item ${newItem.id} (${item.title}) succeeded`);
+    } else {
+      this.console.log(`Adding item ${item.id} (${item.title}) failed`);
+    }
 
     return newItem;
   }
