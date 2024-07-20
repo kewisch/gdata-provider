@@ -231,14 +231,16 @@ export default class calGoogleCalendar {
     let data = await request.commit(this.session);
 
     let timeZone = await this.getCalendarPref("timeZone");
+    let accessRole = await this.getCalendarPref("settings.accessRole");
     let defaultTimezone = await TimezoneService.getAsync(timeZone);
 
-    let newItem = await jsonToItem(
-      data,
-      this,
-      this.defaultReminders,
-      defaultTimezone
-    );
+    let newItem = await jsonToItem({
+      entry: data,
+      calendar: this,
+      accessRole,
+      defaultTimezone,
+      defaultReminders: this.defaultReminders
+    });
 
     if (data.organizer?.self) {
       // We found ourselves, remember the display name
@@ -296,14 +298,16 @@ export default class calGoogleCalendar {
     }
 
     let timeZone = await this.getCalendarPref("timeZone");
+    let accessRole = await this.getCalendarPref("settings.accessRole");
     let defaultTimezone = await TimezoneService.getAsync(timeZone);
 
-    let newItem = await jsonToItem(
-      data,
-      this,
-      this.defaultReminders,
-      defaultTimezone
-    );
+    let newItem = await jsonToItem({
+      entry: data,
+      calendar: this,
+      accessRole,
+      defaultTimezone,
+      defaultReminders: this.defaultReminders,
+    });
 
     // TODO
     //  // Make sure to update the etag. Do so before switching to the

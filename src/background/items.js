@@ -70,18 +70,18 @@ function taskToJson(item, calendar, isImport) {
   return entry;
 }
 
-export function jsonToItem(entry, calendar, defaultReminders, defaultTimezone) {
-  if (entry.kind == "tasks#task") {
-    return jsonToTask(...arguments);
-  } else if (entry.kind == "calendar#event") {
-    return jsonToEvent(...arguments);
+export function jsonToItem(data) {
+  if (data.entry?.kind == "tasks#task") {
+    return jsonToTask(data);
+  } else if (data.entry?.kind == "calendar#event") {
+    return jsonToEvent(data);
   } else {
-    calendar.console.error(`Invalid item type ${entry?.kind}`);
+    data.calendar.console.error(`Invalid item type ${data.entry?.kind}`);
     return null;
   }
 }
 
-function jsonToTask(entry, calendar, defaultReminders, defaultTimezone) {
+function jsonToTask({ entry, calendar }) {
   function setIf(prop, type, value, params = {}) {
     if (value) {
       vtodoprops.push([prop, params, type, value]);
@@ -588,7 +588,7 @@ function dateToJson(property) {
   return dateobj;
 }
 
-async function jsonToEvent(entry, calendar, defaultReminders, defaultTimezone) {
+async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone, accessRole }) {
   function setIf(prop, type, value, params = {}) {
     if (value) {
       veventprops.push([prop, params, type, value]);
@@ -602,9 +602,6 @@ async function jsonToEvent(entry, calendar, defaultReminders, defaultTimezone) {
 
   let privateProps = entry.extendedProperties?.private || {};
   let sharedProps = entry.extendedProperties?.shared || {};
-
-  // TODO shouldn't this be getCalendarPref?
-  let prefs = await messenger.storage.local.get({ "settings.accessRole": null });
 
   let veventprops = [];
   let veventcomps = [];
@@ -637,7 +634,7 @@ async function jsonToEvent(entry, calendar, defaultReminders, defaultTimezone) {
 
   // TODO do something about originalStartTime
   // TODO entry.colorId
-  let isFreeBusy = prefs["settings.accessRole"] == "freeBusyReader";
+  let isFreeBusy = accessRole == "freeBusyReader";
   let summary = isFreeBusy ? messenger.i18n.getMessage("busyTitle", calendar.name) : entry.summary;
   setIf("summary", "text", summary);
   setIf("class", "text", entry.visibility?.toUpperCase());
@@ -814,7 +811,12 @@ export class ItemSaver {
     // TODO figure out if it is ok to throw here
     await Promise.all(
       data.items.map(async entry => {
-        let item = await jsonToEvent(entry, this.calendar, null, defaultTimezone); // TODO pass in default reminders
+        let item = await jsonToEvent({
+          entry,
+          calendar: this.calendar,
+          defaultreminders: null, // TODO pass in default reminders
+          defaultTimezone
+        });
         item.formats.jcal = addVCalendar(item.formats.jcal);
 
         if (entry.originalStartTime) {
@@ -849,7 +851,7 @@ export class ItemSaver {
 
     await Promise.all(
       data.items.map(async entry => {
-        let item = await jsonToTask(entry, this.calendar);
+        let item = await jsonToTask({ entry, calendar: this.calendar });
         item.formats.jcal = addVCalendar(item.formats.jcal);
         await this.commitItem(item);
       })
