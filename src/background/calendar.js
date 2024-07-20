@@ -231,7 +231,7 @@ export default class calGoogleCalendar {
     let data = await request.commit(this.session);
 
     let timeZone = await this.getCalendarPref("timeZone");
-    let accessRole = await this.getCalendarPref("settings.accessRole");
+    let accessRole = await this.getCalendarPref("accessRole");
     let defaultTimezone = await TimezoneService.getAsync(timeZone);
 
     let newItem = await jsonToItem({
@@ -298,7 +298,7 @@ export default class calGoogleCalendar {
     }
 
     let timeZone = await this.getCalendarPref("timeZone");
-    let accessRole = await this.getCalendarPref("settings.accessRole");
+    let accessRole = await this.getCalendarPref("accessRole");
     let defaultTimezone = await TimezoneService.getAsync(timeZone);
 
     let newItem = await jsonToItem({
@@ -419,10 +419,10 @@ export default class calGoogleCalendar {
           ];
 
           await Promise.all(
-            settings.map(name => this.setCalendarPref("settings." + name, data[name]))
+            settings.map(name => this.setCalendarPref(name, data[name]))
           );
           await this.setCalendarPref(
-            "settings.defaultReminders",
+            "defaultReminders",
             JSON.stringify(data.defaultReminders)
           );
 

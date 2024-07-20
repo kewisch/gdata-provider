@@ -899,16 +899,16 @@ describe("onSync", () => {
     await calendar.onSync();
 
     expect(await calendar.getCalendarPref("eventSyncToken")).toBe("nextSyncToken");
-    expect(await calendar.getCalendarPref("settings.accessRole")).toBe(accessRole);
-    expect(await calendar.getCalendarPref("settings.backgroundColor")).toBe("#000000");
-    expect(await calendar.getCalendarPref("settings.foregroundColor")).toBe("#FFFFFF");
-    expect(await calendar.getCalendarPref("settings.description")).toBe("The calendar 1");
-    expect(await calendar.getCalendarPref("settings.location")).toBe("test");
-    expect(await calendar.getCalendarPref("settings.primary")).toBe(true);
-    expect(await calendar.getCalendarPref("settings.summary")).toBe("calendar1");
-    expect(await calendar.getCalendarPref("settings.summaryOverride")).toBe("calendar1override");
-    expect(await calendar.getCalendarPref("settings.timeZone")).toBe("Europe/Berlin");
-    expect(await calendar.getCalendarPref("settings.defaultReminders")).toBe(
+    expect(await calendar.getCalendarPref("accessRole")).toBe(accessRole);
+    expect(await calendar.getCalendarPref("backgroundColor")).toBe("#000000");
+    expect(await calendar.getCalendarPref("foregroundColor")).toBe("#FFFFFF");
+    expect(await calendar.getCalendarPref("description")).toBe("The calendar 1");
+    expect(await calendar.getCalendarPref("location")).toBe("test");
+    expect(await calendar.getCalendarPref("primary")).toBe(true);
+    expect(await calendar.getCalendarPref("summary")).toBe("calendar1");
+    expect(await calendar.getCalendarPref("summaryOverride")).toBe("calendar1override");
+    expect(await calendar.getCalendarPref("timeZone")).toBe("Europe/Berlin");
+    expect(await calendar.getCalendarPref("defaultReminders")).toBe(
       '[{"method":"popup","minutes":120}]'
     );
 
