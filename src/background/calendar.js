@@ -7,6 +7,7 @@ import sessions from "./session.js";
 import calGoogleRequest from "./request.js";
 import { ItemError, ResourceGoneError, QuotaFailureError } from "./errors.js";
 import Console from "./log.js";
+import TimezoneService from "./timezone.js";
 
 import { getGoogleId, sessionIdFromUrl, isEmail, GCAL_PATH_RE, API_BASE } from "./utils.js";
 import { itemToJson, jsonToItem, jsonToAlarm, patchItem, ItemSaver } from "./items.js";
@@ -229,11 +230,14 @@ export default class calGoogleCalendar {
 
     let data = await request.commit(this.session);
 
+    let timeZone = await this.getCalendarPref("timeZone");
+    let defaultTimezone = await TimezoneService.getAsync(timeZone);
+
     let newItem = await jsonToItem(
       data,
       this,
       this.defaultReminders,
-      null
+      defaultTimezone
     );
 
     if (data.organizer?.self) {
@@ -291,11 +295,14 @@ export default class calGoogleCalendar {
       throw e;
     }
 
+    let timeZone = await this.getCalendarPref("timeZone");
+    let defaultTimezone = await TimezoneService.getAsync(timeZone);
+
     let newItem = await jsonToItem(
       data,
       this,
       this.defaultReminders,
-      item
+      defaultTimezone
     );
 
     // TODO

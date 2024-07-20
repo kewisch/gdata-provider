@@ -4,13 +4,18 @@ import jcalItems from "./fixtures/jcalItems.json";
 import { jsonToItem, itemToJson, patchItem, ItemSaver } from "../../src/background/items";
 import calGoogleCalendar from "../../src/background/calendar";
 import ICAL from "../../src/background/libs/ical.js";
+import TimezoneService from "../../src/background/timezone.js";
 import v8 from "v8";
 import createMessenger from "./helpers/webext-api.js";
 
 import { jest } from "@jest/globals";
 
-beforeEach(() => {
+var defaultTimezone;
+
+beforeEach(async () => {
   global.messenger = createMessenger();
+  defaultTimezone = await TimezoneService.getAsync("Europe/Berlin");
+
   jest.spyOn(global.console, "log").mockImplementation(() => {});
   jest.spyOn(global.console, "warn").mockImplementation(() => {});
 
@@ -37,7 +42,7 @@ describe("jsonToItem", () => {
     test("simple event", async () => {
       let defaultReminders = [{ method: "popup", minutes: 120 }];
 
-      let item = await jsonToItem(gcalItems.simple_event, calendar, defaultReminders, null);
+      let item = await jsonToItem(gcalItems.simple_event, calendar, defaultReminders, defaultTimezone);
       let jcal = new ICAL.Component(item.formats.jcal);
 
       expect(item.metadata.etag).toBe('"2299601498276000"');
@@ -136,7 +141,7 @@ describe("jsonToItem", () => {
       let gcalItem = v8.deserialize(v8.serialize(gcalItems.simple_event));
       delete gcalItem.organizer.displayName;
 
-      let item = await jsonToItem(gcalItem, calendar, defaultReminders, null);
+      let item = await jsonToItem(gcalItem, calendar, defaultReminders, defaultTimezone);
       let jcal = new ICAL.Component(item.formats.jcal);
 
       expect(jcal.getFirstPropertyValue("organizer")).toBe("mailto:organizer@example.com");
@@ -145,7 +150,7 @@ describe("jsonToItem", () => {
 
     test("valarm_default event", async () => {
       await messenger.storage.local.set({ "settings.accessRole": "freeBusyReader" });
-      let item = await jsonToItem(gcalItems.valarm_default, calendar, [], null);
+      let item = await jsonToItem(gcalItems.valarm_default, calendar, [], defaultTimezone);
       let jcal = new ICAL.Component(item.formats.jcal);
       await messenger.storage.local.set({ "settings.accessRole": null });
 
@@ -158,7 +163,7 @@ describe("jsonToItem", () => {
       expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610");
     });
     test("utc_event event", async () => {
-      let item = await jsonToItem(gcalItems.utc_event, calendar, [], null);
+      let item = await jsonToItem(gcalItems.utc_event, calendar, [], defaultTimezone);
       let jcal = new ICAL.Component(item.formats.jcal);
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("uasfsingergnenedfwiefefgjk@google.com");
@@ -166,7 +171,7 @@ describe("jsonToItem", () => {
     });
 
     test("recur rule", async () => {
-      let item = await jsonToItem(gcalItems.recur_rrule, calendar, [], null);
+      let item = await jsonToItem(gcalItems.recur_rrule, calendar, [], defaultTimezone);
       let jcal = new ICAL.Component(item.formats.jcal);
 
       expect(jcal.getFirstPropertyValue("exdate")?.toICALString()).toBe("20070609");
@@ -186,7 +191,7 @@ describe("jsonToItem", () => {
     });
 
     test("recur instance", async () => {
-      let item = await jsonToItem(gcalItems.recur_instance, calendar, [], null);
+      let item = await jsonToItem(gcalItems.recur_instance, calendar, [], defaultTimezone);
       let jcal = new ICAL.Component(item.formats.jcal);
 
       expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060626");
@@ -194,7 +199,7 @@ describe("jsonToItem", () => {
     });
 
     test("html description", async () => {
-      let item = await jsonToItem(gcalItems.html_descr, calendar, [], null);
+      let item = await jsonToItem(gcalItems.html_descr, calendar, [], defaultTimezone);
       let jcal = new ICAL.Component(item.formats.jcal);
 
       let descr = jcal.getFirstProperty("description");
@@ -203,11 +208,11 @@ describe("jsonToItem", () => {
     });
 
     test("non-standard event types", async () => {
-      let item = await jsonToItem(gcalItems.ooo_event, calendar, [], null);
+      let item = await jsonToItem(gcalItems.ooo_event, calendar, [], defaultTimezone);
       let jcal = new ICAL.Component(item.formats.jcal);
       expect(jcal.getFirstPropertyValue("x-google-event-type")).toBe("outOfOffice");
 
-      item = await jsonToItem(gcalItems.focus_event, calendar, [], null);
+      item = await jsonToItem(gcalItems.focus_event, calendar, [], defaultTimezone);
       jcal = new ICAL.Component(item.formats.jcal);
       expect(jcal.getFirstPropertyValue("x-google-event-type")).toBe("focusTime");
     });
@@ -215,7 +220,7 @@ describe("jsonToItem", () => {
 
   describe("tasks", () => {
     test("simple task", async () => {
-      let item = await jsonToItem(gcalItems.simple_task, calendar, [], null);
+      let item = await jsonToItem(gcalItems.simple_task, calendar, [], defaultTimezone);
       let jcal = new ICAL.Component(item.formats.jcal);
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("lqohjsbhqoztdkusnpruvooacn");
@@ -244,7 +249,7 @@ describe("jsonToItem", () => {
     });
 
     test("deleted task", async () => {
-      let item = await jsonToItem(gcalItems.deleted_task, calendar, [], null);
+      let item = await jsonToItem(gcalItems.deleted_task, calendar, [], defaultTimezone);
       let jcal = new ICAL.Component(item.formats.jcal);
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("jidlfaenrgjklebrgjebuwdfer");
@@ -252,7 +257,7 @@ describe("jsonToItem", () => {
     });
 
     test("needsAction task", async () => {
-      let item = await jsonToItem(gcalItems.needs_action, calendar, [], null);
+      let item = await jsonToItem(gcalItems.needs_action, calendar, [], defaultTimezone);
       let jcal = new ICAL.Component(item.formats.jcal);
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("jidlfaenrgjklebrgjebuwdfer");

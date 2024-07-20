@@ -10,7 +10,9 @@ import {
   addVCalendar,
   stripFractional,
 } from "./utils.js";
+
 import ICAL from "./libs/ical.js";
+import TimezoneService from "./timezone.js";
 
 const ATTENDEE_STATUS_MAP = {
   needsAction: "NEEDS-ACTION",
@@ -68,7 +70,7 @@ function taskToJson(item, calendar, isImport) {
   return entry;
 }
 
-export function jsonToItem(entry, calendar, defaultReminders, referenceItem) {
+export function jsonToItem(entry, calendar, defaultReminders, defaultTimezone) {
   if (entry.kind == "tasks#task") {
     return jsonToTask(...arguments);
   } else if (entry.kind == "calendar#event") {
@@ -79,7 +81,7 @@ export function jsonToItem(entry, calendar, defaultReminders, referenceItem) {
   }
 }
 
-function jsonToTask(entry, calendar, referenceItem) {
+function jsonToTask(entry, calendar, defaultReminders, defaultTimezone) {
   function setIf(prop, type, value, params = {}) {
     if (value) {
       vtodoprops.push([prop, params, type, value]);
@@ -539,21 +541,34 @@ function patchEvent(item, oldItem) {
   return entry;
 }
 
-function jsonToDate(propName, dateobj) {
-  if (!dateobj) {
+async function jsonToDate(propName, dateObj, defaultTimezone) {
+  if (!dateObj) {
     return null;
   }
 
   let params = {};
 
-  if (dateobj.timeZone) {
-    params.tzid = dateobj.timeZone;
+  if (dateObj.timeZone) {
+    params.tzid = dateObj.timeZone;
   }
 
-  if (dateobj.date) {
-    return [propName, params, "date", dateobj.date];
+  if (dateObj.date) {
+    return [propName, params, "date", dateObj.date];
   } else {
-    return [propName, params, "date-time", stripFractional(dateobj.dateTime)];
+    let timeString = stripFractional(dateObj.dateTime);
+    if (dateObj.timeZone && dateObj.timeZone != defaultTimezone.tzid) {
+      let time = ICAL.Time.fromDateTimeString(timeString);
+      time.zone = defaultTimezone;
+
+      let targetZone = await TimezoneService.getAsync(dateObj.timeZone);
+      if (targetZone) {
+        timeString = time.convertToZone(targetZone).toString();
+      } else {
+        throw new Error(`Could not find zone ${dateObj.timeZone} for dateObj.dateTime`);
+      }
+    }
+
+    return [propName, params, "date-time", timeString];
   }
 }
 
@@ -573,7 +588,7 @@ function dateToJson(property) {
   return dateobj;
 }
 
-async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
+async function jsonToEvent(entry, calendar, defaultReminders, defaultTimezone) {
   function setIf(prop, type, value, params = {}) {
     if (value) {
       veventprops.push([prop, params, type, value]);
@@ -588,6 +603,7 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   let privateProps = entry.extendedProperties?.private || {};
   let sharedProps = entry.extendedProperties?.shared || {};
 
+  // TODO shouldn't this be getCalendarPref?
   let prefs = await messenger.storage.local.get({ "settings.accessRole": null });
 
   let veventprops = [];
@@ -595,8 +611,6 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   let vevent = ["vevent", veventprops, veventcomps];
 
   let uid = entry.iCalUID || (entry.recurringEventId || entry.id) + "@google.com";
-
-  // TODO json to date: start/end/recurrence-id - these use settings.timeZone as their default zone
 
   setIf("uid", "text", uid);
   setIf("created", "date-time", stripFractional(entry.created));
@@ -618,7 +632,7 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
   setIf("status", "text", entry.status?.toUpperCase());
 
   if (entry.originalStartTime) {
-    veventprops.push(jsonToDate("recurrence-id", entry.originalStartTime));
+    veventprops.push(await jsonToDate("recurrence-id", entry.originalStartTime, defaultTimezone));
   }
 
   // TODO do something about originalStartTime
@@ -637,9 +651,9 @@ async function jsonToEvent(entry, calendar, defaultReminders, referenceItem) {
 
   setIf("x-google-confdata", "text", entry.conferenceData ? JSON.stringify(entry.conferenceData) : null);
 
-  pushPropIf(jsonToDate("dtstart", entry.start));
+  pushPropIf(await jsonToDate("dtstart", entry.start, defaultTimezone));
   if (!entry.endTimeUnspecified) {
-    veventprops.push(jsonToDate("dtend", entry.end));
+    veventprops.push(await jsonToDate("dtend", entry.end, defaultTimezone));
   }
 
   if (entry.organizer) {
@@ -793,12 +807,14 @@ export class ItemSaver {
     //   JSONToAlarm(reminder, true)
     // );
 
+    let defaultTimezone = await TimezoneService.getAsync(data.timeZone);
+
     // In the first pass, we go through the data and sort into parent items and exception items, as
     // the parent item might be after the exception in the stream.
     // TODO figure out if it is ok to throw here
     await Promise.all(
       data.items.map(async entry => {
-        let item = await jsonToEvent(entry, this.calendar); // TODO pass in default reminders
+        let item = await jsonToEvent(entry, this.calendar, null, defaultTimezone); // TODO pass in default reminders
         item.formats.jcal = addVCalendar(item.formats.jcal);
 
         if (entry.originalStartTime) {

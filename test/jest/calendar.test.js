@@ -325,7 +325,10 @@ describe("item functions", () => {
     calendar = await calGoogleCalendar.get("id1");
     await calendar.onInit();
     authenticate(calendar.session);
+
+    await calendar.setCalendarPref("timeZone", "Europe/Berlin");
   });
+
   describe("events", () => {
     describe("onItemCreated", () => {
       test.each([false, true])("onItemCreated success sendUpdates=%s", async sendUpdates => {

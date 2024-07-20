@@ -1,5 +1,7 @@
 import { jest } from "@jest/globals";
 
+import timezones from "../fixtures/timezones.js";
+
 export class WebExtListener {
   _mockArgs = [];
   _listeners = new Set();
@@ -152,6 +154,12 @@ export default function createMessenger() {
         onResetSync: new WebExtListener(),
         onDetectCalendars: new WebExtListener(),
       },
+
+      timezones: {
+        getDefinition: jest.fn(async (tzid) => {
+          return timezones[tzid];
+        })
+      }
     },
     gdata: {
       _token: {},
