@@ -53,6 +53,9 @@ var EXPORTED_SYMBOLS = [
   "JSONToDate",
   "monkeyPatch",
   "spinEventLoop",
+  "doEnableColors",
+  "doDisableColors",
+  "flushCache",
   "getMessenger",
 ];
 
@@ -380,9 +383,21 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
   }
   setIf(itemData, "status", status);
 
+  let categoryList = aItem.getCategories({});
+  let enableColors = getMessenger().gdataSyncPrefs.get("settings.enableColors", false);
+  if (enableColors) {
+    // Take the first category of the form "Google Color dd" for 1 <= dd <= 11 and turn it into a colorId.
+    // Right now, the rest are treated like all other categories.
+    // TODO would it make sense / be possible to issue some sort of warning / error here or elsewhere?
+    let colorCat = categoryList.findIndex((category) => /^Google Color (0[1-9]|1[01])$/.test(category));
+    if (colorCat > -1) {
+        itemData.colorId = parseInt(categoryList[colorCat].match(/^Google Color (0[1-9]|1[01])$/)[1]);
+        categoryList.splice(colorCat, 1);
+    }
+  }
   // Google does not support categories natively, but allows us to store data
   // as an "extendedProperty", so we do here
-  let categories = cal.category.arrayToString(aItem.getCategories({}));
+  let categories = cal.category.arrayToString(categoryList);
   addExtendedProperty("X-MOZ-CATEGORIES", categories);
 
   // Only parse attendees if they are enabled, due to bug 407961
@@ -894,10 +909,17 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
       }
     }
 
+    let categories = cal.category.stringToArray(sharedProps["X-MOZ-CATEGORIES"]);
+    let enableColors = getMessenger().gdataSyncPrefs.get("settings.enableColors", false);
+    if (enableColors) {
+      if (aEntry.colorId) {
+        // Add color category at the beginning
+        categories.unshift("Google Color " + aEntry.colorId.toString().padStart(2,'0'));
+      }
+    }
     // Google does not support categories natively, but allows us to store
     // data as an "extendedProperty", and here it's going to be retrieved
     // again
-    let categories = cal.category.stringToArray(sharedProps["X-MOZ-CATEGORIES"]);
     item.setCategories(categories);
 
     // Conference data
@@ -1481,6 +1503,43 @@ function getWXAPI(extension, name, sync = false) {
     return extension.apiManager.asyncGetAPI(name, extension, "addon_parent").then(api => {
       return implementation(api);
     });
+  }
+}
+
+function doEnableColors() {
+  const GOOGLE_COLORS = ["#000", "#7986CB", "#33B679", "#8E24AA", "#E67C73", "#F6BF26",
+  "#F4511E", "#039BE5", "#616161", "#3F51B5", "#0B8043", "#D50000"];
+  let calendarCategories = Services.prefs.getStringPref("calendar.categories.names");
+  for (let i=1; i<=11; i++) {
+    let paddedIndex = i.toString().padStart(2,'0');
+    let catName = "Google Color " + paddedIndex;
+    if (!calendarCategories.includes(catName)) {
+      calendarCategories += "," + catName;
+      Services.prefs.setStringPref("calendar.category.color.google_color_" + paddedIndex, GOOGLE_COLORS[i]);
+    }
+  }
+  Services.prefs.setStringPref("calendar.categories.names", calendarCategories);
+}
+
+function doDisableColors() {
+  for (let i=1; i<=11; i++) {
+    let padded_index = i.toString().padStart(2,'0');
+    Services.prefs.clearUserPref("calendar.category.color.google_color_" + padded_index);
+  }
+  let calendarCategories = Services.prefs.getStringPref("calendar.categories.names");
+  calendarCategories = calendarCategories.replaceAll(/,Google\sColor\s\d\d/g, "")
+  Services.prefs.setStringPref("calendar.categories.names", calendarCategories);
+}
+
+/**
+ * Deletes the local Google calendar cache and reloads all Google calendars from the source.
+ */
+function flushCache() {
+  let cals = cal.manager.wrappedJSObject.getCalendars();
+  for (let calendar of cals) {
+    if (calendar.type == "gdata") {
+      calendar.mUncachedCalendar.resetLog();
+    }
   }
 }
 
