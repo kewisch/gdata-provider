@@ -17,10 +17,10 @@ this.calendar_timezones = class extends ExtensionAPI {
     return {
       calendar: {
         timezones: {
-          async getDefinition(tzid, options={}) {
+          async getDefinition(tzid, returnFormat) {
             let zoneInfo = timezoneDatabase.getTimezoneDefinition(tzid);
 
-            if (options.returnFormat == "jcal") {
+            if (returnFormat == "jcal") {
               zoneInfo = ICAL.parse(zoneInfo);
             }
 

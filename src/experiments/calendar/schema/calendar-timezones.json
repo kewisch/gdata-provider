@@ -12,6 +12,13 @@
             "type": "string",
             "name": "tzid",
             "description": "The timezone id to retrieve defintiion for"
+          },
+          {
+            "$ref": "calendar.items.CalendarItemFormats",
+            "name":"returnFormat",
+            "optional": true,
+            "default": "ical",
+            "description": "The return format of the definition"
           }
         ]
       }
