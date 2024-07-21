@@ -12,9 +12,9 @@ import { jest } from "@jest/globals";
 
 var defaultTimezone;
 
-beforeEach(async () => {
+beforeEach(() => {
   global.messenger = createMessenger();
-  defaultTimezone = await TimezoneService.getAsync("Europe/Berlin");
+  defaultTimezone = TimezoneService.get("Europe/Berlin");
 
   jest.spyOn(global.console, "log").mockImplementation(() => {});
   jest.spyOn(global.console, "warn").mockImplementation(() => {});

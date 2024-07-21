@@ -15,10 +15,14 @@ class TimezoneService {
     this.#zoneCache.set("floating", ICAL.Timezone.localTimezone);
   }
 
-  async getAsync(tzid) {
-    let zone = this.get(tzid);
+  get(tzid) {
+    if (tzid == "Z") {
+      return this.#zoneCache.get("UTC");
+    }
+
+    let zone = this.#zoneCache.get(tzid);
     if (!zone) {
-      let tzdef = await messenger.calendar.timezones.getDefinition(tzid);
+      let tzdef = messenger.calendar.timezones.getDefinition(tzid);
       if (!tzdef) {
         return null;
       }
@@ -31,14 +35,6 @@ class TimezoneService {
       this.#zoneCache.set(tzid, zone);
     }
     return zone;
-  }
-
-  get(tzid) {
-    if (tzid == "Z") {
-      return this.#zoneCache.get("UTC");
-    }
-
-    return this.#zoneCache.get(tzid);
   }
 }
 

@@ -541,7 +541,7 @@ function patchEvent(item, oldItem) {
   return entry;
 }
 
-async function jsonToDate(propName, dateObj, defaultTimezone) {
+function jsonToDate(propName, dateObj, defaultTimezone) {
   if (!dateObj) {
     return null;
   }
@@ -560,7 +560,7 @@ async function jsonToDate(propName, dateObj, defaultTimezone) {
       let time = ICAL.Time.fromDateTimeString(timeString);
       time.zone = defaultTimezone;
 
-      let targetZone = await TimezoneService.getAsync(dateObj.timeZone);
+      let targetZone = TimezoneService.get(dateObj.timeZone);
       if (targetZone) {
         timeString = time.convertToZone(targetZone).toString();
       } else {
@@ -629,7 +629,7 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
   setIf("status", "text", entry.status?.toUpperCase());
 
   if (entry.originalStartTime) {
-    veventprops.push(await jsonToDate("recurrence-id", entry.originalStartTime, defaultTimezone));
+    veventprops.push(jsonToDate("recurrence-id", entry.originalStartTime, defaultTimezone));
   }
 
   // TODO do something about originalStartTime
@@ -648,9 +648,9 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
 
   setIf("x-google-confdata", "text", entry.conferenceData ? JSON.stringify(entry.conferenceData) : null);
 
-  pushPropIf(await jsonToDate("dtstart", entry.start, defaultTimezone));
+  pushPropIf(jsonToDate("dtstart", entry.start, defaultTimezone));
   if (!entry.endTimeUnspecified) {
-    veventprops.push(await jsonToDate("dtend", entry.end, defaultTimezone));
+    veventprops.push(jsonToDate("dtend", entry.end, defaultTimezone));
   }
 
   if (entry.organizer) {
@@ -804,7 +804,7 @@ export class ItemSaver {
     //   JSONToAlarm(reminder, true)
     // );
 
-    let defaultTimezone = await TimezoneService.getAsync(data.timeZone);
+    let defaultTimezone = TimezoneService.get(data.timeZone);
 
     // In the first pass, we go through the data and sort into parent items and exception items, as
     // the parent item might be after the exception in the stream.
@@ -814,7 +814,7 @@ export class ItemSaver {
         let item = await jsonToEvent({
           entry,
           calendar: this.calendar,
-          defaultreminders: null, // TODO pass in default reminders
+          defaultReminders: null, // TODO pass in default reminders
           defaultTimezone
         });
         item.formats.jcal = addVCalendar(item.formats.jcal);

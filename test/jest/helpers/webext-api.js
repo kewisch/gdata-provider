@@ -156,9 +156,17 @@ export default function createMessenger() {
       },
 
       timezones: {
-        getDefinition: jest.fn(async (tzid) => {
+        _currentZone: null,
+        get currentZone() {
+          return this._currentZone || timezones[Object.keys(timezones)[0]];
+        },
+        get timezoneIds() {
+          return Object.keys(timezones);
+        },
+        getDefinition: jest.fn((tzid) => {
           return timezones[tzid];
-        })
+        }),
+        onUpdated: new WebExtListener(),
       }
     },
     gdata: {

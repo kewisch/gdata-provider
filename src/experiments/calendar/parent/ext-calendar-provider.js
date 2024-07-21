@@ -234,7 +234,6 @@ class ExtCalendar extends cal.provider.BaseClass {
   async adoptItem(aItem) {
     const adoptCallback = this._cachedAdoptItemCallback;
     try {
-
       // TODO There should be an easier way to determine this
       let options = {};
       if (stackContains("calItipUtils")) {
@@ -368,7 +367,6 @@ class ExtCalendar extends cal.provider.BaseClass {
   }
 
   async deleteItem(aItem, aOptions = {}) {
-
     // TODO There should be an easier way to determine this
     if (stackContains("calItipUtils")) {
       aOptions.invitation = true;

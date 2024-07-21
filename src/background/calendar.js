@@ -232,7 +232,7 @@ export default class calGoogleCalendar {
 
     let timeZone = await this.getCalendarPref("timeZone");
     let accessRole = await this.getCalendarPref("accessRole");
-    let defaultTimezone = await TimezoneService.getAsync(timeZone);
+    let defaultTimezone = TimezoneService.get(timeZone);
 
     let newItem = await jsonToItem({
       entry: data,
@@ -299,7 +299,7 @@ export default class calGoogleCalendar {
 
     let timeZone = await this.getCalendarPref("timeZone");
     let accessRole = await this.getCalendarPref("accessRole");
-    let defaultTimezone = await TimezoneService.getAsync(timeZone);
+    let defaultTimezone = TimezoneService.get(timeZone);
 
     let newItem = await jsonToItem({
       entry: data,

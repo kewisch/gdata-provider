@@ -6,8 +6,6 @@ var {
   ExtensionCommon: { ExtensionAPI, EventManager }
 } = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
 
-var { default: ICAL } = ChromeUtils.importESModule("resource:///modules/calendar/Ical.sys.mjs");
-
 var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
 
 this.calendar_timezones = class extends ExtensionAPI {
