@@ -134,6 +134,13 @@
         "paths": [
           ["calendar", "timezones"]
         ]
+      },
+      "child": {
+        "scopes": ["addon_child"],
+        "script": "experiments/calendar/child/ext-calendar-timezones.js",
+        "paths": [
+          ["calendar", "timezones"]
+        ]
       }
     },
     "calendarItemAction": {

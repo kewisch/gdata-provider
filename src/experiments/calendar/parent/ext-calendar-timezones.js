@@ -8,24 +8,43 @@ var {
 
 var { default: ICAL } = ChromeUtils.importESModule("resource:///modules/calendar/Ical.sys.mjs");
 
+var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
+
 this.calendar_timezones = class extends ExtensionAPI {
   getAPI(context) {
-    let timezoneDatabase = Cc["@mozilla.org/calendar/timezone-database;1"].getService(
-      Ci.calITimezoneDatabase
-    );
-
     return {
       calendar: {
         timezones: {
-          async getDefinition(tzid, returnFormat) {
-            let zoneInfo = timezoneDatabase.getTimezoneDefinition(tzid);
+          onUpdated: new EventManager({
+            context,
+            name: "calendar.timezones.onUpdated",
+            register: fire => {
+              cal.timezoneService.wrappedJSObject._updateDefaultTimezone();
+              let lastValue = cal.timezoneService.defaultTimezone?.tzid;
 
-            if (returnFormat == "jcal") {
-              zoneInfo = ICAL.parse(zoneInfo);
-            }
+              let observer = {
+                QueryInterface: ChromeUtils.generateQI(["nsIObserver"]),
+                observe: function(subject, topic, data) {
+                  // Make sure the default timezone is updated before firing
+                  cal.timezoneService.wrappedJSObject._updateDefaultTimezone();
+                  let currentValue = cal.timezoneService.defaultTimezone?.tzid;
+                  if (currentValue != lastValue) {
+                    lastValue = currentValue;
+                    fire.sync(currentValue);
+                  }
+                }
+              };
 
-            return zoneInfo;
-          }
+              Services.prefs.addObserver("calendar.timezone.useSystemTimezone", observer);
+              Services.prefs.addObserver("calendar.timezone.local", observer);
+              Services.obs.addObserver(observer, "default-timezone-changed");
+              return () => {
+                Services.obs.removeObserver(observer, "default-timezone-changed");
+                Services.prefs.removeObserver("calendar.timezone.local", observer);
+                Services.prefs.removeObserver("calendar.timezone.useSystemTimezone", observer);
+              };
+            },
+          }).api(),
         }
       }
     };
