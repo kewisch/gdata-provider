@@ -18,6 +18,7 @@ beforeEach(() => {
 
   jest.spyOn(global.console, "log").mockImplementation(() => {});
   jest.spyOn(global.console, "warn").mockImplementation(() => {});
+  jest.spyOn(global.console, "error").mockImplementation(() => {});
 
   global.window = {
     DOMParser: class {
@@ -323,14 +324,12 @@ describe("jsonToItem", () => {
       expect(jcal.getFirstPropertyValue("status")).toBe("NEEDS-ACTION");
     });
   });
+  test("invalid item type", () => {
+    expect(jsonToItem({ entry: { kind: "invalid" }, calendar })).toBe(null);
+    expect(console.error).toHaveBeenCalledTimes(1);
+  });
 });
 
-test("invalid item type", () => {
-  let consoleError = jest.fn(msg => {});
-
-  let calendar = { console: { error: consoleError } };
-  expect(jsonToItem({ entry: { kind: "invalid" }, calendar })).toBe(null);
-  expect(consoleError.mock.calls.length).toBe(1);
 });
 
 describe("itemToJson", () => {
