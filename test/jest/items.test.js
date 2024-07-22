@@ -1,7 +1,7 @@
 import gcalItems from "./fixtures/gcalItems.json";
 import jcalItems from "./fixtures/jcalItems.json";
 
-import { jsonToItem, itemToJson, patchItem, ItemSaver } from "../../src/background/items";
+import { jsonToItem, jsonToDate, itemToJson, patchItem, ItemSaver } from "../../src/background/items";
 import calGoogleCalendar from "../../src/background/calendar";
 import ICAL from "../../src/background/libs/ical.js";
 import TimezoneService from "../../src/background/timezone.js";
@@ -330,6 +330,41 @@ describe("jsonToItem", () => {
   });
 });
 
+describe("jsonToDate", () => {
+  let cases = [
+    [
+      null, null
+    ],
+    [
+      { date: "2024-01-01" },
+      ["dtstart", {}, "date", "2024-01-01"]
+    ],
+    [
+      { dateTime: "2024-01-01T01:02:03.456Z" },
+      ["dtstart", {}, "date-time", "2024-01-01T01:02:03Z"]
+    ],
+    [
+      { dateTime: "2024-01-01T01:02:03.456+01:00", timeZone: "Europe/Berlin" },
+      ["dtstart", { tzid: "Europe/Berlin" }, "date-time", "2024-01-01T01:02:03"]
+    ],
+    [
+      { dateTime: "2024-01-01T17:02:03.456+01:00", timeZone: "America/Los_Angeles" },
+      ["dtstart", { tzid: "America/Los_Angeles" }, "date-time", "2024-01-01T08:02:03"]
+    ]
+  ];
+
+
+  test.each(cases)("convert %s", (gcalDate, jcalDate) => {
+    let berlin = TimezoneService.get("Europe/Berlin");
+    expect(jsonToDate("dtstart", gcalDate, berlin)).toEqual(jcalDate);
+  });
+
+  test("invalid zone", () => {
+    let berlin = TimezoneService.get("Europe/Berlin");
+    expect(() => {
+      jsonToDate("dtstart", { dateTime: "2024-01-01T01:02:03.456+01:00", timeZone: "Murica" }, berlin);
+    }).toThrow("Could not find zone Murica");
+  });
 });
 
 describe("itemToJson", () => {

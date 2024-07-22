@@ -541,7 +541,7 @@ function patchEvent(item, oldItem) {
   return entry;
 }
 
-function jsonToDate(propName, dateObj, defaultTimezone) {
+export function jsonToDate(propName, dateObj, defaultTimezone) {
   if (!dateObj) {
     return null;
   }
@@ -564,7 +564,7 @@ function jsonToDate(propName, dateObj, defaultTimezone) {
       if (targetZone) {
         timeString = time.convertToZone(targetZone).toString();
       } else {
-        throw new Error(`Could not find zone ${dateObj.timeZone} for dateObj.dateTime`);
+        throw new Error(`Could not find zone ${dateObj.timeZone}`);
       }
     }
 
