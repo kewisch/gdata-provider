@@ -639,7 +639,7 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
   setIf("summary", "text", summary);
   setIf("class", "text", entry.visibility?.toUpperCase());
   setIf("sequence", "integer", entry.sequence);
-  setIf("url", "text", entry.htmlLink);
+  setIf("url", "uri", entry.htmlLink);
   setIf("transp", "text", entry.transparency?.toUpperCase());
 
   if (entry.eventType != "default") {
