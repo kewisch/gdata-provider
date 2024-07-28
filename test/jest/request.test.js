@@ -197,6 +197,16 @@ test("status code 400 sync token", async () => {
   expect(request.response.status).toBe(400);
 });
 
+test("status code 400 sequence", async () => {
+  let request = new calGoogleRequest({
+    method: "PUT",
+    uri: "https://localhost/test",
+  });
+  mockErrorResponse(400, { message: "Invalid sequence value." });
+  await expect(request.commit(session)).rejects.toThrow("CONFLICT");
+  expect(request.response.status).toBe(400);
+});
+
 test("status code 400 other", async () => {
   let request = new calGoogleRequest({
     method: "PUT",

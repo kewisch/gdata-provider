@@ -160,7 +160,10 @@ export default class calGoogleRequest {
       case 400:
         if (this.firstError?.message == "Invalid sync token value.") {
           throw new ResourceGoneError();
+        } else if (this.firstError?.message.startsWith("Invalid sequence value.")) {
+          throw new ConflictError();
         }
+
       // Fall through intended
       default:
         this.console.log(
