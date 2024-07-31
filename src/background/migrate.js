@@ -28,3 +28,30 @@ export async function migrateCalendars(ids) {
     })
   ).catch(console.error);
 }
+
+export async function checkCalendarMigration() {
+  let prefs = await messenger.storage.local.get({ "settings.migrate": true });
+  let calendars = await getMigratableCalendars();
+  if (prefs["settings.migrate"] && calendars) {
+    let clickListener = (notificationId) => {
+      messenger.notifications.onClicked.removeListener(clickListener);
+      messenger.notifications.clear("gdata-migrate");
+
+      if (notificationId == "gdata-migrate") {
+        messenger.windows.create({
+          url: "/content/migration-wizard.html",
+          type: "popup",
+          allowScriptsToClose: true
+        });
+      }
+    };
+
+    messenger.notifications.onClicked.addListener(clickListener);
+    messenger.notifications.create("gdata-migrate", {
+      type: "basic",
+      title: messenger.i18n.getMessage("extensionName"),
+      iconUrl: "/images/icon.png",
+      message: messenger.i18n.getMessage("gdata.migration.notification")
+    });
+  }
+}

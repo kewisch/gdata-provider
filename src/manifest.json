@@ -58,10 +58,6 @@
     "allowed_areas": ["inline", "summary"]
   },
 
-  "browser_action": {
-    "default_popup": "/content/migration-wizard.html"
-  },
-
   "background": {
     "page": "background/index.html"
   },
@@ -75,6 +71,7 @@
     "identity",
     "notifications",
     "idle",
+    "tabs",
     "webRequest",
 
     "https://www.googleapis.com/calendar/v3/*",

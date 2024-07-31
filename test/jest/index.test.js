@@ -1,19 +1,19 @@
 import { jest } from "@jest/globals";
 import createMessenger from "./helpers/webext-api.js";
-import { migrate, initMessageListener } from "../../src/background/index";
+import { migrateLegacyPrefs, initMessageListener } from "../../src/background/index";
 
 beforeEach(() => {
   global.messenger = createMessenger();
 });
 
-test("migrate", async () => {
+test("migrateLegacyPrefs", async () => {
   messenger.calendar.calendars.query = jest.fn(async () => []);
   messenger.calendar.calendars.create = jest.fn(async () => []);
   messenger.gdata.getLegacyPrefs = jest.fn(async () => ({ prefs: true }));
   messenger.gdata.purgeLegacyPrefs = jest.fn(async () => {});
   jest.spyOn(global.console, "log").mockImplementation(() => {});
 
-  await migrate();
+  await migrateLegacyPrefs();
 
   expect(await messenger.storage.local.get({ prefs: null })).toEqual({ prefs: true });
   expect(messenger.gdata.purgeLegacyPrefs).toHaveBeenCalled();
@@ -26,7 +26,7 @@ test("migrate no prefs", async () => {
   messenger.gdata.purgeLegacyPrefs = jest.fn(async () => {});
   jest.spyOn(global.console, "log").mockImplementation(() => {});
 
-  await migrate();
+  await migrateLegacyPrefs();
 
   expect(Object.keys(messenger.storage.local.storage).length).toBe(0);
   expect(messenger.gdata.purgeLegacyPrefs).not.toHaveBeenCalled();

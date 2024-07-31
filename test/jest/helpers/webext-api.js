@@ -205,6 +205,8 @@ export default function createMessenger() {
     },
     notifications: {
       create: jest.fn(async () => {}),
+      clear: jest.fn(async () => {}),
+      onClicked: new WebExtListener(),
     },
     webRequest: {
       onBeforeRequest: new WebExtListener(),

@@ -2,16 +2,19 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <script type="module" defer src="options.js"></script>
   </head>
   <body>
     <div class="browser-style">
-      <input type="checkbox" id="sendEventNotifications"/>
-      <label for="sendEventNotifications" data-l10n-id="settings.sendEventNotifications"/>
+      <input type="checkbox" id="sendEventNotifications">
+      <label for="sendEventNotifications" data-l10n-id="settings.sendEventNotifications"></label>
     </div>
     <div class="browser-style">
-      <input type="checkbox" id="forcePlainText"/>
-      <label for="forcePlainText" data-l10n-id="settings.forcePlainText"/>
+      <input type="checkbox" id="forcePlainText">
+      <label for="forcePlainText" data-l10n-id="settings.forcePlainText"></label>
     </div>
-    <script src="options.js"></script>
+    <div class="browser-style">
+      <button class="browser-style" id="migrate-calendars" data-l10n-id="settings.migrateCalendars"></button>
+    </div>
   </body>
 </html>

@@ -52,7 +52,7 @@ test("init", async () => {
 
   expect(document.title).toEqual("gdata.migration.title[]");
   expect(qs("#gdata-migration-description")).toHaveTextContent("gdata.migration.description[]");
-  expect(accept).toHaveTextContent("gdata.migration.upgrade.label[]");
+  expect(accept).toHaveTextContent("gdata.migration.dont-upgrade.label[]");
   expect(accept).toHaveAttribute("accesskey", "gdata.migration.upgrade.accesskey[]");
 
   expect(cancel).toHaveTextContent("gdata.migration.cancel.label[]");

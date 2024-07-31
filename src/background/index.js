@@ -3,25 +3,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch */
 
-import { getMigratableCalendars } from "./migrate.js";
+import { checkCalendarMigration } from "./migrate.js";
 import { isTesting } from "./utils.js";
 import calGoogleCalendar from "./calendar.js";
 import sessions from "./session.js";
 import TimezoneService from "./timezone.js";
 
-export async function migrate() {
+export async function migrateLegacyPrefs() {
   let legacyprefs = await messenger.gdata.getLegacyPrefs();
   if (legacyprefs) {
     console.log("[gdata-provider] Migrating legacy prefs", legacyprefs);
     await messenger.storage.local.set(legacyprefs);
     await messenger.gdata.purgeLegacyPrefs();
   }
-
-  let prefs = await messenger.storage.local.get({ "settings.migrate": true });
-  let calendars = await getMigratableCalendars();
-  // if (calendars.length) {
-  //  // TODO notification
-  // }
 }
 
 /* istanbul ignore next */
@@ -77,6 +71,7 @@ export async function initMessageListener() {
 
   initMessageListener();
   calGoogleCalendar.initListeners();
-  await migrate();
+  await migrateLegacyPrefs();
+  await checkCalendarMigration();
   // installDebugCalendar();
 })();

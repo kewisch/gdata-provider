@@ -18,7 +18,7 @@ export async function main() {
   document.getElementById("gdata-migration-description").textContent = messenger.i18n.getMessage(
     "gdata.migration.description"
   );
-  accept.textContent = messenger.i18n.getMessage("gdata.migration.upgrade.label");
+  accept.textContent = messenger.i18n.getMessage("gdata.migration.dont-upgrade.label");
   accept.setAttribute("accesskey", messenger.i18n.getMessage("gdata.migration.upgrade.accesskey"));
   cancel.textContent = messenger.i18n.getMessage("gdata.migration.cancel.label");
   cancel.setAttribute("accesskey", messenger.i18n.getMessage("gdata.migration.cancel.accesskey"));
@@ -42,10 +42,14 @@ export async function main() {
   // Event listeners
   accept.addEventListener("click", clickAccept);
   cancel.addEventListener("click", clickCancel);
+  listbox.addEventListener("click", clickListbox, false);
 }
 
 export async function clickAccept(event) {
   try {
+    let accept = document.getElementById("accept");
+    accept.disabled = true;
+
     let alwaysCheck = document.getElementById("always-check");
     let calendarIds = [...document.querySelectorAll("#calendar-listbox input:checked")].map(
       item => item.value
@@ -60,6 +64,20 @@ export async function clickCancel(event) {
   let alwaysCheck = document.getElementById("always-check");
   await messenger.storage.local.set({ "settings.migrate": alwaysCheck.checked });
   window.close();
+}
+
+export async function clickListbox(event) {
+  let listbox = document.getElementById("calendar-listbox");
+  let accept = document.getElementById("accept");
+
+  let key;
+  if (listbox.querySelectorAll("input:checked").length == 0) {
+    key = "gdata.migration.dont-upgrade.label";
+  } else {
+    key = "gdata.migration.upgrade.label";
+  }
+
+  accept.textContent = messenger.i18n.getMessage(key);
 }
 
 /* istanbul ignore next */

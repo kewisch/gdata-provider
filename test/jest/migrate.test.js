@@ -1,5 +1,5 @@
 import { jest } from "@jest/globals";
-import { getMigratableCalendars, migrateCalendars } from "../../src/background/migrate";
+import { checkCalendarMigration, getMigratableCalendars, migrateCalendars } from "../../src/background/migrate";
 import createMessenger from "./helpers/webext-api.js";
 
 beforeEach(() => {
@@ -63,4 +63,33 @@ test("migrateCalendars", async () => {
     type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
     url: "https://example.com/?id=id3",
   });
+});
+
+test("checkCalendarMigration", async () => {
+  await messenger.storage.local.set({ "settings.migrate": false });
+
+  await checkCalendarMigration();
+  expect(messenger.notifications.create).not.toHaveBeenCalled();
+
+  await messenger.storage.local.set({ "settings.migrate": true });
+  global.messenger.calendar.calendars._calendars = [
+    { id: "id1", type: "ics", url: "https://example.com/feed.ics" },
+    {
+      id: "id2",
+      type: "ics",
+      url: "https://calendar.google.com/calendar/ical/user@example.com/private/full.ics",
+    },
+  ];
+
+  messenger.notifications.onClicked.mockResponse("something else");
+
+  await checkCalendarMigration();
+  expect(messenger.notifications.create).toHaveBeenCalled();
+  expect(messenger.windows.create).not.toHaveBeenCalled();
+
+  messenger.notifications.onClicked.mockResponse("gdata-migrate");
+
+  await checkCalendarMigration();
+  expect(messenger.notifications.create).toHaveBeenCalled();
+  expect(messenger.windows.create).toHaveBeenCalled();
 });

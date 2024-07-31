@@ -20,6 +20,9 @@
     "message": "D"
   },
 
+  "gdata.migration.notification": {
+    "message": "Some of your calendars can be migrated to the Provider for Google Calendar"
+  },
   "gdata.migration.title": {
     "message": "Migrate read-only calendars"
   },
@@ -28,6 +31,9 @@
   },
   "gdata.migration.upgrade.label": {
     "message": "Upgrade"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Don't Upgrade"
   },
   "gdata.migration.upgrade.accesskey": {
     "message": "U"
@@ -164,6 +170,12 @@
   },
   "settings.forcePlainText": {
     "message": "Force use of plain text in event descriptions"
+  },
+  "settings.migrateCalendars": {
+    "message": "Migrate read-only calendars"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "There are currently no read-only calendars to migrate"
   },
 
   "eventdialog.joinVia.video": {
