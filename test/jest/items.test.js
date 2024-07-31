@@ -1,7 +1,7 @@
 import gcalItems from "./fixtures/gcalItems.json";
 import jcalItems from "./fixtures/jcalItems.json";
 
-import { jsonToItem, jsonToDate, itemToJson, patchItem, ItemSaver } from "../../src/background/items";
+import { findRelevantInstance, jsonToItem, jsonToDate, itemToJson, patchItem, ItemSaver } from "../../src/background/items";
 import calGoogleCalendar from "../../src/background/calendar";
 import ICAL from "../../src/background/libs/ical.js";
 import TimezoneService from "../../src/background/timezone.js";
@@ -36,6 +36,18 @@ beforeEach(() => {
 // TODO test recurrence-id/ost, recurringEventId
 // TODO conferenceData
 
+test("findRelevantInstance", () => {
+  let vcalendar = new ICAL.Component(jcalItems.simple_event.formats.jcal);
+  let vevent = vcalendar.getFirstSubcomponent("vevent");
+  expect(findRelevantInstance(vcalendar, false, "vevent")).toBe(vevent);
+  expect(findRelevantInstance(vcalendar, "2024-01-01", "vevent")).toBeNull();
+
+  vcalendar = new ICAL.Component(jcalItems.recur_instance.formats.jcal);
+  vevent = vcalendar.getFirstSubcomponent("vevent");
+  expect(findRelevantInstance(vcalendar, false, "vevent")).toBeNull();
+  expect(findRelevantInstance(vcalendar, "2006-06-25", "vevent")).toBe(vevent);
+});
+
 describe("jsonToItem", () => {
   let calendar = { console, name: "calendarName" };
 
@@ -49,7 +61,7 @@ describe("jsonToItem", () => {
         defaultReminders,
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal);
+      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
 
       expect(item.metadata.etag).toBe('"2299601498276000"');
       expect(item.metadata.path).toBe("go6ijb0b46hlpbu4eeu92njevo");
@@ -153,7 +165,7 @@ describe("jsonToItem", () => {
         defaultReminders,
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal);
+      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
 
       expect(jcal.getFirstPropertyValue("organizer")).toBe("mailto:organizer@example.com");
       expect(jcal.getFirstProperty("organizer").getParameter("cn")).toBe(undefined);
@@ -167,7 +179,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal);
+      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("swpefnfloqssxjdlbpyqlyqddb@google.com");
       expect(jcal.getFirstPropertyValue("summary")).toBe("busyTitle[calendarName]");
@@ -184,7 +196,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal);
+      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("uasfsingergnenedfwiefefgjk@google.com");
       expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610T010203Z");
@@ -197,7 +209,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal);
+      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
 
       expect(jcal.getFirstPropertyValue("exdate")?.toICALString()).toBe("20070609");
       expect(jcal.getFirstPropertyValue("rdate")?.toICALString()).toBe("20060812");
@@ -222,7 +234,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal);
+      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
 
       expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060626");
       expect(jcal.getFirstPropertyValue("recurrence-id").toICALString()).toBe("20060625");
@@ -235,7 +247,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal);
+      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
 
       let descr = jcal.getFirstProperty("description");
       expect(descr.getParameter("altrep")).toBe("data:text/html,%3Cb%3EBold%3C%2Fb%3E");
@@ -249,7 +261,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal);
+      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
       expect(jcal.getFirstPropertyValue("x-google-event-type")).toBe("outOfOffice");
 
       item = await jsonToItem({
@@ -258,7 +270,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      jcal = new ICAL.Component(item.formats.jcal);
+      jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
       expect(jcal.getFirstPropertyValue("x-google-event-type")).toBe("focusTime");
     });
   });
@@ -272,6 +284,7 @@ describe("jsonToItem", () => {
         defaultTimezone
       });
       let jcal = new ICAL.Component(item.formats.jcal);
+      jcal = jcal.getFirstSubcomponent("vtodo");
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("lqohjsbhqoztdkusnpruvooacn");
       expect(jcal.getFirstPropertyValue("last-modified")?.toICALString()).toBe("20060608T210549Z");
@@ -306,6 +319,7 @@ describe("jsonToItem", () => {
         defaultTimezone
       });
       let jcal = new ICAL.Component(item.formats.jcal);
+      jcal = jcal.getFirstSubcomponent("vtodo");
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("jidlfaenrgjklebrgjebuwdfer");
       expect(jcal.getFirstPropertyValue("status")).toBe("CANCELLED");
@@ -319,6 +333,7 @@ describe("jsonToItem", () => {
         defaultTimezone
       });
       let jcal = new ICAL.Component(item.formats.jcal);
+      jcal = jcal.getFirstSubcomponent("vtodo");
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("jidlfaenrgjklebrgjebuwdfer");
       expect(jcal.getFirstPropertyValue("status")).toBe("NEEDS-ACTION");
@@ -499,6 +514,7 @@ describe("itemToJson", () => {
     let data = itemToJson(jcalItems.recur_instance, calendar, false);
     expect(data).toEqual({
       icalUID: "osndfnwejrgnejnsdjfwegjdfr@google.com",
+      recurringEventId: "osndfnwejrgnejnsdjfwegjdfr",
       start: {
         date: "2006-06-26",
       },
@@ -984,6 +1000,7 @@ describe("ItemSaver", () => {
       await saver.parseEventStream({
         items: [gcalItems.valarm_default],
       });
+      await saver.complete();
       expect(console.log).toHaveBeenCalledWith("Parsing 1 received events");
 
       expect(messenger.calendar.items.remove).not.toHaveBeenCalled();
@@ -1005,6 +1022,7 @@ describe("ItemSaver", () => {
       await saver.parseEventStream({
         items: [gitem],
       });
+      await saver.complete();
       expect(console.log).toHaveBeenCalledWith("Parsing 1 received events");
 
       expect(messenger.calendar.items.create).not.toHaveBeenCalled();
@@ -1018,16 +1036,30 @@ describe("ItemSaver", () => {
       await saver.parseEventStream({
         items: [gcalItems.recur_rrule, gcalItems.recur_instance],
       });
+      await saver.complete();
       expect(console.log).toHaveBeenCalledWith("Parsing 2 received events");
       expect(messenger.calendar.items.remove).not.toHaveBeenCalled();
-      expect(messenger.calendar.items.create).toHaveBeenCalledTimes(2);
+      expect(messenger.calendar.items.create).toHaveBeenCalledTimes(1);
       expect(messenger.calendar.items.create).toHaveBeenCalledWith(
         "calendarId#cache",
         expect.objectContaining({
           id: "osndfnwejrgnejnsdjfwegjdfr@google.com",
           formats: {
             use: "jcal",
-            jcal: ["vcalendar", expect.anything(), expect.anything()],
+            jcal: ["vcalendar", expect.anything(), [
+              ["vevent",
+                expect.arrayContaining([
+                  ["uid", {}, "text", "osndfnwejrgnejnsdjfwegjdfr@google.com"],
+                  ["rrule", {}, "recur", expect.anything()]
+                ]), expect.anything()
+              ],
+              ["vevent",
+                expect.arrayContaining([
+                  ["uid", {}, "text", "osndfnwejrgnejnsdjfwegjdfr@google.com"],
+                  ["recurrence-id", {}, "date", expect.anything()]
+                ]), expect.anything()
+              ]
+            ]]
           },
         })
       );
@@ -1040,6 +1072,7 @@ describe("ItemSaver", () => {
       await saver.parseEventStream({
         items: [gitem, gcalItems.recur_instance],
       });
+      await saver.complete();
       expect(console.log).toHaveBeenCalledWith("Parsing 2 received events");
       expect(messenger.calendar.items.remove).toHaveBeenCalledWith(
         "calendarId#cache",
@@ -1054,10 +1087,10 @@ describe("ItemSaver", () => {
         items: [gcalItems.recur_instance],
       });
       expect(console.log).toHaveBeenCalledWith("Parsing 1 received events");
-      expect(messenger.calendar.items.remove).not.toHaveBeenCalled();
 
       await saver.complete();
 
+      expect(messenger.calendar.items.remove).not.toHaveBeenCalled();
       expect(messenger.calendar.items.create).toHaveBeenCalledWith(
         "calendarId#cache",
         expect.objectContaining({

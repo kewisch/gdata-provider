@@ -142,17 +142,18 @@ export default class calGoogleRequest {
         throw new NotModifiedError();
       case 401:
       case 403:
+      case 429:
         // Unsupported standard parameter, or authentication or Authorization failed.
         this.console.log(
           `Login failed for ${session.id}. Status: ${this.response.status}. Reason: ${this.firstError?.reason}`
         );
         return this.handleAuthError(session);
-      case 410:
-        // 410 Gone: Happens when deleting an event that has already been deleted.
-        throw new ResourceGoneError();
       case 404:
         //  404 NOT FOUND: Resource (such as a feed or entry) not found.
         // This happens when deleting an event that has already been deleted, fall through
+        throw new ResourceGoneError();
+      case 410:
+        // 410 Gone: Happens when deleting an event that has already been deleted.
         throw new ResourceGoneError();
       case 409:
       case 412:

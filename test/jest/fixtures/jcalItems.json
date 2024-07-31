@@ -16,7 +16,7 @@
           "vcalendar",
           [
             ["calscale", {}, "text", "GREGORIAN"],
-            ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+            ["prodid", {}, "text", "-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"],
             ["version", {}, "text", "2.0"]
           ],
           [
@@ -124,7 +124,7 @@
           "vcalendar",
           [
             ["calscale", {}, "text", "GREGORIAN"],
-            ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+            ["prodid", {}, "text", "-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"],
             ["version", {}, "text", "2.0"]
           ],
           [
@@ -147,7 +147,7 @@
           "vcalendar",
           [
             ["calscale", {}, "text", "GREGORIAN"],
-            ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+            ["prodid", {}, "text", "-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"],
             ["version", {}, "text", "2.0"]
           ],
           [
@@ -181,7 +181,7 @@
         "vcalendar",
         [
           ["calscale", {}, "text", "GREGORIAN"],
-          ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+          ["prodid", {}, "text", "-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"],
           ["version", {}, "text", "2.0"]
         ],
         [
@@ -236,7 +236,7 @@
         "vcalendar",
         [
           ["calscale", {}, "text", "GREGORIAN"],
-          ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+          ["prodid", {}, "text", "-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"],
           ["version", {}, "text", "2.0"]
         ],
         [
@@ -272,7 +272,7 @@
         "vcalendar",
         [
           ["calscale", {}, "text", "GREGORIAN"],
-          ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+          ["prodid", {}, "text", "-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"],
           ["version", {}, "text", "2.0"]
         ],
         [
@@ -299,6 +299,7 @@
     "id": "osndfnwejrgnejnsdjfwegjdfr@google.com",
     "title" : "New Event",
     "type" : "event",
+    "instance": "2006-06-25",
     "metadata": {
       "etag": "\"8735583482382345\"",
       "path": "osndfnwejrgnejnsdjfwegjdfr"
@@ -309,7 +310,7 @@
         "vcalendar",
         [
           ["calscale", {}, "text", "GREGORIAN"],
-          ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+          ["prodid", {}, "text", "-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"],
           ["version", {}, "text", "2.0"]
         ],
         [
@@ -344,7 +345,7 @@
         "vcalendar",
         [
           ["calscale", {}, "text", "GREGORIAN"],
-          ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+          ["prodid", {}, "text", "-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"],
           ["version", {}, "text", "2.0"]
         ],
         [
@@ -376,7 +377,7 @@
           "vcalendar",
           [
             ["calscale", {}, "text", "GREGORIAN"],
-            ["prodid", {}, "text", "-//Example Inc.//Example Calendar//EN"],
+            ["prodid", {}, "text", "-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN"],
             ["version", {}, "text", "2.0"]
           ],
           [

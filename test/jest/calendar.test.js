@@ -365,9 +365,6 @@ describe("item functions", () => {
           .getFirstSubcomponent("vevent")
           .removeAllSubcomponents("valarm");
 
-        // vcalendar -> vevent
-        expected.formats.jcal = expected.formats.jcal[2][0];
-
         let item = await calendar.onItemCreated(newItem);
 
         expect(item).toEqual(expected);
@@ -763,7 +760,11 @@ describe("item functions", () => {
       let item = await calendar.onItemCreated(jcalItems.simple_task);
       let jcal = new ICAL.Component(item.formats.jcal);
 
-      expect(jcal.name).toBe("vtodo");
+      expect(jcal.name).toBe("vcalendar");
+
+      jcal = jcal.getFirstSubcomponent("vtodo");
+
+      expect(jcal).not.toBeNull();
       expect(item.metadata.etag).toBe('"2128312983238480"');
       expect(item.metadata.path).toBe("lqohjsbhqoztdkusnpruvooacn");
       expect(item.title).toBe("New Task");

@@ -50,19 +50,35 @@ export function addVCalendar(vcomponent) {
   }
 }
 
-export function getGoogleId(item) {
-  // TODO potentially take from parent item
-  let baseId = item.metadata?.path || item.id.replace(/@google.com$/, "");
+export function getItemPath(item) {
+  let baseId = item.metadata?.path;
+
+  if (!baseId) {
+    baseId = item.id.replace(/@google.com$/, "");
+  }
 
   let vevent = new ICAL.Component(item.formats.jcal);
+  if (vevent.name == "vcalendar") {
+    vevent = vevent.getFirstSubcomponent("vevent");
+  }
+
   let recId = vevent.getFirstPropertyValue("recurrence-id");
-  if (recId) {
+  if (baseId && recId) {
     let recSuffix = "_" + recId.convertToZone(ICAL.Timezone.utcTimezone).toICALString();
     if (!baseId.endsWith(recSuffix)) {
       baseId += recSuffix;
     }
   }
+
   return baseId;
+}
+
+export function getItemEtag(item, force = false) {
+  if (force) {
+    return "*";
+  }
+
+  return item.metadata.etag || "*";
 }
 
 export function categoriesStringToArray(aCategories) {
@@ -91,7 +107,7 @@ export function sessionIdFromUrl(url) {
   // The first two cases are for the jest tests, node's URL constructor works differently.
   if (url.username) {
     return `${url.username}@${url.hostname}`;
-  } /* istanbul ignore else */ else if (url.hostname) {
+  } else /* istanbul ignore else */ if (url.hostname) {
     return url.hostname;
   } else {
     return url.pathname.substring(2, url.pathname.length - 1);

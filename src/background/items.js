@@ -31,6 +31,18 @@ const FOUR_WEEKS_IN_MINUTES = 40320;
 
 const CONTAINS_HTML_RE = /^<|&(lt|gt|amp);|<(br|p)>/;
 
+
+export function findRelevantInstance(vcalendar, instance, type) {
+  for (let comp of vcalendar.getAllSubcomponents(type)) {
+    if (!instance && !comp.hasProperty("recurrence-id")) {
+      return comp;
+    } else if (instance && comp.getFirstPropertyValue("recurrence-id")?.convertToZone(ICAL.Timezone.utcTimezone).toString() == instance) {
+      return comp;
+    }
+  }
+  return null;
+}
+
 export function itemToJson(item, calendar, isImport) {
   if (item.type == "event") {
     return eventToJson(item, calendar, isImport);
@@ -44,9 +56,18 @@ export function itemToJson(item, calendar, isImport) {
 function eventToJson(item, calendar, isImport) {
   let oldItem = {
     formats: {
+      use: "jcal",
       jcal: ["vcalendar", [], [["vevent", [], []]]],
     },
   };
+
+  if (item.instance) {
+    // TODO need this so that patchEvent will set up the instance correctly, but this is a really
+    // brittle way to do it.
+    oldItem.formats.jcal[2][0][1].push(
+      ["recurrence-id", {}, item.instance.length == 10 ? "date" : "date-time", item.instance]
+    );
+  }
 
   let entry = patchEvent(item, oldItem);
   if (item.id) {
@@ -58,6 +79,7 @@ function eventToJson(item, calendar, isImport) {
 function taskToJson(item, calendar, isImport) {
   let oldItem = {
     formats: {
+      use: "jcal",
       jcal: ["vcalendar", [], [["vtodo", [], []]]],
     },
   };
@@ -136,7 +158,7 @@ function jsonToTask({ entry, calendar }) {
       etag: entry.etag,
       path: entry.id,
     },
-    formats: { use: "jcal", jcal: vtodo },
+    formats: { use: "jcal", jcal: addVCalendar(vtodo) },
   };
 }
 
@@ -344,8 +366,8 @@ function patchTask(item, oldItem) {
   }
 
   let entry = {};
-  let task = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vtodo");
-  let oldTask = new ICAL.Component(oldItem.formats.jcal).getFirstSubcomponent("vtodo");
+  let task = findRelevantInstance(new ICAL.Component(item.formats.jcal), item.instance, "vtodo");
+  let oldTask = findRelevantInstance(new ICAL.Component(oldItem.formats.jcal), item.instance, "vtodo");
 
   setIfFirstProperty(entry, "title", "summary");
   setIfFirstProperty(entry, "status", "status", val => {
@@ -416,8 +438,9 @@ function patchEvent(item, oldItem) {
 
   let entry = { extendedProperties: { shared: {}, private: {} } };
 
-  let event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
-  let oldEvent = new ICAL.Component(oldItem.formats.jcal).getFirstSubcomponent("vevent");
+  // TODO this is where brittle occurs
+  let event = findRelevantInstance(new ICAL.Component(item.formats.jcal), item.instance, "vevent");
+  let oldEvent = findRelevantInstance(new ICAL.Component(oldItem.formats.jcal), item.instance, "vevent");
 
   if (!event) {
     throw new Error(`Missing vevent in toplevel component ${item.formats.jcal?.[0]}`);
@@ -457,18 +480,19 @@ function patchEvent(item, oldItem) {
     }
   }
 
-  let oldRecurrenceSet = convertRecurrence(oldEvent);
-  let newRecurrence = [...convertRecurrence(event)];
-  if (
-    oldRecurrenceSet.size != newRecurrence.length ||
-    newRecurrence.some(elem => !oldRecurrenceSet.has(elem))
-  ) {
-    entry.recurrence = newRecurrence;
+  if (item.instance) {
+    entry.recurringEventId = item.id.replace(/@google.com$/, "");
+    entry.originalStartTime = dateToJson(event.getFirstProperty("recurrence-id"));
+  } else {
+    let oldRecurrenceSet = convertRecurrence(oldEvent);
+    let newRecurrence = [...convertRecurrence(event)];
+    if (
+      oldRecurrenceSet.size != newRecurrence.length ||
+      newRecurrence.some(elem => !oldRecurrenceSet.has(elem))
+    ) {
+      entry.recurrence = newRecurrence;
+    }
   }
-
-  setIfDateChanged(entry, "originalStartTime", "recurrence-id");
-  // TODO
-  //  setIf(entry, "recurringEventId", item.id.replace("@google.com", "")); // TODO parentMeta?.path || item.id.replace("@google.com", "");
 
   setIfFirstProperty(entry, "sequence");
   setIfFirstProperty(entry, "transparency", "transp", transparency => transparency?.toLowerCase());
@@ -541,14 +565,15 @@ function patchEvent(item, oldItem) {
   return entry;
 }
 
-export function jsonToDate(propName, dateObj, defaultTimezone) {
+export function jsonToDate(propName, dateObj, defaultTimezone, requestedZone = null) {
   if (!dateObj) {
     return null;
   }
 
   let params = {};
+  let targetZone = requestedZone || dateObj.timeZone;
 
-  if (dateObj.timeZone) {
+  if (targetZone && targetZone != "UTC") {
     params.tzid = dateObj.timeZone;
   }
 
@@ -556,15 +581,15 @@ export function jsonToDate(propName, dateObj, defaultTimezone) {
     return [propName, params, "date", dateObj.date];
   } else {
     let timeString = stripFractional(dateObj.dateTime);
-    if (dateObj.timeZone && dateObj.timeZone != defaultTimezone.tzid) {
+    if (targetZone && targetZone != defaultTimezone.tzid) {
       let time = ICAL.Time.fromDateTimeString(timeString);
       time.zone = defaultTimezone;
 
-      let targetZone = TimezoneService.get(dateObj.timeZone);
-      if (targetZone) {
-        timeString = time.convertToZone(targetZone).toString();
+      let zone = TimezoneService.get(targetZone);
+      if (zone) {
+        timeString = time.convertToZone(zone).toString();
       } else {
-        throw new Error(`Could not find zone ${dateObj.timeZone}`);
+        throw new Error(`Could not find zone ${targetZone}`);
       }
     }
 
@@ -632,7 +657,6 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
     veventprops.push(jsonToDate("recurrence-id", entry.originalStartTime, defaultTimezone));
   }
 
-  // TODO do something about originalStartTime
   // TODO entry.colorId
   let isFreeBusy = accessRole == "freeBusyReader";
   let summary = isFreeBusy ? messenger.i18n.getMessage("busyTitle", calendar.name) : entry.summary;
@@ -730,7 +754,7 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
 
   // TODO do we still need referenceItem?
 
-  return {
+  let shell = {
     // TODO having both title and formats/jcal/summary kinda sucks. Maybe go with shell format instead
     id: uid,
     title: summary,
@@ -742,8 +766,15 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
       etag: entry.etag,
       path: entry.id,
     },
-    formats: { use: "jcal", jcal: vevent },
+    formats: { use: "jcal", jcal: addVCalendar(vevent) },
   };
+
+  if (entry.originalStartTime) {
+    let recId = jsonToDate("recurrence-id", entry.originalStartTime, defaultTimezone, "UTC");
+    shell.instance = recId[3];
+  }
+
+  return shell;
 }
 
 export function jsonToAlarm(entry, isDefault = false) {
@@ -823,21 +854,18 @@ export class ItemSaver {
           exceptionItems.push(item);
         } else {
           this.parentItems[item.id] = item;
-          await this.commitItem(item);
         }
       })
     );
 
-    // Not doing this in parallel in case multiple exceptions for a parent item confuse things.
     for (let exc of exceptionItems) {
       let item = this.parentItems[exc.id];
 
       if (item) {
-        await this.processException(exc, item);
+        this.processException(exc, item);
       } else {
         this.missingParents.push(exc);
       }
-      // TODO are we saving the etag of the exception events for future use?
     }
   }
 
@@ -858,7 +886,7 @@ export class ItemSaver {
     );
   }
 
-  async processException(exc, item) {
+  processException(exc, item) {
     let itemCalendar = new ICAL.Component(item.formats.jcal);
     let itemEvent = itemCalendar.getFirstSubcomponent("vevent");
 
@@ -873,16 +901,17 @@ export class ItemSaver {
     }
 
     if (exceptionEvent.getFirstPropertyValue("status") == "CANCELLED") {
-      itemEvent.addPropertyWithValue(
-        "exdate",
-        exceptionEvent.getFirstPropertyValue("recurrence-id").clone()
-      );
+      let recId = exceptionEvent.getFirstProperty("recurrence-id");
+      let exdate = itemEvent.addPropertyWithValue("exdate", recId.getFirstValue().clone());
+      let recIdZone = recId.getParameter("tzid");
+      if (recIdZone) {
+        exdate.setParameter("tzid", recIdZone);
+      }
     } else {
       itemCalendar.addSubcomponent(exceptionEvent);
     }
 
     this.parentItems[item.id] = item;
-    await this.commitItem(item);
   }
 
   async commitItem(item) {
@@ -910,31 +939,56 @@ export class ItemSaver {
         let excCalendar = new ICAL.Component(exc.formats.jcal);
         let excEvent = excCalendar.getFirstSubcomponent("vevent");
 
-        let item = await messenger.calendar.items.get(this.calendar.cacheId, exc.id, {
-          returnFormat: "jcal",
-        });
+        let item;
+        if (exc.id in this.parentItems) {
+          // Parent item could have been on a later page, check again
+          item = this.parentItems[exc.id];
+        } else {
+          // Otherwise check if we happen to have it in the database
+          item = await messenger.calendar.items.get(this.calendar.cacheId, exc.id, {
+            returnFormat: "jcal",
+          });
+          if (item) {
+            this.parentItems[exc.id] = item;
+          }
+        }
 
         if (item) {
           delete item.calendarId;
-          await this.processException(exc, item);
+          this.processException(exc, item);
         } else if (excEvent.getFirstPropertyValue("status") != "CANCELLED") {
           // If the item could not be found, it could be that the user is invited to an instance of
           // a recurring event. Unless this is a cancelled exception, create a mock parent item with
           // one positive RDATE.
-          let recId = excEvent.getFirstPropertyValue("recurrence-id");
           // TODO this was also in the old code, but what happens if someone is invited to an
           // exception of a recurring event that doesn't fall on the date of the recurrence-id?
-          excEvent.updatePropertyWithValue("dtstart", recId.clone());
+
+          // Copy dtstart and rdate, same timezone
+          let recId = excEvent.getFirstProperty("recurrence-id");
+          let dtStart = excEvent.updatePropertyWithValue("dtstart", recId.getFirstValue().clone());
+          let rDate = excEvent.updatePropertyWithValue("rdate", recId.getFirstValue().clone());
+          let recTzid = recId.getParameter("tzid");
+          if (recTzid) {
+            dtStart.setParameter("tzid", recTzid);
+            rDate.setParameter("tzid", recTzid);
+          }
+
           excEvent.removeAllProperties("recurrence-id");
           excEvent.updatePropertyWithValue("x-moz-faked-master", "1");
-          excEvent.updatePropertyWithValue("rdate", recId.clone());
 
-          // By now, exc is the parent event
-          await this.commitItem(exc);
+          // Promote the item to a parent item we'll commit later
+          this.parentItems[exc.id] = exc;
         }
       })
     );
-
     this.missingParents = [];
+
+    // Commit all parents, they have collected all the exceptions by now
+    await Promise.all(
+      Object.values(this.parentItems).map(parent => {
+        return this.commitItem(parent);
+      })
+    );
+    this.parentItems = Object.create(null);
   }
 }

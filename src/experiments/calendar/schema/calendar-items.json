@@ -16,6 +16,7 @@
           "categories": { "type": "array", "items": { "type": "string" }, "optional": true },
           "startDate": { "type": "string", "optional": true },
           "endDate": { "type": "string", "optional": true },
+          "instance": { "type": "string", "optional": true },
           "formats": { "$ref": "RawCalendarItem", "optional": true },
           "metadata": { "type": "object", "additionalProperties": { "type": "any" }, "optional": true }
         }

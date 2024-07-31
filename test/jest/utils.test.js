@@ -2,7 +2,8 @@ import {
   isEmail,
   stripFractional,
   addVCalendar,
-  getGoogleId,
+  getItemPath,
+  getItemEtag,
   categoriesStringToArray,
   arrayToCategoriesString,
   isTesting,
@@ -35,7 +36,7 @@ test("addVCalendar", () => {
   }).toThrow("Invalid base component: undefined");
 });
 
-test("getGoogleId", () => {
+test("getItemPath", () => {
   let item = {
     metadata: null,
     id: "foo@google.com",
@@ -43,7 +44,7 @@ test("getGoogleId", () => {
       jcal: ["vevent", [], []],
     },
   };
-  expect(getGoogleId(item)).toBe("foo");
+  expect(getItemPath(item)).toBe("foo");
 
   item = {
     metadata: null,
@@ -52,7 +53,7 @@ test("getGoogleId", () => {
       jcal: ["vevent", [], []],
     },
   };
-  expect(getGoogleId(item)).toBe("@google.com-foo");
+  expect(getItemPath(item)).toBe("@google.com-foo");
 
   item = {
     metadata: { path: "bar" },
@@ -61,7 +62,7 @@ test("getGoogleId", () => {
       jcal: ["vevent", [], []],
     },
   };
-  expect(getGoogleId(item)).toBe("bar");
+  expect(getItemPath(item)).toBe("bar");
 
   item = {
     metadata: null,
@@ -70,7 +71,7 @@ test("getGoogleId", () => {
       jcal: ["vevent", [["recurrence-id", {}, "date-time", "2021-01-01T02:03:04"]], []],
     },
   };
-  expect(getGoogleId(item)).toBe("foo_20210101T020304Z");
+  expect(getItemPath(item)).toBe("foo_20210101T020304Z");
 });
 
 test("categoriesStringToArray", () => {

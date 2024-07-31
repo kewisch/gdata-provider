@@ -2,6 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+
+/*
+ * WARNING: This file usually doesn't live reload, you need to restart Thunderbird after editing
+ */
+
 var {
   ExtensionUtils: { ExtensionError, promiseEvent }
 } = ChromeUtils.importESModule("resource://gre/modules/ExtensionUtils.sys.mjs");
@@ -75,7 +80,76 @@ export function convertCalendar(extension, calendar) {
   return props;
 }
 
-export function propsToItem(props, baseItem) {
+function parseJcalData(jcalComp) {
+  function generateItem(jcalSubComp) {
+    let item;
+    if (jcalSubComp.name == "vevent") {
+      item = new CalEvent();
+    } else if (jcalSubComp.name == "vtodo") {
+      item = new CalTodo();
+    } else {
+      throw new ExtensionError("Invalid item component");
+    }
+
+    // TODO use calIcalComponent directly when bringing this to core
+    let comp = cal.icsService.createIcalComponent(jcalSubComp.name);
+    comp.wrappedJSObject.innerObject = jcalSubComp;
+
+    item.icalComponent = comp;
+    return item;
+  }
+
+  if (jcalComp.name == "vevent" || jcalComp.name == "vtodo") {
+    // Single item only, no exceptions
+    return generateItem(jcalComp);
+  } else if (jcalComp.name == "vcalendar") {
+    // A vcalendar with vevents or vtodos
+    let exceptions = [];
+    let parent;
+
+    for (let subComp of jcalComp.getAllSubcomponents()) {
+      if (subComp.name != "vevent" && subComp.name != "vtodo") {
+        continue;
+      }
+
+      if (subComp.hasProperty("recurrence-id")) {
+        exceptions.push(subComp);
+        continue;
+      }
+
+      if (parent) {
+        throw new ExtensionError("Cannot parse more than one parent item");
+      }
+
+      parent = generateItem(subComp);
+    }
+
+    if (!parent) {
+      throw new ExtensionError("TODO need to retrieve a parent item from storage");
+    }
+
+    if (exceptions.length && !parent.recurrenceInfo) {
+      throw new ExtensionError("Exceptions were supplied to a non-recurring item");
+    }
+
+    for (let exception of exceptions) {
+      let excItem = generateItem(exception);
+      if (excItem.id != parent.id || parent.isEvent() != excItem.isEvent()) {
+        throw new ExtensionError("Exception does not relate to parent item");
+      }
+      parent.recurrenceInfo.modifyException(excItem, true);
+    }
+    return parent;
+  } else {
+    throw new ExtensionError("Don't know how to handle component type " + jcalComp.name);
+  }
+}
+
+function convertSimpleFormat(props, baseItem) {
+  // TODO this was kind of a quick hack. Consider not having a simple format
+  // and forcing ical or jcal, or maybe using jsCalendar which is close enough
+  // to simple (but not backwards compatible)
+
   let item;
   if (baseItem) {
     item = baseItem;
@@ -89,51 +163,59 @@ export function propsToItem(props, baseItem) {
     throw new ExtensionError("Invalid item type: " + props.type);
   }
 
+  // TODO allow empty/null props
+
+  if (props.id) {
+    item.id = props.id;
+  }
+  if (props.title) {
+    item.title = props.title;
+  }
+  if (props.description) {
+    item.setProperty("description", props.description);
+  }
+  if (props.location) {
+    item.setProperty("location", props.location);
+  }
+  if (props.categories) {
+    item.setCategories(props.categories);
+  }
+
+  if (props.type == "event") {
+    // TODO need to do something about timezone
+    if (props.startDate) {
+      item.startDate = cal.createDateTime(props.startDate);
+    }
+    if (props.endDate) {
+      item.endDate = cal.createDateTime(props.endDate);
+    }
+  } else if (props.type == "task") {
+    // entryDate, dueDate, completedDate, isCompleted, duration
+  }
+
+  return item;
+}
+
+export function propsToItem(props, baseItem) {
+  let jcalComp;
+
   if (props.formats?.use == "ical") {
-    item.icalString = props.formats.ical;
+    try {
+      jcalComp = new ICAL.Component(ICAL.parse(props.formats.ical));
+    } catch (e) {
+      throw new ExtensionError("Could not parse iCalendar", { cause: e });
+    }
+    return parseJcalData(jcalComp);
   } else if (props.formats?.use == "jcal") {
     try {
-      item.icalString = ICAL.stringify(props.formats.jcal);
+      jcalComp = new ICAL.Component(props.formats.jcal);
     } catch (e) {
-      let jsonstring;
-      try {
-        jsonstring = JSON.stringify(props.formats.jcal, null, 2);
-      } catch {
-        jsonstring = props.formats.jcal;
-      }
-
-      throw new ExtensionError("Could not parse jCal: " + e + "\n" + jsonstring);
+      throw new ExtensionError("Could not parse jCal", { cause: e });
     }
+    return parseJcalData(jcalComp);
   } else {
-    if (props.id) {
-      item.id = props.id;
-    }
-    if (props.title) {
-      item.title = props.title;
-    }
-    if (props.description) {
-      item.setProperty("description", props.description);
-    }
-    if (props.location) {
-      item.setProperty("location", props.location);
-    }
-    if (props.categories) {
-      item.setCategories(props.categories);
-    }
-
-    if (props.type == "event") {
-      // TODO need to do something about timezone
-      if (props.startDate) {
-        item.startDate = cal.createDateTime(props.startDate);
-      }
-      if (props.endDate) {
-        item.endDate = cal.createDateTime(props.endDate);
-      }
-    } else if (props.type == "task") {
-      // entryDate, dueDate, completedDate, isCompleted, duration
-    }
+    return convertSimpleFormat(props, baseItem);
   }
-  return item;
 }
 
 export function convertItem(item, options, extension) {
@@ -158,6 +240,12 @@ export function convertItem(item, options, extension) {
   props.location = item.getProperty("location") || "";
   props.categories = item.getCategories();
 
+  let recId = item.recurrenceId?.getInTimezone(cal.timezoneService.UTC)?.icalString;
+  if (recId) {
+    let jcalId = ICAL.design.icalendar.value[recId.length == 8 ? "date" : "date-time"].fromICAL(recId);
+    props.instance = jcalId;
+  }
+
   if (isOwnCalendar(item.calendar, extension)) {
     props.metadata = {};
     let cache = getCachedCalendar(item.calendar);
@@ -170,20 +258,27 @@ export function convertItem(item, options, extension) {
   }
 
   if (options?.returnFormat) {
-    props.formats = { use: null };
     let formats = options.returnFormat;
+    props.formats = { use: formats };
+
     if (!Array.isArray(formats)) {
       formats = [formats];
     }
 
+    let serializer = Cc["@mozilla.org/calendar/ics-serializer;1"].createInstance(
+      Ci.calIIcsSerializer
+    );
+    serializer.addItems([item]);
+    let icalString = serializer.serializeToString();
+
     for (let format of formats) {
       switch (format) {
         case "ical":
-          props.formats.ical = item.icalString;
+          props.formats.ical = icalString;
           break;
         case "jcal":
           // TODO shortcut when using icaljs backend
-          props.formats.jcal = ICAL.parse(item.icalString);
+          props.formats.jcal = ICAL.parse(icalString);
           break;
         default:
           throw new ExtensionError("Invalid format specified: " + format);

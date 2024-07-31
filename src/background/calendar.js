@@ -8,8 +8,9 @@ import calGoogleRequest from "./request.js";
 import { ItemError, ResourceGoneError, QuotaFailureError } from "./errors.js";
 import Console from "./log.js";
 import TimezoneService from "./timezone.js";
+import ICAL from "./libs/ical.js";
 
-import { getGoogleId, sessionIdFromUrl, isEmail, GCAL_PATH_RE, API_BASE } from "./utils.js";
+import { getItemPath, getItemEtag, sessionIdFromUrl, isEmail, GCAL_PATH_RE, API_BASE } from "./utils.js";
 import { itemToJson, jsonToItem, jsonToAlarm, patchItem, ItemSaver } from "./items.js";
 
 var console = new Console("calGoogleCalendar");
@@ -261,11 +262,16 @@ export default class calGoogleCalendar {
   }
 
   async onItemUpdated(item, oldItem, options = {}) {
+    this.console.log(
+      `Modifying ${options.offline ? "offline " : ""}${options.invitation ? "invitation" : "regular"} ` +
+      `${item.type} ${item.title} etag ${item.metadata.etag}`
+    );
     let uri;
 
     /* istanbul ignore else - caught in patchItem */
     if (item.type == "event") {
-      uri = this.createEventsURI("events", getGoogleId(item));
+      uri = this.createEventsURI("events", getItemPath(item));
+
       let prefs = await messenger.storage.local.get({ "settings.sendEventNotifications": false });
       if (prefs["settings.sendEventNotifications"]) {
         uri += "?sendUpdates=all";
@@ -281,7 +287,7 @@ export default class calGoogleCalendar {
       uri,
       json: itemData,
       headers: {
-        "If-Match": options.force ? "*" : oldItem.metadata.etag || "*",
+        "If-Match": getItemEtag(oldItem, options.force),
       },
       calendar: this,
     });
@@ -309,33 +315,44 @@ export default class calGoogleCalendar {
       defaultReminders: this.defaultReminders,
     });
 
-    // TODO
-    //  // Make sure to update the etag. Do so before switching to the
-    //  // parent item, as google saves its own etags for changed
-    //  // instances.
-    //  migrateItemMetadata(this.offlineStorage, aOldItem, item, metaData);
-    //
-    //  if (item.recurrenceId) {
-    //    // If we only modified an exception item, then we need to
-    //    // set the parent item and modify the exception.
-    //    let modifiedItem = aNewItem.parentItem.clone();
-    //    if (item.status == "CANCELLED") {
-    //      // Canceled means the occurrence is an EXDATE.
-    //      modifiedItem.recurrenceInfo.removeOccurrenceAt(item.recurrenceId);
-    //    } else {
-    //      // Not canceled means the occurrence was modified.
-    //      modifiedItem.recurrenceInfo.modifyException(item, true);
-    //    }
-    //    item = modifiedItem;
-    //  }
+    if (newItem.instance) {
+      // Calling code expects a parent item. Add the created instance to the parent item from the
+      // cache and move forward with that.
+      let parentItem = await messenger.calendar.items.get(this.cacheId, newItem.id, { returnFormat: "jcal" });
+      let parentJcal = new ICAL.Component(parentItem.formats.jcal);
+      let newItemComponent = new ICAL.Component(newItem.formats.jcal);
+      parentJcal.addSubcomponent(newItemComponent.getFirstSubcomponent(newItem.type == "event" ? "vevent" : "vtodo"));
+
+      parentItem.metadata.etag = newItem.metadata.etag;
+      newItem = parentItem;
+    } else if (data.recurrence) {
+      // We need to make sure all modified instances are on the returned item. If we modify the
+      // parent, (e.g. add an EXDATE), newItem will just be the parent, but without the instances.
+      let referenceItem = await messenger.calendar.items.get(this.cacheId, newItem.id, { returnFormat: "jcal" });
+      referenceItem = new ICAL.Component(referenceItem.formats.jcal);
+
+      let parentItem = new ICAL.Component(newItem.formats.jcal);
+      for (let component of referenceItem.getAllSubcomponents()) {
+        if (component.name != "vevent" && component.name != "vtodo") {
+          continue;
+        }
+        if (component.hasProperty("recurrence-id")) {
+          parentItem.addSubcomponent(component);
+        }
+      }
+    }
 
     return newItem;
   }
 
   async onItemRemoved(item, options = {}) {
+    this.console.log(
+      `Removing ${options.offline ? "offline " : ""}${options.invitation ? "invitation" : "regular"} ` +
+      `${item.type} ${item.title}`
+    );
     let uri;
     if (item.type == "event") {
-      uri = this.createEventsURI("events", getGoogleId(item));
+      uri = this.createEventsURI("events", getItemPath(item));
       let prefs = await messenger.storage.local.get({ "settings.sendEventNotifications": false });
       if (prefs["settings.sendEventNotifications"]) {
         uri += "?sendUpdates=all";
@@ -350,7 +367,7 @@ export default class calGoogleCalendar {
       method: "DELETE",
       uri,
       headers: {
-        "If-Match": options.force ? "*" : (item.metadata.etag || "*"),
+        "If-Match": getItemEtag(item, options.force),
       },
       calendar: this,
     });
