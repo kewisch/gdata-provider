@@ -51,7 +51,7 @@
       }
     }
   },
-  "valarm_default": {
+  "valarm_no_default_override": {
     "kind": "calendar#event",
     "etag": "\"2128312983238480\"",
     "id": "swpefnfloqssxjdlbpyqlyqddb",
@@ -113,6 +113,37 @@
         "X-MOZ-LASTACK": "2014-01-01T01:01:01Z",
         "X-MOZ-SNOOZE-TIME": "2014-01-01T02:02:02Z"
       }
+    }
+  },
+  "valarm_default_override": {
+    "kind": "calendar#event",
+    "etag": "\"2128312983238480\"",
+    "id": "swpefnfloqssxjdlbpyqlyqddb",
+    "eventType": "default",
+    "status": "confirmed",
+    "htmlLink": "https://example.com/calendar/event?eid=eventhash",
+    "created": "2006-06-08T21:04:52.000Z",
+    "updated": "2006-06-08T21:05:49.138Z",
+    "summary": "New Event",
+    "description": "Description",
+    "location": "Hard Drive",
+    "colorId": 17,
+    "creator": { "id": "b4d9b3a9-b537-47bd-92a1-fb40c0c1c7fc", "displayName": "Eggs P. Seashell" },
+    "organizer": { "id": "b4d9b3a9-b537-47bd-92a1-fb40c0c1c7fc", "displayName": "Eggs P. Seashell" },
+    "start": { "date": "2006-06-10" },
+    "endTimeUnspecified": true,
+    "end": { "date": "2006-06-11" },
+    "transparency": "transparent",
+    "visibility": "private",
+    "sequence": 1,
+    "reminders": {
+      "useDefault": true,
+      "overrides": [
+        {
+          "method": "email",
+          "minutes": 20
+        }
+      ]
     }
   },
   "utc_event": {

@@ -92,16 +92,37 @@ describe("jsonToItem", () => {
       expect(jcal.getFirstProperty("dtend").getParameter("tzid")).toBe("Europe/Berlin");
 
       let alarms = jcal.getAllSubcomponents("valarm");
-      expect(alarms.length).toBe(3);
-      expect(alarms[0].getFirstPropertyValue("action")).toBe("EMAIL");
-      expect(alarms[0].getFirstPropertyValue("trigger").toICALString()).toBe("-PT20M");
-      expect(alarms[0].getFirstPropertyValue("x-default-alarm")).toBe(null);
-      expect(alarms[1].getFirstPropertyValue("action")).toBe("DISPLAY");
-      expect(alarms[1].getFirstPropertyValue("trigger").toICALString()).toBe("-PT5M");
-      expect(alarms[1].getFirstPropertyValue("x-default-alarm")).toBe(null);
-      expect(alarms[2].getFirstPropertyValue("action")).toBe("DISPLAY");
-      expect(alarms[2].getFirstPropertyValue("trigger").toICALString()).toBe("-PT10M");
-      expect(alarms[2].getFirstPropertyValue("x-default-alarm")).toBe(null);
+      expect(alarms.length).toBe(4);
+
+      let alarminfo = alarms.map(alarm => {
+        return {
+          action: alarm.getFirstPropertyValue("action"),
+          trigger: alarm.getFirstPropertyValue("trigger").toICALString(),
+          "x-default-alarm": alarm.getFirstPropertyValue("x-default-alarm")
+        };
+      });
+      expect(alarminfo).toEqual(expect.arrayContaining([
+        {
+          action: "EMAIL",
+          trigger: "-PT20M",
+          "x-default-alarm": null,
+        },
+        {
+          action: "DISPLAY",
+          trigger: "-PT5M",
+          "x-default-alarm": null,
+        },
+        {
+          action: "DISPLAY",
+          trigger: "-PT10M",
+          "x-default-alarm": null,
+        },
+        {
+          action: "DISPLAY",
+          trigger: "-PT2H",
+          "x-default-alarm": true,
+        }
+      ]));
 
       let attendees = jcal.getAllProperties("attendee");
       expect(attendees.length).toBe(2);
@@ -171,12 +192,13 @@ describe("jsonToItem", () => {
       expect(jcal.getFirstProperty("organizer").getParameter("cn")).toBe(undefined);
     });
 
-    test("valarm_default event", async () => {
+    test("valarm_no_default_override event", async () => {
+      let defaultReminders = [{ method: "popup", minutes: 120 }];
       let item = await jsonToItem({
-        entry: gcalItems.valarm_default,
+        entry: gcalItems.valarm_no_default_override,
         calendar,
         accessRole: "freeBusyReader",
-        defaultReminders: [],
+        defaultReminders,
         defaultTimezone
       });
       let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
@@ -188,6 +210,35 @@ describe("jsonToItem", () => {
         "urn:id:b4d9b3a9-b537-47bd-92a1-fb40c0c1c7fc"
       );
       expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610");
+
+      let alarms = jcal.getAllSubcomponents("valarm");
+      expect(alarms?.length).toBe(1);
+      expect(alarms[0].getFirstPropertyValue("trigger").toICALString()).toBe("-PT20M");
+    });
+
+    test("valarm_default_override event", async () => {
+      let defaultReminders = [{ method: "popup", minutes: 120 }];
+      let item = await jsonToItem({
+        entry: gcalItems.valarm_default_override,
+        calendar,
+        accessRole: "freeBusyReader",
+        defaultReminders,
+        defaultTimezone
+      });
+      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+
+      expect(jcal.getFirstPropertyValue("uid")).toBe("swpefnfloqssxjdlbpyqlyqddb@google.com");
+      expect(jcal.getFirstPropertyValue("summary")).toBe("busyTitle[calendarName]");
+      expect(jcal.getFirstProperty("dtend")).toBe(null); // endTimeUnspecified
+      expect(jcal.getFirstPropertyValue("organizer")).toBe(
+        "urn:id:b4d9b3a9-b537-47bd-92a1-fb40c0c1c7fc"
+      );
+      expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610");
+
+      let alarms = jcal.getAllSubcomponents("valarm");
+      expect(alarms?.length).toBe(2);
+      let triggers = alarms.map(alarm => alarm.getFirstPropertyValue("trigger").toICALString());
+      expect(triggers).toEqual(expect.arrayContaining(["-PT20M", "-PT2H"]));
     });
     test("utc_event event", async () => {
       let item = await jsonToItem({
@@ -474,8 +525,8 @@ describe("itemToJson", () => {
     });
   });
 
-  test("event 2", async () => {
-    let data = itemToJson(jcalItems.valarm_default, calendar, false);
+  test("valarm_no_default_override", async () => {
+    let data = itemToJson(jcalItems.valarm_no_default_override, calendar, false);
     expect(data).toEqual({
       icalUID: "xkoaavctdghzjszjssqttcbhkv@google.com",
       reminders: {
@@ -996,9 +1047,9 @@ describe("ItemSaver", () => {
       expect(console.log).toHaveBeenCalledWith("No events have been changed");
     });
 
-    test("Simple item", async () => {
+    test("Single item (valarm_no_default_override)", async () => {
       await saver.parseEventStream({
-        items: [gcalItems.valarm_default],
+        items: [gcalItems.valarm_no_default_override],
       });
       await saver.complete();
       expect(console.log).toHaveBeenCalledWith("Parsing 1 received events");
@@ -1016,7 +1067,7 @@ describe("ItemSaver", () => {
       );
     });
     test("Master item removed", async () => {
-      let gitem = v8.deserialize(v8.serialize(gcalItems.valarm_default));
+      let gitem = v8.deserialize(v8.serialize(gcalItems.valarm_no_default_override));
       gitem.status = "cancelled";
 
       await saver.parseEventStream({

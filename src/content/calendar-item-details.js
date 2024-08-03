@@ -120,6 +120,8 @@ async function main() {
 
     // TODO need to devise item-level capabilities
   }
+
+  // TODO need an action on save. We need to set x-default-alarm as needed
 }
 
 main();

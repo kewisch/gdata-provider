@@ -240,7 +240,7 @@ export default class calGoogleCalendar {
       calendar: this,
       accessRole,
       defaultTimezone,
-      defaultReminders: this.defaultReminders
+      defaultReminders: this.defaultReminders,
     });
 
     if (data.organizer?.self) {
@@ -419,9 +419,7 @@ export default class calGoogleCalendar {
             calendar: this,
           });
           let data = await request.commit(this.session);
-          this.defaultReminders = (data.defaultReminders || []).map(alarm =>
-            jsonToAlarm(alarm, true)
-          );
+          this.defaultReminders = data.defaultReminders;
 
           let settings = [
             "accessRole",

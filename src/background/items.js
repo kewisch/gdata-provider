@@ -713,8 +713,15 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
   }
 
   if (entry.reminders) {
-    if (entry.reminders.useDefault && defaultReminders?.length) {
-      veventprops.push(["x-default-alarm", {}, "boolean", true]);
+    if (entry.reminders.useDefault) {
+      veventcomps.push(...defaultReminders.map(alarmEntry => jsonToAlarm(alarmEntry, true)));
+
+      if (!defaultReminders?.length) {
+        // There are no default reminders, but we want to use the default in case the user changes
+        // it in the future. Until we have VALARM extension which allow for a default settings, we
+        // use an x-prop
+        veventprops.push(["x-default-alarm", {}, "boolean", true]);
+      }
     }
 
     if (entry.reminders.overrides) {
@@ -723,8 +730,6 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
       }
     }
   }
-
-  // TODO reminders and default reminders
 
   // We can set these directly as they are UTC RFC3339 timestamps, which works with jCal date-times
   setIf("x-moz-lastack", "date-time", stripFractional(privateProps["X-MOZ-LASTACK"]));
@@ -830,11 +835,6 @@ export class ItemSaver {
 
     let exceptionItems = [];
 
-    // TODO default reminders from stream
-    // let defaultReminders = (aData.defaultReminders || []).map(reminder =>
-    //   JSONToAlarm(reminder, true)
-    // );
-
     let defaultTimezone = TimezoneService.get(data.timeZone);
 
     // In the first pass, we go through the data and sort into parent items and exception items, as
@@ -845,7 +845,7 @@ export class ItemSaver {
         let item = await jsonToEvent({
           entry,
           calendar: this.calendar,
-          defaultReminders: null, // TODO pass in default reminders
+          defaultReminders: data.defaultReminders || [],
           defaultTimezone
         });
         item.formats.jcal = addVCalendar(item.formats.jcal);

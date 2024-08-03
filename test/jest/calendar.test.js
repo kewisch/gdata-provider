@@ -348,7 +348,7 @@ describe("item functions", () => {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify(gcalItemResponse),
+              body: JSON.stringify(gcalItemResponse)
             };
           }
           throw new Error("Unhandled request " + req.url);
