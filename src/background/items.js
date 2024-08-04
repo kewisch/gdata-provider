@@ -34,9 +34,10 @@ const CONTAINS_HTML_RE = /^<|&(lt|gt|amp);|<(br|p)>/;
 
 export function findRelevantInstance(vcalendar, instance, type) {
   for (let comp of vcalendar.getAllSubcomponents(type)) {
-    if (!instance && !comp.hasProperty("recurrence-id")) {
+    let recId = comp.getFirstPropertyValue("recurrence-id");
+    if (!instance && !recId) {
       return comp;
-    } else if (instance && comp.getFirstPropertyValue("recurrence-id")?.convertToZone(ICAL.Timezone.utcTimezone).toString() == instance) {
+    } else if (instance && recId?.convertToZone(ICAL.Timezone.utcTimezone).toString() == instance) {
       return comp;
     }
   }
@@ -54,17 +55,18 @@ export function itemToJson(item, calendar, isImport) {
 }
 
 function eventToJson(item, calendar, isImport) {
+  let veventprops = [];
   let oldItem = {
     formats: {
       use: "jcal",
-      jcal: ["vcalendar", [], [["vevent", [], []]]],
+      jcal: ["vcalendar", [], [["vevent", veventprops, []]]],
     },
   };
 
   if (item.instance) {
-    // TODO need this so that patchEvent will set up the instance correctly, but this is a really
-    // brittle way to do it.
-    oldItem.formats.jcal[2][0][1].push(
+    // patchEvent needs to find the relevant instance, which means we need the recurrence-id on the
+    // old item.
+    veventprops.push(
       ["recurrence-id", {}, item.instance.length == 10 ? "date" : "date-time", item.instance]
     );
   }
@@ -438,7 +440,6 @@ function patchEvent(item, oldItem) {
 
   let entry = { extendedProperties: { shared: {}, private: {} } };
 
-  // TODO this is where brittle occurs
   let event = findRelevantInstance(new ICAL.Component(item.formats.jcal), item.instance, "vevent");
   let oldEvent = findRelevantInstance(new ICAL.Component(oldItem.formats.jcal), item.instance, "vevent");
 
