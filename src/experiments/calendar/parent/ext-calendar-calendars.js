@@ -69,7 +69,6 @@ this.calendar_calendars = class extends ExtensionAPI {
               .map(calendar => convertCalendar(context.extension, calendar));
           },
           get: async function(id) {
-            // TODO find a better way to determine cache id
             if (id.endsWith("#cache")) {
               let calendar = unwrapCalendar(cal.manager.getCalendarById(id.substring(0, id.length - 6)));
               let own = calendar.offlineStorage && isOwnCalendar(calendar, context.extension);

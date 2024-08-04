@@ -52,7 +52,6 @@ export function getCachedCalendar(calendar) {
 }
 
 export function isCachedCalendar(id) {
-  // TODO make this better
   return id.endsWith("#cache");
 }
 
@@ -72,7 +71,6 @@ export function convertCalendar(extension, calendar) {
   };
 
   if (isOwnCalendar(calendar, extension)) {
-    // TODO find a better way to define the cache id
     props.cacheId = calendar.superCalendar.id + "#cache";
     props.capabilities = unwrapCalendar(calendar.superCalendar).capabilities; // TODO needs deep clone?
   }

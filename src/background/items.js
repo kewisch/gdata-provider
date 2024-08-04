@@ -758,8 +758,6 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
     veventprops.push(["categories", {}, "text", ...categories]);
   }
 
-  // TODO do we still need referenceItem?
-
   let shell = {
     // TODO having both title and formats/jcal/summary kinda sucks. Maybe go with shell format instead
     id: uid,
@@ -840,7 +838,6 @@ export class ItemSaver {
 
     // In the first pass, we go through the data and sort into parent items and exception items, as
     // the parent item might be after the exception in the stream.
-    // TODO figure out if it is ok to throw here
     await Promise.all(
       data.items.map(async entry => {
         let item = await jsonToEvent({
@@ -961,8 +958,6 @@ export class ItemSaver {
           // If the item could not be found, it could be that the user is invited to an instance of
           // a recurring event. Unless this is a cancelled exception, create a mock parent item with
           // one positive RDATE.
-          // TODO this was also in the old code, but what happens if someone is invited to an
-          // exception of a recurring event that doesn't fall on the date of the recurrence-id?
 
           // Copy dtstart and rdate, same timezone
           let recId = excEvent.getFirstProperty("recurrence-id");
