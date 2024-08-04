@@ -23,7 +23,7 @@ this.calendar_calendars = class extends ExtensionAPI {
     return {
       calendar: {
         calendars: {
-          query: async function({ type, url, name, color, readOnly, enabled }) {
+          query: async function({ type, url, name, color, readOnly, enabled, visible }) {
             let calendars = cal.manager.getCalendars();
 
             let pattern = null;
@@ -60,6 +60,10 @@ this.calendar_calendars = class extends ExtensionAPI {
                   matches = false;
                 }
 
+                if (visible != null & calendar.getProperty("calendar-main-in-composite") != visible) {
+                  matches = false;
+                }
+
                 if (readOnly != null && calendar.readOnly != readOnly) {
                   matches = false;
                 }
@@ -91,6 +95,12 @@ this.calendar_calendars = class extends ExtensionAPI {
             if (typeof createProperties.color != "undefined") {
               calendar.setProperty("color", createProperties.color);
             }
+            if (typeof createProperties.visible != "undefined") {
+              calendar.setProperty("calendar-main-in-composite", createProperties.visible);
+            }
+            if (typeof createProperties.showReminders != "undefined") {
+              calendar.setProperty("suppressAlarms", !createProperties.showReminders);
+            }
 
             cal.manager.registerCalendar(calendar);
 
@@ -116,6 +126,14 @@ this.calendar_calendars = class extends ExtensionAPI {
 
             if (updateProperties.enabled != null) {
               calendar.setProperty("disabled", !updateProperties.enabled);
+            }
+
+            if (updateProperties.visible != null) {
+              calendar.setProperty("calendar-main-in-composite", updateProperties.visible);
+            }
+
+            if (updateProperties.showReminders != null) {
+              calendar.setProperty("suppressAlarms", !updateProperties.showReminders);
             }
 
             for (let prop of ["readOnly", "name", "color"]) {
@@ -240,6 +258,12 @@ this.calendar_calendars = class extends ExtensionAPI {
                       break;
                     case "uri":
                       fire.sync(converted, { url: value?.spec });
+                      break;
+                    case "suppressAlarms":
+                      fire.sync(converted, { showReminders: !value });
+                      break;
+                    case "calendar-main-in-composite":
+                      fire.sync(converted, { visible: value });
                       break;
                     case "disabled":
                       fire.sync(converted, { enabled: !value });

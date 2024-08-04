@@ -20,9 +20,6 @@ export async function migrateCalendars(ids) {
       delete calendar.id;
       calendar.type = "ext-" + messenger.runtime.id;
 
-      // TODO existing properties copied: color, disabled, suppressAlarms,
-      // calendar-main-in-composite, calendar-main-default, name, uri
-
       await messenger.calendar.calendars.create(calendar);
       await messenger.calendar.calendars.remove(id);
     })

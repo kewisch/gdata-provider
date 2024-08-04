@@ -66,6 +66,8 @@ export function convertCalendar(extension, calendar) {
     name: calendar.name,
     url: calendar.uri.spec,
     readOnly: calendar.readOnly,
+    visible: !!calendar.getProperty("calendar-main-in-composite"),
+    showReminders: !calendar.getProperty("suppressAlarms"),
     enabled: !calendar.getProperty("disabled"),
     color: calendar.getProperty("color") || "#A8C2E1",
   };

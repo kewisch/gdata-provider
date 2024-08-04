@@ -13,6 +13,8 @@
           "url": { "type": "string" },
           "readOnly": { "type": "boolean" },
           "enabled": { "type": "boolean" },
+          "visible": { "type": "boolean" },
+          "showReminders": { "type": "boolean" },
           "color": { "type": "string", "optional": true },
           "capabilities": { "$ref": "CalendarCapabilities", "optional": true }
         }
@@ -25,6 +27,8 @@
           "url": { "type": "string" },
           "readOnly": { "type": "boolean" },
           "enabled": { "type": "boolean" },
+          "visible": { "type": "boolean" },
+          "showReminders": { "type": "boolean" },
           "color": { "type": "string", "optional": true }
         }
       },
@@ -104,6 +108,7 @@
               "name": { "type": "string", "optional": true },
               "color": { "type": "string", "optional": true },
               "readOnly": { "type": "boolean", "optional": true },
+              "visible": { "type": "boolean", "optional": true },
               "enabled": { "type": "boolean", "optional": true }
             }
           }
@@ -131,6 +136,8 @@
               "url": { "type": "string" },
               "readOnly": { "type": "boolean", "optional": true },
               "enabled": { "type": "boolean", "optional": true },
+              "visible": { "type": "boolean", "optional": true },
+              "showReminders": { "type": "boolean", "optional": true },
               "color": { "type": "string", "optional": true },
               "capabilities": { "$ref": "CalendarCapabilities", "optional": true }
             }
