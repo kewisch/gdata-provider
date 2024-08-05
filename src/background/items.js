@@ -563,6 +563,8 @@ function patchEvent(item, oldItem) {
     delete entry.extendedProperties;
   }
 
+  setIfFirstProperty(entry, "colorId", "x-google-color-id");
+
   return entry;
 }
 
@@ -658,7 +660,6 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
     veventprops.push(jsonToDate("recurrence-id", entry.originalStartTime, defaultTimezone));
   }
 
-  // TODO entry.colorId
   let isFreeBusy = accessRole == "freeBusyReader";
   let summary = isFreeBusy ? messenger.i18n.getMessage("busyTitle", calendar.name) : entry.summary;
   setIf("summary", "text", summary);
@@ -671,6 +672,7 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
     setIf("x-google-event-type", "text", entry.eventType);
   }
 
+  setIf("x-google-color-id", "text", String(entry.colorId));
   setIf("x-google-confdata", "text", entry.conferenceData ? JSON.stringify(entry.conferenceData) : null);
 
   pushPropIf(jsonToDate("dtstart", entry.start, defaultTimezone));

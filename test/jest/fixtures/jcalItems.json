@@ -34,6 +34,7 @@
                 [ "sequence", {}, "integer", 1 ],
                 [ "url", {}, "uri", "https://example.com/calendar/event?eid=eventhash" ],
                 [ "transp", {}, "text", "TRANSPARENT" ],
+                [ "x-google-color-id", {}, "text", "17" ],
                 [ "dtstart", { "tzid" : "Europe/Berlin" }, "date-time", "2006-06-10T18:00:00" ],
                 [ "dtend", { "tzid" : "Europe/Berlin" }, "date-time", "2006-06-10T20:00:00" ],
                 [ "organizer", { "cn" : "Eggs P. Seashell" }, "uri", "mailto:organizer@example.com" ],

@@ -142,6 +142,7 @@ describe("jsonToItem", () => {
       expect(jcal.getFirstPropertyValue("x-moz-snooze-time").toString()).toBe(
         "2014-01-01T02:02:02Z"
       );
+      expect(jcal.getFirstPropertyValue("x-google-color-id")).toBe("17");
 
       // Remove the properties we consumed and see if we forgot anything
       [
@@ -164,7 +165,8 @@ describe("jsonToItem", () => {
         "categories",
         "x-moz-lastack",
         "x-moz-snooze-time",
-        "x-default-alarm",
+        "x-google-color-id",
+        "x-default-alarm"
       ].forEach(prop => {
         jcal.removeAllProperties(prop);
       });
@@ -436,7 +438,7 @@ describe("jsonToDate", () => {
 describe("itemToJson", () => {
   let calendar = { console, name: "calendarName" };
 
-  test("event 0", async () => {
+  test("simple_event", async () => {
     let data = itemToJson(jcalItems.simple_event, calendar, false);
 
     // TODO originalStartTime
@@ -457,6 +459,7 @@ describe("itemToJson", () => {
         "displayName": "Eggs P. Seashell",
         "email": "organizer@example.com"
       },
+      colorId: "17",
       attendees: [
         {
           displayName: "attendee name",
@@ -698,9 +701,6 @@ describe("patchItem", () => {
         ],
       ])("prop %s", (jprop, prop, jchanged, changed) => {
         event.updatePropertyWithValue(jprop, jchanged);
-        if (jprop.startsWith("x-moz-snooze-time-")) {
-          console.warn(event.jCal);
-        }
         changes = patchItem(item, oldItem);
         expect(changes).toEqual({ [prop]: changed });
       });
