@@ -6,31 +6,26 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <style>
-      #calendar-list li, #tasklist-list li {
-        list-style-type: none;
-      }
-      
-      section[hidden] {
-        display: none !important;
-      }
-    </style>
+    <link rel="stylesheet" href="calendar-creation.css">
   </head>
   <body>
     <section id="gdata-session">
-      <p data-l10n-id="gdata.wizard.session.description"></p>
+      <p class="description" data-l10n-id="gdata.wizard.session.description"></p>
       <div id="gdata-existing-sessions">
       </div>
-      <input type="radio" name="session" value=""><input id="gdata-session-name" type="email">
-      <br>
-      <input type="button" id="gdata-auth-session" value="Authenticate Session"></input>
+      <div id="gdata-new-session">
+        <input type="radio" name="session" value="_new">
+        <input id="gdata-session-name" type="email">
+      </div>
     </section>
     <section id="gdata-calendars" hidden="true">
-      <p data-l10n-id="gdata.wizard.calendars.description"></p>
-      <h2>Calendars</h2>
-      <ul id="calendar-list"></ul>
-      <h2>Task Lists</h2>
-      <ul id="tasklist-list"></ul>
+      <p class="description" data-l10n-id="gdata.wizard.calendars.description"></p>
+      <div class="scroll-area">
+        <h2>Calendars</h2>
+        <ul id="calendar-list"></ul>
+        <h2>Task Lists</h2>
+        <ul id="tasklist-list"></ul>
+      </div>
     </section>
     <script type="module" src="calendar-creation.js"></script>
   </body>

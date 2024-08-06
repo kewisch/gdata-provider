@@ -59,6 +59,23 @@
         }
       }
     }],
+    "functions": [
+      {
+        "name": "setAdvanceAction",
+        "async": true,
+        "type": "function",
+        "parameters": [
+          {
+            "type": "object",
+            "properties": {
+              "forward": { "type": "string" },
+              "back": { "type": "string", "optional": true },
+              "label": { "type": "string" }
+            }
+          }
+        ]
+      }
+    ],
     "events": [
       {
         "name": "onItemCreated",
@@ -186,6 +203,13 @@
           { "name": "location", "type": "string" },
           { "name": "savePassword", "type": "boolean" },
           { "name": "extraProperties", "type": "object" }
+        ]
+      },
+      {
+        "name": "onAdvanceNewCalendar",
+        "type": "function",
+        "parameters": [
+          { "name": "id", "type": "string" }
         ]
       }
     ]

@@ -145,6 +145,8 @@ export default function createMessenger() {
       calendars: new WebExtCalendars(),
       items: new WebExtCalendarItems(),
       provider: {
+        _advanceAction: null,
+
         onFreeBusy: new WebExtListener(),
         onItemCreated: new WebExtListener(),
         onItemUpdated: new WebExtListener(),
@@ -153,6 +155,11 @@ export default function createMessenger() {
         onSync: new WebExtListener(),
         onResetSync: new WebExtListener(),
         onDetectCalendars: new WebExtListener(),
+
+        setAdvanceAction: function(action) {
+          this._advanceAction = action;
+        },
+        onAdvanceNewCalendar: new WebExtListener(),
       },
 
       timezones: {

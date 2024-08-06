@@ -1,0 +1,70 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch */
+
+* {
+  box-sizing: border-box;
+}
+  
+html, body {
+  background: -moz-Dialog;
+  color: -moz-DialogText;
+  font-family: -apple-system;
+  font-size: 11px;
+  margin: 0;
+  padding: 0;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+section > .description {
+  margin-top: 0;
+}
+
+section[hidden] {
+  display: none !important;
+}
+
+#gdata-calendars > .scroll-area {
+  overflow: auto;
+  flex: 1;
+}
+
+#gdata-calendars > .scroll-area > h2:first-child {
+  margin-top: 0;
+}
+
+#gdata-calendars > .scroll-area > h2 {
+  position: sticky;
+  top: 0;
+  background: -moz-Dialog;
+  font-weight: 300;
+}
+
+#calendar-list, #tasklist-list {
+  padding-inline-start: 23px;
+}
+
+#calendar-list li, #tasklist-list li {
+  list-style-type: none;
+}
+
+#calendar-list li label, #tasklist-list li label {
+  display: flex;
+  align-items: center;
+}
+
+#gdata-existing-sessions label {
+  display: block;
+}
+
+#gdata-new-session, #gdata-existing-sessions label {
+  padding: 0.3ex 0;
+  margin-inline-start: 23px;
+}

@@ -5,7 +5,7 @@
 import fs from "fs";
 import { jest } from "@jest/globals";
 import createMessenger from "./helpers/webext-api.js";
-import { main as creationMain, clickAuth, onCreate } from "../../src/content/calendar-creation.js";
+import { main as creationMain, onAuthenticate, onCreate } from "../../src/content/calendar-creation.js";
 import { initMessageListener } from "../../src/background/index.js";
 import sessions from "../../src/background/session.js";
 
@@ -49,7 +49,7 @@ test("auth", async () => {
   });
 
   document.getElementById("gdata-session-name").value = "sessionId";
-  await clickAuth();
+  await onAuthenticate();
 
   expect(qs("#calendar-list").children.length).toBe(1);
   expect(qs("#calendar-list > li > label").textContent).toBe("calendar1");
@@ -69,7 +69,7 @@ test("create", async () => {
   });
 
   document.getElementById("gdata-session-name").value = "sessionId";
-  await clickAuth();
+  await onAuthenticate();
 
   qs("#calendar-list > li > label > input").checked = true;
 
@@ -83,6 +83,7 @@ test("create", async () => {
 });
 
 test("invalid message", async () => {
+  await creationMain();
   await onCreate({ data: "something else" });
   expect(messenger.calendar.calendars.create).not.toHaveBeenCalled();
 });
