@@ -105,6 +105,12 @@ test("accept no calendars", async () => {
   expect(await getStoragePref("settings.migrate")).toBe(null);
 
   await migrateMain();
+  expect(accept).toHaveTextContent("gdata.migration.dont-upgrade.label[]");
+  let firstInput = qs("#calendar-listbox input");
+  firstInput.click();
+  expect(accept).toHaveTextContent("gdata.migration.upgrade.label[]");
+  firstInput.click();
+  expect(accept).toHaveTextContent("gdata.migration.dont-upgrade.label[]");
   await clickAccept();
 
   expect(window.close).toHaveBeenCalledTimes(1);
