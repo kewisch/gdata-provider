@@ -44,6 +44,21 @@ export function findRelevantInstance(vcalendar, instance, type) {
   return null;
 }
 
+export function transformDateXprop(value) {
+  if (!value || value[4] == "-") {
+    // No value, or already a jCal/rfc3339 time
+    return value;
+  } else if (value instanceof ICAL.Time) {
+    // Core needs to allow x-props with params, then this will simply be parsed an ICAL.Time
+    return value.toString();
+  } else if (value.length == 16 && value[value.length - 1] == "Z") {
+    // An ICAL string value like 20240102T030405Z
+    return ICAL.design.icalendar.value["date-time"].fromICAL(value);
+  }
+
+  return null;
+}
+
 export function itemToJson(item, calendar, isImport) {
   if (item.type == "event") {
     return eventToJson(item, calendar, isImport);
@@ -544,13 +559,13 @@ function patchEvent(item, oldItem) {
     entry.extendedProperties.private,
     "X-MOZ-LASTACK",
     "x-moz-lastack",
-    ack => ack?.toString()
+    transformDateXprop
   );
   setIfFirstProperty(
     entry.extendedProperties.private,
     "X-MOZ-SNOOZE-TIME",
     "x-moz-snooze-time",
-    snooze => snooze?.toString()
+    transformDateXprop
   );
 
   if (!Object.keys(entry.extendedProperties.shared).length) {

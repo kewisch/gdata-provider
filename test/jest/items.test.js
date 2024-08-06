@@ -1,7 +1,7 @@
 import gcalItems from "./fixtures/gcalItems.json";
 import jcalItems from "./fixtures/jcalItems.json";
 
-import { findRelevantInstance, jsonToItem, jsonToDate, itemToJson, patchItem, ItemSaver } from "../../src/background/items";
+import { findRelevantInstance, transformDateXprop, jsonToItem, jsonToDate, itemToJson, patchItem, ItemSaver } from "../../src/background/items";
 import calGoogleCalendar from "../../src/background/calendar";
 import ICAL from "../../src/background/libs/ical.js";
 import TimezoneService from "../../src/background/timezone.js";
@@ -46,6 +46,14 @@ test("findRelevantInstance", () => {
   vevent = vcalendar.getFirstSubcomponent("vevent");
   expect(findRelevantInstance(vcalendar, false, "vevent")).toBeNull();
   expect(findRelevantInstance(vcalendar, "2006-06-25", "vevent")).toBe(vevent);
+});
+
+test("transformDateXprop", () => {
+  expect(transformDateXprop(null)).toBeNull();
+  expect(transformDateXprop("2024-01-01T01:02:03Z")).toBe("2024-01-01T01:02:03Z");
+  expect(transformDateXprop(ICAL.Time.fromString("2024-01-01T01:02:03Z"))).toBe("2024-01-01T01:02:03Z");
+  expect(transformDateXprop("20240101T010203Z")).toBe("2024-01-01T01:02:03Z");
+  expect(transformDateXprop("2024aaaa0101T010203Z")).toBe(null);
 });
 
 describe("jsonToItem", () => {
