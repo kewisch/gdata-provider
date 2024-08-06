@@ -398,7 +398,7 @@ export default class calGoogleCalendar {
   async onSync(retry = true) {
     let prefs = await messenger.storage.local.get({
       "settings.idleTime": 300,
-      "settings.maxResultsPerRequest": null,
+      "settings.maxResultsPerRequest": 1000,
     });
 
     let idleState = await messenger.idle.queryState(prefs["settings.idleTime"] * 1000);
