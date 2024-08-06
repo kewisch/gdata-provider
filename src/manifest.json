@@ -44,13 +44,6 @@
     }
   },
 
-  "calendar_item_action": {
-    "default_icon": "icon.png",
-    "default_popup": "content/calendar-item-action.html",
-    "default_title": "__MSG_extensionName__",
-    "type": "button"
-  },
-
   "calendar_item_details": {
     "default_icon": "icon.png",
     "default_content": "content/calendar-item-details.html",
