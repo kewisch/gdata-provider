@@ -2,14 +2,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var {
-  ExtensionCommon: { ExtensionAPI, EventManager, EventEmitter }
-} = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
+var { ExtensionCommon: { ExtensionAPI, EventManager, EventEmitter } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
+var { ExtensionUtils: { ExtensionError } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionUtils.sys.mjs");
 
 var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
 var { ExtensionSupport } = ChromeUtils.importESModule("resource:///modules/ExtensionSupport.sys.mjs");
 
-
+// TODO move me
 function getNewCalendarWindow() {
   // This window is missing a windowtype attribute
   for (let win of Services.wm.getEnumerator(null)) {
@@ -565,9 +564,7 @@ this.calendar_provider = class extends ExtensionAPI {
             }
 
             loadPromise.then(() => {
-              browser.fixupAndLoadURIString(calendarType.panelSrc, {
-                triggeringPrincipal: this.extension.principal
-              });
+              browser.fixupAndLoadURIString(calendarType.panelSrc, { triggeringPrincipal: this.extension.principal });
             });
 
             win.gButtonHandlers.forNodeId["panel-addon-calendar-settings"].accept = (event) => {
@@ -627,7 +624,7 @@ this.calendar_provider = class extends ExtensionAPI {
       .getProtocolHandler("resource")
       .QueryInterface(Ci.nsIResProtocolHandler)
       .setSubstitution("tb-experiments-calendar", null);
-    Services.obs.notifyObservers(null, "startupcache-invalidate", null);
+    Services.obs.notifyObservers(null, "startupcache-invalidate");
   }
 
   onManifestEntry(entryName) {
@@ -817,7 +814,7 @@ this.calendar_provider = class extends ExtensionAPI {
 
 
           // New calendar dialog
-          setAdvanceAction: async function({ forward, back, label }) {
+          async setAdvanceAction({ forward, back, label }) {
             let window = getNewCalendarWindow();
             if (!window) {
               throw new ExtensionError("New calendar wizard is not open");

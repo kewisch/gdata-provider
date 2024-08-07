@@ -37,7 +37,7 @@ this.calendarItemAction = class extends ToolbarButtonAPI {
     // TODO this is only necessary in the experiment, can refactor this when moving to core.
     ExtensionSupport.registerWindowListener("ext-calendar-itemAction-" + this.extension.id, {
       chromeURLs: ["chrome://calendar/content/calendar-event-dialog.xhtml"],
-      onLoadWindow: function(win) {
+      onLoadWindow(win) {
         let { document } = win;
 
         if (!document.getElementById("mainPopupSet")) {

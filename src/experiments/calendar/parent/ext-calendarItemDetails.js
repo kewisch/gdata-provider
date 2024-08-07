@@ -2,16 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var {
-  ExtensionCommon: { ExtensionAPI, makeWidgetId }
-} = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
+var { ExtensionCommon: { ExtensionAPI, makeWidgetId } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
 
-var {
-  ExtensionUtils: { ExtensionError }
-} = ChromeUtils.importESModule("resource://gre/modules/ExtensionUtils.sys.mjs");
-
-Cu.importGlobalProperties(["URL"]);
-
+var { ExtensionUtils: { ExtensionError } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionUtils.sys.mjs");
 
 var { ExtensionSupport } = ChromeUtils.importESModule("resource:///modules/ExtensionSupport.sys.mjs");
 
@@ -25,7 +18,7 @@ this.calendarItemDetails = class extends ExtensionAPI {
     }
     let panelFrame;
     if (window.tabmail) {
-      panelFrame = window.document.getElementById(iframeId|| tabmail.currentTabInfo.iframe?.id);
+      panelFrame = window.document.getElementById(iframeId || window.tabmail.currentTabInfo.iframe?.id);
     } else {
       panelFrame = window.document.getElementById("calendar-item-panel-iframe");
     }
@@ -62,9 +55,7 @@ this.calendarItemDetails = class extends ExtensionAPI {
         setupE10sBrowser(this.extension, browser, tabpanel, options).then(() => {
           let target = new URL(this.extension.manifest.calendar_item_details.default_content);
           target.searchParams.set("area", "secondary");
-          browser.fixupAndLoadURIString(target.href, {
-            triggeringPrincipal: this.extension.principal
-          });
+          browser.fixupAndLoadURIString(target.href, { triggeringPrincipal: this.extension.principal });
         });
       } else if (areas.includes("inline")) {
         let tabbox = document.getElementById("event-grid");
@@ -94,9 +85,7 @@ this.calendarItemDetails = class extends ExtensionAPI {
         setupE10sBrowser(this.extension, browser, browserCell, options).then(() => {
           let target = new URL(this.extension.manifest.calendar_item_details.default_content);
           target.searchParams.set("area", "inline");
-          browser.fixupAndLoadURIString(target.href, {
-            triggeringPrincipal: this.extension.principal
-          });
+          browser.fixupAndLoadURIString(target.href, { triggeringPrincipal: this.extension.principal });
         });
       }
     });
@@ -137,9 +126,7 @@ this.calendarItemDetails = class extends ExtensionAPI {
       setupE10sBrowser(this.extension, browser, summaryBox, options).then(() => {
         let target = new URL(this.extension.manifest.calendar_item_details.default_content);
         target.searchParams.set("area", "summary");
-        browser.fixupAndLoadURIString(target.href, {
-          triggeringPrincipal: this.extension.principal
-        });
+        browser.fixupAndLoadURIString(target.href, { triggeringPrincipal: this.extension.principal });
       });
     }
   }

@@ -2,9 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var {
-  ExtensionCommon: { ExtensionAPI, EventManager }
-} = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
+var { ExtensionCommon: { ExtensionAPI, EventManager } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
 
 var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
 
@@ -22,7 +20,7 @@ this.calendar_timezones = class extends ExtensionAPI {
 
               let observer = {
                 QueryInterface: ChromeUtils.generateQI(["nsIObserver"]),
-                observe: function(subject, topic, data) {
+                observe(subject, topic, data) {
                   // Make sure the default timezone is updated before firing
                   cal.timezoneService.wrappedJSObject._updateDefaultTimezone();
                   let currentValue = cal.timezoneService.defaultTimezone?.tzid;

@@ -2,12 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var {
-  ExtensionCommon: { ExtensionAPI, EventManager }
-} = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
-var {
-  ExtensionUtils: { ExtensionError }
-} = ChromeUtils.importESModule("resource://gre/modules/ExtensionUtils.sys.mjs");
+var { ExtensionCommon: { ExtensionAPI, EventManager } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
+var { ExtensionUtils: { ExtensionError } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionUtils.sys.mjs");
 
 var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
 
@@ -26,7 +22,7 @@ this.calendar_items = class extends ExtensionAPI {
     return {
       calendar: {
         items: {
-          query: async function(queryProps) {
+          async query(queryProps) {
             let calendars = [];
             if (typeof queryProps.calendarId == "string") {
               calendars = [getResolvedCalendarById(context.extension, queryProps.calendarId)];
@@ -64,12 +60,12 @@ this.calendar_items = class extends ExtensionAPI {
 
             return calendarItems.flat().map(item => convertItem(item, queryProps, context.extension));
           },
-          get: async function(calendarId, id, options) {
+          async get(calendarId, id, options) {
             let calendar = getResolvedCalendarById(context.extension, calendarId);
             let item = await calendar.getItem(id);
             return convertItem(item, options, context.extension);
           },
-          create: async function(calendarId, createProperties) {
+          async create(calendarId, createProperties) {
             let calendar = getResolvedCalendarById(context.extension, calendarId);
             let item = propsToItem(createProperties);
             item.calendar = calendar.superCalendar;
@@ -88,7 +84,7 @@ this.calendar_items = class extends ExtensionAPI {
 
             return convertItem(createdItem, createProperties, context.extension);
           },
-          update: async function(calendarId, id, updateProperties) {
+          async update(calendarId, id, updateProperties) {
             let calendar = getResolvedCalendarById(context.extension, calendarId);
 
             let oldItem = await calendar.getItem(id);
@@ -115,7 +111,7 @@ this.calendar_items = class extends ExtensionAPI {
             let modifiedItem = await calendar.modifyItem(newItem, oldItem);
             return convertItem(modifiedItem, updateProperties, context.extension);
           },
-          move: async function(fromCalendarId, id, toCalendarId) {
+          async move(fromCalendarId, id, toCalendarId) {
             if (fromCalendarId == toCalendarId) {
               return;
             }
@@ -138,7 +134,7 @@ this.calendar_items = class extends ExtensionAPI {
             await toCalendar.addItem(item);
             await fromCalendar.deleteItem(item);
           },
-          remove: async function(calendarId, id) {
+          async remove(calendarId, id) {
             let calendar = getResolvedCalendarById(context.extension, calendarId);
 
             let item = await calendar.getItem(id);
@@ -148,9 +144,9 @@ this.calendar_items = class extends ExtensionAPI {
             await calendar.deleteItem(item);
           },
 
-          getCurrent: async function(options) {
+          async getCurrent(options) {
             try {
-              // This seems risky, could be null depending on remoteness
+              // TODO This seems risky, could be null depending on remoteness
               let item = context.browsingContext.embedderElement.ownerGlobal.calendarItem;
               return convertItem(item, options, context.extension);
             } catch (e) {

@@ -60,11 +60,11 @@
   },
   {
     "namespace": "calendarItemDetails",
-    "description": "Describes the area(s) where the item details should be displayed",
     "permissions": ["manifest:calendar_item_details"],
     "types": [
       {
         "id": "CalendarItemDetailsArea",
+        "description": "Describes the area(s) where the item details should be displayed",
         "type": "string",
         "enum": ["secondary", "inline", "summary"]
       }

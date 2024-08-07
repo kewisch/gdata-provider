@@ -2,12 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var {
-  ExtensionCommon: { ExtensionAPI, EventManager }
-} = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
-var {
-  ExtensionUtils: { ExtensionError }
-} = ChromeUtils.importESModule("resource://gre/modules/ExtensionUtils.sys.mjs");
+var { ExtensionCommon: { ExtensionAPI, EventManager } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
+var { ExtensionUtils: { ExtensionError } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionUtils.sys.mjs");
 
 var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
 
@@ -23,7 +19,7 @@ this.calendar_calendars = class extends ExtensionAPI {
     return {
       calendar: {
         calendars: {
-          query: async function({ type, url, name, color, readOnly, enabled, visible }) {
+          async query({ type, url, name, color, readOnly, enabled, visible }) {
             let calendars = cal.manager.getCalendars();
 
             let pattern = null;
@@ -72,7 +68,7 @@ this.calendar_calendars = class extends ExtensionAPI {
               })
               .map(calendar => convertCalendar(context.extension, calendar));
           },
-          get: async function(id) {
+          async get(id) {
             if (id.endsWith("#cache")) {
               let calendar = unwrapCalendar(cal.manager.getCalendarById(id.substring(0, id.length - 6)));
               let own = calendar.offlineStorage && isOwnCalendar(calendar, context.extension);
@@ -82,7 +78,7 @@ this.calendar_calendars = class extends ExtensionAPI {
               return convertCalendar(context.extension, calendar);
             }
           },
-          create: async function(createProperties) {
+          async create(createProperties) {
             let calendar = cal.manager.createCalendar(
               createProperties.type,
               Services.io.newURI(createProperties.url)
@@ -107,7 +103,7 @@ this.calendar_calendars = class extends ExtensionAPI {
             calendar = cal.manager.getCalendarById(calendar.id);
             return convertCalendar(context.extension, calendar);
           },
-          update: async function(id, updateProperties) {
+          async update(id, updateProperties) {
             let calendar = cal.manager.getCalendarById(id);
             if (!calendar) {
               throw new ExtensionError(`Invalid calendar id: ${id}`);
@@ -158,7 +154,7 @@ this.calendar_calendars = class extends ExtensionAPI {
               }
             }
           },
-          remove: async function(id) {
+          async remove(id) {
             let calendar = cal.manager.getCalendarById(id);
             if (!calendar) {
               throw new ExtensionError(`Invalid calendar id: ${id}`);
@@ -166,7 +162,7 @@ this.calendar_calendars = class extends ExtensionAPI {
 
             cal.manager.unregisterCalendar(calendar);
           },
-          clear: async function(id) {
+          async clear(id) {
             if (!id.endsWith("#cache")) {
               throw new ExtensionError("Cannot clear non-cached calendar");
             }
@@ -196,7 +192,7 @@ this.calendar_calendars = class extends ExtensionAPI {
             calendar.wrappedJSObject.mObservers.notify("onLoad", [calendar]);
           },
 
-          synchronize: function(ids) {
+          synchronize(ids) {
             let calendars = [];
             if (ids) {
               if (!Array.isArray(ids)) {
