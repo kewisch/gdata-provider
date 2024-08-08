@@ -137,9 +137,8 @@ function parseJcalData(jcalComp) {
       parent.recurrenceInfo.modifyException(excItem, true);
     }
     return parent;
-  } else {
-    throw new ExtensionError("Don't know how to handle component type " + jcalComp.name);
   }
+    throw new ExtensionError("Don't know how to handle component type " + jcalComp.name);
 }
 
 function convertSimpleFormat(props, baseItem) {
@@ -210,9 +209,8 @@ export function propsToItem(props, baseItem) {
       throw new ExtensionError("Could not parse jCal", { cause: e });
     }
     return parseJcalData(jcalComp);
-  } else {
-    return convertSimpleFormat(props, baseItem);
   }
+    return convertSimpleFormat(props, baseItem);
 }
 
 export function convertItem(item, options, extension) {

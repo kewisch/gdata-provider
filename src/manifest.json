@@ -75,10 +75,10 @@
 
   "experiment_apis": {
     "gdata": {
-      "schema": "experiments/gdata/gdata.json",
+      "schema": "experiments/gdata/schema/gdata.json",
       "parent": {
         "scopes": ["addon_parent"],
-        "script": "experiments/gdata/ext-gdata.js",
+        "script": "experiments/gdata/parent/ext-gdata.js",
         "events": ["startup"],
         "paths": [
           ["gdata"]

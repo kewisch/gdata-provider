@@ -362,10 +362,9 @@ class ExtCalendar extends cal.provider.BaseClass {
           let overwrite = cal.provider.promptOverwrite("modify", aOldItem);
           if (overwrite) {
             return this.modifyItem(aNewItem, aOldItem, { force: true });
-          } else {
+          }
             code = Ci.calIErrors.OPERATION_CANCELLED;
             this.superCalendar.refresh();
-          }
         } else {
           code = e.xpcomReason;
         }
@@ -412,10 +411,9 @@ class ExtCalendar extends cal.provider.BaseClass {
           let overwrite = cal.provider.promptOverwrite("delete", aItem);
           if (overwrite) {
             return this.deleteItem(aItem, { force: true });
-          } else {
+          }
             code = Ci.calIErrors.OPERATION_CANCELLED;
             this.superCalendar.refresh();
-          }
         } else {
           code = e.xpcomReason;
         }
@@ -428,11 +426,11 @@ class ExtCalendar extends cal.provider.BaseClass {
     return aItem;
   }
 
-  getItem(aId) {
+  getItem(_aId) {
     return this.offlineStorage.getItem(...arguments);
   }
 
-  getItems(aFilter, aCount, aRangeStart, aRangeEnd) {
+  getItems(_aFilter, _aCount, _aRangeStart, _aRangeEnd) {
     return this.offlineStorage.getItems(...arguments);
   }
 
@@ -581,7 +579,7 @@ this.calendar_provider = class extends ExtensionAPI {
                 win.close();
               }
             };
-            win.gButtonHandlers.forNodeId["panel-addon-calendar-settings"].extra2 = (event) => {
+            win.gButtonHandlers.forNodeId["panel-addon-calendar-settings"].extra2 = (_event) => {
               let addonPanel = win.document.getElementById("panel-addon-calendar-settings");
 
               if (addonPanel.dataset.addonBackward) {
@@ -673,15 +671,15 @@ this.calendar_provider = class extends ExtensionAPI {
 
                 if (props?.error) {
                   return { error: props.error };
-                } else {
-                  if (props?.type) {
-                    item = propsToItem(props, item);
-                  }
-                  if (!item.id) {
-                    item.id = cal.getUUID();
-                  }
-                  return { item, metadata: props?.metadata };
                 }
+
+                if (props?.type) {
+                  item = propsToItem(props, item);
+                }
+                if (!item.id) {
+                  item.id = cal.getUUID();
+                }
+                return { item, metadata: props?.metadata };
               };
 
               context.extension.on("calendar.provider.onItemCreated", listener);
@@ -704,12 +702,11 @@ this.calendar_provider = class extends ExtensionAPI {
                 );
                 if (props?.error) {
                   return { error: props.error };
-                } else {
+                }
                   if (props?.type) {
                     item = propsToItem(props, item);
                   }
                   return { item, metadata: props?.metadata };
-                }
               };
 
               context.extension.on("calendar.provider.onItemUpdated", listener);

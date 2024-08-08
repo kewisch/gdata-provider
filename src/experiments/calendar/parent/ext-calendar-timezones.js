@@ -20,7 +20,7 @@ this.calendar_timezones = class extends ExtensionAPI {
 
               let observer = {
                 QueryInterface: ChromeUtils.generateQI(["nsIObserver"]),
-                observe(subject, topic, data) {
+                observe(_subject, _topic, _data) {
                   // Make sure the default timezone is updated before firing
                   cal.timezoneService.wrappedJSObject._updateDefaultTimezone();
                   let currentValue = cal.timezoneService.defaultTimezone?.tzid;

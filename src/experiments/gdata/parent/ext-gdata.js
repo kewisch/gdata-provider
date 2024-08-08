@@ -5,10 +5,9 @@
 
 /* global Services */
 
-var { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
-var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
+var { ExtensionCommon: { ExtensionAPI } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
 
-var { ExtensionAPI } = ExtensionCommon;
+var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
 
 const GDATA_LEGACY_PREFS = {
   useHTTPMethodOverride: true,
@@ -48,8 +47,8 @@ this.gdata = class extends ExtensionAPI {
       return;
     }
 
-    let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
-    gdataUI.unregister();
+    // let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
+    // gdataUI.unregister();
 
     Services.io
       .getProtocolHandler("resource")

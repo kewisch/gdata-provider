@@ -177,7 +177,7 @@ this.calendar_items = class extends ExtensionAPI {
             name: "calendar.items.onUpdated",
             register: (fire, options) => {
               let observer = cal.createAdapter(Ci.calIObserver, {
-                onModifyItem: (newItem, oldItem) => {
+                onModifyItem: (newItem, _oldItem) => {
                   // TODO calculate changeInfo
                   let changeInfo = {};
                   fire.sync(convertItem(newItem, options, context.extension), changeInfo);
@@ -217,9 +217,9 @@ this.calendar_items = class extends ExtensionAPI {
                 onAlarm(item, alarm) {
                   fire.sync(convertItem(item, options, context.extension), convertAlarm(item, alarm));
                 },
-                onRemoveAlarmsByItem(item) {},
-                onRemoveAlarmsByCalendar(calendar) {},
-                onAlarmsLoaded(calendar) {},
+                onRemoveAlarmsByItem(_item) {},
+                onRemoveAlarmsByCalendar(_calendar) {},
+                onAlarmsLoaded(_calendar) {},
               };
 
               let alarmsvc = Cc["@mozilla.org/calendar/alarm-service;1"].getService(
