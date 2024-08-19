@@ -99,7 +99,7 @@ this.calendar_items = class extends ExtensionAPI {
               throw new ExtensionError(`Encountered unknown item type for ${calendarId}/${id}`);
             }
 
-            let newItem = propsToItem(updateProperties, oldItem?.clone());
+            let newItem = propsToItem(updateProperties);
             newItem.calendar = calendar.superCalendar;
 
             if (updateProperties.metadata && isOwnCalendar(calendar, context.extension)) {

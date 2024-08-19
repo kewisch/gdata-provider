@@ -674,7 +674,7 @@ this.calendar_provider = class extends ExtensionAPI {
                 }
 
                 if (props?.type) {
-                  item = propsToItem(props, item);
+                  item = propsToItem(props);
                 }
                 if (!item.id) {
                   item.id = cal.getUUID();
@@ -704,7 +704,7 @@ this.calendar_provider = class extends ExtensionAPI {
                   return { error: props.error };
                 }
                   if (props?.type) {
-                    item = propsToItem(props, item);
+                    item = propsToItem(props);
                   }
                   return { item, metadata: props?.metadata };
               };

@@ -5,7 +5,7 @@ import {
   getItemPath,
   getItemEtag,
   categoriesStringToArray,
-  arrayToCategoriesString,
+  categoriesArrayToString,
   isTesting,
 } from "../../src/background/utils";
 
@@ -40,36 +40,32 @@ test("getItemPath", () => {
   let item = {
     metadata: null,
     id: "foo@google.com",
-    formats: {
-      jcal: ["vevent", [], []],
-    },
+    format: "jcal",
+    item: ["vevent", [], []]
   };
   expect(getItemPath(item)).toBe("foo");
 
   item = {
     metadata: null,
     id: "@google.com-foo",
-    formats: {
-      jcal: ["vevent", [], []],
-    },
+    format: "jcal",
+    item: ["vevent", [], []],
   };
   expect(getItemPath(item)).toBe("@google.com-foo");
 
   item = {
     metadata: { path: "bar" },
     id: "foo@google.com",
-    formats: {
-      jcal: ["vevent", [], []],
-    },
+    format: "jcal",
+    item: ["vevent", [], []],
   };
   expect(getItemPath(item)).toBe("bar");
 
   item = {
     metadata: null,
     id: "foo@google.com",
-    formats: {
-      jcal: ["vevent", [["recurrence-id", {}, "date-time", "2021-01-01T02:03:04"]], []],
-    },
+    format: "jcal",
+    item: ["vevent", [["recurrence-id", {}, "date-time", "2021-01-01T02:03:04"]], []]
   };
   expect(getItemPath(item)).toBe("foo_20210101T020304Z");
 });
@@ -80,8 +76,9 @@ test("categoriesStringToArray", () => {
   expect(categoriesStringToArray("foo,bar")).toEqual(["foo", "bar"]);
 });
 
-test("arrayToCategoriesString", () => {
-  expect(arrayToCategoriesString([])).toBe(null);
+test("categoriesArrayToString", () => {
+  expect(categoriesArrayToString([])).toBe(null);
+  expect(categoriesArrayToString(["foo", "bar"])).toEqual("foo,bar");
 });
 
 test("isTesting", async () => {

@@ -107,7 +107,7 @@ async function main() {
 
   let item = await messenger.calendar.items.getCurrent({ returnFormat: "jcal" });
 
-  let vcalendar = new ICAL.Component(item.formats.jcal);
+  let vcalendar = new ICAL.Component(item.item);
   let vevent = vcalendar.getFirstSubcomponent("vevent");
   let vtodo = vcalendar.getFirstSubcomponent("vtodo");
 

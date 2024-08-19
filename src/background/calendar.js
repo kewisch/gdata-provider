@@ -319,8 +319,8 @@ export default class calGoogleCalendar {
       // Calling code expects a parent item. Add the created instance to the parent item from the
       // cache and move forward with that.
       let parentItem = await messenger.calendar.items.get(this.cacheId, newItem.id, { returnFormat: "jcal" });
-      let parentJcal = new ICAL.Component(parentItem.formats.jcal);
-      let newItemComponent = new ICAL.Component(newItem.formats.jcal);
+      let parentJcal = new ICAL.Component(parentItem.item);
+      let newItemComponent = new ICAL.Component(newItem.item);
       parentJcal.addSubcomponent(newItemComponent.getFirstSubcomponent(newItem.type == "event" ? "vevent" : "vtodo"));
 
       parentItem.metadata.etag = newItem.metadata.etag;
@@ -329,9 +329,9 @@ export default class calGoogleCalendar {
       // We need to make sure all modified instances are on the returned item. If we modify the
       // parent, (e.g. add an EXDATE), newItem will just be the parent, but without the instances.
       let referenceItem = await messenger.calendar.items.get(this.cacheId, newItem.id, { returnFormat: "jcal" });
-      referenceItem = new ICAL.Component(referenceItem.formats.jcal);
+      referenceItem = new ICAL.Component(referenceItem.item);
 
-      let parentItem = new ICAL.Component(newItem.formats.jcal);
+      let parentItem = new ICAL.Component(newItem.item);
       for (let component of referenceItem.getAllSubcomponents()) {
         if (component.name != "vevent" && component.name != "vtodo") {
           continue;

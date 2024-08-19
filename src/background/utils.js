@@ -57,7 +57,7 @@ export function getItemPath(item) {
     baseId = item.id.replace(/@google.com$/, "");
   }
 
-  let vevent = new ICAL.Component(item.formats.jcal);
+  let vevent = new ICAL.Component(item.item);
   if (vevent.name == "vcalendar") {
     vevent = vevent.getFirstSubcomponent("vevent");
   }
@@ -94,8 +94,8 @@ export function categoriesStringToArray(aCategories) {
   return categories;
 }
 
-export function arrayToCategoriesString(aSortedCategoriesArray) {
-  let catString = aSortedCategoriesArray?.map(cat => cat.replace(/,/g, "\\,")).join(",");
+export function categoriesArrayToString(aCategories) {
+  let catString = aCategories?.map(cat => cat.replace(/,/g, "\\,")).join(",");
   return catString?.length ? catString : null;
 }
 

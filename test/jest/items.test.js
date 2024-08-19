@@ -38,12 +38,12 @@ beforeEach(() => {
 // TODO conferenceData
 
 test("findRelevantInstance", () => {
-  let vcalendar = new ICAL.Component(jcalItems.simple_event.formats.jcal);
+  let vcalendar = new ICAL.Component(jcalItems.simple_event.item);
   let vevent = vcalendar.getFirstSubcomponent("vevent");
   expect(findRelevantInstance(vcalendar, false, "vevent")).toBe(vevent);
   expect(findRelevantInstance(vcalendar, "2024-01-01", "vevent")).toBeNull();
 
-  vcalendar = new ICAL.Component(jcalItems.recur_instance.formats.jcal);
+  vcalendar = new ICAL.Component(jcalItems.recur_instance.item);
   vevent = vcalendar.getFirstSubcomponent("vevent");
   expect(findRelevantInstance(vcalendar, false, "vevent")).toBeNull();
   expect(findRelevantInstance(vcalendar, "2006-06-25", "vevent")).toBe(vevent);
@@ -70,7 +70,7 @@ describe("jsonToItem", () => {
         defaultReminders,
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+      let jcal = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
 
       expect(item.metadata.etag).toBe('"2299601498276000"');
       expect(item.metadata.path).toBe("go6ijb0b46hlpbu4eeu92njevo");
@@ -197,7 +197,7 @@ describe("jsonToItem", () => {
         defaultReminders,
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+      let jcal = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
 
       expect(jcal.getFirstPropertyValue("organizer")).toBe("mailto:organizer@example.com");
       expect(jcal.getFirstProperty("organizer").getParameter("cn")).toBe(undefined);
@@ -212,7 +212,7 @@ describe("jsonToItem", () => {
         defaultReminders,
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+      let jcal = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("swpefnfloqssxjdlbpyqlyqddb@google.com");
       expect(jcal.getFirstPropertyValue("summary")).toBe("busyTitle[calendarName]");
@@ -236,7 +236,7 @@ describe("jsonToItem", () => {
         defaultReminders,
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+      let jcal = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("swpefnfloqssxjdlbpyqlyqddb@google.com");
       expect(jcal.getFirstPropertyValue("summary")).toBe("busyTitle[calendarName]");
@@ -258,7 +258,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+      let jcal = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("uasfsingergnenedfwiefefgjk@google.com");
       expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060610T010203Z");
@@ -271,7 +271,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+      let jcal = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
 
       expect(jcal.getFirstPropertyValue("exdate")?.toICALString()).toBe("20070609");
       expect(jcal.getFirstPropertyValue("rdate")?.toICALString()).toBe("20060812");
@@ -296,7 +296,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+      let jcal = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
 
       expect(jcal.getFirstPropertyValue("dtstart").toICALString()).toBe("20060626");
       expect(jcal.getFirstPropertyValue("recurrence-id").toICALString()).toBe("20060625");
@@ -309,7 +309,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+      let jcal = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
 
       let descr = jcal.getFirstProperty("description");
       expect(descr.getParameter("altrep")).toBe("data:text/html,%3Cb%3EBold%3C%2Fb%3E");
@@ -323,7 +323,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+      let jcal = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
       expect(jcal.getFirstPropertyValue("x-google-event-type")).toBe("outOfOffice");
 
       item = await jsonToItem({
@@ -332,7 +332,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      jcal = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+      jcal = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
       expect(jcal.getFirstPropertyValue("x-google-event-type")).toBe("focusTime");
     });
   });
@@ -345,7 +345,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal);
+      let jcal = new ICAL.Component(item.item);
       jcal = jcal.getFirstSubcomponent("vtodo");
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("lqohjsbhqoztdkusnpruvooacn");
@@ -380,7 +380,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal);
+      let jcal = new ICAL.Component(item.item);
       jcal = jcal.getFirstSubcomponent("vtodo");
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("jidlfaenrgjklebrgjebuwdfer");
@@ -394,7 +394,7 @@ describe("jsonToItem", () => {
         defaultReminders: [],
         defaultTimezone
       });
-      let jcal = new ICAL.Component(item.formats.jcal);
+      let jcal = new ICAL.Component(item.item);
       jcal = jcal.getFirstSubcomponent("vtodo");
 
       expect(jcal.getFirstPropertyValue("uid")).toBe("jidlfaenrgjklebrgjebuwdfer");
@@ -594,7 +594,7 @@ describe("itemToJson", () => {
   test("event failures", () => {
     expect(() => {
       itemToJson(
-        { type: "event", formats: { jcal: ["x-wrong", [], [["x-notit", [], []]]] } },
+        { type: "event", format: "jcal", item: ["x-wrong", [], [["x-notit", [], []]]] },
         calendar,
         false
       );
@@ -603,9 +603,8 @@ describe("itemToJson", () => {
       itemToJson(
         {
           type: "event",
-          formats: {
-            jcal: ["vcalendar", [], [["vevent", [["status", {}, "text", "CANCELLED"]], []]]],
-          },
+          format: "jcal",
+          item: ["vcalendar", [], [["vevent", [["status", {}, "text", "CANCELLED"]], []]]],
         },
         calendar,
         false
@@ -651,7 +650,7 @@ describe("patchItem", () => {
       beforeEach(() => {
         oldItem = jcalItems.simple_event;
         item = v8.deserialize(v8.serialize(oldItem));
-        event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+        event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
       });
 
       test("no changes", () => {
@@ -848,8 +847,8 @@ describe("patchItem", () => {
         item = v8.deserialize(v8.serialize(jcalItems.organizer_partstat));
         oldItem = v8.deserialize(v8.serialize(item));
 
-        oldEvent = new ICAL.Component(oldItem.formats.jcal).getFirstSubcomponent("vevent");
-        event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+        oldEvent = new ICAL.Component(oldItem.item).getFirstSubcomponent("vevent");
+        event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
         event.getFirstProperty("organizer").setParameter("partstat", "ACCEPTED");
 
         // Ensure organizer partstat is propagated to attendee (to work around a Thunderbird bug)
@@ -895,7 +894,7 @@ describe("patchItem", () => {
       beforeEach(() => {
         oldItem = jcalItems.valarm_override;
         item = v8.deserialize(v8.serialize(oldItem));
-        event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+        event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
       });
 
       test("action changed", () => {
@@ -948,7 +947,7 @@ describe("patchItem", () => {
       beforeEach(() => {
         oldItem = jcalItems.recur_rrule;
         item = v8.deserialize(v8.serialize(oldItem));
-        event = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vevent");
+        event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
       });
 
       test("recurring snooze", () => {
@@ -985,7 +984,7 @@ describe("patchItem", () => {
 
     beforeEach(() => {
       item = v8.deserialize(v8.serialize(oldItem));
-      task = new ICAL.Component(item.formats.jcal).getFirstSubcomponent("vtodo");
+      task = new ICAL.Component(item.item).getFirstSubcomponent("vtodo");
     });
 
     test.each([
@@ -1068,10 +1067,8 @@ describe("ItemSaver", () => {
         "calendarId#cache",
         expect.objectContaining({
           id: "swpefnfloqssxjdlbpyqlyqddb@google.com",
-          formats: {
-            use: "jcal",
-            jcal: ["vcalendar", expect.anything(), expect.anything()],
-          },
+          format: "jcal",
+          item: ["vcalendar", expect.anything(), expect.anything()],
         })
       );
     });
@@ -1118,7 +1115,7 @@ describe("ItemSaver", () => {
       let parentItem = await messenger.calendar.items.get("calendarId#cache", "osndfnwejrgnejnsdjfwegjdfr@google.com");
       expect(parentItem).not.toBeNull();
 
-      let vcalendar = new ICAL.Component(parentItem.formats.jcal);
+      let vcalendar = new ICAL.Component(parentItem.item);
       let vevent = vcalendar.getFirstSubcomponent("vevent");
 
       expect(vevent.getFirstProperty("x-moz-faked-master")).toBeNull();
@@ -1141,8 +1138,6 @@ describe("ItemSaver", () => {
         { returnFormat: "jcal" }
       );
 
-      console.debug(messenger.calendar.items.create.mock.calls);
-
       expect(messenger.calendar.items.create).toHaveBeenCalledTimes(1);
       expect(messenger.calendar.items.create).toHaveBeenCalledWith(
         "calendarId#cache",
@@ -1154,7 +1149,7 @@ describe("ItemSaver", () => {
       let parentItem = await messenger.calendar.items.get("calendarId#cache", "osndfnwejrgnejnsdjfwegjdfr@google.com");
       expect(parentItem).not.toBeNull();
 
-      let vcalendar = new ICAL.Component(parentItem.formats.jcal);
+      let vcalendar = new ICAL.Component(parentItem.item);
       let vevents = vcalendar.getAllSubcomponents("vevent");
 
       expect(vevents.length).toBe(2);
@@ -1175,23 +1170,21 @@ describe("ItemSaver", () => {
         "calendarId#cache",
         expect.objectContaining({
           id: "osndfnwejrgnejnsdjfwegjdfr@google.com",
-          formats: {
-            use: "jcal",
-            jcal: ["vcalendar", expect.anything(), [
-              ["vevent",
-                expect.arrayContaining([
-                  ["uid", {}, "text", "osndfnwejrgnejnsdjfwegjdfr@google.com"],
-                  ["rrule", {}, "recur", expect.anything()]
-                ]), expect.anything()
-              ],
-              ["vevent",
-                expect.arrayContaining([
-                  ["uid", {}, "text", "osndfnwejrgnejnsdjfwegjdfr@google.com"],
-                  ["recurrence-id", {}, "date", expect.anything()]
-                ]), expect.anything()
-              ]
-            ]]
-          },
+          format: "jcal",
+          item: ["vcalendar", expect.anything(), [
+            ["vevent",
+              expect.arrayContaining([
+                ["uid", {}, "text", "osndfnwejrgnejnsdjfwegjdfr@google.com"],
+                ["rrule", {}, "recur", expect.anything()]
+              ]), expect.anything()
+            ],
+            ["vevent",
+              expect.arrayContaining([
+                ["uid", {}, "text", "osndfnwejrgnejnsdjfwegjdfr@google.com"],
+                ["recurrence-id", {}, "date", expect.anything()]
+              ]), expect.anything()
+            ]
+          ]]
         })
       );
     });
@@ -1226,15 +1219,13 @@ describe("ItemSaver", () => {
         "calendarId#cache",
         expect.objectContaining({
           id: "osndfnwejrgnejnsdjfwegjdfr@google.com",
-          formats: {
-            use: "jcal",
-            jcal: ["vcalendar", expect.anything(), expect.anything()],
-          },
+          format: "jcal",
+          item: ["vcalendar", expect.anything(), expect.anything()],
         })
       );
 
       let vcalendar = new ICAL.Component(
-        messenger.calendar.items.create.mock.calls[0][1].formats.jcal
+        messenger.calendar.items.create.mock.calls[0][1].item
       );
       let vevent = vcalendar.getFirstSubcomponent("vevent");
 
@@ -1261,15 +1252,13 @@ describe("ItemSaver", () => {
         "calendarId#cache",
         expect.objectContaining({
           id: "osndfnwejrgnejnsdjfwegjdfr@google.com",
-          formats: {
-            use: "jcal",
-            jcal: ["vcalendar", expect.anything(), expect.anything()],
-          },
+          format: "jcal",
+          item: ["vcalendar", expect.anything(), expect.anything()],
         })
       );
 
       let vcalendar = new ICAL.Component(
-        messenger.calendar.items.create.mock.calls[0][1].formats.jcal
+        messenger.calendar.items.create.mock.calls[0][1].item
       );
       let vevent = vcalendar.getFirstSubcomponent("vevent");
 
@@ -1319,15 +1308,13 @@ describe("ItemSaver", () => {
         "calendarId#cache",
         expect.objectContaining({
           id: "osndfnwejrgnejnsdjfwegjdfr@google.com",
-          formats: {
-            use: "jcal",
-            jcal: ["vcalendar", expect.anything(), expect.anything()],
-          },
+          format: "jcal",
+          item: ["vcalendar", expect.anything(), expect.anything()],
         })
       );
 
       let vcalendar = new ICAL.Component(
-        messenger.calendar.items.create.mock.calls[0][1].formats.jcal
+        messenger.calendar.items.create.mock.calls[0][1].item
       );
       let vevent = vcalendar.getFirstSubcomponent("vevent");
       expect(
@@ -1347,10 +1334,8 @@ describe("ItemSaver", () => {
         "calendarId#cache",
         expect.objectContaining({
           id: "lqohjsbhqoztdkusnpruvooacn",
-          formats: {
-            use: "jcal",
-            jcal: ["vcalendar", expect.anything(), expect.anything()],
-          },
+          format: "jcal",
+          item: ["vcalendar", expect.anything(), expect.anything()],
         })
       );
     });

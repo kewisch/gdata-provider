@@ -10,30 +10,15 @@
           "id": { "type": "string" },
           "calendarId": { "type": "string" },
           "type": { "type": "string", "enum": ["event", "task"] },
-          "title": { "type": "string", "optional": true },
-          "description": { "type": "string", "optional": true },
-          "location": { "type": "string", "optional": true },
-          "categories": { "type": "array", "items": { "type": "string" }, "optional": true },
-          "startDate": { "type": "string", "optional": true },
-          "endDate": { "type": "string", "optional": true },
           "instance": { "type": "string", "optional": true },
-          "formats": { "$ref": "RawCalendarItem", "optional": true },
+          "format": { "$ref": "CalendarItemFormat", "optional": true },
+          "item": { "$ref": "RawCalendarItem" },
           "metadata": { "type": "object", "additionalProperties": { "type": "any" }, "optional": true }
         }
       },
       {
         "id": "RawCalendarItem",
-        "type": "object",
-        "properties": {
-          "use": {
-            "choices": [
-              { "type": "null" },
-              { "$ref": "CalendarItemFormats" }
-            ]
-          },
-          "ical": { "type": "string", "optional": true },
-          "jcal": { "type": "any", "optional": true }
-        }
+        "type": "any"
       },
       {
         "id": "CalendarItemFormats",
@@ -116,13 +101,8 @@
             "properties": {
               "id": { "type": "string", "optional": true },
               "type": { "type": "string", "enum": ["event", "task"] },
-              "title": { "type": "string", "optional": true },
-              "description": { "type": "string", "optional": true },
-              "location": { "type": "string", "optional": true },
-              "categories": { "type": "array", "items": { "type": "string" }, "optional": true },
-              "startDate": { "type": "string", "optional": true },
-              "endDate": { "type": "string", "optional": true },
-              "formats": { "$ref": "RawCalendarItem", "optional": true },
+              "format": { "$ref": "CalendarItemFormats", "optional": true },
+              "item": { "$ref": "RawCalendarItem" },
               "returnFormat": { "$ref": "ReturnFormat", "optional": true },
               "metadata": { "type": "object", "properties": {}, "additionalProperties": { "type": "any" }, "optional": true }
             }
@@ -140,13 +120,8 @@
             "name": "updateProperties",
             "type": "object",
             "properties": {
-              "title": { "type": "string", "optional": true },
-              "description": { "type": "string", "optional": true },
-              "location": { "type": "string", "optional": true },
-              "categories": { "type": "array", "items": { "type": "string" }, "optional": true },
-              "startDate": { "type": "string", "optional": true },
-              "endDate": { "type": "string", "optional": true },
-              "formats": { "$ref": "RawCalendarItem", "optional": true },
+              "format": { "$ref": "CalendarItemFormat", "optional": true },
+              "item": { "$ref": "RawCalendarItem" },
               "returnFormat": { "$ref": "ReturnFormat", "optional": true },
               "metadata": { "type": "object", "additionalProperties": { "type": "any" }, "optional": true }
             }

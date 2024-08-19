@@ -5,7 +5,7 @@
 
 import {
   categoriesStringToArray,
-  arrayToCategoriesString,
+  categoriesArrayToString,
   reverseObject,
   addVCalendar,
   stripFractional,
@@ -72,10 +72,8 @@ export function itemToJson(item, calendar, isImport) {
 function eventToJson(item, calendar, isImport) {
   let veventprops = [];
   let oldItem = {
-    formats: {
-      use: "jcal",
-      jcal: ["vcalendar", [], [["vevent", veventprops, []]]],
-    },
+    format: "jcal",
+    item: ["vcalendar", [], [["vevent", veventprops, []]]],
   };
 
   if (item.instance) {
@@ -95,10 +93,8 @@ function eventToJson(item, calendar, isImport) {
 
 function taskToJson(item, calendar, isImport) {
   let oldItem = {
-    formats: {
-      use: "jcal",
-      jcal: ["vcalendar", [], [["vtodo", [], []]]],
-    },
+    format: "jcal",
+    item: ["vcalendar", [], [["vtodo", [], []]]],
   };
 
   let entry = patchTask(item, oldItem);
@@ -168,14 +164,13 @@ function jsonToTask({ entry, calendar }) {
 
   return {
     id: entry.id,
-    title: entry.title,
     type: "task",
-    description: entry.notes,
     metadata: {
       etag: entry.etag,
       path: entry.id,
     },
-    formats: { use: "jcal", jcal: addVCalendar(vtodo) },
+    format: "jcal",
+    item: addVCalendar(vtodo)
   };
 }
 
@@ -383,8 +378,8 @@ function patchTask(item, oldItem) {
   }
 
   let entry = {};
-  let task = findRelevantInstance(new ICAL.Component(item.formats.jcal), item.instance, "vtodo");
-  let oldTask = findRelevantInstance(new ICAL.Component(oldItem.formats.jcal), item.instance, "vtodo");
+  let task = findRelevantInstance(new ICAL.Component(item.item), item.instance, "vtodo");
+  let oldTask = findRelevantInstance(new ICAL.Component(oldItem.item), item.instance, "vtodo");
 
   setIfFirstProperty(entry, "title", "summary");
   setIfFirstProperty(entry, "status", "status", val => {
@@ -455,11 +450,11 @@ function patchEvent(item, oldItem) {
 
   let entry = { extendedProperties: { shared: {}, private: {} } };
 
-  let event = findRelevantInstance(new ICAL.Component(item.formats.jcal), item.instance, "vevent");
-  let oldEvent = findRelevantInstance(new ICAL.Component(oldItem.formats.jcal), item.instance, "vevent");
+  let event = findRelevantInstance(new ICAL.Component(item.item), item.instance, "vevent");
+  let oldEvent = findRelevantInstance(new ICAL.Component(oldItem.item), item.instance, "vevent");
 
   if (!event) {
-    throw new Error(`Missing vevent in toplevel component ${item.formats.jcal?.[0]}`);
+    throw new Error(`Missing vevent in toplevel component ${item.item?.[0]}`);
   }
 
   setIfFirstProperty(entry, "summary");
@@ -546,12 +541,20 @@ function patchEvent(item, oldItem) {
   }
 
   // Categories
-  let oldCatSet = new Set(oldItem.categories || []);
+
+  function getAllCategories(vevent) {
+    return vevent.getAllProperties("categories").reduce((acc, comp) => acc.concat(comp.getValues()), []);
+  }
+
+  let oldCatSet = new Set(getAllCategories(oldEvent));
+  let newCatArray = getAllCategories(event);
+  let newCatSet = new Set(newCatArray);
+
   if (
-    oldCatSet.size != (item.categories?.length ?? 0) ||
-    item.categories?.some(itm => !oldCatSet.has(itm))
+    oldCatSet.size != newCatSet.size ||
+    oldCatSet.difference(newCatSet).size != 0
   ) {
-    entry.extendedProperties.shared["X-MOZ-CATEGORIES"] = arrayToCategoriesString(item.categories);
+    entry.extendedProperties.shared["X-MOZ-CATEGORIES"] = categoriesArrayToString(newCatArray);
   }
 
   // Last ack and snooze time are always in UTC, when serialized they'll contain a Z
@@ -776,18 +779,14 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
   }
 
   let shell = {
-    // TODO having both title and formats/jcal/summary kinda sucks. Maybe go with shell format instead
     id: uid,
-    title: summary,
     type: "event",
-    location: entry.location,
-    description: entry.description,
-    categories: categories,
     metadata: {
       etag: entry.etag,
       path: entry.id,
     },
-    formats: { use: "jcal", jcal: addVCalendar(vevent) },
+    format: "jcal",
+    item: addVCalendar(vevent)
   };
 
   if (entry.originalStartTime) {
@@ -863,7 +862,7 @@ export class ItemSaver {
           defaultReminders: data.defaultReminders || [],
           defaultTimezone
         });
-        item.formats.jcal = addVCalendar(item.formats.jcal);
+        item.item = addVCalendar(item.item);
 
         if (entry.originalStartTime) {
           exceptionItems.push(item);
@@ -895,17 +894,17 @@ export class ItemSaver {
     await Promise.all(
       data.items.map(async entry => {
         let item = await jsonToTask({ entry, calendar: this.calendar });
-        item.formats.jcal = addVCalendar(item.formats.jcal);
+        item.item = addVCalendar(item.item);
         await this.commitItem(item);
       })
     );
   }
 
   processException(exc, item) {
-    let itemCalendar = new ICAL.Component(item.formats.jcal);
+    let itemCalendar = new ICAL.Component(item.item);
     let itemEvent = itemCalendar.getFirstSubcomponent("vevent");
 
-    let exceptionCalendar = new ICAL.Component(exc.formats.jcal);
+    let exceptionCalendar = new ICAL.Component(exc.item);
     let exceptionEvent = exceptionCalendar.getFirstSubcomponent("vevent");
 
     if (itemEvent.getFirstPropertyValue("status") == "CANCELLED") {
@@ -933,7 +932,7 @@ export class ItemSaver {
     // This is a normal item. If it was canceled, then it should be deleted, otherwise it should be
     // either added or modified. The relaxed mode of the cache calendar takes care of the latter two
     // cases.
-    let vcalendar = new ICAL.Component(item.formats.jcal);
+    let vcalendar = new ICAL.Component(item.item);
     let vcomp = vcalendar.getFirstSubcomponent("vevent") || vcalendar.getFirstSubcomponent("vtodo");
 
     if (vcomp.getFirstPropertyValue("status") == "CANCELLED") {
@@ -951,7 +950,7 @@ export class ItemSaver {
   async complete() {
     await Promise.all(
       this.missingParents.map(async exc => {
-        let excCalendar = new ICAL.Component(exc.formats.jcal);
+        let excCalendar = new ICAL.Component(exc.item);
         let excEvent = excCalendar.getFirstSubcomponent("vevent");
 
         let item;

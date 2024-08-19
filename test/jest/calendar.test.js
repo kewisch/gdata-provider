@@ -358,10 +358,10 @@ describe("item functions", () => {
         let expected = v8.deserialize(v8.serialize(jcalItems.simple_event));
 
         // remove alarms
-        new ICAL.Component(newItem.formats.jcal)
+        new ICAL.Component(newItem.item)
           .getFirstSubcomponent("vevent")
           .removeAllSubcomponents("valarm");
-        new ICAL.Component(expected.formats.jcal)
+        new ICAL.Component(expected.item)
           .getFirstSubcomponent("vevent")
           .removeAllSubcomponents("valarm");
 
@@ -475,7 +475,7 @@ describe("item functions", () => {
           delete oldItem.metadata.etag;
         }
 
-        let vevent = new ICAL.Component(newItem.formats.jcal);
+        let vevent = new ICAL.Component(newItem.item);
         vevent
           .getFirstSubcomponent("vevent")
           .getFirstProperty("summary")
@@ -518,7 +518,7 @@ describe("item functions", () => {
         let oldItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
         let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
 
-        let vevent = new ICAL.Component(newItem.formats.jcal);
+        let vevent = new ICAL.Component(newItem.item);
         vevent
           .getFirstSubcomponent("vevent")
           .getFirstProperty("summary")
@@ -584,7 +584,7 @@ describe("item functions", () => {
         let oldItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
         let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
 
-        let vevent = new ICAL.Component(newItem.formats.jcal);
+        let vevent = new ICAL.Component(newItem.item);
         vevent
           .getFirstSubcomponent("vevent")
           .getFirstProperty("summary")
@@ -758,7 +758,7 @@ describe("item functions", () => {
       expect(jcalItems.simple_task.id).toBe("lqohjsbhqoztdkusnpruvooacn");
 
       let item = await calendar.onItemCreated(jcalItems.simple_task);
-      let jcal = new ICAL.Component(item.formats.jcal);
+      let jcal = new ICAL.Component(item.item);
 
       expect(jcal.name).toBe("vcalendar");
 
@@ -767,7 +767,6 @@ describe("item functions", () => {
       expect(jcal).not.toBeNull();
       expect(item.metadata.etag).toBe('"2128312983238480"');
       expect(item.metadata.path).toBe("lqohjsbhqoztdkusnpruvooacn");
-      expect(item.title).toBe("New Task");
       expect(jcal.getFirstPropertyValue("summary")).toBe("New Task");
       expect(jcal.getFirstPropertyValue("last-modified").toICALString()).toBe("20060608T210549Z");
       expect(jcal.getFirstPropertyValue("dtstamp").toICALString()).toBe("20060608T210549Z");
@@ -808,7 +807,7 @@ describe("item functions", () => {
 
       expect(oldItem.id).toBe("lqohjsbhqoztdkusnpruvooacn");
 
-      let vcalendar = new ICAL.Component(newItem.formats.jcal);
+      let vcalendar = new ICAL.Component(newItem.item);
       vcalendar
         .getFirstSubcomponent("vtodo")
         .getFirstProperty("summary")

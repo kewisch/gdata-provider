@@ -42,7 +42,8 @@ module.exports = {
         Services: true,
       },
       rules: {
-        "no-unused-vars": ["error", { argsIgnorePattern: "^_|context" }]
+        "no-unused-vars": ["error", { argsIgnorePattern: "^_|context" }],
+        "mozilla/reject-importGlobalProperties": "off"
       }
     }
   ]

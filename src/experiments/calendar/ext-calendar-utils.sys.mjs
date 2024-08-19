@@ -141,76 +141,26 @@ function parseJcalData(jcalComp) {
     throw new ExtensionError("Don't know how to handle component type " + jcalComp.name);
 }
 
-function convertSimpleFormat(props, baseItem) {
-  // TODO this was kind of a quick hack. Consider not having a simple format
-  // and forcing ical or jcal, or maybe using jsCalendar which is close enough
-  // to simple (but not backwards compatible)
-
-  let item;
-  if (baseItem) {
-    item = baseItem;
-  } else if (props.type == "event") {
-    item = new CalEvent();
-    cal.dtz.setDefaultStartEndHour(item);
-  } else if (props.type == "task") {
-    item = new CalTodo();
-    cal.dtz.setDefaultStartEndHour(item);
-  } else {
-    throw new ExtensionError("Invalid item type: " + props.type);
-  }
-
-  // TODO allow empty/null props
-
-  if (props.id) {
-    item.id = props.id;
-  }
-  if (props.title) {
-    item.title = props.title;
-  }
-  if (props.description) {
-    item.setProperty("description", props.description);
-  }
-  if (props.location) {
-    item.setProperty("location", props.location);
-  }
-  if (props.categories) {
-    item.setCategories(props.categories);
-  }
-
-  if (props.type == "event") {
-    // TODO need to do something about timezone
-    if (props.startDate) {
-      item.startDate = cal.createDateTime(props.startDate);
-    }
-    if (props.endDate) {
-      item.endDate = cal.createDateTime(props.endDate);
-    }
-  } else if (props.type == "task") {
-    // entryDate, dueDate, completedDate, isCompleted, duration
-  }
-
-  return item;
-}
-
-export function propsToItem(props, baseItem) {
+export function propsToItem(props) {
   let jcalComp;
 
-  if (props.formats?.use == "ical") {
+  if (props.format == "ical") {
     try {
-      jcalComp = new ICAL.Component(ICAL.parse(props.formats.ical));
+      jcalComp = new ICAL.Component(ICAL.parse(props.item));
     } catch (e) {
       throw new ExtensionError("Could not parse iCalendar", { cause: e });
     }
     return parseJcalData(jcalComp);
-  } else if (props.formats?.use == "jcal") {
+  } else if (props.format == "jcal") {
     try {
-      jcalComp = new ICAL.Component(props.formats.jcal);
+      jcalComp = new ICAL.Component(props.item);
     } catch (e) {
       throw new ExtensionError("Could not parse jCal", { cause: e });
     }
     return parseJcalData(jcalComp);
   }
-    return convertSimpleFormat(props, baseItem);
+
+  throw new ExtensionError("Invalid item format: " + props.format);
 }
 
 export function convertItem(item, options, extension) {
@@ -230,10 +180,6 @@ export function convertItem(item, options, extension) {
 
   props.id = item.id;
   props.calendarId = item.calendar.superCalendar.id;
-  props.title = item.title || "";
-  props.description = item.getProperty("description") || "";
-  props.location = item.getProperty("location") || "";
-  props.categories = item.getCategories();
 
   let recId = item.recurrenceId?.getInTimezone(cal.timezoneService.UTC)?.icalString;
   if (recId) {
@@ -253,12 +199,7 @@ export function convertItem(item, options, extension) {
   }
 
   if (options?.returnFormat) {
-    let formats = options.returnFormat;
-    props.formats = { use: formats };
-
-    if (!Array.isArray(formats)) {
-      formats = [formats];
-    }
+    props.format = options.returnFormat;
 
     let serializer = Cc["@mozilla.org/calendar/ics-serializer;1"].createInstance(
       Ci.calIIcsSerializer
@@ -266,26 +207,17 @@ export function convertItem(item, options, extension) {
     serializer.addItems([item]);
     let icalString = serializer.serializeToString();
 
-    for (let format of formats) {
-      switch (format) {
-        case "ical":
-          props.formats.ical = icalString;
-          break;
-        case "jcal":
-          // TODO shortcut when using icaljs backend
-          props.formats.jcal = ICAL.parse(icalString);
-          break;
-        default:
-          throw new ExtensionError("Invalid format specified: " + format);
-      }
+    switch (options.returnFormat) {
+      case "ical":
+        props.item = icalString;
+        break;
+      case "jcal":
+        // TODO shortcut when using icaljs backend
+        props.item = ICAL.parse(icalString);
+        break;
+      default:
+        throw new ExtensionError("Invalid format specified: " + options.returnFormat);
     }
-  }
-
-  if (props.type == "event") {
-    props.startDate = item.startDate.icalString;
-    props.endDate = item.endDate.icalString;
-  } else if (props.type == "task") {
-    // TODO extra properties
   }
 
   return props;
