@@ -29,10 +29,10 @@ this.gdata = class extends ExtensionAPI {
       .QueryInterface(Ci.nsIResProtocolHandler)
       .setSubstitution("gdata-provider", this.extension.rootURI);
 
-    let aomStartup = Cc["@mozilla.org/addons/addon-manager-startup;1"].getService(
+    const aomStartup = Cc["@mozilla.org/addons/addon-manager-startup;1"].getService(
       Ci.amIAddonManagerStartup
     );
-    let manifestURI = Services.io.newURI("manifest.json", null, this.extension.rootURI);
+    const manifestURI = Services.io.newURI("manifest.json", null, this.extension.rootURI);
 
     this.chromeHandle = aomStartup.registerChrome(manifestURI, [
       ["content", "gdata-provider", "legacy/content/"],
@@ -63,7 +63,7 @@ this.gdata = class extends ExtensionAPI {
     // }
   }
 
-  getAPI(context) {
+  getAPI(_context) {
     return {
       gdata: {
         /* onLegacyEvent: new ExtensionCommon.EventManager({
@@ -86,10 +86,10 @@ this.gdata = class extends ExtensionAPI {
         */
 
         async getLegacyPrefs() {
-          let wxprefs = {};
+          const wxprefs = {};
           let branch = Services.prefs.getBranch("calendar.google.");
-          for (let [pref, defaultValue] of Object.entries(GDATA_LEGACY_PREFS)) {
-            let type = branch.getPrefType(pref);
+          for (const [pref, defaultValue] of Object.entries(GDATA_LEGACY_PREFS)) {
+            const type = branch.getPrefType(pref);
             switch (type) {
               case Ci.nsIPrefBranch.PREF_BOOL:
                 wxprefs["settings." + pref] = branch.getBoolPref(pref, defaultValue);
@@ -104,7 +104,7 @@ this.gdata = class extends ExtensionAPI {
           }
 
           branch = Services.prefs.getBranch("calendar.google.calPrefs.");
-          for (let pref of branch.getChildList("")) {
+          for (const pref of branch.getChildList("")) {
             if (!pref.endsWith(".googleUser")) {
               continue;
             }
@@ -124,9 +124,9 @@ this.gdata = class extends ExtensionAPI {
         },
 
         getOAuthToken(sessionId) {
-          let pass = { value: null };
+          const pass = { value: null };
           try {
-            let origin = "oauth:" + sessionId;
+            const origin = "oauth:" + sessionId;
             cal.auth.passwordManagerGet(sessionId, pass, origin, GDATA_PWMGR_ID);
           } catch (e) {
             // User might have cancelled the master password prompt, that's ok
@@ -139,7 +139,7 @@ this.gdata = class extends ExtensionAPI {
 
         setOAuthToken(sessionId, value) {
           try {
-            let origin = "oauth:" + sessionId;
+            const origin = "oauth:" + sessionId;
             if (value) {
               cal.auth.passwordManagerSave(sessionId, value, origin, GDATA_PWMGR_ID);
             } else {

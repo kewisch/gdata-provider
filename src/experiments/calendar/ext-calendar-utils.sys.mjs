@@ -32,7 +32,7 @@ export function unwrapCalendar(calendar) {
 export function getResolvedCalendarById(extension, id) {
   let calendar;
   if (id.endsWith("#cache")) {
-    let cached = cal.manager.getCalendarById(id.substring(0, id.length - 6));
+    const cached = cal.manager.getCalendarById(id.substring(0, id.length - 6));
     calendar = cached && isOwnCalendar(cached, extension) && cached.wrappedJSObject.mCachedCalendar;
   } else {
     calendar = cal.manager.getCalendarById(id);
@@ -57,7 +57,7 @@ export function convertCalendar(extension, calendar) {
     return null;
   }
 
-  let props = {
+  const props = {
     id: calendar.id,
     type: calendar.type,
     name: calendar.name,
@@ -89,7 +89,7 @@ function parseJcalData(jcalComp) {
     }
 
     // TODO use calIcalComponent directly when bringing this to core
-    let comp = cal.icsService.createIcalComponent(jcalSubComp.name);
+    const comp = cal.icsService.createIcalComponent(jcalSubComp.name);
     comp.wrappedJSObject.innerObject = jcalSubComp;
 
     item.icalComponent = comp;
@@ -101,10 +101,10 @@ function parseJcalData(jcalComp) {
     return generateItem(jcalComp);
   } else if (jcalComp.name == "vcalendar") {
     // A vcalendar with vevents or vtodos
-    let exceptions = [];
+    const exceptions = [];
     let parent;
 
-    for (let subComp of jcalComp.getAllSubcomponents()) {
+    for (const subComp of jcalComp.getAllSubcomponents()) {
       if (subComp.name != "vevent" && subComp.name != "vtodo") {
         continue;
       }
@@ -129,8 +129,8 @@ function parseJcalData(jcalComp) {
       throw new ExtensionError("Exceptions were supplied to a non-recurring item");
     }
 
-    for (let exception of exceptions) {
-      let excItem = generateItem(exception);
+    for (const exception of exceptions) {
+      const excItem = generateItem(exception);
       if (excItem.id != parent.id || parent.isEvent() != excItem.isEvent()) {
         throw new ExtensionError("Exception does not relate to parent item");
       }
@@ -138,7 +138,7 @@ function parseJcalData(jcalComp) {
     }
     return parent;
   }
-    throw new ExtensionError("Don't know how to handle component type " + jcalComp.name);
+  throw new ExtensionError("Don't know how to handle component type " + jcalComp.name);
 }
 
 export function propsToItem(props) {
@@ -168,7 +168,7 @@ export function convertItem(item, options, extension) {
     return null;
   }
 
-  let props = {};
+  const props = {};
 
   if (item.isEvent()) {
     props.type = "event";
@@ -181,15 +181,15 @@ export function convertItem(item, options, extension) {
   props.id = item.id;
   props.calendarId = item.calendar.superCalendar.id;
 
-  let recId = item.recurrenceId?.getInTimezone(cal.timezoneService.UTC)?.icalString;
+  const recId = item.recurrenceId?.getInTimezone(cal.timezoneService.UTC)?.icalString;
   if (recId) {
-    let jcalId = ICAL.design.icalendar.value[recId.length == 8 ? "date" : "date-time"].fromICAL(recId);
+    const jcalId = ICAL.design.icalendar.value[recId.length == 8 ? "date" : "date-time"].fromICAL(recId);
     props.instance = jcalId;
   }
 
   if (isOwnCalendar(item.calendar, extension)) {
     props.metadata = {};
-    let cache = getCachedCalendar(item.calendar);
+    const cache = getCachedCalendar(item.calendar);
     try {
       // TODO This is a sync operation. Not great. Can we optimize this?
       props.metadata = JSON.parse(cache.getMetaData(item.id)) ?? {};
@@ -201,11 +201,11 @@ export function convertItem(item, options, extension) {
   if (options?.returnFormat) {
     props.format = options.returnFormat;
 
-    let serializer = Cc["@mozilla.org/calendar/ics-serializer;1"].createInstance(
+    const serializer = Cc["@mozilla.org/calendar/ics-serializer;1"].createInstance(
       Ci.calIIcsSerializer
     );
     serializer.addItems([item]);
-    let icalString = serializer.serializeToString();
+    const icalString = serializer.serializeToString();
 
     switch (options.returnFormat) {
       case "ical":
@@ -269,7 +269,7 @@ export async function setupE10sBrowser(extension, browser, parent, initOptions={
     browser.contentwindow; // eslint-disable-line no-unused-expressions
   }
 
-  let sheets = [];
+  const sheets = [];
   if (initOptions.browser_style) {
     delete initOptions.browser_style;
     sheets.push("chrome://browser/content/extension.css");
@@ -278,13 +278,13 @@ export async function setupE10sBrowser(extension, browser, parent, initOptions={
 
   const initBrowser = () => {
     ExtensionParent.apiManager.emit("extension-browser-inserted", browser);
-    let mm = browser.messageManager;
+    const mm = browser.messageManager;
     mm.loadFrameScript(
       "chrome://extensions/content/ext-browser-content.js",
       false,
       true
     );
-    let options = Object.assign({
+    const options = Object.assign({
       allowScriptsToClose: true,
       blockParser: false,
       maxWidth: 800,

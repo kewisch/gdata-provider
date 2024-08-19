@@ -17,9 +17,9 @@ this.calendarItemAction = class extends ToolbarButtonAPI {
 
   onStartup() {
     // TODO this is only necessary in the experiment, can drop this when moving to core.
-    let calendarItemAction = this.extension.manifest?.calendar_item_action;
+    const calendarItemAction = this.extension.manifest?.calendar_item_action;
     if (calendarItemAction) {
-      let localize = this.extension.localize.bind(this.extension);
+      const localize = this.extension.localize.bind(this.extension);
 
       if (calendarItemAction.default_popup) {
         calendarItemAction.default_popup = this.extension.getURL(localize(calendarItemAction.default_popup));
@@ -38,12 +38,12 @@ this.calendarItemAction = class extends ToolbarButtonAPI {
     ExtensionSupport.registerWindowListener("ext-calendar-itemAction-" + this.extension.id, {
       chromeURLs: ["chrome://calendar/content/calendar-event-dialog.xhtml"],
       onLoadWindow(win) {
-        let { document } = win;
+        const { document } = win;
 
         if (!document.getElementById("mainPopupSet")) {
-          let mainPopupSet = document.createElementNS("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul", "popupset");
+          const mainPopupSet = document.createElementNS("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul", "popupset");
           mainPopupSet.id = "mainPopupSet";
-          let dialog = document.querySelector("dialog");
+          const dialog = document.querySelector("dialog");
           dialog.insertBefore(mainPopupSet, dialog.firstElementChild);
         }
       }
@@ -115,7 +115,7 @@ this.calendarItemAction = class extends ToolbarButtonAPI {
 
   handleEvent(event) {
     super.handleEvent(event);
-    let window = event.target.ownerGlobal;
+    const window = event.target.ownerGlobal;
 
     switch (event.type) {
       case "popupshowing": {
@@ -142,25 +142,25 @@ this.calendarItemAction = class extends ToolbarButtonAPI {
 
   onShutdown() {
     // TODO browserAction uses static onUninstall, this doesn't work in an experiment.
-    let extensionId = this.extension.id;
+    const extensionId = this.extension.id;
     ExtensionSupport.unregisterWindowListener("ext-calendar-itemAction-" + extensionId);
 
-    let widgetId = makeWidgetId(extensionId);
-    let id = `${widgetId}-calendarItemAction-toolbarbutton`;
+    const widgetId = makeWidgetId(extensionId);
+    const id = `${widgetId}-calendarItemAction-toolbarbutton`;
 
-    let windowURLs = [
+    const windowURLs = [
       "chrome://messenger/content/messenger.xhtml",
       "chrome://calendar/content/calendar-event-dialog.xhtml"
     ];
 
-    for (let windowURL of windowURLs) {
+    for (const windowURL of windowURLs) {
       let currentSet = Services.xulStore.getValue(
         windowURL,
         "event-toolbar",
         "currentset"
       );
       currentSet = currentSet.split(",");
-      let index = currentSet.indexOf(id);
+      const index = currentSet.indexOf(id);
       if (index >= 0) {
         currentSet.splice(index, 1);
         Services.xulStore.setValue(

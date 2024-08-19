@@ -18,12 +18,12 @@ this.calendar_timezones = class extends ExtensionAPI {
               cal.timezoneService.wrappedJSObject._updateDefaultTimezone();
               let lastValue = cal.timezoneService.defaultTimezone?.tzid;
 
-              let observer = {
+              const observer = {
                 QueryInterface: ChromeUtils.generateQI(["nsIObserver"]),
                 observe(_subject, _topic, _data) {
                   // Make sure the default timezone is updated before firing
                   cal.timezoneService.wrappedJSObject._updateDefaultTimezone();
-                  let currentValue = cal.timezoneService.defaultTimezone?.tzid;
+                  const currentValue = cal.timezoneService.defaultTimezone?.tzid;
                   if (currentValue != lastValue) {
                     lastValue = currentValue;
                     fire.sync(currentValue);

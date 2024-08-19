@@ -14,7 +14,7 @@ this.calendarItemDetails = class extends ExtensionAPI {
   onLoadCalendarItemPanel(window, origLoadCalendarItemPanel, iframeId, url) {
     const { setupE10sBrowser } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
 
-    let res = origLoadCalendarItemPanel(iframeId, url);
+    const res = origLoadCalendarItemPanel(iframeId, url);
     if (!this.extension.manifest.calendar_item_details) {
       return res;
     }
@@ -26,7 +26,7 @@ this.calendarItemDetails = class extends ExtensionAPI {
     }
 
     panelFrame.contentWindow.addEventListener("load", (event) => {
-      let document = event.target.ownerGlobal.document;
+      const document = event.target.ownerGlobal.document;
 
       let areas = this.extension.manifest.calendar_item_details.allowed_areas || ["secondary"];
       if (!Array.isArray(areas)) {
@@ -34,45 +34,45 @@ this.calendarItemDetails = class extends ExtensionAPI {
       }
 
       if (areas.includes("secondary")) {
-        let widgetId = makeWidgetId(this.extension.id);
+        const widgetId = makeWidgetId(this.extension.id);
 
-        let tabs = document.getElementById("event-grid-tabs");
-        let tab = document.createXULElement("tab");
+        const tabs = document.getElementById("event-grid-tabs");
+        const tab = document.createXULElement("tab");
         tabs.appendChild(tab);
         tab.setAttribute("label", this.extension.manifest.calendar_item_details.default_title);
         tab.setAttribute("id", widgetId + "-calendarItemDetails-tab");
         tab.setAttribute("image", this.extension.manifest.calendar_item_details.default_icon);
         tab.querySelector(".tab-icon").style.maxHeight = "19px";
 
-        let tabpanels = document.getElementById("event-grid-tabpanels");
-        let tabpanel = document.createXULElement("tabpanel");
+        const tabpanels = document.getElementById("event-grid-tabpanels");
+        const tabpanel = document.createXULElement("tabpanel");
         tabpanels.appendChild(tabpanel);
         tabpanel.setAttribute("id", widgetId + "-calendarItemDetails-tabpanel");
         tabpanel.setAttribute("flex", "1");
 
-        let browser = document.createXULElement("browser");
+        const browser = document.createXULElement("browser");
         browser.setAttribute("flex", "1");
 
-        let options = { maxWidth: null, fixedWidth: true };
+        const options = { maxWidth: null, fixedWidth: true };
         setupE10sBrowser(this.extension, browser, tabpanel, options).then(() => {
-          let target = new URL(this.extension.manifest.calendar_item_details.default_content);
+          const target = new URL(this.extension.manifest.calendar_item_details.default_content);
           target.searchParams.set("area", "secondary");
           browser.fixupAndLoadURIString(target.href, { triggeringPrincipal: this.extension.principal });
         });
       } else if (areas.includes("inline")) {
-        let tabbox = document.getElementById("event-grid");
+        const tabbox = document.getElementById("event-grid");
 
-        let browserRow = tabbox.appendChild(document.createElementNS("http://www.w3.org/1999/xhtml", "tr"));
-        let browserCell = browserRow.appendChild(document.createElementNS("http://www.w3.org/1999/xhtml", "td"));
+        const browserRow = tabbox.appendChild(document.createElementNS("http://www.w3.org/1999/xhtml", "tr"));
+        const browserCell = browserRow.appendChild(document.createElementNS("http://www.w3.org/1999/xhtml", "td"));
         browserRow.className = "event-grid-link-row";
         browserCell.setAttribute("colspan", "2");
 
-        let separator = tabbox.appendChild(document.createElementNS("http://www.w3.org/1999/xhtml", "tr"));
+        const separator = tabbox.appendChild(document.createElementNS("http://www.w3.org/1999/xhtml", "tr"));
         separator.className = "separator";
-        let separatorCell = separator.appendChild(document.createElementNS("http://www.w3.org/1999/xhtml", "td"));
+        const separatorCell = separator.appendChild(document.createElementNS("http://www.w3.org/1999/xhtml", "td"));
         separatorCell.setAttribute("colspan", "2");
 
-        let browser = document.createXULElement("browser");
+        const browser = document.createXULElement("browser");
         browser.setAttribute("flex", "1");
 
         // TODO The real version will need a max-height and auto-resizing
@@ -83,9 +83,9 @@ this.calendarItemDetails = class extends ExtensionAPI {
         // Fix an annoying bug, this should be part of a different patch
         document.getElementById("url-link").style.maxWidth = "42em";
 
-        let options = { maxWidth: null, fixedWidth: true };
+        const options = { maxWidth: null, fixedWidth: true };
         setupE10sBrowser(this.extension, browser, browserCell, options).then(() => {
-          let target = new URL(this.extension.manifest.calendar_item_details.default_content);
+          const target = new URL(this.extension.manifest.calendar_item_details.default_content);
           target.searchParams.set("area", "inline");
           browser.fixupAndLoadURIString(target.href, { triggeringPrincipal: this.extension.principal });
         });
@@ -98,7 +98,7 @@ this.calendarItemDetails = class extends ExtensionAPI {
   onLoadSummary(window) {
     const { setupE10sBrowser } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
 
-    let document = window.document;
+    const document = window.document;
 
     // Fix an annoying bug, this should be part of a different patch
     document.querySelector(".url-link").style.maxWidth = "42em";
@@ -110,23 +110,23 @@ this.calendarItemDetails = class extends ExtensionAPI {
 
 
     if (areas.includes("summary")) {
-      let summaryBox = document.querySelector(".item-summary-box");
+      const summaryBox = document.querySelector(".item-summary-box");
 
-      let browser = document.createXULElement("browser");
+      const browser = document.createXULElement("browser");
       browser.id = "ext-calendar-item-details-" + this.extension.id;
       browser.style.minHeight = "150px";
       document.getElementById(browser.id)?.remove();
 
-      let separator = document.createXULElement("separator");
+      const separator = document.createXULElement("separator");
       separator.id = "ext-calendar-item-details-separator-" + this.extension.id;
       separator.className = "groove";
 
       document.getElementById(separator.id)?.remove();
       summaryBox.appendChild(separator);
 
-      let options = { maxWidth: null, fixedWidth: true };
+      const options = { maxWidth: null, fixedWidth: true };
       setupE10sBrowser(this.extension, browser, summaryBox, options).then(() => {
-        let target = new URL(this.extension.manifest.calendar_item_details.default_content);
+        const target = new URL(this.extension.manifest.calendar_item_details.default_content);
         target.searchParams.set("area", "summary");
         browser.fixupAndLoadURIString(target.href, { triggeringPrincipal: this.extension.principal });
       });
@@ -134,9 +134,9 @@ this.calendarItemDetails = class extends ExtensionAPI {
   }
 
   onStartup() {
-    let calendarItemDetails = this.extension.manifest?.calendar_item_details;
+    const calendarItemDetails = this.extension.manifest?.calendar_item_details;
     if (calendarItemDetails) {
-      let localize = this.extension.localize.bind(this.extension);
+      const localize = this.extension.localize.bind(this.extension);
 
       if (calendarItemDetails.default_icon) {
         calendarItemDetails.default_icon = this.extension.getURL(localize(calendarItemDetails.default_icon));
@@ -149,7 +149,7 @@ this.calendarItemDetails = class extends ExtensionAPI {
         calendarItemDetails.default_title = localize(calendarItemDetails.default_title);
       }
 
-      let areas = calendarItemDetails.allowed_areas;
+      const areas = calendarItemDetails.allowed_areas;
       if (Array.isArray(areas) && areas.includes("inline") && areas.includes("secondary")) {
         throw new ExtensionError("Cannot show calendar_item_details both inline and secondary");
       }
@@ -170,7 +170,7 @@ this.calendarItemDetails = class extends ExtensionAPI {
       ],
       onLoadWindow: (window) => {
         if (window.location.href == "chrome://messenger/content/messenger.xhtml") {
-          let orig = window.onLoadCalendarItemPanel;
+          const orig = window.onLoadCalendarItemPanel;
           window.onLoadCalendarItemPanel = this.onLoadCalendarItemPanel.bind(this, window, orig.bind(window));
           window._onLoadCalendarItemPanelOrig = orig;
         } else {
@@ -185,7 +185,7 @@ this.calendarItemDetails = class extends ExtensionAPI {
     ExtensionSupport.unregisterWindowListener("ext-calendarItemDetails-event-" + this.extension.id);
     ExtensionSupport.unregisterWindowListener("ext-calendarItemDetails-summary-" + this.extension.id);
 
-    for (let wnd of ExtensionSupport.openWindows) {
+    for (const wnd of ExtensionSupport.openWindows) {
       if (wnd.location.href == "chrome://messenger/content/messenger.xhtml") {
         if (wnd._onLoadCalendarItemPanelOrig) {
           wnd.onLoadCalendarItemPanel = wnd._onLoadCalendarItemPanelOrig;
@@ -194,7 +194,7 @@ this.calendarItemDetails = class extends ExtensionAPI {
       }
     }
   }
-  getAPI(context) {
+  getAPI(_context) {
     return { calendar: { itemDetails: {} } };
   }
 };

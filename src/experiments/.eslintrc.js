@@ -25,6 +25,15 @@ module.exports = {
     "quote-props": ["error", "consistent-as-needed", { keywords: true }],
     "quotes": ["error", "double", { avoidEscape: true }],
     "padded-blocks": ["error", "never"],
+    "indent": [2, 2, { SwitchCase: 1 }],
+
+    // Rules from https://searchfox.org/comm-central/source/.eslintrc.js#70
+    "complexity": ["error", 80],
+    "func-names": ["error", "never"],
+    "mozilla/prefer-boolean-length-check": "off",
+    // Enforce using `let` only when variables are reassigned.
+    "prefer-const": ["error", { destructuring: "all" }],
+    "mozilla/reject-chromeutils-import": "error",
   },
 
   "overrides": [
@@ -42,7 +51,6 @@ module.exports = {
         Services: true,
       },
       rules: {
-        "no-unused-vars": ["error", { argsIgnorePattern: "^_|context" }],
         "mozilla/reject-importGlobalProperties": "off"
       }
     }

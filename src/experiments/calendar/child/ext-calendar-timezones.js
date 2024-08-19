@@ -9,7 +9,7 @@ var { default: ICAL } = ChromeUtils.importESModule("resource:///modules/calendar
 var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
 
 this.calendar_timezones = class extends ExtensionAPI {
-  getAPI(context) {
+  getAPI(_context) {
     return {
       calendar: {
         timezones: {
@@ -21,7 +21,7 @@ this.calendar_timezones = class extends ExtensionAPI {
             return cal.timezoneService.defaultTimezone?.tzid;
           },
           getDefinition(tzid, returnFormat) {
-            let timezoneDatabase = Cc["@mozilla.org/calendar/timezone-database;1"].getService(
+            const timezoneDatabase = Cc["@mozilla.org/calendar/timezone-database;1"].getService(
               Ci.calITimezoneDatabase
             );
             let zoneInfo = timezoneDatabase.getTimezoneDefinition(tzid);
