@@ -141,6 +141,7 @@ this.calendar_calendars = class extends ExtensionAPI {
               // TODO validate capability names
               let unwrappedCalendar = calendar.wrappedJSObject.mUncachedCalendar.wrappedJSObject;
               unwrappedCalendar.capabilities = Object.assign({}, unwrappedCalendar.capabilities, updateProperties.capabilities);
+              calendar.setProperty("extensionCapabilities", JSON.stringify(unwrappedCalendar.capabilities));
             }
 
             if (updateProperties.lastError !== undefined) {

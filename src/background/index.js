@@ -51,6 +51,11 @@ export async function initMessageListener() {
             name: data.name,
             type: "ext-" + messenger.runtime.id,
             url: `googleapi://${message.sessionId}/?${data.type}=${encodeURIComponent(data.id)}`,
+            capabilities: {
+              events: data.type == "calendar",
+              tasks: data.type == "tasks"
+              // TODO more task properties
+            }
           };
           return messenger.calendar.calendars.create(calendar);
         })

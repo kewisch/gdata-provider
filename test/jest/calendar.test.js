@@ -1239,7 +1239,9 @@ describe("onDetectCalendars", () => {
           url: "googleapi://username@example.com/?calendar=calid",
           color: "#FF0000",
           capabilities: {
-            mutable: true
+            mutable: true,
+            events: true,
+            tasks: false
           }
         },
         {
@@ -1248,13 +1250,19 @@ describe("onDetectCalendars", () => {
           url: "googleapi://username@example.com/?calendar=calid2",
           color: "#00FF00",
           capabilities: {
-            mutable: false
+            mutable: false,
+            events: true,
+            tasks: false
           }
         },
         {
           name: "task summary",
           type: "ext-" + messenger.runtime.id,
           url: "googleapi://username@example.com/?tasks=taskid",
+          capabilities: {
+            events: false,
+            tasks: true
+          }
         },
       ])
     );
@@ -1304,6 +1312,10 @@ describe("onDetectCalendars", () => {
           name: "task summary",
           type: "ext-" + messenger.runtime.id,
           url: "googleapi://username@example.com/?tasks=taskid",
+          capabilities: {
+            events: false,
+            tasks: true
+          }
         },
       ])
     );
@@ -1357,7 +1369,9 @@ describe("onDetectCalendars", () => {
           url: "googleapi://username@example.com/?calendar=calid",
           color: "#FF0000",
           capabilities: {
-            mutable: true
+            mutable: true,
+            events: true,
+            tasks: false
           },
         },
       ])

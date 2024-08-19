@@ -88,6 +88,8 @@ export default class calGoogleCalendar {
         url: `googleapi://${username}/?calendar=${encodeURIComponent(gcal.id)}`,
         capabilities: {
           mutable: gcal.accessRole != "freeBusyReader" && gcal.accessRole != "reader",
+          tasks: false,
+          events: true
         },
         color: gcal.backgroundColor,
       };
@@ -98,6 +100,11 @@ export default class calGoogleCalendar {
         name: gcal.title,
         type: "ext-" + messenger.runtime.id,
         url: `googleapi://${username}/?tasks=${encodeURIComponent(gcal.id)}`,
+        capabilities: {
+          tasks: true,
+          events: false
+          // TODO more task properties
+        },
       };
     });
 
@@ -233,7 +240,7 @@ export default class calGoogleCalendar {
 
     let timeZone = await this.getCalendarPref("timeZone");
     let accessRole = await this.getCalendarPref("accessRole");
-    let defaultTimezone = TimezoneService.get(timeZone);
+    let defaultTimezone = timeZone ? TimezoneService.get(timeZone) : null;
 
     let newItem = await jsonToItem({
       entry: data,

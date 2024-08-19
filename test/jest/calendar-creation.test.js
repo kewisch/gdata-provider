@@ -79,6 +79,10 @@ test("create", async () => {
     name: "calendar1",
     type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
     url: "googleapi://sessionId/?calendar=id1",
+    capabilities: {
+      events: true,
+      tasks: false
+    }
   });
 });
 
