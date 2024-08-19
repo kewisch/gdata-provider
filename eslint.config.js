@@ -12,7 +12,9 @@ export default [
       "!eslint.config.js",
       "!commitlint.config.js",
 
-      "src/experiments/calendar/**",
+      "src/experiments/**",
+      "!src/experiments/gdata/**/*.js",
+
       "src/background/libs/**",
       "test/xpcshell/**",
     ]
