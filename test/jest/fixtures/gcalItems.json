@@ -181,7 +181,8 @@
   "recur_instance": {
     "kind": "calendar#event",
     "etag": "\"2128312983238480\"",
-    "id": "osndfnwejrgnejnsdjfwegjdfr",
+    "id": "osndfnwejrgnejnsdjfwegjdfr_20060626",
+    "recurringEventId": "osndfnwejrgnejnsdjfwegjdfr",
     "eventType": "default",
     "created": "2006-06-08T21:04:52.000Z",
     "updated": "2006-06-08T21:05:49.138Z",

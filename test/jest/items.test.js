@@ -19,6 +19,7 @@ beforeEach(() => {
   jest.spyOn(global.console, "log").mockImplementation(() => {});
   jest.spyOn(global.console, "warn").mockImplementation(() => {});
   jest.spyOn(global.console, "error").mockImplementation(() => {});
+  TimezoneService.init();
 
   global.window = {
     DOMParser: class {
@@ -747,7 +748,7 @@ describe("patchItem", () => {
       ])("date prop %s timezone change", (jprop, prop, changed) => {
         event.getFirstProperty(jprop).setParameter("tzid", "America/Los_Angeles");
         changes = patchItem(item, oldItem);
-        expect(changes).toEqual({ [prop]: changed });
+        expect(changes).toEqual({ [prop]: changed, reminders: expect.anything() });
       });
 
       test("dtend unspecified", () => {
@@ -972,7 +973,7 @@ describe("patchItem", () => {
 
         changes = patchItem(item, oldItem);
         expect(changes.recurrence).toEqual(
-          expect.arrayContaining([prop.toUpperCase() + ":20070609T122334Z"])
+          expect.arrayContaining([prop.toUpperCase() + ":20070609T102334Z"])
         );
       });
     });
@@ -1074,6 +1075,7 @@ describe("ItemSaver", () => {
         })
       );
     });
+
     test("Master item removed", async () => {
       let gitem = v8.deserialize(v8.serialize(gcalItems.valarm_no_default_override));
       gitem.status = "cancelled";
@@ -1089,6 +1091,76 @@ describe("ItemSaver", () => {
         "calendarId#cache",
         "swpefnfloqssxjdlbpyqlyqddb@google.com"
       );
+    });
+
+    test("Parent item on separate page", async () => {
+      await saver.parseEventStream({
+        items: [gcalItems.recur_instance],
+      });
+      expect(saver.missingParents.length).toBe(1);
+
+      await saver.parseEventStream({
+        items: [gcalItems.recur_rrule],
+      });
+
+      await saver.complete();
+
+      // Don't retrieve from cache, it should be in the stream
+      expect(messenger.calendar.items.get).not.toHaveBeenCalled();
+      expect(messenger.calendar.items.create).toHaveBeenCalledTimes(1);
+      expect(messenger.calendar.items.create).toHaveBeenCalledWith(
+        "calendarId#cache",
+        expect.objectContaining({
+          id: "osndfnwejrgnejnsdjfwegjdfr@google.com",
+        })
+      );
+
+      let parentItem = await messenger.calendar.items.get("calendarId#cache", "osndfnwejrgnejnsdjfwegjdfr@google.com");
+      expect(parentItem).not.toBeNull();
+
+      let vcalendar = new ICAL.Component(parentItem.formats.jcal);
+      let vevent = vcalendar.getFirstSubcomponent("vevent");
+
+      expect(vevent.getFirstProperty("x-moz-faked-master")).toBeNull();
+    });
+
+    test("Parent item from database", async () => {
+      await messenger.calendar.items.create("calendarId#cache", jcalItems.recur_rrule);
+      messenger.calendar.items.create.mockClear();
+
+      await saver.parseEventStream({
+        items: [gcalItems.recur_instance],
+      });
+      expect(saver.missingParents.length).toBe(1);
+
+      await saver.complete();
+
+      expect(messenger.calendar.items.get).toHaveBeenCalledWith(
+        "calendarId#cache",
+        "osndfnwejrgnejnsdjfwegjdfr@google.com",
+        { returnFormat: "jcal" }
+      );
+
+      console.debug(messenger.calendar.items.create.mock.calls);
+
+      expect(messenger.calendar.items.create).toHaveBeenCalledTimes(1);
+      expect(messenger.calendar.items.create).toHaveBeenCalledWith(
+        "calendarId#cache",
+        expect.objectContaining({
+          id: "osndfnwejrgnejnsdjfwegjdfr@google.com",
+        })
+      );
+
+      let parentItem = await messenger.calendar.items.get("calendarId#cache", "osndfnwejrgnejnsdjfwegjdfr@google.com");
+      expect(parentItem).not.toBeNull();
+
+      let vcalendar = new ICAL.Component(parentItem.formats.jcal);
+      let vevents = vcalendar.getAllSubcomponents("vevent");
+
+      expect(vevents.length).toBe(2);
+      expect(vevents[0].getFirstProperty("x-moz-faked-master")).toBeNull();
+      expect(vevents[0].getFirstProperty("recurrence-id")).toBeNull();
+      expect(vevents[1].getFirstProperty("recurrence-id").jCal).toEqual(["recurrence-id", {}, "date", "2006-06-25"]);
     });
 
     test("recurring event", async () => {
@@ -1169,6 +1241,43 @@ describe("ItemSaver", () => {
       expect(vevent.getFirstProperty("recurrence-id")).toBe(null);
       expect(vevent.getFirstPropertyValue("dtstart")?.toICALString()).toBe("20060625");
       expect(vevent.getFirstPropertyValue("rdate")?.toICALString()).toBe("20060625");
+      expect(vevent.getFirstPropertyValue("x-moz-faked-master")).toBe("1");
+    });
+
+    test("recurring event missing parent with timezone recid", async () => {
+      let gitem = v8.deserialize(v8.serialize(gcalItems.recur_instance));
+      gitem.start = { dateTime: "2006-06-25T01:02:03", timeZone: "Europe/Berlin" };
+      gitem.end = { dateTime: "2006-06-25T02:03:04", timeZone: "Europe/Berlin" };
+      gitem.originalStartTime = { dateTime: "2006-06-25T05:06:07", timeZone: "Europe/Berlin" };
+
+      await saver.parseEventStream({
+        items: [gitem],
+        timeZone: "America/Los_Angeles"
+      });
+      await saver.complete();
+
+      expect(messenger.calendar.items.remove).not.toHaveBeenCalled();
+      expect(messenger.calendar.items.create).toHaveBeenCalledWith(
+        "calendarId#cache",
+        expect.objectContaining({
+          id: "osndfnwejrgnejnsdjfwegjdfr@google.com",
+          formats: {
+            use: "jcal",
+            jcal: ["vcalendar", expect.anything(), expect.anything()],
+          },
+        })
+      );
+
+      let vcalendar = new ICAL.Component(
+        messenger.calendar.items.create.mock.calls[0][1].formats.jcal
+      );
+      let vevent = vcalendar.getFirstSubcomponent("vevent");
+
+      expect(vevent.getFirstProperty("recurrence-id")).toBe(null);
+      expect(vevent.getFirstProperty("dtstart")?.getParameter("tzid")).toBe("Europe/Berlin");
+      expect(vevent.getFirstProperty("rdate")?.getParameter("tzid")).toBe("Europe/Berlin");
+      expect(vevent.getFirstPropertyValue("dtstart")?.toICALString()).toBe("20060625T140607");
+      expect(vevent.getFirstPropertyValue("rdate")?.toICALString()).toBe("20060625T140607");
       expect(vevent.getFirstPropertyValue("x-moz-faked-master")).toBe("1");
     });
 
