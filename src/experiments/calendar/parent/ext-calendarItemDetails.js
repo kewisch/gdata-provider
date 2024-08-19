@@ -8,6 +8,8 @@ var { ExtensionUtils: { ExtensionError } } = ChromeUtils.importESModule("resourc
 
 var { ExtensionSupport } = ChromeUtils.importESModule("resource:///modules/ExtensionSupport.sys.mjs");
 
+Cu.importGlobalProperties(["URL"]);
+
 this.calendarItemDetails = class extends ExtensionAPI {
   onLoadCalendarItemPanel(window, origLoadCalendarItemPanel, iframeId, url) {
     const { setupE10sBrowser } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
