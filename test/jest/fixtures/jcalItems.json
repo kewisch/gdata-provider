@@ -247,7 +247,7 @@
     "title" : "New Event",
     "type" : "event",
     "metadata": {
-      "etag": "\"8735583482382345\"",
+      "etag": "\"8735583482382344\"",
       "path": "osndfnwejrgnejnsdjfwegjdfr"
     },
     "format": "jcal",
@@ -259,6 +259,16 @@
         ["version", {}, "text", "2.0"]
       ],
       [
+        ["vtimezone",
+          [
+            ["last-modified", {}, "date-time", "2004-01-10T03:28:45Z"],
+            ["tzid", {}, "text", "US/Eastern"]
+          ],
+          [
+            ["daylight", [], []],
+            ["standard", [], []]
+          ]
+        ],
         ["vevent",
           [
             [ "uid", {}, "text", "osndfnwejrgnejnsdjfwegjdfr@google.com" ],

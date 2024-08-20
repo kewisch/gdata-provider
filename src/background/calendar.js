@@ -322,29 +322,32 @@ export default class calGoogleCalendar {
       defaultReminders: this.defaultReminders,
     });
 
-    if (newItem.instance) {
-      // Calling code expects a parent item. Add the created instance to the parent item from the
-      // cache and move forward with that.
-      let parentItem = await messenger.calendar.items.get(this.cacheId, newItem.id, { returnFormat: "jcal" });
-      let parentJcal = new ICAL.Component(parentItem.item);
-      let newItemComponent = new ICAL.Component(newItem.item);
-      parentJcal.addSubcomponent(newItemComponent.getFirstSubcomponent(newItem.type == "event" ? "vevent" : "vtodo"));
 
-      parentItem.metadata.etag = newItem.metadata.etag;
-      newItem = parentItem;
-    } else if (data.recurrence) {
-      // We need to make sure all modified instances are on the returned item. If we modify the
-      // parent, (e.g. add an EXDATE), newItem will just be the parent, but without the instances.
-      let referenceItem = await messenger.calendar.items.get(this.cacheId, newItem.id, { returnFormat: "jcal" });
-      referenceItem = new ICAL.Component(referenceItem.item);
+    if (newItem.type == "event") {
+      if (newItem.instance) {
+        // Calling code expects a parent item. Add the created instance to the parent item from the
+        // cache and move forward with that.
+        console.warn(this.cacheId, newItem.id);
+        let parentItem = await messenger.calendar.items.get(this.cacheId, newItem.id, { returnFormat: "jcal" });
+        let parentJcal = new ICAL.Component(parentItem.item);
+        let newItemComponent = new ICAL.Component(newItem.item);
+        parentJcal.addSubcomponent(newItemComponent.getFirstSubcomponent("vevent"));
+        parentItem.metadata.etag = newItem.metadata.etag;
+        newItem = parentItem;
+      } else if (data.recurrence) {
+        // We need to make sure all modified instances are on the returned item. If we modify the
+        // parent, (e.g. add an EXDATE), newItem will just be the parent, but without the instances.
+        let referenceItem = await messenger.calendar.items.get(this.cacheId, newItem.id, { returnFormat: "jcal" });
+        referenceItem = new ICAL.Component(referenceItem.item);
 
-      let parentItem = new ICAL.Component(newItem.item);
-      for (let component of referenceItem.getAllSubcomponents()) {
-        if (component.name != "vevent" && component.name != "vtodo") {
-          continue;
-        }
-        if (component.hasProperty("recurrence-id")) {
-          parentItem.addSubcomponent(component);
+        let parentItem = new ICAL.Component(newItem.item);
+        for (let component of referenceItem.getAllSubcomponents()) {
+          if (component.name != "vevent") {
+            continue;
+          }
+          if (component.hasProperty("recurrence-id")) {
+            parentItem.addSubcomponent(component);
+          }
         }
       }
     }

@@ -592,6 +592,118 @@ describe("item functions", () => {
 
         await expect(calendar.onItemUpdated(newItem, oldItem)).rejects.toThrow("QUOTA_FAILURE");
       });
+
+      test("onItemUpdated success task", async () => {
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/tasks/v1/lists/taskhash/tasks/lqohjsbhqoztdkusnpruvooacn"
+            )
+          ) {
+            return {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(gcalItems.simple_task),
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
+
+        let oldItem = v8.deserialize(v8.serialize(jcalItems.simple_task));
+        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_task));
+
+        let vtodo = new ICAL.Component(newItem.item);
+        vtodo
+          .getFirstSubcomponent("vtodo")
+          .getFirstProperty("summary")
+          .setValue("changed");
+
+        let result = await calendar.onItemUpdated(newItem, oldItem, {});
+
+        expect(fetch).toHaveBeenCalledWith(
+          new URL(
+            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+          ),
+          expect.objectContaining({
+            method: "PATCH",
+            body: '{"title":"changed"}',
+          })
+        );
+      });
+
+      test("onItemUpdated instance", async () => {
+        await messenger.calendar.items.create(calendar.cacheId, jcalItems.recur_rrule);
+
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/osndfnwejrgnejnsdjfwegjdfr_20060625"
+            )
+          ) {
+            return {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(gcalItems.recur_instance),
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
+
+        let oldItem = v8.deserialize(v8.serialize(jcalItems.recur_instance));
+        let newItem = v8.deserialize(v8.serialize(jcalItems.recur_instance));
+
+        let vevent = new ICAL.Component(newItem.item);
+        vevent
+          .getFirstSubcomponent("vevent")
+          .getFirstProperty("summary")
+          .setValue("changed");
+
+        let result = await calendar.onItemUpdated(newItem, oldItem, {});
+
+        expect(result.instance).not.toBeNull();
+        expect(result.metadata.etag).toEqual(`"2128312983238481"`);
+        expect(result.item[2].length).toEqual(3);
+      });
+
+      test("onItemUpdated recurrence", async () => {
+        // We need an item that has a modified occurrence
+        let oldItem = v8.deserialize(v8.serialize(jcalItems.recur_rrule));
+        oldItem.item[2].push(v8.deserialize(v8.serialize(jcalItems.recur_instance)).item[2][0]);
+
+        await messenger.calendar.items.create(calendar.cacheId, oldItem);
+
+        fetch.mockResponse(req => {
+          if (
+            req.url.startsWith(
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/osndfnwejrgnejnsdjfwegjdfr"
+            )
+          ) {
+            return {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(gcalItems.recur_rrule),
+            };
+          }
+          throw new Error("Unhandled request " + req.url);
+        });
+
+        let newItem = v8.deserialize(v8.serialize(jcalItems.recur_rrule));
+
+        let vevent = new ICAL.Component(newItem.item);
+        vevent
+          .getFirstSubcomponent("vevent")
+          .getFirstProperty("summary")
+          .setValue("changed");
+
+        let result = await calendar.onItemUpdated(newItem, oldItem, {});
+
+        expect(result.instance).toBeUndefined();
+        expect(result.metadata.etag).toEqual(`"2128312983238480"`);
+        expect(result.item[2].length).toEqual(2);
+      });
     });
 
     describe("onItemRemoved", () => {
