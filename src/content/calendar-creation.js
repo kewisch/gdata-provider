@@ -56,7 +56,7 @@ async function onInitial() {
   return false;
 }
 
-export async function onAuthenticate() {
+async function onAuthenticate() {
   let sessionId = document.querySelector("input[name='session']:checked").value;
   if (sessionId == "_new") {
     sessionId = document.getElementById("gdata-session-name").value;
@@ -120,7 +120,7 @@ export async function onAuthenticate() {
   return false;
 }
 
-export async function onCreate() {
+async function onCreate() {
   let sessionId = document.querySelector("input[name='session']:checked").value;
   if (sessionId == "_new") {
     sessionId = document.getElementById("gdata-session-name").value;
