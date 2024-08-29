@@ -25,7 +25,7 @@
     "lint": "commitlint -g commitlint.config.js -f origin/legacy && eslint --ext '.js,.jsm' . || true"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.4.0",
+    "@commitlint/cli": "^19.4.1",
     "@commitlint/config-conventional": "^19.2.2",
     "babel-eslint": "^10.1.0",
     "bump-file": "^2.0.0",
