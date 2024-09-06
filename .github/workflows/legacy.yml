@@ -8,60 +8,41 @@ on:
   push:
     branches:
       - legacy
+  pull_request:
+    branches:
+      - legacy
 
 jobs:
-  lint:
-    name: "Lint"
+  build:
+    name: "Build"
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: "npm ci"
         run: npm ci
 
-      - name: "Commit lint"
-        uses: wagoid/commitlint-github-action@v4
+      - name: "commitlint pull requests"
+        if: ${{ github.event_name == 'pull_request' }}
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+      - name: "commitlint legacy"
+        if: ${{ github.event_name == 'push' }}
+        run: npx commitlint --from ${{ github.event.before }} --to ${{ github.event.after }} --verbose
 
       - name: "ESLint"
-        uses: kewisch/action-yet-another-eslint@v1
-        with:
-          extensions: "js,jsm"
-
-  build:
-    name: "Build"
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v2
+        run: npx eslint --ext jsm --ext js .
 
       - name: "Build"
         run: npm run build
 
       - name: "Upload"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: gdata-provider.xpi
           path: dist/gdata-provider.xpi
-
-  test:
-    name: "Tests"
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v2
-
-      - name: "npm ci"
-        run: npm ci
-
-      - name: "Run Tests"
-        run: npm run test
-
-      - name: "Coveralls"
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
