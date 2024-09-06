@@ -8,6 +8,9 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
 
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
+/* global CalAlarm, CalAttachment, CalAttendee, CalEvent, CalRecurrenceInfo, CalRelation, CalTodo,
+ * cal, LOGitem, LOGverbose, stringException, calGoogleRequest, windowsTimezoneMap,
+ * ExtensionParent */
 XPCOMUtils.defineLazyModuleGetters(this, {
   CalAlarm: "resource:///modules/CalAlarm.jsm",
   CalAttachment: "resource:///modules/CalAttachment.jsm",
