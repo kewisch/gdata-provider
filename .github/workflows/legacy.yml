@@ -36,7 +36,7 @@ jobs:
         run: npx commitlint --from ${{ github.event.before }} --to ${{ github.event.after }} --verbose
 
       - name: "ESLint"
-        run: npx eslint --ext jsm --ext js .
+        run: npx eslint
 
       - name: "Build"
         run: npm run build

@@ -10,6 +10,7 @@ var EXPORTED_SYMBOLS = ["gdataInitUI"];
 
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
+/* global cal, monkeyPatch, getMessenger, CONFERENCE_ROW_FRAGMENT, initConferenceRow */
 XPCOMUtils.defineLazyModuleGetters(this, {
   cal: "resource:///modules/calendar/calUtils.jsm",
   monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
@@ -261,7 +262,6 @@ function gdataInitUI(window, document) {
       reminderList.value = "default";
 
       // remember the selected index
-      // eslint-disable-next-line no-undef
       window.gLastAlarmSelection = reminderList.selectedIndex;
     } else {
       rv = protofunc.call(this, reminders, ...args);

@@ -10,6 +10,7 @@ var EXPORTED_SYMBOLS = ["gdataInitUI"];
 
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
+/* global cal, migrateCalendars, getMigratableCalendars */
 XPCOMUtils.defineLazyModuleGetters(this, {
   cal: "resource:///modules/calendar/calUtils.jsm",
   migrateCalendars: "resource://gdata-provider/legacy/modules/gdataMigration.jsm",

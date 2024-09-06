@@ -29,7 +29,7 @@ function OAuth2(aBaseURI, aScope, aAppKey, aAppSecret) {
   this.extraAuthParams = [];
   this.randomizePort();
 
-  this.log = console.createInstance({
+  this.log = console.createInstance({ // eslint-disable-line no-console
     prefix: "gdata.oauth",
     maxLogLevel: "Warn",
     maxLogLevelPref: "mailnews.oauth.loglevel",

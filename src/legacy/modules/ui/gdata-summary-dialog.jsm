@@ -10,6 +10,7 @@ var EXPORTED_SYMBOLS = ["gdataInitUI"];
 
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
+/* global getMessenger, CONFERENCE_ROW_FRAGMENT, initConferenceRow */
 XPCOMUtils.defineLazyModuleGetters(this, {
   getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
   CONFERENCE_ROW_FRAGMENT: "resource://gdata-provider/legacy/modules/ui/gdata-dialog-utils.jsm",

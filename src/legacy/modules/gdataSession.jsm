@@ -10,6 +10,7 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
 
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
+/* global calGoogleRequest, API_BASE, cal, LOGinterval, OAuth2 */
 XPCOMUtils.defineLazyModuleGetters(this, {
   calGoogleRequest: "resource://gdata-provider/legacy/modules/gdataRequest.jsm",
   API_BASE: "resource://gdata-provider/legacy/modules/gdataRequest.jsm",
@@ -302,7 +303,9 @@ calGoogleSession.prototype = {
           let dataObj;
           try {
             dataObj = JSON.parse(aData);
-          } catch (e) {}
+          } catch (e) {
+            // Ok if parsing fails
+          }
           error = dataObj && dataObj.error;
         }
 
@@ -462,15 +465,12 @@ calGoogleSession.prototype = {
       await onEach(data);
     }
 
-    // In bug 1410672 it turns out this doesn't work without return await
-    /* eslint-disable no-return-await */
     if (data.nextPageToken) {
       aRequest.addQueryParameter("pageToken", data.nextPageToken);
       return await this.asyncPaginatedRequest(aRequest, null, onEach, onLast);
     } else if (onLast) {
       return await onLast(data);
     }
-    /* eslint-enable no-return-await */
 
     return null;
   },

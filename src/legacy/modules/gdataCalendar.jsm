@@ -12,6 +12,10 @@ var { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
 
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
+/* global stringException, getGoogleSessionManager, calGoogleRequest, API_BASE,
+ * getCorrectedDate, ItemToJSON, JSONToItem, ItemSaver, checkResolveConflict, getGoogleId,
+ * getItemMetadata, saveItemMetadata, deleteItemMetadata, migrateItemMetadata, JSONToAlarm,
+ * getMessenger */
 XPCOMUtils.defineLazyModuleGetters(this, {
   setTimeout: "resource://gre/modules/Timer.jsm",
   stringException: "resource://gdata-provider/legacy/modules/gdataLogging.jsm",

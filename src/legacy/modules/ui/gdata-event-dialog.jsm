@@ -11,6 +11,7 @@ var EXPORTED_SYMBOLS = ["gdataInitUI"];
 
 var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
+/* global monkeyPatch, getMessenger */
 XPCOMUtils.defineLazyModuleGetters(this, {
   monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
   getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
