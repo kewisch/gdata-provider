@@ -13,7 +13,7 @@ on:
       - main
 
 jobs:
-  lint:
+  build:
     name: "Lint"
     runs-on: ubuntu-latest
     steps:
@@ -30,8 +30,13 @@ jobs:
       - name: "npm ci"
         run: npm ci
 
-      - name: "Commit lint"
-        run: npx commitlint --from $GITHUB_SHA^
+      - name: "commitlint pull requests"
+        if: ${{ github.event_name == 'pull_request' }}
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+      - name: "commitlint main"
+        if: ${{ github.event_name == 'push' }}
+        run: npx commitlint --from ${{ github.event.before }} --to ${{ github.event.after }} --verbose
 
       - name: "ESLint"
         run: npx eslint
