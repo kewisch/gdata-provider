@@ -11,6 +11,9 @@ ChromeUtils.defineModuleGetter(
   "resource:///modules/ExtensionSupport.jsm"
 ); /* global ExtensionSupport */
 
+const Services =
+  globalThis.Services || ChromeUtils.import("resource://gre/modules/Services.jsm").Services; // Thunderbird 103 compat
+
 var unregisterIds = [];
 var unregisterModules = new Set();
 var closeWindows = new Set();
@@ -71,9 +74,39 @@ function register() {
       checkMigrateCalendars(window);
     },
   });
+
+  let { doEnableColors, doDisableColors, flushCache, getMessenger } = ChromeUtils.import(
+    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
+  );
+
+  let messenger = getMessenger();
+  messenger.storage.onChanged.addListener((settings, _target) => {
+    if ("settings.enableColors" in settings) {
+      // check for true and false explicitly, since `undefined` can also happen
+      if (settings["settings.enableColors"].newValue === true) {
+        doEnableColors();
+      } else if (settings["settings.enableColors"].newValue === false) {
+        doDisableColors();
+      }
+      // We must delete the cache and reload all calendars from the source in order
+      // to add/remove the color categories. Restarting Thunderbird is insufficient
+      // because the locally cached calendar entries lack the color information.
+      flushCache();
+    }
+  });
+
+  let enableColors = messenger.gdataSyncPrefs.get("settings.enableColors", false);
+  if (enableColors) {
+    doEnableColors();
+  }
 }
 
 function unregister() {
+  let { doDisableColors } = ChromeUtils.import(
+    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
+  );
+  doDisableColors();
+
   for (let id of unregisterIds) {
     ExtensionSupport.unregisterWindowListener(id);
     Cu.unload(`resource://gdata-provider/legacy/modules/ui/${id}.jsm`);
