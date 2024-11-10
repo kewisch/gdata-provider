@@ -2,6 +2,7 @@ Provider for Google Calendar
 ============================
 
 [![Build Status](https://github.com/kewisch/gdata-provider/actions/workflows/legacy.yml/badge.svg)](https://github.com/kewisch/gdata-provider/actions/workflows/legacy.yml)
+[![Active Users](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Faddons.thunderbird.net%2Fapi%2Fv4%2Faddons%2Faddon%2Fprovider-for-google-calendar%2F&query=%24.average_daily_users&label=Active%20Users)](https://addons.thunderbird.net/thunderbird/addon/provider-for-google-calendar/)
 
 These are the sources for the [Provider for Google Calendar](https://addons.thunderbird.net/thunderbird/addon/provider-for-google-calendar/).
 
