@@ -33,7 +33,7 @@
     "bump-file": "^2.0.0",
     "conventional-changelog": "^6.0.0",
     "conventional-changelog-cli": "^5.0.0",
-    "eslint": "^9.10.0",
+    "eslint": "^9.17.0",
     "globals": "^15.9.0"
   }
 }
