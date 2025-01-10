@@ -663,7 +663,7 @@ describe("item functions", () => {
         let result = await calendar.onItemUpdated(newItem, oldItem, {});
 
         expect(result.instance).not.toBeNull();
-        expect(result.metadata.etag).toEqual(`"2128312983238481"`);
+        expect(result.metadata.etag).toEqual('"2128312983238481"');
         expect(result.item[2].length).toEqual(3);
       });
 
@@ -701,7 +701,7 @@ describe("item functions", () => {
         let result = await calendar.onItemUpdated(newItem, oldItem, {});
 
         expect(result.instance).toBeUndefined();
-        expect(result.metadata.etag).toEqual(`"2128312983238480"`);
+        expect(result.metadata.etag).toEqual('"2128312983238480"');
         expect(result.item[2].length).toEqual(2);
       });
     });
