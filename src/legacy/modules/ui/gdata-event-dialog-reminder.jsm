@@ -2,40 +2,76 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
+  "ui/gdata-event-dialog-reminder.jsm"
+);
+
 var EXPORTED_SYMBOLS = ["gdataInitUI"];
 
-function gdataInitUI(window, document) {
-  ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-    "ui/gdata-event-dialog-reminder.jsm"
-  );
+var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 
+XPCOMUtils.defineLazyModuleGetters(this, {
+  cal: "resource:///modules/calendar/calUtils.jsm",
+  monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+});
+
+ChromeUtils.defineLazyGetter(this, "messenger", () => getMessenger());
+
+const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
+
+function gdataInitUI(window, document) {
   let item = window.arguments[0].item;
   let calendar = window.arguments[0].calendar;
-  if (calendar.type != "gdata") {
+  if (calendar.type != GDATA_CALENDAR_TYPE) {
     return;
   }
 
   const FOUR_WEEKS_BEFORE = -2419200;
-  const { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
-  const { monkeyPatch, getMessenger } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
-  );
 
-  let messenger = getMessenger();
   let reminderOutOfRange = messenger.i18n.getMessage("reminderOutOfRange");
   let notificationbox;
+  let checkPending;
+
+  function calculateAlarmOffset(aItem, aAlarm, aRelated) {
+    let offset = aAlarm.offset;
+    if (aAlarm.related == Ci.calIAlarm.ALARM_RELATED_ABSOLUTE) {
+      let returnDate;
+      if (aRelated === undefined || aRelated == Ci.calIAlarm.ALARM_RELATED_START) {
+        returnDate = aItem[cal.dtz.startDateProp(aItem)];
+      } else if (aRelated == Ci.calIAlarm.ALARM_RELATED_END) {
+        returnDate = aItem[cal.dtz.endDateProp(aItem)];
+      }
+
+      if (returnDate && aAlarm.alarmDate) {
+        offset = aAlarm.alarmDate.subtractDate(returnDate);
+      }
+    }
+    return offset;
+  }
 
   function checkReminderRange(reminder) {
-    let offset = cal.alarms.calculateAlarmOffset(item, reminder);
+    let alarm;
+    let offset = calculateAlarmOffset(item, reminder);
     let seconds = offset.inSeconds;
     return seconds < 1 && seconds >= FOUR_WEEKS_BEFORE;
   }
 
   function checkAllReminders() {
+    if (checkAllReminders.pending) {
+      return checkAllReminders.pending;
+    }
+    checkAllReminders.pending = checkAllRemindersAsync().finally(() => {
+      checkAllReminders.pending = null;
+    });
+    return checkAllReminders.pending;
+  }
+
+  async function checkAllRemindersAsync() {
     let listbox = document.getElementById("reminder-listbox");
 
     let validated = true;
-    for (let node of listbox.childNodes) {
+    for (let node of listbox.querySelectorAll("richlistitem")) {
       validated = validated && checkReminderRange(node.reminder);
       if (!validated) {
         break;
@@ -57,22 +93,22 @@ function gdataInitUI(window, document) {
     if (validated) {
       notificationbox.removeAllNotifications();
     } else if (!notificationbox.getNotificationWithValue("reminderNotification")) {
-      let notification = notificationbox.appendNotification(
-        reminderOutOfRange,
-        "reminderNotification",
-        null,
-        notificationbox.PRIORITY_CRITICAL_HIGH
-      );
+      let notification = await notificationbox.appendNotification("reminderNotification", {
+        label: reminderOutOfRange,
+        priority: notificationbox.PRIORITY_CRITICAL_HIGH,
+      });
 
-      notification.closeButton.setAttribute("hidden", "true");
+      notification.closeButton.style.display = "none";
     }
   }
 
   monkeyPatch(window, "updateReminder", function(protofunc, event) {
     let rv = protofunc.apply(this, Array.from(arguments).slice(1));
     if (
-      event.explicitOriginalTarget.localName == "listitem" ||
-      event.explicitOriginalTarget.id == "reminder-remove-button" ||
+      window.suppressListUpdate ||
+      event.target.localName == "richlistitem" ||
+      event.target.parentNode.localName == "richlistitem" ||
+      event.target.id == "reminder-remove-button" ||
       !document.commandDispatcher.focusedElement
     ) {
       // Same hack from the original dialog

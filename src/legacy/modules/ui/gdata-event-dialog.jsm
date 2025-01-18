@@ -2,23 +2,30 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+var { recordModule, recordWindow } = ChromeUtils.import(
+  "resource://gdata-provider/legacy/modules/gdataUI.jsm"
+);
+recordModule("ui/gdata-event-dialog.jsm");
+
 var EXPORTED_SYMBOLS = ["gdataInitUI"];
 
+var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+
+XPCOMUtils.defineLazyModuleGetters(this, {
+  monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
+});
+
+ChromeUtils.defineLazyGetter(this, "messenger", () => getMessenger());
+
+const ITEM_IFRAME_URL = "chrome://calendar/content/calendar-item-iframe.xhtml";
+const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
+
 function gdataInitUI(window, document) {
-  const { recordModule, recordWindow } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataUI.jsm"
-  );
-  recordModule("ui/gdata-event-dialog.jsm");
-
-  const { monkeyPatch, getMessenger } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
-  );
-  let messenger = getMessenger();
-
   // For event dialogs, record the window so it is closed when the extension is unloaded
   if (
     window.location.href == "chrome://calendar/content/calendar-event-dialog.xhtml" &&
-    window.arguments[0].calendarEvent.calendar.type == "gdata"
+    window.arguments[0].calendarEvent.calendar.type == GDATA_CALENDAR_TYPE
   ) {
     recordWindow(window);
   }
@@ -30,7 +37,7 @@ function gdataInitUI(window, document) {
     optionsPrivacyItem.accesskey = messenger.i18n.getMessage("gdata.privacy.default.accesskey");
     optionsPrivacyItem.type = "radio";
     optionsPrivacyItem.setAttribute("privacy", "DEFAULT");
-    optionsPrivacyItem.setAttribute("provider", "gdata");
+    optionsPrivacyItem.setAttribute("provider", GDATA_CALENDAR_TYPE);
     optionsPrivacyItem.setAttribute("oncommand", "editPrivacy(this)");
 
     const toolbarPrivacyItem = optionsPrivacyItem.cloneNode();
@@ -38,33 +45,33 @@ function gdataInitUI(window, document) {
     toolbarPrivacyItem.id = "gdata-toolbar-privacy-default-menuitem";
 
     let privacyOptionsPopup = document.getElementById("options-privacy-menupopup");
-    if (privacyOptionsPopup) {
+    if (privacyOptionsPopup && !document.getElementById(optionsPrivacyItem.id)) {
       privacyOptionsPopup.insertBefore(optionsPrivacyItem, privacyOptionsPopup.firstElementChild);
     }
 
     let privacyToolbarPopup = document.getElementById("event-privacy-menupopup");
-    if (privacyToolbarPopup) {
+    if (privacyToolbarPopup && !document.getElementById(toolbarPrivacyItem.id)) {
       privacyToolbarPopup.insertBefore(toolbarPrivacyItem, privacyToolbarPopup.firstElementChild);
     }
 
     const gdataStatusPrivacyHbox = document.createXULElement("hbox");
-    gdataStatusPrivacyHbox.setAttribute("id", "gdata-status-privacy-default-box");
+    gdataStatusPrivacyHbox.id = "gdata-status-privacy-default-box";
     gdataStatusPrivacyHbox.setAttribute("privacy", "DEFAULT");
-    gdataStatusPrivacyHbox.setAttribute("provider", "gdata");
+    gdataStatusPrivacyHbox.setAttribute("provider", GDATA_CALENDAR_TYPE);
 
     const statusPrivacy = document.getElementById("status-privacy");
-    statusPrivacy.insertBefore(
-      gdataStatusPrivacyHbox,
-      document.getElementById("status-privacy-public-box")
-    );
+    if (statusPrivacy && !document.getElementById(gdataStatusPrivacyHbox.id)) {
+      statusPrivacy.insertBefore(
+        gdataStatusPrivacyHbox,
+        document.getElementById("status-privacy-public-box")
+      );
+    }
   })();
 
-  monkeyPatch(window, "onLoadCalendarItemPanel", (protofunc, passedFrameId, url) => {
-    let rv = protofunc(passedFrameId, url);
-
+  function loadPanel(passedFrameId) {
     let frameId;
-    if (window.gTabMail) {
-      frameId = passedFrameId || window.gTabmail.currentTabInfo.iframe.id;
+    if (window.tabmail) {
+      frameId = passedFrameId || window.tabmail.currentTabInfo.iframe?.id;
     } else {
       frameId = "calendar-item-panel-iframe";
     }
@@ -73,19 +80,36 @@ function gdataInitUI(window, document) {
     let frameScript = ChromeUtils.import(
       "resource://gdata-provider/legacy/modules/ui/gdata-lightning-item-iframe.jsm"
     );
-    if (frame.readyState == "complete") {
+
+    if (
+      frame.contentDocument.location == ITEM_IFRAME_URL &&
+      frame.contentDocument.readyState == "complete"
+    ) {
       frameScript.gdataInitUI(frame.contentWindow, frame.contentDocument);
     } else {
-      frame.contentWindow.addEventListener("load", () =>
-        frameScript.gdataInitUI(frame.contentWindow, frame.contentDocument)
-      );
+      let loader = function() {
+        if (frame.contentDocument.location == ITEM_IFRAME_URL) {
+          frameScript.gdataInitUI(frame.contentWindow, frame.contentDocument);
+          frame.removeEventListener("load", loader, { capture: true });
+        }
+      };
+      frame.addEventListener("load", loader, { capture: true });
     }
-    return rv;
-  });
+  }
+
+  if (window.location.href == "chrome://calendar/content/calendar-event-dialog.xhtml") {
+    window.setTimeout(() => loadPanel(), 0);
+  } else {
+    monkeyPatch(window, "onLoadCalendarItemPanel", (protofunc, passedFrameId, ...args) => {
+      let rv = protofunc(passedFrameId, ...args);
+      loadPanel(passedFrameId);
+      return rv;
+    });
+  }
 
   window.addEventListener("message", aEvent => {
-    let validOrigin = window.gTabmail ? "chrome://messenger" : "chrome://calendar";
-    if (aEvent.origin !== validOrigin) {
+    let validOrigin = window.tabmail ? "chrome://messenger" : "chrome://calendar";
+    if (!aEvent.isTrusted && aEvent.origin !== validOrigin) {
       return;
     }
 
@@ -108,7 +132,11 @@ function gdataInitUI(window, document) {
             node.disabled = aEvent.data.isGoogleTask;
           }
         }
+        break;
       }
+      case "gdataSettingsMigrate":
+        messenger.storage.local.set({ "settings.migrate": aEvent.data.value });
+        break;
     }
   });
 }

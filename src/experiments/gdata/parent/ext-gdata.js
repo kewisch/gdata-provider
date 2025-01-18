@@ -38,8 +38,8 @@ this.gdata = class extends ExtensionAPI {
       ["content", "gdata-provider", "legacy/content/"],
     ]);
 
-    // let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
-    // gdataUI.register();
+    let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
+    gdataUI.register();
   }
 
   onShutdown(isAppShutdown) {
@@ -47,8 +47,8 @@ this.gdata = class extends ExtensionAPI {
       return;
     }
 
-    // let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
-    // gdataUI.unregister();
+    let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
+    gdataUI.unregister();
 
     Services.io
       .getProtocolHandler("resource")
@@ -66,25 +66,6 @@ this.gdata = class extends ExtensionAPI {
   getAPI(_context) {
     return {
       gdata: {
-        /* onLegacyEvent: new ExtensionCommon.EventManager({
-          context,
-          name: "gdata.onLegacyEvent",
-          register: fire => {
-            let { legacyEventManager } = ChromeUtils.import(
-              "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
-            );
-            let listener = (event, name, ...args) => {
-              return fire.async(name, args);
-            };
-
-            legacyEventManager._emitter.on("legacyEvent", listener);
-            return () => {
-              legacyEventManager._emitter.off("legacyEvent", listener);
-            };
-          },
-        }).api(),
-        */
-
         async getLegacyPrefs() {
           const wxprefs = {};
           let branch = Services.prefs.getBranch("calendar.google.");
