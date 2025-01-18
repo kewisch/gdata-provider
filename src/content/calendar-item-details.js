@@ -104,6 +104,7 @@ async function main() {
   let params = new URLSearchParams(location.search);
   let area = params.get("area");
   document.body.classList.add("area-" + area);
+  document.body.style.marginInlineStart = `${params.get("columnWidth")}px`;
 
   let item = await messenger.calendar.items.getCurrent({ returnFormat: "jcal" });
 

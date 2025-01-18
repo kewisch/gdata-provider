@@ -10,8 +10,19 @@ html, body {
   padding: 0;
 }
 
+input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  margin-inline-end: 0.534rem;
+}
+
 body.area-summary .editable {
-  display: none;
+  display: none !important;
+}
+
+#default-alarms-row {
+  display: flex;
+  align-items: center;
 }
 
 #conf-info {

@@ -16,6 +16,12 @@ html, body {
   padding: 0;
 }
 
+input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  margin-inline-end: 0.534rem;
+}
+
 section {
   display: flex;
   flex-direction: column;
