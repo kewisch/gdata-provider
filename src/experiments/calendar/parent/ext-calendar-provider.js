@@ -146,8 +146,10 @@ class ExtCalendar extends cal.provider.BaseClass {
       try {
         this.capabilities = JSON.parse(super.getProperty("extensionCapabilities"));
       } catch (e) {
-        this.capabilities = this.extension.manifest.calendar_provider.capabilities || {};
+        this.capabilities = null;
       }
+
+      this.capabilities ??= this.extension.manifest.calendar_provider.capabilities || {};
 
       this.extension.emit("calendar.provider.onInit", this);
     }
@@ -496,15 +498,21 @@ this.calendar_provider = class extends ExtensionAPI {
     if (this.extension.manifest.calendar_provider) {
       this.onManifestEntry("calendar_provider");
     }
-
+    const uuid = this.extension.uuid;
+    const root = `experiments-calendar-${uuid}`;
+    const query = this.extension.manifest.version;
     Services.io
       .getProtocolHandler("resource")
       .QueryInterface(Ci.nsIResProtocolHandler)
-      .setSubstitution("tb-experiments-calendar", this.extension.rootURI);
+      .setSubstitution(root, this.extension.rootURI);
 
-    const { setupE10sBrowser, unwrapCalendar } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
+    const { setupE10sBrowser, unwrapCalendar } = ChromeUtils.importESModule(
+      `resource://${root}/experiments/calendar/ext-calendar-utils.sys.mjs?${query}`
+    );
 
-    ChromeUtils.registerWindowActor("CalendarProvider", { child: { esModuleURI: "resource://tb-experiments-calendar/experiments/calendar/child/ext-calendar-provider-actor.sys.mjs" } });
+    ChromeUtils.registerWindowActor(`CalendarProvider-${uuid}`, { child: { esModuleURI:
+      `resource://${root}/experiments/calendar/child/ext-calendar-provider-actor.sys.mjs?${query}`
+    }});
 
     ExtensionSupport.registerWindowListener("ext-calendar-provider-properties-" + this.extension.id, {
       chromeURLs: ["chrome://calendar/content/calendar-properties-dialog.xhtml"],
@@ -606,19 +614,19 @@ this.calendar_provider = class extends ExtensionAPI {
     if (isAppShutdown) {
       return;
     }
+    const uuid = this.extension.uuid;
+    const root = `experiments-calendar-${uuid}`;
     ExtensionSupport.unregisterWindowListener("ext-calendar-provider-creation-" + this.extension.id);
     ExtensionSupport.unregisterWindowListener("ext-calendar-provider-properties-" + this.extension.id);
-    ChromeUtils.unregisterWindowActor("CalendarProvider");
+    ChromeUtils.unregisterWindowActor(`CalendarProvider-${uuid}`);
 
     if (this.extension.manifest.calendar_provider) {
       ExtCalendarProvider.unregister(this.extension);
     }
-
-    Cu.unload("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
     Services.io
       .getProtocolHandler("resource")
       .QueryInterface(Ci.nsIResProtocolHandler)
-      .setSubstitution("tb-experiments-calendar", null);
+      .setSubstitution(root, null);
     Services.obs.notifyObservers(null, "startupcache-invalidate");
   }
 
@@ -646,11 +654,16 @@ this.calendar_provider = class extends ExtensionAPI {
   }
 
   getAPI(context) {
+    const uuid = context.extension.uuid;
+    const root = `experiments-calendar-${uuid}`;
+    const query = context.extension.manifest.version;
     const {
       propsToItem,
       convertItem,
       convertCalendar,
-    } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
+    } = ChromeUtils.importESModule(
+      `resource://${root}/experiments/calendar/ext-calendar-utils.sys.mjs?${query}`
+    );
 
     return {
       calendar: {

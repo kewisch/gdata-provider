@@ -12,7 +12,12 @@ Cu.importGlobalProperties(["URL"]);
 
 this.calendarItemDetails = class extends ExtensionAPI {
   onLoadCalendarItemPanel(window, origLoadCalendarItemPanel, iframeId, url) {
-    const { setupE10sBrowser } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
+    const uuid = this.extension.uuid;
+    const root = `experiments-calendar-${uuid}`;
+    const query = this.extension.manifest.version;
+    const { setupE10sBrowser } = ChromeUtils.importESModule(
+      `resource://${root}/experiments/calendar/ext-calendar-utils.sys.mjs?${query}`
+    );
 
     const res = origLoadCalendarItemPanel(iframeId, url);
     if (!this.extension.manifest.calendar_item_details) {
@@ -28,9 +33,12 @@ this.calendarItemDetails = class extends ExtensionAPI {
     panelFrame.contentWindow.addEventListener("load", (event) => {
       const document = event.target.ownerGlobal.document;
 
-      let areas = this.extension.manifest.calendar_item_details.allowed_areas || ["secondary"];
-      if (!Array.isArray(areas)) {
-        areas = [areas];
+      let areas = [];
+      if (this.extension.manifest.calendar_item_details) {
+        areas = this.extension.manifest.calendar_item_details.allowed_areas || ["secondary"]
+        if (!Array.isArray(areas)) {
+          areas = [areas];
+        }
       }
 
       if (areas.includes("secondary")) {
@@ -72,23 +80,32 @@ this.calendarItemDetails = class extends ExtensionAPI {
         const separatorCell = separator.appendChild(document.createElementNS("http://www.w3.org/1999/xhtml", "td"));
         separatorCell.setAttribute("colspan", "2");
 
-        const browser = document.createXULElement("browser");
-        browser.setAttribute("flex", "1");
-
-        // TODO The real version will need a max-height and auto-resizing
-        browser.style.height = "200px";
-        browser.style.width = "100%";
-        browser.style.display = "block";
-
         // Fix an annoying bug, this should be part of a different patch
         document.getElementById("url-link").style.maxWidth = "42em";
 
-        const options = { maxWidth: null, fixedWidth: true };
-        setupE10sBrowser(this.extension, browser, browserCell, options).then(() => {
-          const target = new URL(this.extension.manifest.calendar_item_details.default_content);
-          target.searchParams.set("area", "inline");
-          browser.fixupAndLoadURIString(target.href, { triggeringPrincipal: this.extension.principal });
-        });
+        const browser = document.createXULElement("browser");
+        browser.setAttribute("flex", "1");
+
+        browser.style.width = "100%";
+        browser.style.display = "block";
+
+        // Do this on the next tick so the column width is correctly calculated
+        window.setTimeout(() => {
+          const columnWidth = document.querySelector("#event-grid th")?.offsetWidth || 0;
+
+          const options = { maxWidth: null, fixedWidth: true, maxHeight: 200 };
+          setupE10sBrowser(this.extension, browser, browserCell, options).then(() => {
+            browser.messageManager.addMessageListener("Extension:BrowserResized", function(message) {
+              if (message.data.detail == "delayed") {
+                browser.style.height = `${message.data.height}px`;
+              }
+            });
+            const target = new URL(this.extension.manifest.calendar_item_details.default_content);
+            target.searchParams.set("area", "inline");
+            target.searchParams.set("columnWidth", columnWidth);
+            browser.fixupAndLoadURIString(target.href, { triggeringPrincipal: this.extension.principal });
+          });
+        }, 0);
       }
     });
 
@@ -96,18 +113,25 @@ this.calendarItemDetails = class extends ExtensionAPI {
   }
 
   onLoadSummary(window) {
-    const { setupE10sBrowser } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
+    const uuid = this.extension.uuid;
+    const root = `experiments-calendar-${uuid}`;
+    const query = this.extension.manifest.version;
+    const { setupE10sBrowser } = ChromeUtils.importESModule(
+      `resource://${root}/experiments/calendar/ext-calendar-utils.sys.mjs?${query}`
+    );
 
     const document = window.document;
 
     // Fix an annoying bug, this should be part of a different patch
     document.querySelector(".url-link").style.maxWidth = "42em";
 
-    let areas = this.extension.manifest.calendar_item_details.allowed_areas || ["secondary"];
-    if (!Array.isArray(areas)) {
-      areas = [areas];
+    let areas = [];
+    if (this.extension.manifest.calendar_item_details) {
+      areas = this.extension.manifest.calendar_item_details.allowed_areas || ["secondary"]
+      if (!Array.isArray(areas)) {
+        areas = [areas];
+      }
     }
-
 
     if (areas.includes("summary")) {
       const summaryBox = document.querySelector(".item-summary-box");

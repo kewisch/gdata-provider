@@ -9,12 +9,17 @@ var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.
 
 this.calendar_calendars = class extends ExtensionAPI {
   getAPI(context) {
+    const uuid = context.extension.uuid;
+    const root = `experiments-calendar-${uuid}`;
+    const query = context.extension.manifest.version;
     const {
       unwrapCalendar,
       getResolvedCalendarById,
       isOwnCalendar,
       convertCalendar,
-    } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
+    } = ChromeUtils.importESModule(
+      `resource://${root}/experiments/calendar/ext-calendar-utils.sys.mjs?${query}`
+    );
 
     return {
       calendar: {
@@ -140,7 +145,12 @@ this.calendar_calendars = class extends ExtensionAPI {
             if (updateProperties.capabilities) {
               // TODO validate capability names
               const unwrappedCalendar = calendar.wrappedJSObject.mUncachedCalendar.wrappedJSObject;
-              unwrappedCalendar.capabilities = Object.assign({}, unwrappedCalendar.capabilities, updateProperties.capabilities);
+              for (const [key, value] of Object.entries(updateProperties.capabilities)) {
+                if (value === null) {
+                  continue;
+                }
+                unwrappedCalendar.capabilities[key] = value;
+              }
               calendar.setProperty("extensionCapabilities", JSON.stringify(unwrappedCalendar.capabilities));
             }
 

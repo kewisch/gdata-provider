@@ -9,6 +9,9 @@ var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.
 
 this.calendar_items = class extends ExtensionAPI {
   getAPI(context) {
+    const uuid = context.extension.uuid;
+    const root = `experiments-calendar-${uuid}`;
+    const query = context.extension.manifest.version;
     const {
       getResolvedCalendarById,
       getCachedCalendar,
@@ -17,7 +20,9 @@ this.calendar_items = class extends ExtensionAPI {
       propsToItem,
       convertItem,
       convertAlarm,
-    } = ChromeUtils.importESModule("resource://tb-experiments-calendar/experiments/calendar/ext-calendar-utils.sys.mjs");
+    } = ChromeUtils.importESModule(
+      `resource://${root}/experiments/calendar/ext-calendar-utils.sys.mjs?${query}`
+    );
 
     return {
       calendar: {
