@@ -28,6 +28,12 @@ npm test
 ```
 Commit messages should follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) with sentence case.
 
+Translation
+-----------
+
+This project uses Weblate for its translations, you can contribute by visiting https://hosted.weblate.org/engage/provider-for-google-calendar/
+
+Weblate is a continuous localization platform used by over 2,500 libre software projects. Learn more about Weblate at https://weblate.org/
 
 Report Issues
 -------------
