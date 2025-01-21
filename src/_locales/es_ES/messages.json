@@ -7,19 +7,16 @@
     "message": "Permite acceso bidireccional a Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Predeterminado de Google"
   },
   "gdata.privacy.default.accesskey": {
     "message": "D"
   },
-
   "gdata.migration.title": {
     "message": "Migrar calendarios de sólo lectura"
   },
@@ -35,29 +32,24 @@
   "gdata.migration.showagain.label": {
     "message": "Comprobar siempre "
   },
-
   "gdata.reminder.default": {
     "message": "Recordatorio por omisión"
   },
-
   "gdata.wizard.session.description": {
     "message": "Elija una sesión existente o escriba su dirección de correo electrónico para crear una nueva sesión. Sólo necesita una sesión por cuenta."
   },
   "gdata.wizard.calendars.description": {
     "message": "Seleccione los calendarios y listas de tareas a las que le gustaría suscribirse."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Avance al siguiente paso para configurar sus calendarios."
   },
-
   "calendarsHeader": {
     "message": "Calendars"
   },
   "taskListsHeader": {
     "message": "Task Lists"
   },
-
   "busyTitle": {
     "message": " Ocupado ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": " La cuota de $session_id$ se ha excedido, vuelva a intentarlo más tarde.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": " Esta versión del proveedor ha caducado, actualice a la última versión."
   },
-
   "reminderOutOfRange": {
     "message": " Google Calendar sólo permite recordatorios hasta 4 semanas antes de que comience el evento."
   },
-
   "syncProgressEvent": {
     "message": " Sincronizando $calendar_name$ evento $num_events_synced$ de $total_events_to_sync$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": " Sincronizando $calendar_name$ tarea $num_tasks_synced$ de $total_tasks_to_sync$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": " Sincronizando calendario $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": " El proveedor de Google Calendar desea acceder a su cuenta $session_id$ para recuperar eventos y tareas. Los datos de credenciales y calendario solo se transfieren entre su equipo y Google, sin que intervengan sitios de terceros.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": " Inicie sesión en su cuenta: $session_id$",
     "placeholders": {

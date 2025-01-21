@@ -7,19 +7,16 @@
     "message": "Позволява двупосочен достъп до Google Календар",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google Календар",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Google по подразбиране"
   },
   "gdata.privacy.default.accesskey": {
     "message": "п"
   },
-
   "gdata.migration.title": {
     "message": "Мигриране на календарите „само за четене“"
   },
@@ -35,29 +32,24 @@
   "gdata.migration.showagain.label": {
     "message": "Винаги да се проверява"
   },
-
   "gdata.reminder.default": {
     "message": "Напомняне по подразбиране"
   },
-
   "gdata.wizard.session.description": {
     "message": "Моля изберете съществуваща сесия или въведете своя имейл адрес за създаване на нова сесия. Трябва само една сесия на акаунт."
   },
   "gdata.wizard.calendars.description": {
     "message": "Моля, изберете календари и списъци със задачи, за които искате да се абонирате."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Моля преминете към следващата стъпка, за да настроите вашите календари."
   },
-
   "calendarsHeader": {
     "message": "Calendars"
   },
   "taskListsHeader": {
     "message": "Task Lists"
   },
-
   "busyTitle": {
     "message": "Зает(а) ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "Надвишена е квотата на $session_id$, моля опитайте по-късно.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Версията на доставчика е с изтекъл срок, моля обновете до последната версия."
   },
-
   "reminderOutOfRange": {
     "message": "Google Календар позволява напомняния до 4 седмици преди началото на събитието."
   },
-
   "syncProgressEvent": {
     "message": "Синхронизиране на събитие $num_events_synced$ от общо $total_events_to_sync$ в $calendar_name$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Синхронизиране на задача $num_tasks_synced$ от общо $total_tasks_to_sync$ в $calendar_name$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Синхронизиране на календара $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Доставчикът за Google Календар изисква достъп до акаунта $session_id$, за да може да изтегля събития и задачи. Идентификационните и календарните данни се пренасят само между вашия компютър и Google без намеса на трети страни.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Впишете се във вашата сметка $session_id$",
     "placeholders": {

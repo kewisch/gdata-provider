@@ -7,19 +7,16 @@
     "message": "允许双向访问 Google 日历",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google 日历",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Google 默认"
   },
   "gdata.privacy.default.accesskey": {
     "message": "D"
   },
-
   "gdata.migration.title": {
     "message": "迁移只读日历"
   },
@@ -35,29 +32,24 @@
   "gdata.migration.showagain.label": {
     "message": "一律检查 "
   },
-
   "gdata.reminder.default": {
     "message": "预设提醒"
   },
-
   "gdata.wizard.session.description": {
     "message": "请选择现有的会话，或者输入您的电子邮件地址以建立新的会话。每个账号您只需建立一个会话。"
   },
   "gdata.wizard.calendars.description": {
     "message": "请选择您要订阅的日历与任务列表。"
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "请前往下一步设置您的日历。"
   },
-
   "calendarsHeader": {
     "message": "日历"
   },
   "taskListsHeader": {
     "message": "任务列表"
   },
-
   "busyTitle": {
     "message": "忙碌（$calendar_name$）",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "$session_id$ 的配额已经用完，请稍后再试。",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "此版本的提供者已经过期，请更新到最新版本。"
   },
-
   "reminderOutOfRange": {
     "message": "Google Calendar 仅允许最早于活动四个星期前的提醒。"
   },
-
   "syncProgressEvent": {
     "message": "正在同步 $calendar_name$ 的第 $num_events_synced$ 个事件，共 $total_events_to_sync$ 条",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "正在同步 $calendar_name$ 的第 $num_tasks_synced$ 个任务，共 $total_tasks_to_sync$ 个",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "正在同步行日历 $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Google Calendar 提供者想要访问您的 $session_id$ 账号以便取回您的事件和任务。您的账号密码将会直接从电脑传送给 Google，不会被其他人知晓。",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "登录您的账号 $session_id$",
     "placeholders": {

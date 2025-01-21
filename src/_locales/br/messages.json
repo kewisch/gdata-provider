@@ -7,19 +7,16 @@
     "message": "Aotren haeziñ daouduek da Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Diouer Google"
   },
   "gdata.privacy.default.accesskey": {
     "message": "D"
   },
-
   "gdata.migration.title": {
     "message": "Emdizhañ an deiziataerioù e mod lenn nemetken "
   },
@@ -35,29 +32,24 @@
   "gdata.migration.showagain.label": {
     "message": "Bepred gwiriekaat "
   },
-
   "gdata.reminder.default": {
     "message": "Kounadur Diouer"
   },
-
   "gdata.wizard.session.description": {
     "message": "Dibabit un estez a zo diouti pe enlakait ho chomlec'h postel evit krouiñ un estez nevez. N'ho peus ezhomm eus un estez dre gont hepken."
   },
   "gdata.wizard.calendars.description": {
     "message": "Diuzit an deiziataerioù ha listennoù trevell ho peus c'hoant koumanantiñ dezho."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Kit er paz war-lec'h evit arventennañ ho deiziataerioù."
   },
-
   "calendarsHeader": {
     "message": "Calendars"
   },
   "taskListsHeader": {
     "message": "Task Lists"
   },
-
   "busyTitle": {
     "message": "Ac'hubet ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "Aet eo bet dreist ar feurbarzh evit $session_id$, klaskit en-dro diwezhatoc'h mar plij.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Handelv ar pourchaset a zo diamzeret, hizivait d'an handelv ziwezhañ."
   },
-
   "reminderOutOfRange": {
     "message": "N'eo aotreet gant Google Calendar kounadurioù betek 4 sizhun a-raok penn-kentañ an darvoud nemetken."
   },
-
   "syncProgressEvent": {
     "message": "O goubredañ $calendar_name$ darvoud $num_events_synced$ war $total_events_to_sync$",
     "placeholders": {
@@ -104,9 +93,8 @@
       }
     }
   },
-
   "syncProgressTask": {
-    "message": "O goubredañ $calendar_name$ trevell $num_tasks_synced$ war $total_tasks_to_sync$\u0020",
+    "message": "O goubredañ $calendar_name$ trevell $num_tasks_synced$ war $total_tasks_to_sync$ ",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "O goubredañ deiziataer $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Ar pourchaser evit Google Calendar en deus c'hoant haeziñ ho gont $session_id$ a-benn adkavout darvoudoù ha trevelloù. Naoudi ha roadennoù deiziataer a zo treuzkaset etre ho urzhiataer ha Google, n'eus lec'hienn all ebet o kemer perzh.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Kevreit ouzh ho kont $session_id$",
     "placeholders": {
