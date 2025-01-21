@@ -35,6 +35,12 @@ Note that the tests will fail if something is up with the Thunderbird test harne
 
 This may also affect your pull request checks, as the test are also running via Github Actions CI
 
+Translation
+-----------
+
+This project uses Weblate for its translations, you can contribute by visiting https://hosted.weblate.org/engage/provider-for-google-calendar/
+
+Weblate is a continuous localization platform used by over 2,500 libre software projects. Learn more about Weblate at https://weblate.org/
 
 Report Issues
 -------------
