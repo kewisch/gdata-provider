@@ -136,5 +136,62 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konferencia:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Pripojte sa k videokonferenciám"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefón"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Heslo"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Prístupový kód"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "settings.warning": {
+    "message": "Tieto nastavenia vám umožnia využiť e-mailové plánovanie cez Google Calendar, ale tam boli tiež správy o mimoriadne oznámenia e-maily sú odoslané. Najprv testujte s malým stretnutím."
+  },
+  "settings.enableAttendees": {
+    "message": "Synchronizácia podujatia"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Kód"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Kód stretnutia"
+  },
+  "settings.forcePlainText": {
+    "message": "Sila použitia jednoduchého textu v opisoch udalostí"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Viac informácií o konferencii"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Povolenie e-mailov"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "Mnoho užívateľov sa teraz prihlási, Google uviedla, že sa prekonala schéma prihlásenia. Skúste prosím neskôr.",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Pošlite e-mailové upozornenia pre hostí"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Mimo kanceláriu"
   }
 }
