@@ -139,5 +139,62 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "calendarsHeader": {
+    "message": "Kalender"
+  },
+  "settings.forcePlainText": {
+    "message": "Reines Textformat für Terminbeschreibungen forcieren"
+  },
+  "settings.warning": {
+    "message": "Diese Einstellungen ermöglichen das Versenden von Email-Einladungen über Google Kalender, aber es gab in der Vergangenheit Berichte über ungewollte zusätzliche Benachrichtigungsemails. Bitte zunächst mit einem kleinen Meeting testen."
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Meeting-Code"
+  },
+  "settings.sendEventNotifications": {
+    "message": "Benachrichtigungen an Terminteilnehmer versenden"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Zugangscode"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Kennungscode"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Abwesend"
+  },
+  "settings.enableAttendees": {
+    "message": "Terminteilnehmer synchronisieren"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Email Einladungen aktivieren"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "An Videokonferenz teilnehmen"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Weitere Konferenzinformationen"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Kennwort"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Fokuszeit"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefon"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konferenz:"
+  },
+  "taskListsHeader": {
+    "message": "Aufgabenlisten"
   }
 }
