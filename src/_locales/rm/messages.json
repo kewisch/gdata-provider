@@ -7,19 +7,16 @@
     "message": "Permetta l'access bidirecziunal a Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Standard da Google"
   },
   "gdata.privacy.default.accesskey": {
     "message": "S"
   },
-
   "gdata.migration.title": {
     "message": "Migrar ils chalenders mo per lectura"
   },
@@ -35,29 +32,24 @@
   "gdata.migration.showagain.label": {
     "message": "Adina controllar "
   },
-
   "gdata.reminder.default": {
     "message": "Promemoria da standard"
   },
-
   "gdata.wizard.session.description": {
     "message": "Tscherna per plaschair ina sessiun existenta u endatescha tia adressa dad e-mail per crear ina nova sessiun. Ti dovras mo ina sessiun per conto."
   },
   "gdata.wizard.calendars.description": {
     "message": "Tscherna per plaschair ils chalenders e las glistas d'incumbensas che ti vuls abunar."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Avanza per plaschair al proxim pass per configurar tes chalenders."
   },
-
   "calendarsHeader": {
     "message": "Calendars"
   },
   "taskListsHeader": {
     "message": "Task Lists"
   },
-
   "busyTitle": {
     "message": "Occupà ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "La quota per $session_id$ è surpassada, emprova per plaschair pli tard anc ina giada.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Questa versiun dal purschider è scadida, actualisescha per plaschair a la pli nova versiun."
   },
-
   "reminderOutOfRange": {
     "message": "Google Calendar permetta mo promemorias a partir da 4 emnas avant che l'eveniment cumenza."
   },
-
   "syncProgressEvent": {
     "message": "Sincronisar $calendar_name$, l'eveniment $num_events_synced$ da $total_events_to_sync$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Sincronisar $calendar_name$, l'incumbensa $num_tasks_synced$ da $total_tasks_to_sync$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Sincronisar il chalender $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Il purschider da Google Calendar vuless acceder tes conto $session_id$ per recuperar eveniments ed incumbensas. Las infurmaziuns d'annunzia e las datas da chalender vegnan mo transmessas tranter tes computer e Google, naginas websites da terzas partidas n'èn involvadas.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "T'annunzia cun tes conto $session_id$",
     "placeholders": {

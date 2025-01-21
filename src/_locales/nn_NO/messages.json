@@ -7,19 +7,16 @@
     "message": "Tillèt tovegs tilgang til Google Kalender",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google Kalender",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Google-standard"
   },
   "gdata.privacy.default.accesskey": {
     "message": "s"
   },
-
   "gdata.migration.title": {
     "message": "Migrer skriveverna kalendrar"
   },
@@ -35,29 +32,24 @@
   "gdata.migration.showagain.label": {
     "message": "Kontroller alltid"
   },
-
   "gdata.reminder.default": {
     "message": "Standardpåminning"
   },
-
   "gdata.wizard.session.description": {
     "message": "Vel ei eksisterande økt, eller skriv inn e-postadressa di for å laga ei ny økt. Du treng berre ei økt per konto."
   },
   "gdata.wizard.calendars.description": {
     "message": "Vel kalendrane og oppgåvelistene du vil abonnere på."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Gå til neste steg for å konfigurere kalendrane dine."
   },
-
   "calendarsHeader": {
     "message": "Kalendrar"
   },
   "taskListsHeader": {
     "message": "Oppgåveliste"
   },
-
   "busyTitle": {
     "message": "Opptatt ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "Plasskvoten for $session_id$ er overskriden, prøv på nytt seinare.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Denne versjonen av tilbydarkomponenten er forelda. Oppdater til den nysate versjonen."
   },
-
   "reminderOutOfRange": {
     "message": "Google Calendar tillèt berre påminningar opptil 4 veker før hendinga startar."
   },
-
   "syncProgressEvent": {
     "message": "Synkroniserer $calendar_name$ hending $num_events_synced$ av $total_events_to_sync$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Synkroniserer $calendar_name$ oppgåve $num_tasks_synced$ av $total_tasks_to_sync$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Synkroniserer kalender $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Tilbydaren for Google Calendar ønskjer å få tilgang til kontoen $session_id$ for å hente hendingar og oppgåver. Brukarinfo og kalenderdata vert overførte berre mellom di datamaskin og Google, ingen tredjeparts nettstadar er involverte.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Logg inn på kontoen din $session_id$",
     "placeholders": {

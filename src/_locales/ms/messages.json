@@ -7,19 +7,16 @@
     "message": "Izinkan akses dwi-arah ke Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Piawai Google"
   },
   "gdata.privacy.default.accesskey": {
     "message": "P"
   },
-
   "gdata.migration.title": {
     "message": "Pindahkan kalendar baca-sahaja"
   },
@@ -35,29 +32,24 @@
   "gdata.migration.showagain.label": {
     "message": "Sentiasa semak "
   },
-
   "gdata.reminder.default": {
     "message": "Peringatan Piawai"
   },
-
   "gdata.wizard.session.description": {
     "message": "Sila pilih sesi semasa atau masukkan alamat e-mel anda untuk mencipta sesi yang baru. Anda hanya perlukan satu sesi bagi setiap akaun."
   },
   "gdata.wizard.calendars.description": {
     "message": "Sila pilih senarai kalendar dan tugasan yang anda mahu langgan."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Sila pergi ke langkah seterusnya untuk menetapkan kalendar anda."
   },
-
   "calendarsHeader": {
     "message": "Calendars"
   },
   "taskListsHeader": {
     "message": "Task Lists"
   },
-
   "busyTitle": {
     "message": "Sibuk ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "Kuota $session_id$ telah melebihi had, sila cuba lagi nanti.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Versi penyedia ini telah luput, sila kemaskini ke versi terkini."
   },
-
   "reminderOutOfRange": {
     "message": "Google Calendar hanya mengizinkan peringatan sehingga 4 minggu sebelum acara bermula."
   },
-
   "syncProgressEvent": {
     "message": "Menyelaraskan $num_events_synced$ daripada $total_events_to_sync$ acara $calendar_name$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Menyelaraskan $num_tasks_synced$ daripada $total_tasks_to_sync$ tugasan $calendar_name$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Menyelaraskan Kalendar $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Penyedia Google Calendar mahu mengakses akaun $session_id$ anda untuk mendapatkan acara dan tugasan. Wasikah dan data kalendar hanya dipindahkan antara komputer anda dengan Google, tiada laman pihak ketiga yang terlibat.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Daftar masuk ke akaun $session_id$ anda",
     "placeholders": {

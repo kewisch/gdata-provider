@@ -7,19 +7,16 @@
     "message": "Sireg anekcum si sin idisan ɣer uwiyitay Google",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Awitay Google",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Aɣewwaṛ amezwer Google"
   },
   "gdata.privacy.default.accesskey": {
     "message": "G"
   },
-
   "gdata.migration.title": {
     "message": "Sgaǧ iwitayen n tɣuṛi kan"
   },
@@ -35,29 +32,24 @@
   "gdata.migration.showagain.label": {
     "message": "Senqad yal tikelt"
   },
-
   "gdata.reminder.default": {
     "message": "Asmekti amezwer"
   },
-
   "gdata.wizard.session.description": {
     "message": "Ma ulac aɣilif, fren tiɣimt neɣ sekcem tansa imayl akken ad ternuḍ tiɣimit tamaynut. Tesriḍ kan yiwet n tɣimit i yiwen n umiḍan."
   },
   "gdata.wizard.calendars.description": {
     "message": "Ma ulac aɣilif fren tibdarin n iwitayen akked twuriwin anda tebɣid ad tejerredeḍ."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Ma ulac aɣilif ddu ɣer imecwar d-iteddun akken ad tesbaduḍ iwitayen-inek."
   },
-
   "calendarsHeader": {
     "message": "Iwitayen"
   },
   "taskListsHeader": {
     "message": "Tibdarin n wuri"
   },
-
   "busyTitle": {
     "message": "Yettwaṭṭe ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "Amur $session_id$ iɛedda tilas, ma ulac aɣilif ɛreḍ tikelt nniḍen ticki.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Lqem n usaǧǧaw d aqbuṛ, ma ulac aɣilif ddu ɣer lqem amaynut."
   },
-
   "reminderOutOfRange": {
     "message": "Awitay Google yessirig kan ismektiyen arama d 4 n dduṛtat seg azemz n tazwara."
   },
-
   "syncProgressEvent": {
     "message": "Amtawi n tedyant $num_events_synced$ si $calendar_name$ ar $total_events_to_sync$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Amtawi n twuri $num_tasks_synced$ si $calendar_name$ ar $total_tasks_to_sync$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Amtawi n uwitay $calendar_name$",
     "placeholders": {
@@ -132,9 +119,8 @@
       }
     }
   },
-
   "requestWindowDescription": {
-    "message": "Asaǧǧaw i uwitay Google yezmer yebɣa ad yekcem ɣer umiḍan-inek $session_id$ akken ad d-inadi tidyanin akked twuriwin. Isefka n unekcum akked iwitayen ttwaznen kan gar uselkim inek akked Google, ulac ismal wis kraḍ ara yilin gar-asen.\u0020",
+    "message": "Asaǧǧaw i uwitay Google yezmer yebɣa ad yekcem ɣer umiḍan-inek $session_id$ akken ad d-inadi tidyanin akked twuriwin. Isefka n unekcum akked iwitayen ttwaznen kan gar uselkim inek akked Google, ulac ismal wis kraḍ ara yilin gar-asen. ",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Kcem ɣer umiḍan inek $session_id$",
     "placeholders": {
@@ -151,5 +136,17 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Awal n uεeddi"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Tiliɣri"
   }
 }

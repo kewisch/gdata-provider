@@ -7,19 +7,16 @@
     "message": "Leyfir les og skrif aðgang að Google Dagatali",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google Dagatal",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Google Sjálfgefið"
   },
   "gdata.privacy.default.accesskey": {
     "message": "S"
   },
-
   "gdata.migration.title": {
     "message": "Flytja inn skrifvarin dagatöl"
   },
@@ -35,29 +32,24 @@
   "gdata.migration.showagain.label": {
     "message": "Alltaf athuga "
   },
-
   "gdata.reminder.default": {
     "message": "Sjálfgefin áminning"
   },
-
   "gdata.wizard.session.description": {
     "message": "Veldu lotu sem er til fyrir eða sláðu inn tölvupóstfang til að búa til nýja lotu. Þú þarft aðeins eina lotu per reikning."
   },
   "gdata.wizard.calendars.description": {
     "message": "Veldu þau dagatöl og verkefnalista sem þú vilt gerast áskrifandi að."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Farðu áfram á næsta skref til að setja upp dagatölin."
   },
-
   "calendarsHeader": {
     "message": "Calendars"
   },
   "taskListsHeader": {
     "message": "Task Lists"
   },
-
   "busyTitle": {
     "message": "Upptekin ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "Kvótinn fyrir $session_id$ er búinn, reyndu aftur seinna.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Þessi útgáfa af þjónustuaðila er útrunnin, uppfærðu í nýjustu útgáfu."
   },
-
   "reminderOutOfRange": {
     "message": "Google dagatal leyfir aðeins áminningar 4 vikur fyrir atburðinn."
   },
-
   "syncProgressEvent": {
     "message": "Samstilli $calendar_name$ atburði $num_events_synced$ af $total_events_to_sync$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Samstilli $calendar_name$ verkefni $num_tasks_synced$ af $total_tasks_to_sync$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Samstilli dagatal $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Þjónustuaðilinn fyrir Google Calendar vill fá aðgang að þínum reikningi $session_id$ til að ná í atburði og verkefni. Auðkenni og dagatal er aðeins sent á milli tölvunnar þinnar og Google, engin þriðji aðili fær aðgang.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Skráðu þig inn á reikninginn $session_id$",
     "placeholders": {
