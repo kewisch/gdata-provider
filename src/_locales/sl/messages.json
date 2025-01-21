@@ -21,7 +21,7 @@
     "message": "Preseli koledarje, ki so le za branje"
   },
   "gdata.migration.description": {
-    "message": "Vmesnik za Google Koledar je zaznal, da imate koledarje, ki imajo dostop do Googlovega koledarja le v načinu za branje. Če bi radi katerega koli od teh koledarjev nadgradili, jih izberite s spodnjega seznama"
+    "message": "Vmesnik za Google Koledar je zaznal, da imate koledarje, ki imajo dostop do Googlovega koledarja le v načinu za branje. Če bi radi katerega koli od teh koledarjev nadgradili, jih izberite s spodnjega seznama."
   },
   "gdata.migration.upgrade.label": {
     "message": "Posodobi"

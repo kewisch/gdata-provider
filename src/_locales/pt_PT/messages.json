@@ -21,7 +21,7 @@
     "message": "Migrar calendários de leitura"
   },
   "gdata.migration.description": {
-    "message": "O fornecedor do calendário Google detetou que você possui calendários que apenas conseguem aceder aos calendários Google no modo de leitura. Se pretender atualizar algum destes calendários, por favor selecione-os abaixo"
+    "message": "O fornecedor do calendário Google detetou que você possui calendários que apenas conseguem aceder aos calendários Google no modo de leitura. Se pretender atualizar algum destes calendários, por favor selecione-os abaixo."
   },
   "gdata.migration.upgrade.label": {
     "message": "Atualizar"

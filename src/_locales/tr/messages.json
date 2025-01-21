@@ -21,7 +21,7 @@
     "message": "Salt okunur takvimleri taşı"
   },
   "gdata.migration.description": {
-    "message": "Google Takvim sağlayıcısı, Google Takvim'e yalnızca salt okunur olarak erişebilen takvimlerinizin bulunduğunu saptadı. Bu takvimleri yükseltmek isterseniz lütfen takvimleri seçin"
+    "message": "Google Takvim sağlayıcısı, Google Takvim'e yalnızca salt okunur olarak erişebilen takvimlerinizin bulunduğunu saptadı. Bu takvimleri yükseltmek isterseniz lütfen takvimleri seçin."
   },
   "gdata.migration.upgrade.label": {
     "message": "Yükselt"

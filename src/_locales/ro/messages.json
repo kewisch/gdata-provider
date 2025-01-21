@@ -21,7 +21,7 @@
     "message": "Migrare calendare disponibile numai pentru citire"
   },
   "gdata.migration.description": {
-    "message": "Furnizorul pentru Google Calendar a detectat că ai calendare existente care sunt capabile să acceseze Google Calendar în modul numai citire. Dacă dorești să actualizezi oricare dintre aceste calendare, te rugăm să le selectezi mai jos"
+    "message": "Furnizorul pentru Google Calendar a detectat că ai calendare existente care sunt capabile să acceseze Google Calendar în modul numai citire. Dacă dorești să actualizezi oricare dintre aceste calendare, te rugăm să le selectezi mai jos."
   },
   "gdata.migration.upgrade.label": {
     "message": "Actualizare"

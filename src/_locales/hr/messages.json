@@ -21,7 +21,7 @@
     "message": "Preseli kalendare koji se samo mogu čitati"
   },
   "gdata.migration.description": {
-    "message": "Pružatelj usluge za Google kalendar je otkrio da imate postojeće kalendare koji mogu pristupati Google kalendaru samo u načinu čitanja. Ako želite nadograditi neki od ovih kalendara odaberite ih niže"
+    "message": "Pružatelj usluge za Google kalendar je otkrio da imate postojeće kalendare koji mogu pristupati Google kalendaru samo u načinu čitanja. Ako želite nadograditi neki od ovih kalendara odaberite ih niže."
   },
   "gdata.migration.upgrade.label": {
     "message": "Nadogradi"

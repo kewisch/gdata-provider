@@ -21,7 +21,7 @@
     "message": "Integrér ikke-skrivbare kalendere"
   },
   "gdata.migration.description": {
-    "message": "Tjenesten Google Kalender har registreret, at du har eksisterende kalendere, som ikke er i stand til at skrive til kalendere hos Google Kalender. Hvis du vil opgradere nogen af disse kalendere, så vælg dem nedenfor"
+    "message": "Tjenesten Google Kalender har registreret, at du har eksisterende kalendere, som ikke er i stand til at skrive til kalendere hos Google Kalender. Hvis du vil opgradere nogen af disse kalendere, så vælg dem nedenfor."
   },
   "gdata.migration.upgrade.label": {
     "message": "Opgrader"

@@ -21,7 +21,7 @@
     "message": "Migrera skrivskyddade kalendrar"
   },
   "gdata.migration.description": {
-    "message": "Leverantören av Google Kalender har upptäckt att du har kalendrar som endast kan användas i skrivskyddat läge. Om du vill uppgradera någon av dessa kalendrar, vänligen ange dem nedan"
+    "message": "Leverantören av Google Kalender har upptäckt att du har kalendrar som endast kan användas i skrivskyddat läge. Om du vill uppgradera någon av dessa kalendrar, vänligen ange dem nedan."
   },
   "gdata.migration.upgrade.label": {
     "message": "Uppgradera"

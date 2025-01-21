@@ -21,7 +21,7 @@
     "message": "Migració de calendaris només de lectura"
   },
   "gdata.migration.description": {
-    "message": "El proveïdor del Google Calendar ha detectat que teniu calendaris que només poden accedir al Google Calendar en mode només de lectura. Si voleu actualitzar cap d'aquests calendaris, seleccioneu-los a continuació"
+    "message": "El proveïdor del Google Calendar ha detectat que teniu calendaris que només poden accedir al Google Calendar en mode només de lectura. Si voleu actualitzar cap d'aquests calendaris, seleccioneu-los a continuació."
   },
   "gdata.migration.upgrade.label": {
     "message": "Actualitza"

@@ -21,7 +21,7 @@
     "message": "Imrich mìosachain a tha ri leughadh a-mhàin"
   },
   "gdata.migration.description": {
-    "message": "Mhothaich solaraiche mìosachan Ghoogle gu bheil mìosachain agad nach urrainn dhaibh inntrigeadh a dhèanamh do mhìosachan Ghoogle ach ann am modh ri leughadh a-mhàin. Ma tha thu airson gin dhe na mìosachain seo leasachadh, tagh iad gu h-ìosal"
+    "message": "Mhothaich solaraiche mìosachan Ghoogle gu bheil mìosachain agad nach urrainn dhaibh inntrigeadh a dhèanamh do mhìosachan Ghoogle ach ann am modh ri leughadh a-mhàin. Ma tha thu airson gin dhe na mìosachain seo leasachadh, tagh iad gu h-ìosal."
   },
   "gdata.migration.upgrade.label": {
     "message": "Leasaich"

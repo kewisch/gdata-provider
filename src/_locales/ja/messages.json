@@ -21,7 +21,7 @@
     "message": "読み込み専用のカレンダーの移行"
   },
   "gdata.migration.description": {
-    "message": "Provider for Google Calendar は、読み込み専用モードでのみアクセスできる Google カレンダーを検出しました。アップグレードするには以下のカレンダーを選択してください:"
+    "message": "Provider for Google Calendar は、読み込み専用モードでのみアクセスできる Google カレンダーを検出しました。アップグレードするには以下のカレンダーを選択してください:。"
   },
   "gdata.migration.upgrade.label": {
     "message": "アップグレード"

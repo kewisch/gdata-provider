@@ -21,7 +21,7 @@
     "message": "轉移唯讀的行事曆"
   },
   "gdata.migration.description": {
-    "message": "Google Calendar 提供者發現您擁有只能使用於唯讀模式的行事曆。若您想要升級這些行事曆，請在下面選擇"
+    "message": "Google Calendar 提供者發現您擁有只能使用於唯讀模式的行事曆。若您想要升級這些行事曆，請在下面選擇。"
   },
   "gdata.migration.upgrade.label": {
     "message": "升級"

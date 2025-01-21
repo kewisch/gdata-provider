@@ -21,7 +21,7 @@
     "message": "Uaktualnij kalendarze tylko do odczytu"
   },
   "gdata.migration.description": {
-    "message": "Dostawca dla Kalendarza Google wykrył kalendarze, które działają jedynie w trybie tylko do odczytu. Aby uaktualnić któreś z nich, należy wybrać je z poniższej listy"
+    "message": "Dostawca dla Kalendarza Google wykrył kalendarze, które działają jedynie w trybie tylko do odczytu. Aby uaktualnić któreś z nich, należy wybrać je z poniższej listy."
   },
   "gdata.migration.upgrade.label": {
     "message": "Uaktualnij"

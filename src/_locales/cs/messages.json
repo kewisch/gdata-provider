@@ -21,7 +21,7 @@
     "message": "Migrace kalendáře pro čtení"
   },
   "gdata.migration.description": {
-    "message": "Poskytovatel kalendáře Google detekoval kalendáře, které umožňují přístup ke kalendáři Google pouze v režimu jen pro čtení. Pokud si přejete aktualizovat některý z těchto kalendářů, vyberte jej prosím níže"
+    "message": "Poskytovatel kalendáře Google detekoval kalendáře, které umožňují přístup ke kalendáři Google pouze v režimu jen pro čtení. Pokud si přejete aktualizovat některý z těchto kalendářů, vyberte jej prosím níže."
   },
   "gdata.migration.upgrade.label": {
     "message": "Aktualizovat"

@@ -21,7 +21,7 @@
     "message": "迁移只读日历"
   },
   "gdata.migration.description": {
-    "message": "Google 日历提供者发现您拥有一些只读的 Google 日历。如果您想要修改其中的日历，请从下面选择"
+    "message": "Google 日历提供者发现您拥有一些只读的 Google 日历。如果您想要修改其中的日历，请从下面选择。"
   },
   "gdata.migration.upgrade.label": {
     "message": "升级"

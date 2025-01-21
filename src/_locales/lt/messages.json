@@ -21,7 +21,7 @@
     "message": "Tik skaitymui skirtų kalendorių konvertavimas"
   },
   "gdata.migration.description": {
-    "message": "Prieigos prie „Google“ kalendoriaus teiktuvas nustatė, jog kai kurie jūsų naudojami kalendoriai geba tik skaityti „Google“ kalendorius. Jei kažkuriuos jų norite konvertuoti į dvipusės prieigos kalendorius, parinkite juos žemiau"
+    "message": "Prieigos prie „Google“ kalendoriaus teiktuvas nustatė, jog kai kurie jūsų naudojami kalendoriai geba tik skaityti „Google“ kalendorius. Jei kažkuriuos jų norite konvertuoti į dvipusės prieigos kalendorius, parinkite juos žemiau."
   },
   "gdata.migration.upgrade.label": {
     "message": "Konvertuoti"

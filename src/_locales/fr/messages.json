@@ -21,7 +21,7 @@
     "message": "Migrer les agendas en lecture seule"
   },
   "gdata.migration.description": {
-    "message": "Le fournisseur pour Google Agenda a détecté que vous aviez des agendas existants qui ne sont capables d’accéder à Google Agenda qu’en lecture seule. Si vous voulez mettre à jour ces agendas, veuillez les sélectionner ci-dessous"
+    "message": "Le fournisseur pour Google Agenda a détecté que vous aviez des agendas existants qui ne sont capables d’accéder à Google Agenda qu’en lecture seule. Si vous voulez mettre à jour ces agendas, veuillez les sélectionner ci-dessous."
   },
   "gdata.migration.upgrade.label": {
     "message": "Mettre à jour"

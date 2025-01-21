@@ -21,7 +21,7 @@
     "message": "Migrar calendarios de só lectura"
   },
   "gdata.migration.description": {
-    "message": "O fornecedor para Google Calendar detectou que ten calendarios existentes que só poden acceder a Google Calendar en modo de só lectura. Se lle gustaría anovar algún destes calendarios, seleccióneos a continuación"
+    "message": "O fornecedor para Google Calendar detectou que ten calendarios existentes que só poden acceder a Google Calendar en modo de só lectura. Se lle gustaría anovar algún destes calendarios, seleccióneos a continuación."
   },
   "gdata.migration.upgrade.label": {
     "message": "Anovar"

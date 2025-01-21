@@ -21,7 +21,7 @@
     "message": "Migrer kalendere bare for lesing"
   },
   "gdata.migration.description": {
-    "message": "Leseren for Google Kalender har oppdaget at du har kalendere som bare kan få tilgang til Google Kalender i lesemodus. Dersom du ønsker å oppgradere noen av disse kalendrene, så velg de nedenfor"
+    "message": "Leseren for Google Kalender har oppdaget at du har kalendere som bare kan få tilgang til Google Kalender i lesemodus. Dersom du ønsker å oppgradere noen av disse kalendrene, så velg de nedenfor."
   },
   "gdata.migration.upgrade.label": {
     "message": "Oppgrader"

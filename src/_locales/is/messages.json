@@ -21,7 +21,7 @@
     "message": "Flytja inn skrifvarin dagatöl"
   },
   "gdata.migration.description": {
-    "message": "Þjónustan fyrir Google Dagatal hefur komist að því að þú átt til dagatöl sem aðeins er hægt að nálgast skrifvarin. Ef þú vilt uppfæra eitthvert af þessum dagatölum, veldu þau hérna fyrir neðan"
+    "message": "Þjónustan fyrir Google Dagatal hefur komist að því að þú átt til dagatöl sem aðeins er hægt að nálgast skrifvarin. Ef þú vilt uppfæra eitthvert af þessum dagatölum, veldu þau hérna fyrir neðan."
   },
   "gdata.migration.upgrade.label": {
     "message": "Uppfæra"

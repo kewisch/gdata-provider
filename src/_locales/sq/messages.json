@@ -21,7 +21,7 @@
     "message": "Migro kalendarë vetëm-lexim"
   },
   "gdata.migration.description": {
-    "message": "Furnizuesi për Google Calendar ka zbuluar se keni kalendarë ekzistues që mundet të hyjnë në Google Calendar vetëm nën mënyrën lexim. Nëse doni të përditësoni ndonjë prej këtyre kalendarëve, ju lutemi, përzgjidhini më poshtë"
+    "message": "Furnizuesi për Google Calendar ka zbuluar se keni kalendarë ekzistues që mundet të hyjnë në Google Calendar vetëm nën mënyrën lexim. Nëse doni të përditësoni ndonjë prej këtyre kalendarëve, ju lutemi, përzgjidhini më poshtë."
   },
   "gdata.migration.upgrade.label": {
     "message": "Përmirësoji"

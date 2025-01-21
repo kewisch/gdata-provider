@@ -21,7 +21,7 @@
     "message": "Migra calendari in sola lettura"
   },
   "gdata.migration.description": {
-    "message": "Provider for Google calendar ha rilevato che ci sono calendari esistenti in grado di accedere a Google Calendar solamente in lettura. Se si vuole aggiornare qualcuno di questo calendari, selezionarli sotto"
+    "message": "Provider for Google calendar ha rilevato che ci sono calendari esistenti in grado di accedere a Google Calendar solamente in lettura. Se si vuole aggiornare qualcuno di questo calendari, selezionarli sotto."
   },
   "gdata.migration.upgrade.label": {
     "message": "Aggiorna"
