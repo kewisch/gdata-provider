@@ -51,7 +51,7 @@
     "message": "Task Lists"
   },
   "busyTitle": {
-    "message": " Occupato ($calendar_name$)",
+    "message": "Occupato ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
     "placeholders": {
       "calendar_name": {
@@ -61,7 +61,7 @@
     }
   },
   "quotaExceeded": {
-    "message": " La quota per $session_id$ è stata superata, riprovare più tardi.",
+    "message": "La quota per $session_id$ è stata superata, riprovare più tardi.",
     "description": "This is shown when the request quota has been exceeded.",
     "placeholders": {
       "session_id": {
@@ -71,13 +71,13 @@
     }
   },
   "providerOutdated": {
-    "message": " Questa versione del provider è scaduta, aggiornare all'ultima versione."
+    "message": "Questa versione del provider è scaduta, aggiornare all'ultima versione."
   },
   "reminderOutOfRange": {
-    "message": " Google Calendar consente solamente promemoria di massimo quattro settimane prima dell'inizio dell'evento."
+    "message": "Google Calendar consente solamente promemoria di massimo quattro settimane prima dell'inizio dell'evento."
   },
   "syncProgressEvent": {
-    "message": " Sincronizzazione di $calendar_name$, evento $num_events_synced$ di $total_events_to_sync$",
+    "message": "Sincronizzazione di $calendar_name$, evento $num_events_synced$ di $total_events_to_sync$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -94,7 +94,7 @@
     }
   },
   "syncProgressTask": {
-    "message": " Sincronizzazione di $calendar_name$, attività $num_tasks_synced$ di $total_tasks_to_sync$",
+    "message": "Sincronizzazione di $calendar_name$, attività $num_tasks_synced$ di $total_tasks_to_sync$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -111,7 +111,7 @@
     }
   },
   "syncStatus": {
-    "message": " Sincronizzazione del calendario $calendar_name$",
+    "message": "Sincronizzazione del calendario $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -120,7 +120,7 @@
     }
   },
   "requestWindowDescription": {
-    "message": " Provider for Google Calendar vorrebbe accedere all'account $session_id$ per scaricare gli eventi e le attività. Le credenziali e i dati del calendario vengono scambiati solamente tra i computer e Google, senza coinvolgimento di terze parti.",
+    "message": "Provider for Google Calendar vorrebbe accedere all'account $session_id$ per scaricare gli eventi e le attività. Le credenziali e i dati del calendario vengono scambiati solamente tra i computer e Google, senza coinvolgimento di terze parti.",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -129,7 +129,7 @@
     }
   },
   "requestWindowTitle": {
-    "message": " Accedere al proprio account $session_id$",
+    "message": "Accedere al proprio account $session_id$",
     "placeholders": {
       "session_id": {
         "content": "$1",

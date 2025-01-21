@@ -30,7 +30,7 @@
     "message": "U"
   },
   "gdata.migration.showagain.label": {
-    "message": "Comprobar siempre "
+    "message": "Comprobar siempre"
   },
   "gdata.reminder.default": {
     "message": "Recordatorio por omisión"
@@ -51,7 +51,7 @@
     "message": "Task Lists"
   },
   "busyTitle": {
-    "message": " Ocupado ($calendar_name$)",
+    "message": "Ocupado ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
     "placeholders": {
       "calendar_name": {
@@ -61,7 +61,7 @@
     }
   },
   "quotaExceeded": {
-    "message": " La cuota de $session_id$ se ha excedido, vuelva a intentarlo más tarde.",
+    "message": "La cuota de $session_id$ se ha excedido, vuelva a intentarlo más tarde.",
     "description": "This is shown when the request quota has been exceeded.",
     "placeholders": {
       "session_id": {
@@ -71,13 +71,13 @@
     }
   },
   "providerOutdated": {
-    "message": " Esta versión del proveedor ha caducado, actualice a la última versión."
+    "message": "Esta versión del proveedor ha caducado, actualice a la última versión."
   },
   "reminderOutOfRange": {
-    "message": " Google Calendar sólo permite recordatorios hasta 4 semanas antes de que comience el evento."
+    "message": "Google Calendar sólo permite recordatorios hasta 4 semanas antes de que comience el evento."
   },
   "syncProgressEvent": {
-    "message": " Sincronizando $calendar_name$ evento $num_events_synced$ de $total_events_to_sync$",
+    "message": "Sincronizando $calendar_name$ evento $num_events_synced$ de $total_events_to_sync$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -94,7 +94,7 @@
     }
   },
   "syncProgressTask": {
-    "message": " Sincronizando $calendar_name$ tarea $num_tasks_synced$ de $total_tasks_to_sync$",
+    "message": "Sincronizando $calendar_name$ tarea $num_tasks_synced$ de $total_tasks_to_sync$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -111,7 +111,7 @@
     }
   },
   "syncStatus": {
-    "message": " Sincronizando calendario $calendar_name$",
+    "message": "Sincronizando calendario $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -120,7 +120,7 @@
     }
   },
   "requestWindowDescription": {
-    "message": " El proveedor de Google Calendar desea acceder a su cuenta $session_id$ para recuperar eventos y tareas. Los datos de credenciales y calendario solo se transfieren entre su equipo y Google, sin que intervengan sitios de terceros.",
+    "message": "El proveedor de Google Calendar desea acceder a su cuenta $session_id$ para recuperar eventos y tareas. Los datos de credenciales y calendario solo se transfieren entre su equipo y Google, sin que intervengan sitios de terceros.",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -129,7 +129,7 @@
     }
   },
   "requestWindowTitle": {
-    "message": " Inicie sesión en su cuenta: $session_id$",
+    "message": "Inicie sesión en su cuenta: $session_id$",
     "placeholders": {
       "session_id": {
         "content": "$1",
