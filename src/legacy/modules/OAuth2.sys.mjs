@@ -2,8 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-  "OAuth2.jsm"
+ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
+  "OAuth2.sys.mjs"
 );
 
 /**
@@ -11,7 +11,6 @@ ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recor
  *
  * @see RFC 6749
  */
-var EXPORTED_SYMBOLS = ["OAuth2"]; /* exported OAuth2 */
 
 // Only allow one connecting window per endpoint.
 var gConnecting = {};
@@ -19,13 +18,15 @@ var gConnecting = {};
 /**
  * Constructor for the OAuth2 object.
  */
-function OAuth2(aBaseURI, aScope, aAppKey, aAppSecret) {
+export function OAuth2({ clientId, clientSecret, scope, refreshToken = null, accessToken = null }) {
   // aBaseURI was used historically. Until we complete the MailExtensions rewrite, we'll use authURI
   // and tokenEndpoint directly.
 
-  this.clientId = aAppKey;
-  this.consumerSecret = aAppSecret;
-  this.scope = aScope;
+  this.clientId = clientId;
+  this.consumerSecret = clientSecret;
+  this.scope = scope;
+  this.refreshToken = refreshToken;
+  this.accessToken = accessToken;
   this.extraAuthParams = [];
   this.randomizePort();
 

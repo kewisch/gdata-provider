@@ -7,8 +7,10 @@ export default [
     ignores: [
       "**/*.js",
       "**/*.jsm",
+      "**/*.sys.mjs",
       "!src/**/*.js",
       "!src/**/*.jsm",
+      "!src/**/*.sys.mjs",
       "!eslint.config.mjs",
       "!commitlint.config.js",
 
@@ -416,6 +418,7 @@ export default [
       "src/api/**/*.js",
       "src/legacy/**/*.js",
       "src/legacy/**/*.jsm",
+      "src/legacy/**/*.sys.mjs",
     ],
     languageOptions: {
       globals: {

@@ -2,28 +2,26 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-  "gdataMigration.jsm"
+ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
+  "gdataMigration.sys.mjs"
 );
 
-var EXPORTED_SYMBOLS = ["migrateCalendars", "getMigratableCalendars", "checkMigrateCalendars"];
+var lazy = {};
 
-ChromeUtils.defineLazyGetter(this, "messenger", () => {
-  let { getMessenger } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
+ChromeUtils.defineLazyGetter(lazy, "messenger", () => {
+  let { getMessenger } = ChromeUtils.importESModule(
+    "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs"
   );
 
   return getMessenger();
 });
 
-ChromeUtils.defineModuleGetter(
-  this,
-  "cal",
-  "resource:///modules/calendar/calUtils.jsm"
-); /* global cal */
+ChromeUtils.defineESModuleGetters(lazy, {
+  cal: "resource:///modules/calendar/calUtils.sys.mjs" /* global cal */
+});
 
-async function checkMigrateCalendars(window) {
-  let prefs = await messenger.storage.local.get({ "settings.migrate": true });
+export async function checkMigrateCalendars(window) {
+  let prefs = await lazy.messenger.storage.local.get({ "settings.migrate": true });
   let calendars = getMigratableCalendars();
 
   if (calendars.length && prefs["settings.migrate"]) {
@@ -38,8 +36,8 @@ async function checkMigrateCalendars(window) {
   }
 }
 
-function migrateCalendars(calendars) {
-  let calmgr = cal.manager;
+export function migrateCalendars(calendars) {
+  let calmgr = lazy.cal.manager;
   for (let calendar of calendars) {
     let newCalendar = calmgr.createCalendar("gdata", calendar.uri);
     newCalendar.name = calendar.name;
@@ -63,7 +61,7 @@ function migrateCalendars(calendars) {
  *
  * @return {calICalendar[]}     Migratable calendars
  */
-function getMigratableCalendars() {
+export function getMigratableCalendars() {
   const re = new RegExp(
     "^http[s]?://(www|calendar)\\.google\\.com/calendar/ical/" +
       "[^/]+/(private(-[^/]+)?|public)/" +
@@ -71,7 +69,7 @@ function getMigratableCalendars() {
       "attendees-only|free-busy|basic)(\\.ics)?$"
   );
 
-  return cal.manager.getCalendars({}).filter(calendar => {
+  return lazy.cal.manager.getCalendars({}).filter(calendar => {
     return calendar.type == "ics" && calendar.uri.spec.match(re);
   });
 }

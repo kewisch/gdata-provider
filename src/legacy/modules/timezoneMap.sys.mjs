@@ -1,13 +1,11 @@
 // Mappings Copyright © 1991-2013 Unicode, Inc. with modifications.
 // http://unicode.org/repos/cldr/trunk/common/supplemental/windowsZones.xml
 
-ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-  "timezoneMap.jsm"
+ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
+  "timezoneMap.sys.mjs"
 );
 
-var EXPORTED_SYMBOLS = ["windowsTimezoneMap"];
-
-var windowsTimezoneMap = {
+export var windowsTimezoneMap = {
   "Afghanistan Standard Time": "Asia/Kabul",
   "Alaskan Standard Time": "America/Anchorage",
   "Aleutian Standard Time": "America/Adak",

@@ -3,33 +3,31 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch, 2020 */
 
-var EXPORTED_SYMBOLS = ["register", "unregister", "recordModule", "recordWindow"];
+var lazy = {};
 
-ChromeUtils.defineModuleGetter(
-  this,
-  "ExtensionSupport",
-  "resource:///modules/ExtensionSupport.jsm"
-); /* global ExtensionSupport */
+ChromeUtils.defineESModuleGetters(lazy, {
+  ExtensionSupport: "resource:///modules/ExtensionSupport.sys.mjs" /* global ExtensionSupport */
+});
 
 var unregisterIds = [];
 var unregisterModules = new Set();
 var closeWindows = new Set();
 
-function recordModule(path) {
+export function recordModule(path) {
   unregisterModules.add(path);
 }
 
-function recordWindow(window) {
+export function recordWindow(window) {
   closeWindows.add(window);
   window.addEventListener("unload", () => closeWindows.delete(window));
 }
 
 function registerWindowListener(id, chromeURLs, record = true) {
-  ExtensionSupport.registerWindowListener(id, {
+  lazy.ExtensionSupport.registerWindowListener(id, {
     chromeURLs: chromeURLs,
     onLoadWindow: window => {
-      let { gdataInitUI } = ChromeUtils.import(
-        `resource://gdata-provider/legacy/modules/ui/${id}.jsm`
+      let { gdataInitUI } = ChromeUtils.importESModule(
+        `resource://gdata-provider/legacy/modules/ui/${id}.sys.mjs`
       );
       gdataInitUI(window, window.document);
       if (record) {
@@ -40,7 +38,7 @@ function registerWindowListener(id, chromeURLs, record = true) {
   unregisterIds.push(id);
 }
 
-function register() {
+export function register() {
   registerWindowListener("gdata-calendar-creation", [
     "chrome://calendar/content/calendar-creation.xhtml",
   ]);
@@ -62,25 +60,25 @@ function register() {
     false
   );
 
-  ExtensionSupport.registerWindowListener("gdata-messenger-window", {
+  lazy.ExtensionSupport.registerWindowListener("gdata-messenger-window", {
     chromeURLs: ["chrome://messenger/content/messenger.xhtml"],
     onLoadWindow: window => {
-      let { checkMigrateCalendars } = ChromeUtils.import(
-        "resource://gdata-provider/legacy/modules/gdataMigration.jsm"
+      let { checkMigrateCalendars } = ChromeUtils.importESModule(
+        "resource://gdata-provider/legacy/modules/gdataMigration.sys.mjs"
       );
       checkMigrateCalendars(window);
     },
   });
 }
 
-function unregister() {
+export function unregister() {
   for (let id of unregisterIds) {
-    ExtensionSupport.unregisterWindowListener(id);
-    Cu.unload(`resource://gdata-provider/legacy/modules/ui/${id}.jsm`);
+    lazy.ExtensionSupport.unregisterWindowListener(id);
+    Cu.unload(`resource://gdata-provider/legacy/modules/ui/${id}.sys.mjs`);
   }
   unregisterIds = [];
 
-  ExtensionSupport.unregisterWindowListener("gdata-messenger-window");
+  lazy.ExtensionSupport.unregisterWindowListener("gdata-messenger-window");
 
   for (let path of unregisterModules) {
     Cu.unload("resource://gdata-provider/legacy/modules/" + path);

@@ -2,62 +2,44 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-  "gdataUtils.jsm"
+ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
+  "gdataUtils.sys.mjs"
 );
 
-var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+var lazy = {};
 
 /* global CalAlarm, CalAttachment, CalAttendee, CalEvent, CalRecurrenceInfo, CalRelation, CalTodo,
  * cal, LOGitem, LOGverbose, stringException, calGoogleRequest, windowsTimezoneMap,
  * ExtensionParent */
-XPCOMUtils.defineLazyModuleGetters(this, {
-  CalAlarm: "resource:///modules/CalAlarm.jsm",
-  CalAttachment: "resource:///modules/CalAttachment.jsm",
-  CalAttendee: "resource:///modules/CalAttendee.jsm",
-  CalEvent: "resource:///modules/CalEvent.jsm",
-  CalRecurrenceInfo: "resource:///modules/CalRecurrenceInfo.jsm",
-  CalRelation: "resource:///modules/CalRelation.jsm",
-  CalTodo: "resource:///modules/CalTodo.jsm",
+ChromeUtils.defineESModuleGetters(lazy, {
+  CalAlarm: "resource:///modules/CalAlarm.sys.mjs",
+  CalAttachment: "resource:///modules/CalAttachment.sys.mjs",
+  CalAttendee: "resource:///modules/CalAttendee.sys.mjs",
+  CalEvent: "resource:///modules/CalEvent.sys.mjs",
+  CalRecurrenceInfo: "resource:///modules/CalRecurrenceInfo.sys.mjs",
+  CalRelation: "resource:///modules/CalRelation.sys.mjs",
+  CalTodo: "resource:///modules/CalTodo.sys.mjs",
 
-  cal: "resource:///modules/calendar/calUtils.jsm",
+  cal: "resource:///modules/calendar/calUtils.sys.mjs",
 
-  LOGitem: "resource://gdata-provider/legacy/modules/gdataLogging.jsm",
-  LOGverbose: "resource://gdata-provider/legacy/modules/gdataLogging.jsm",
-  stringException: "resource://gdata-provider/legacy/modules/gdataLogging.jsm",
+  LOGitem: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
+  LOGverbose: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
+  stringException: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
 
-  calGoogleRequest: "resource://gdata-provider/legacy/modules/gdataRequest.jsm",
-  windowsTimezoneMap: "resource://gdata-provider/legacy/modules/timezoneMap.jsm",
+  calGoogleRequest: "resource://gdata-provider/legacy/modules/gdataRequest.sys.mjs",
+  windowsTimezoneMap: "resource://gdata-provider/legacy/modules/timezoneMap.sys.mjs",
 
-  ExtensionParent: "resource://gre/modules/ExtensionParent.jsm",
+  ExtensionParent: "resource://gre/modules/ExtensionParent.sys.mjs",
 });
 
 // TB120 COMPAT
 if (!Promise.withResolvers) {
-  var { PromiseUtils } = ChromeUtils.import("resource://gre/modules/PromiseUtils.jsm");
+  var { PromiseUtils } = ChromeUtils.importESModule("resource://gre/modules/PromiseUtils.sys.mjs");
   Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
 }
 
 var FOUR_WEEKS_IN_MINUTES = 40320;
 var CONTAINS_HTML_RE = /^<|&(lt|gt|amp);|<(br|p)>/;
-
-var EXPORTED_SYMBOLS = [
-  "ItemToJSON",
-  "JSONToItem",
-  "ItemSaver",
-  "checkResolveConflict",
-  "getGoogleId",
-  "getItemMetadata",
-  "saveItemMetadata",
-  "deleteItemMetadata",
-  "migrateItemMetadata",
-  "JSONToAlarm",
-  "dateToJSON",
-  "JSONToDate",
-  "monkeyPatch",
-  "spinEventLoop",
-  "getMessenger",
-];
 
 /**
  * Retrieves the Google ID associated with this event. This is either a simple
@@ -66,12 +48,12 @@ var EXPORTED_SYMBOLS = [
  * @param aItem             The Item to get the id for.
  * @param aOfflineStorage   The offline storage that holds the metadata for this item.
  */
-function getGoogleId(aItem, aOfflineStorage) {
+export function getGoogleId(aItem, aOfflineStorage) {
   let meta =
     getItemMetadata(aOfflineStorage, aItem) || getItemMetadata(aOfflineStorage, aItem.parentItem);
   let baseId = meta ? meta.path : aItem.id.replace("@google.com", "");
   if (aItem.recurrenceId) {
-    let recSuffix = "_" + aItem.recurrenceId.getInTimezone(cal.dtz.UTC).icalString;
+    let recSuffix = "_" + aItem.recurrenceId.getInTimezone(lazy.cal.dtz.UTC).icalString;
     if (!baseId.endsWith(recSuffix)) {
       baseId += recSuffix;
     }
@@ -86,7 +68,7 @@ function getGoogleId(aItem, aOfflineStorage) {
  * @param aId               The hash id to save metadata with.
  * @param aMetadata         The metadata object to save.
  */
-function saveItemMetadata(aOfflineStorage, aId, aMetadata) {
+export function saveItemMetadata(aOfflineStorage, aId, aMetadata) {
   // Save metadata using the same format as for the CalDAV provider, this
   // will make things easier when upgrading to the new item based metadata.
   let meta = [aMetadata.etag, aMetadata.path, false].join("\u001A");
@@ -103,7 +85,7 @@ function saveItemMetadata(aOfflineStorage, aId, aMetadata) {
  * @param aNewItem          The item to migrate to.
  * @param aMetadata         The metadata for this new item.
  */
-function migrateItemMetadata(aOfflineStorage, aOldItem, aNewItem, aMetadata) {
+export function migrateItemMetadata(aOfflineStorage, aOldItem, aNewItem, aMetadata) {
   if (aNewItem.status == "CANCELLED") {
     deleteItemMetadata(aOfflineStorage, aNewItem);
   } else {
@@ -130,7 +112,7 @@ function migrateItemMetadata(aOfflineStorage, aOldItem, aNewItem, aMetadata) {
  * @param aOfflineStorage   The offline storage that holds the metadata for this item.
  * @param aItem             The item to delete metadata for.
  */
-function deleteItemMetadata(aOfflineStorage, aItem) {
+export function deleteItemMetadata(aOfflineStorage, aItem) {
   aOfflineStorage.deleteMetaData(aItem.hashId);
   if (aItem.recurrenceInfo) {
     let recInfo = aItem.recurrenceInfo;
@@ -147,7 +129,7 @@ function deleteItemMetadata(aOfflineStorage, aItem) {
  * @param aOfflineStorage   The offline storage that holds the metadata for this item.
  * @param aItem             The item to retrieve metadat for.
  */
-function getItemMetadata(aOfflineStorage, aItem) {
+export function getItemMetadata(aOfflineStorage, aItem) {
   let data = null;
   let meta = aOfflineStorage.getMetaData(aItem.hashId);
   let parts = meta && meta.split("\u001A");
@@ -166,14 +148,14 @@ function getItemMetadata(aOfflineStorage, aItem) {
  * @param aDate     The date to convert.
  * @return          The converted JS Object.
  */
-function dateToJSON(aDate) {
+export function dateToJSON(aDate) {
   let jsonData = {};
   let tzid = aDate.timezone.tzid;
-  jsonData[aDate.isDate ? "date" : "dateTime"] = cal.dtz.toRFC3339(aDate);
+  jsonData[aDate.isDate ? "date" : "dateTime"] = lazy.cal.dtz.toRFC3339(aDate);
   if (!aDate.isDate && tzid != "floating") {
-    if (tzid in windowsTimezoneMap) {
+    if (tzid in lazy.windowsTimezoneMap) {
       // A Windows timezone, likely an outlook invitation.
-      jsonData.timeZone = windowsTimezoneMap[tzid];
+      jsonData.timeZone = lazy.windowsTimezoneMap[tzid];
       // eslint-disable-next-line no-useless-escape
     } else if (tzid.match(/^[^\/ ]+(\/[^\/ ]+){1,2}$/)) {
       // An Olson timezone id
@@ -213,7 +195,7 @@ function dateToJSON(aDate) {
  * @param aTimezone             The timezone the date/dateTime is specified in.
  * @return                      The converted calIDateTime.
  */
-function JSONToDate(aEntry, aTimezone) {
+export function JSONToDate(aEntry, aTimezone) {
   let dateTime = null;
   if (!aEntry) {
     return null;
@@ -230,7 +212,7 @@ function JSONToDate(aEntry, aTimezone) {
 
   if ("timeZone" in aEntry) {
     // If a timezone was specified, convert to that zone
-    let zone = cal.timezoneService.getTimezone(aEntry.timeZone);
+    let zone = lazy.cal.timezoneService.getTimezone(aEntry.timeZone);
     if (zone) {
       dateTime = dateTime.getInTimezone(zone);
     }
@@ -248,7 +230,7 @@ function JSONToDate(aEntry, aTimezone) {
  * @return              A calIDateTime object
  */
 function fromRFC3339FixedZone(aStr, aTimezone) {
-  let dateTime = cal.createDateTime();
+  let dateTime = lazy.cal.createDateTime();
   let matches = fromRFC3339FixedZone.regex.exec(aStr);
 
   if (!matches) {
@@ -277,10 +259,10 @@ function fromRFC3339FixedZone(aStr, aTimezone) {
       // Warn here, since this shouldn't be happening. Then use the
       // original fromRFC3339, which goes through the timezone list and
       // finds the first matching zone.
-      cal.WARN(
+      lazy.cal.WARN(
         "[calGoogleCalendar] " + aStr + " does not match timezone offset for " + aTimezone.tzid
       );
-      dateTime = cal.dtz.fromRFC3339(aStr, aTimezone);
+      dateTime = lazy.cal.dtz.fromRFC3339(aStr, aTimezone);
     }
   }
 
@@ -300,7 +282,7 @@ fromRFC3339FixedZone.regex = new RegExp(
  * @return          The RFC3339 string stamp.
  */
 function toRFC3339Fraction(date) {
-  let str = cal.dtz.toRFC3339(date);
+  let str = lazy.cal.dtz.toRFC3339(date);
   return str ? str.replace(/(Z?)$/, ".000$1") : null;
 }
 
@@ -385,7 +367,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
 
   // Google does not support categories natively, but allows us to store data
   // as an "extendedProperty", so we do here
-  let categories = cal.category.arrayToString(aItem.getCategories({}));
+  let categories = lazy.cal.category.arrayToString(aItem.getCategories({}));
   addExtendedProperty("X-MOZ-CATEGORIES", categories);
 
   // Only parse attendees if they are enabled, due to bug 407961
@@ -482,7 +464,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
   }
 
   // gd:extendedProperty (alarmLastAck)
-  addExtendedProperty("X-MOZ-LASTACK", cal.dtz.toRFC3339(aItem.alarmLastAck), true);
+  addExtendedProperty("X-MOZ-LASTACK", lazy.cal.dtz.toRFC3339(aItem.alarmLastAck), true);
 
   // XXX While Google now supports multiple alarms and alarm values, we still
   // need to fix bug 353492 first so we can better take care of finding out
@@ -493,10 +475,10 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
   let icalSnoozeTime = null;
   if (itemSnoozeTime) {
     // The property is saved as a string, translate back to calIDateTime.
-    icalSnoozeTime = cal.createDateTime();
+    icalSnoozeTime = lazy.cal.createDateTime();
     icalSnoozeTime.icalString = itemSnoozeTime;
   }
-  addExtendedProperty("X-MOZ-SNOOZE-TIME", cal.dtz.toRFC3339(icalSnoozeTime), true);
+  addExtendedProperty("X-MOZ-SNOOZE-TIME", lazy.cal.dtz.toRFC3339(icalSnoozeTime), true);
 
   // gd:extendedProperty (snooze recurring alarms)
   let snoozeValue = "";
@@ -530,7 +512,7 @@ function EventToJSON(aItem, aOfflineStorage, aIsImport) {
         // EXDATES require special casing, since they might contain
         // a TZID. To avoid the need for conversion of TZID strings,
         // convert to UTC before serialization.
-        prop.valueAsDatetime = ritem.date.getInTimezone(cal.dtz.UTC);
+        prop.valueAsDatetime = ritem.date.getInTimezone(lazy.cal.dtz.UTC);
       }
       itemData.recurrence.push(prop.icalString.trim());
     }
@@ -565,11 +547,11 @@ function TaskToJSON(aItem, aOfflineStorage, aIsImport) {
   itemData.status = aItem.isCompleted ? "completed" : "needsAction";
 
   if (aItem.dueDate) {
-    let dueDate = aItem.dueDate.getInTimezone(cal.dtz.UTC);
+    let dueDate = aItem.dueDate.getInTimezone(lazy.cal.dtz.UTC);
     dueDate.isDate = false;
-    itemData.due = cal.dtz.toRFC3339(dueDate);
+    itemData.due = lazy.cal.dtz.toRFC3339(dueDate);
   }
-  setIf(itemData, "completed", cal.dtz.toRFC3339(aItem.completedDate));
+  setIf(itemData, "completed", lazy.cal.dtz.toRFC3339(aItem.completedDate));
 
   for (let relation of aItem.getRelations({})) {
     if (relation.relId && (!relation.relType || relation.relType == "PARENT")) {
@@ -600,13 +582,13 @@ function TaskToJSON(aItem, aOfflineStorage, aIsImport) {
  * @param aItem         The item to convert
  * @return              A JS Object representing the item.
  */
-function ItemToJSON(aItem, aOfflineStorage, aIsImport) {
+export function ItemToJSON(aItem, aOfflineStorage, aIsImport) {
   if (aItem.isEvent()) {
     return EventToJSON(aItem, aOfflineStorage, aIsImport);
   } else if (aItem.isTodo()) {
     return TaskToJSON(aItem, aOfflineStorage, aIsImport);
   } else {
-    cal.ERROR("[calGoogleCalendar] Invalid item type: " + aItem.icalString);
+    lazy.cal.ERROR("[calGoogleCalendar] Invalid item type: " + aItem.icalString);
     return null;
   }
 }
@@ -625,15 +607,15 @@ function setupRecurrence(aItem, aRecurrence, aTimezone) {
   if (aItem.recurrenceInfo) {
     aItem.recurrenceInfo.clearRecurrenceItems();
   } else {
-    aItem.recurrenceInfo = new CalRecurrenceInfo(aItem);
+    aItem.recurrenceInfo = new lazy.CalRecurrenceInfo(aItem);
   }
 
   let rootComp;
   let vevent = "BEGIN:VEVENT\r\n" + aRecurrence.join("\r\n") + "\r\nEND:VEVENT";
   try {
-    rootComp = cal.icsService.parseICS(vevent, null);
+    rootComp = lazy.cal.icsService.parseICS(vevent, null);
   } catch (e) {
-    cal.ERROR("[calGoogleCalendar] Unable to parse recurrence item: " + vevent);
+    lazy.cal.ERROR("[calGoogleCalendar] Unable to parse recurrence item: " + vevent);
   }
 
   let hasRecurringRules = false;
@@ -649,7 +631,7 @@ function setupRecurrence(aItem, aRecurrence, aTimezone) {
           aItem.recurrenceInfo.appendRecurrenceItem(recItem);
           hasRecurringRules = true;
         } catch (e) {
-          cal.ERROR(
+          lazy.cal.ERROR(
             "[calGoogleCalendar] Error parsing " +
               prop.propertyName +
               " (" +
@@ -661,13 +643,13 @@ function setupRecurrence(aItem, aRecurrence, aTimezone) {
         break;
       }
       case "RRULE": {
-        let recRule = cal.createRecurrenceRule();
+        let recRule = lazy.cal.createRecurrenceRule();
         try {
           recRule.icalProperty = prop;
           aItem.recurrenceInfo.appendRecurrenceItem(recRule);
           hasRecurringRules = true;
         } catch (e) {
-          cal.ERROR("[calGoogleCalendar] Error parsing RRULE (" + prop.icalString + "):" + e);
+          lazy.cal.ERROR("[calGoogleCalendar] Error parsing RRULE (" + prop.icalString + "):" + e);
         }
         break;
       }
@@ -688,13 +670,13 @@ function setupRecurrence(aItem, aRecurrence, aTimezone) {
  * @param aDefault          (optional) If true, this is a default alarm.
  * @return                  The translated calIAlarm.
  */
-function JSONToAlarm(aEntry, aDefault) {
+export function JSONToAlarm(aEntry, aDefault) {
   const alarmActionMap = {
     email: "EMAIL",
     popup: "DISPLAY",
   };
-  let alarm = new CalAlarm();
-  let alarmOffset = cal.createDuration();
+  let alarm = new lazy.CalAlarm();
+  let alarmOffset = lazy.cal.createDuration();
   alarm.action = alarmActionMap[aEntry.method] || "DISPLAY";
   alarm.related = Ci.calIAlarm.ALARM_RELATED_START;
   alarmOffset.inSeconds = -aEntry.minutes * 60;
@@ -719,25 +701,25 @@ function JSONToAlarm(aEntry, aDefault) {
 function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetadata) {
   aDefaultReminders = aDefaultReminders || [];
   aMetadata = aMetadata || {};
-  let item = aReferenceItem || new CalEvent();
+  let item = aReferenceItem || new lazy.CalEvent();
   item.calendar = aCalendar.superCalendar;
   let privateProps = ("extendedProperties" in aEntry && aEntry.extendedProperties.private) || {};
   let sharedProps = ("extendedProperties" in aEntry && aEntry.extendedProperties.shared) || {};
   let accessRole = aCalendar.getProperty("settings.accessRole");
 
-  LOGverbose("[calGoogleCalendar] Parsing entry:\n" + JSON.stringify(aEntry, null, " ") + "\n");
+  lazy.LOGverbose("[calGoogleCalendar] Parsing entry:\n" + JSON.stringify(aEntry, null, " ") + "\n");
 
   if (!aEntry || !("kind" in aEntry) || aEntry.kind != "calendar#event") {
-    cal.ERROR(
+    lazy.cal.ERROR(
       "[calGoogleCalendar] Attempt to decode invalid event: " +
         (aEntry && JSON.stringify(aEntry, null, " "))
     );
     return null;
   }
 
-  let tzs = cal.timezoneService;
+  let tzs = lazy.cal.timezoneService;
   let calendarZoneName = aCalendar.getProperty("settings.timeZone");
-  let calendarZone = calendarZoneName ? tzs.getTimezone(calendarZoneName) : cal.dtz.defaultTimezone;
+  let calendarZone = calendarZoneName ? tzs.getTimezone(calendarZoneName) : lazy.cal.dtz.defaultTimezone;
 
   try {
     item.id = aEntry.iCalUID || (aEntry.recurringEventId || aEntry.id) + "@google.com";
@@ -747,7 +729,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
       // set, but are still instances. work around by detecting the ID.
       // http://code.google.com/a/google.com/p/apps-api-issues/issues/detail?id=3199
       let hack = aEntry.id.match(/([^_]*)_(\d{8}(T\d{6}Z)?)$/);
-      item.recurrenceId = hack ? cal.createDateTime(hack[2]) : null;
+      item.recurrenceId = hack ? lazy.cal.createDateTime(hack[2]) : null;
     }
     item.status = aEntry.status ? aEntry.status.toUpperCase() : null;
     item.title = aEntry.summary;
@@ -765,7 +747,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
     item.setProperty(
       "CREATED",
       aEntry.created
-        ? cal.dtz.fromRFC3339(aEntry.created, calendarZone).getInTimezone(cal.dtz.UTC)
+        ? lazy.cal.dtz.fromRFC3339(aEntry.created, calendarZone).getInTimezone(lazy.cal.dtz.UTC)
         : null
     );
 
@@ -787,7 +769,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
 
     // organizer
     if (aEntry.organizer) {
-      let organizer = new CalAttendee();
+      let organizer = new lazy.CalAttendee();
       if (aEntry.organizer.email) {
         organizer.id = "mailto:" + aEntry.organizer.email;
       } else {
@@ -822,7 +804,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
         accepted: "ACCEPTED",
       };
       for (let attendeeEntry of aEntry.attendees) {
-        let attendee = new CalAttendee();
+        let attendee = new lazy.CalAttendee();
         if (attendeeEntry.email) {
           attendee.id = "mailto:" + attendeeEntry.email;
         } else {
@@ -872,10 +854,10 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
     }
 
     // extendedProperty (alarmLastAck)
-    item.alarmLastAck = cal.dtz.fromRFC3339(privateProps["X-MOZ-LASTACK"], calendarZone);
+    item.alarmLastAck = lazy.cal.dtz.fromRFC3339(privateProps["X-MOZ-LASTACK"], calendarZone);
 
     // extendedProperty (snooze time)
-    let dtSnoozeTime = cal.dtz.fromRFC3339(privateProps["X-MOZ-SNOOZE-TIME"], calendarZone);
+    let dtSnoozeTime = lazy.cal.dtz.fromRFC3339(privateProps["X-MOZ-SNOOZE-TIME"], calendarZone);
     let snoozeProperty = dtSnoozeTime ? dtSnoozeTime.icalString : null;
     item.setProperty("X-MOZ-SNOOZE-TIME", snoozeProperty);
 
@@ -900,7 +882,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
     // Google does not support categories natively, but allows us to store
     // data as an "extendedProperty", and here it's going to be retrieved
     // again
-    let categories = cal.category.stringToArray(sharedProps["X-MOZ-CATEGORIES"]);
+    let categories = lazy.cal.category.stringToArray(sharedProps["X-MOZ-CATEGORIES"]);
     item.setCategories(categories);
 
     // Conference data
@@ -914,12 +896,12 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
 
     // updated (This must be set last!)
     if (aEntry.updated) {
-      let updated = cal.dtz.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC);
+      let updated = lazy.cal.dtz.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(lazy.cal.dtz.UTC);
       item.setProperty("DTSTAMP", updated);
       item.setProperty("LAST-MODIFIED", updated);
     }
   } catch (e) {
-    cal.ERROR(stringException(e));
+    lazy.cal.ERROR(lazy.stringException(e));
     throw e;
   }
   return item;
@@ -937,18 +919,18 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
   aDefaultReminders = aDefaultReminders || [];
   aMetadata = aMetadata || {};
   if (!aEntry || !("kind" in aEntry) || aEntry.kind != "tasks#task") {
-    cal.ERROR(
+    lazy.cal.ERROR(
       "[calGoogleCalendar] Attempt to decode invalid task: " +
         (aEntry && JSON.stringify(aEntry, null, " "))
     );
     return null;
   }
-  let item = new CalTodo();
+  let item = new lazy.CalTodo();
   item.calendar = aCalendar.superCalendar;
 
-  let tzs = cal.timezoneService;
+  let tzs = lazy.cal.timezoneService;
   let calendarZoneName = aCalendar.getProperty("settings.timeZone");
-  let calendarZone = calendarZoneName ? tzs.getTimezone(calendarZoneName) : cal.dtz.defaultTimezone;
+  let calendarZone = calendarZoneName ? tzs.getTimezone(calendarZoneName) : lazy.cal.dtz.defaultTimezone;
 
   try {
     item.id = aEntry.id;
@@ -962,12 +944,12 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
 
     // Google Tasks don't have a due time, but still use 0:00 UTC. They
     // should really be using floating time.
-    item.dueDate = cal.dtz.fromRFC3339(aEntry.due, cal.dtz.floating);
+    item.dueDate = lazy.cal.dtz.fromRFC3339(aEntry.due, lazy.cal.dtz.floating);
     if (item.dueDate) {
-      item.dueDate.timezone = cal.dtz.floating;
+      item.dueDate.timezone = lazy.cal.dtz.floating;
       item.dueDate.isDate = true;
     }
-    item.completedDate = cal.dtz.fromRFC3339(aEntry.completed, calendarZone);
+    item.completedDate = lazy.cal.dtz.fromRFC3339(aEntry.completed, calendarZone);
     if (aEntry.deleted) {
       item.status = "CANCELLED";
     } else if (aEntry.status == "needsAction") {
@@ -977,7 +959,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
     }
 
     if (aEntry.parent) {
-      let relation = new CalRelation();
+      let relation = new lazy.CalRelation();
       relation.relType = "PARENT";
       relation.relId = aEntry.parent;
       item.addRelation(relation);
@@ -985,7 +967,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
 
     if (aEntry.links) {
       for (let link of aEntry.links) {
-        let attach = new CalAttachment();
+        let attach = new lazy.CalAttachment();
         attach.uri = Services.io.newURI(link.link);
         attach.setParameter("FILENAME", link.description);
         attach.setParameter("X-GOOGLE-TYPE", link.type);
@@ -1000,14 +982,14 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
     // updated (This must be set last!)
     item.setProperty(
       "DTSTAMP",
-      cal.dtz.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC)
+      lazy.cal.dtz.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(lazy.cal.dtz.UTC)
     );
     item.setProperty(
       "LAST-MODIFIED",
-      cal.dtz.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(cal.dtz.UTC)
+      lazy.cal.dtz.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(lazy.cal.dtz.UTC)
     );
   } catch (e) {
-    cal.ERROR("[calGoogleCalendar] Error parsing JSON tasks stream: " + stringException(e));
+    lazy.cal.ERROR("[calGoogleCalendar] Error parsing JSON tasks stream: " + lazy.stringException(e));
     throw e;
   }
 
@@ -1023,7 +1005,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
  * @param aMetadata         (optional,out) Item metadata that should be set.
  * @return                  The specialized calIItemBase with the item data.
  */
-function JSONToItem(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetadata) {
+export function JSONToItem(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetadata) {
   aDefaultReminders = aDefaultReminders || [];
   aMetadata = aMetadata || {};
   if (aEntry.kind == "tasks#task") {
@@ -1031,7 +1013,7 @@ function JSONToItem(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
   } else if (aEntry.kind == "calendar#event") {
     return JSONToEvent(...arguments);
   } else {
-    cal.ERROR("[calGoogleCalendar] Invalid item type: " + (aEntry ? aEntry.kind : "<no entry>"));
+    lazy.cal.ERROR("[calGoogleCalendar] Invalid item type: " + (aEntry ? aEntry.kind : "<no entry>"));
     return null;
   }
 }
@@ -1041,7 +1023,7 @@ function JSONToItem(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
  *
  * @param aCalendar     The calendar the events belong to.
  */
-function ItemSaver(aCalendar) {
+export function ItemSaver(aCalendar) {
   this.calendar = aCalendar;
   this.missingParents = [];
   this.masterItems = Object.create(null);
@@ -1081,9 +1063,9 @@ ItemSaver.prototype = {
    */
   parseTaskStream: async function(aData) {
     if (!aData.items || !aData.items.length) {
-      cal.LOG("[calGoogleCalendar] No tasks have been changed on " + this.calendar.name);
+      lazy.cal.LOG("[calGoogleCalendar] No tasks have been changed on " + this.calendar.name);
     } else {
-      cal.LOG("[calGoogleCalendar] Parsing " + aData.items.length + " received tasks");
+      lazy.cal.LOG("[calGoogleCalendar] Parsing " + aData.items.length + " received tasks");
 
       let total = aData.items.length;
       let committedUnits = 0;
@@ -1114,15 +1096,15 @@ ItemSaver.prototype = {
    */
   parseEventStream: async function(aData) {
     if (aData.timeZone) {
-      cal.LOG("[calGoogleCalendar] Timezone for " + this.calendar.name + " is " + aData.timeZone);
+      lazy.cal.LOG("[calGoogleCalendar] Timezone for " + this.calendar.name + " is " + aData.timeZone);
       this.calendar.setProperty("settings.timeZone", aData.timeZone);
     }
 
     if (!aData.items || !aData.items.length) {
-      cal.LOG("[calGoogleCalendar] No events have been changed on " + this.calendar.name);
+      lazy.cal.LOG("[calGoogleCalendar] No events have been changed on " + this.calendar.name);
       return;
     } else {
-      cal.LOG("[calGoogleCalendar] Parsing " + aData.items.length + " received events");
+      lazy.cal.LOG("[calGoogleCalendar] Parsing " + aData.items.length + " received events");
     }
 
     let exceptionItems = [];
@@ -1142,7 +1124,7 @@ ItemSaver.prototype = {
       let entry = aData.items[cur];
       let metaData = Object.create(null);
       let item = JSONToEvent(entry, this.calendar, defaultReminders, null, metaData);
-      LOGitem(item);
+      lazy.LOGitem(item);
 
       this.metaData[item.hashId] = metaData;
 
@@ -1272,6 +1254,9 @@ ItemSaver.prototype = {
     for (let exc of this.missingParents) {
       let item = await this.calendar.mOfflineStorage.getItem(exc.id);
       if (item) {
+        if (!item.isMutable) {
+          item = item.clone();
+        }
         await this.processException(exc, item);
       } else if (exc.status != "CANCELLED") {
         // If the item could not be found, it could be that the
@@ -1289,7 +1274,7 @@ ItemSaver.prototype = {
           let meta = this.metaData[exc.hashId];
           parent.id = meta.path + "@google.com";
         }
-        parent.recurrenceInfo = new CalRecurrenceInfo(parent);
+        parent.recurrenceInfo = new lazy.CalRecurrenceInfo(parent);
         let rdate = Cc["@mozilla.org/calendar/recurrence-date;1"].createInstance(
           Ci.calIRecurrenceDate
         );
@@ -1380,20 +1365,20 @@ ActivityShell.prototype = {
  * @param aItem             The item that was passed to the server
  * @return                  A promise resolved when the conflict has been resolved
  */
-async function checkResolveConflict(aOperation, aCalendar, aItem) {
-  cal.LOG("[calGoogleCalendar] A conflict occurred for " + aItem.title);
+export async function checkResolveConflict(aOperation, aCalendar, aItem) {
+  lazy.cal.LOG("[calGoogleCalendar] A conflict occurred for " + aItem.title);
 
   let method = aOperation.type == aOperation.DELETE ? "delete" : "modify";
-  let overwrite = cal.provider.promptOverwrite(method, aItem);
+  let overwrite = lazy.cal.provider.promptOverwrite(method, aItem);
   if (overwrite) {
     // The user has decided to overwrite the server version. Send again
     // overwriting the server version with If-Match: *
-    cal.LOG("[calGoogleCalendar] Resending " + method + " and ignoring ETag");
+    lazy.cal.LOG("[calGoogleCalendar] Resending " + method + " and ignoring ETag");
     aOperation.addRequestHeader("If-Match", "*");
     try {
       return await aCalendar.session.asyncItemRequest(aOperation);
     } catch (e) {
-      if (e.result == calGoogleRequest.RESOURCE_GONE && aOperation.type == aOperation.DELETE) {
+      if (e.result == lazy.calGoogleRequest.RESOURCE_GONE && aOperation.type == aOperation.DELETE) {
         // The item was deleted on the server and locally, we don't need to
         // notify the user about this.
         return null;
@@ -1404,7 +1389,7 @@ async function checkResolveConflict(aOperation, aCalendar, aItem) {
   } else {
     // The user has decided to throw away changes, use our existing
     // means to update the item locally.
-    cal.LOG("[calGoogleCalendar] Reload requested, cancelling change of " + aItem.title);
+    lazy.cal.LOG("[calGoogleCalendar] Reload requested, cancelling change of " + aItem.title);
     aCalendar.superCalendar.refresh();
     throw Components.Exception(null, Ci.calIErrors.OPERATION_CANCELLED);
   }
@@ -1419,7 +1404,7 @@ async function checkResolveConflict(aOperation, aCalendar, aItem) {
  * @param name          The string name of the function.
  * @param func          The function to monkey patch with.
  */
-function monkeyPatch(obj, x, func) {
+export function monkeyPatch(obj, x, func) {
   let old = obj[x];
   obj[x] = function() {
     let parent = old.bind(obj);
@@ -1437,7 +1422,7 @@ function monkeyPatch(obj, x, func) {
 /**
  * Returns a promise that resolves after pending events have been processed.
  */
-function spinEventLoop() {
+export function spinEventLoop() {
   let diff = new Date() - spinEventLoop.lastSpin;
   if (diff < Services.prefs.getIntPref("calendar.threading.latency", 250)) {
     return Promise.resolve(false);
@@ -1509,8 +1494,8 @@ class SyncPrefs {
 
   get(key, defaultValue = null) {
     if (!this.initComplete) {
-      cal.ERROR(
-        "[calGoogleCalendar] SyncPrefs called before initialization complete\n" + cal.STACK(10)
+      lazy.cal.ERROR(
+        "[calGoogleCalendar] SyncPrefs called before initialization complete\n" + lazy.cal.STACK(10)
       );
     }
     return key in this.prefs ? this.prefs[key] : defaultValue;
@@ -1519,13 +1504,13 @@ class SyncPrefs {
 
 var messengerInstance;
 
-function getMessenger(extension) {
+export function getMessenger(extension) {
   if (messengerInstance) {
     return messengerInstance;
   }
 
   if (!extension) {
-    extension = ExtensionParent.GlobalManager.getExtension(
+    extension = lazy.ExtensionParent.GlobalManager.getExtension(
       "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}"
     );
   }

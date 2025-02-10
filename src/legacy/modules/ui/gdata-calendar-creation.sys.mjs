@@ -2,19 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var EXPORTED_SYMBOLS = ["gdataInitUI"];
-
-function gdataInitUI(window, document) {
-  ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-    "ui/gdata-calendar-creation.jsm"
+export function gdataInitUI(window, document) {
+  ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
+    "ui/gdata-calendar-creation.sys.mjs"
   );
 
-  const { cal } = ChromeUtils.import("resource:///modules/calendar/calUtils.jsm");
-  const { getGoogleSessionManager } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataSession.jsm"
+  const { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
+  const { getGoogleSessionManager } = ChromeUtils.importESModule(
+    "resource://gdata-provider/legacy/modules/gdataSession.sys.mjs"
   );
-  const { monkeyPatch, getMessenger } = ChromeUtils.import(
-    "resource://gdata-provider/legacy/modules/gdataUtils.jsm"
+  const { monkeyPatch, getMessenger } = ChromeUtils.importESModule(
+    "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs"
   );
   let messenger = getMessenger();
 

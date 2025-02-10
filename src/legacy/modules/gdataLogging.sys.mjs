@@ -2,25 +2,23 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-  "gdataLogging.jsm"
+ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
+  "gdataLogging.sys.mjs"
 );
 
-var EXPORTED_SYMBOLS = ["LOGitem", "LOGverbose", "LOGinterval", "stringException"];
+var lazy = {};
 
-ChromeUtils.defineModuleGetter(
-  this,
-  "cal",
-  "resource:///modules/calendar/calUtils.jsm"
-); /* global cal */
+ChromeUtils.defineESModuleGetters(lazy, {
+  cal: "resource:///modules/calendar/calUtils.sys.mjs" /* global cal */
+});
 
-function LOGverbose(aStr) {
+export function LOGverbose(aStr) {
   if (Services.prefs.getBoolPref("calendar.debug.log.verbose", false)) {
-    cal.LOG(aStr);
+    lazy.cal.LOG(aStr);
   }
 }
 
-function stringException(e) {
+export function stringException(e) {
   if ("fileName" in e && "lineNumber" in e) {
     return " (" + e.fileName + ":" + e.lineNumber + "):" + e;
   } else {
@@ -32,7 +30,7 @@ function stringException(e) {
  * LOGitem
  * Custom logging functions
  */
-function LOGitem(item) {
+export function LOGitem(item) {
   if (!item) {
     return;
   }
@@ -160,7 +158,7 @@ function LOGalarm(aAlarm) {
   );
 }
 
-function LOGinterval(aInterval) {
+export function LOGinterval(aInterval) {
   const fbtypes = Ci.calIFreeBusyInterval;
   let type;
   if (aInterval.freeBusyType == fbtypes.FREE) {
@@ -171,7 +169,7 @@ function LOGinterval(aInterval) {
     type = aInterval.freeBusyType + " (UNKNOWN)";
   }
 
-  cal.LOG(
+  lazy.cal.LOG(
     "[calGoogleCalendar] Interval from " +
       aInterval.interval.start +
       " to " +
