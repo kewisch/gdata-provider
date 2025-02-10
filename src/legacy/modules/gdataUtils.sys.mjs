@@ -32,12 +32,6 @@ ChromeUtils.defineESModuleGetters(lazy, {
   ExtensionParent: "resource://gre/modules/ExtensionParent.sys.mjs",
 });
 
-// TB120 COMPAT
-if (!Promise.withResolvers) {
-  var { PromiseUtils } = ChromeUtils.importESModule("resource://gre/modules/PromiseUtils.sys.mjs");
-  Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
-}
-
 var FOUR_WEEKS_IN_MINUTES = 40320;
 var CONTAINS_HTML_RE = /^<|&(lt|gt|amp);|<(br|p)>/;
 

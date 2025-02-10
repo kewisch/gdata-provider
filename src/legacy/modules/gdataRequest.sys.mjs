@@ -6,12 +6,6 @@ ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys
   "gdataRequest.sys.mjs"
 );
 
-// TB120 COMPAT
-if (!Promise.withResolvers) {
-  var { PromiseUtils } = ChromeUtils.importESModule("resource://gre/modules/PromiseUtils.sys.mjs");
-  Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
-}
-
 var lazy = {};
 
 ChromeUtils.defineESModuleGetters(lazy, {

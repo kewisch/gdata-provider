@@ -28,12 +28,6 @@ ChromeUtils.defineLazyGetter(lazy, "messenger", () => {
   return getMessenger();
 });
 
-// TB120 COMPAT
-if (!Promise.withResolvers) {
-  var { PromiseUtils } = ChromeUtils.importESModule("resource://gre/modules/PromiseUtils.sys.mjs");
-  Promise.withResolvers = PromiseUtils.defer.bind(PromiseUtils);
-}
-
 var NOTIFY_TIMEOUT = 60 * 1000;
 
 var gdataSessionMap = new Map();
@@ -64,14 +58,8 @@ var calGoogleSessionManager = {
     }
 
     if (uri.schemeIs("googleapi")) {
-      let fullUser, path;
-      if (uri.pathQueryRef.substr(0, 2) == "//") {
-        // TB115 COMPAT
-        [fullUser, path] = uri.pathQueryRef.substr(2).split("/", 2);
-      } else {
-        [, fullUser] = uri.prePath.split("//", 2);
-        path = uri.pathQueryRef.substr(1);
-      }
+      let [, fullUser] = uri.prePath.split("//", 2);
+      let path = uri.pathQueryRef.substr(1);
 
       id = fullUser || lazy.cal.getUUID();
     } else if (
