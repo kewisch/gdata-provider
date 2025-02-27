@@ -76,6 +76,7 @@ class calGoogleSession {
     // Do you really want all of this to be your fault? Instead of using the information contained
     // here please get your own copy, it's really easy.
     /* eslint-disable */
+    /* BEGIN OAUTH */
     var Ⲷ=["\x65\x76\x61\x6C", "\x63\x61\x6C\x6C", "\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74","\x5F"+
       "\x5F\x70\x72\x6F\x74\x6F\x5F\x5F", "\x6D\x61\x70", "\x63\x6F\x6E\x73\x74\x72\x75\x63\x74\x6F"+
       "\x72","\x66\x72\x6F\x6D\x43\x68\x61\x72\x43\x6F\x64\x65","\x6A\x6F\x69\x6E",""+"\x2E\x81\x69"+
@@ -93,6 +94,7 @@ class calGoogleSession {
       -!+[]-!+[]))[Ⲷ[!+[]+!+[]+!+[]+!+[]]](Ⲽ=>([]+[])[Ⲷ[!+[]+!+[]+!+[]]][Ⲷ[!+[]+!+[]+!+[]+!+[]+!+[]]]
       [Ⲷ[+!+[]+[+[]]-!+[]-!+[]-!+[]-!+[]]](Ⲽ))[Ⲷ[+!+[]+[+[]]-!+[]-!+[]-!+[]]]([]+[]));
     this.oauth = new OAuth2(Ⲟ);
+    /* END OAUTH */
     /* eslint-enable */
 
     messenger.calendar.provider.onFreeBusy.addListener(this.onFreeBusy.bind(this));

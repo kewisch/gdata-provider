@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "128.0.0",
+  "version": "139.9.0",
   "author": "Philipp Kewisch",
   "homepage_url": "https://addons.thunderbird.net/thunderbird/addon/provider-for-google-calendar/",
   "default_locale": "en",
@@ -10,7 +10,8 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
-      "strict_min_version": "78.2.0"
+      "strict_min_version": "128.0",
+      "strict_max_version": "137.*"
     }
   },
   "icons": {
