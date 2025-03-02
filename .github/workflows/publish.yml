@@ -45,8 +45,8 @@ jobs:
             exit 0
           fi
 
-          awk -v keys "$KEYS" '
-              /\/\* BEGIN OAUTH \*\// {print; inside=1; print keys"; next}
+          awk -v keys="$KEYS" '
+              /\/\* BEGIN OAUTH \*\// {print; inside=1; print keys; next}
               /\/\* END OAUTH \*\// {inside=0}
               !inside
           ' $FILENAME > $FILENAME~
