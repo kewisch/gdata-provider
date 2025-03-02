@@ -71,7 +71,7 @@ jobs:
         if: ${{ github.event.release.prerelease }}
         uses: actions/checkout@v4
         with:
-          branch: gh_pages
+          ref: gh_pages
           path: gh_pages
           fetch-depth: 0
 
