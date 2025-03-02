@@ -46,7 +46,7 @@ jobs:
           fi
 
           awk -v keys="$KEYS" '
-              /\/\* BEGIN OAUTH \*\// {print; inside=1; print keys; next}
+              /\/\* BEGIN OAUTH \*\// {print; inside=1; print keys | "base64 -d"; next}
               /\/\* END OAUTH \*\// {inside=0}
               !inside
           ' $FILENAME > $FILENAME~
