@@ -32,7 +32,7 @@ jobs:
         run: |
           jq '.browser_specific_settings.gecko.update_url = "https://kewisch.github.io/gdata-provider/update.json"' \
             src/manifest.json > src/manifest.json~
-          diff -u src/manifest.json src/manifest.json~
+          diff -u src/manifest.json src/manifest.json~ || true
           mv src/manifest.json~ src/manifest.json
 
       - name: "All: Adjust OAuth keys"
@@ -50,7 +50,7 @@ jobs:
               /\/\* END OAUTH \*\// {inside=0}
               !inside
           ' $FILENAME > $FILENAME~
-          diff -u $FILENAME $FILENAME~
+          diff -u $FILENAME $FILENAME~ || true
           mv $FILENAME~ $FILENAME
 
       - name: "All: Build"
@@ -94,7 +94,7 @@ jobs:
                 }
               }] + .[0].addons[.[1].browser_specific_settings.gecko.id].updates | .[0]
           ' update.json ../src/manifest.json > update.json~
-          diff -u update.json update.json~
+          diff -u update.json update.json~ || true
           mv update.json~ update.json
 
       - name: "All: Attach release assets"
