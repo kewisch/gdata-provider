@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: "All: Checkout"
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: "All: npm ci"
         run: npm ci
