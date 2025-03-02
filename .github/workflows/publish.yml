@@ -34,17 +34,20 @@ jobs:
           mv src/manifest.json~ src/manifest.json
 
       - name: "All: Adjust OAuth keys"
-        if: ${{ secrets.OAUTH_KEYS }}
         env:
           KEYS: ${{ secrets.OAUTH_KEYS }}
           FILENAME: ${{ github.event.release.prerelease && 'src/background/session.js' || 'src/legacy/modules/gdataSession.sys.mjs' }}
         run: |
+          if [ -z "$KEYS" ]
+          then
+            exit 0
+          fi
+
           awk -v keys "$KEYS" '
               /\/\* BEGIN OAUTH \*\// {print; inside=1; print keys"; next}
               /\/\* END OAUTH \*\// {inside=0}
               !inside
           ' $FILENAME > $FILENAME~
-          o
           diff -u $FILENAME $FILENAME~
           mv $FILENAME~ $FILENAME
 
@@ -52,7 +55,7 @@ jobs:
         run: npm run build
 
       # - name: "Release: web-ext sign"
-      #   if: ${{ ! github.event.release.prerelease && secrets.AMO_SIGN_SECRET }}
+      #   if: ${{ ! github.event.release.prerelease }}
       #   uses: kewisch/action-web-ext@v1
       #   with:
       #     cmd: sign
@@ -72,7 +75,7 @@ jobs:
 
       - name: "Beta: Add new release to updates.json"
         if: ${{ github.event.release.prerelease }}
-        path: gh_pages
+        working-directory: gh_pages
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
@@ -101,7 +104,7 @@ jobs:
 
       - name: "Beta: Push back gh_pages"
         if: ${{ github.event.release.prerelease }}
-        path: gh_pages
+        working-directory: gh_pages
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
