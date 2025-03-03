@@ -120,4 +120,5 @@ jobs:
 
           git diff
 
-          #git commit -a -m "Release $TAG_NAME"
+          git commit -a -m "Release $TAG_NAME"
+          git push origin gh_pages
