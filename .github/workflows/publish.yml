@@ -1,0 +1,124 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+name: Publish
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: "Release"
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.release.prerelease && 'beta' || 'release' }}
+    steps:
+      - name: "All: Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "All: npm ci"
+        run: npm ci
+
+      - name: "All: npm run lint"
+        run: npm run lint
+
+      - name: "Beta: Add update_url to manifest"
+        if: ${{ github.event.release.prerelease }}
+        run: |
+          jq '.browser_specific_settings.gecko.update_url = "https://kewisch.github.io/gdata-provider/update.json"' \
+            src/manifest.json > src/manifest.json~
+          diff -u src/manifest.json src/manifest.json~ || true
+          mv src/manifest.json~ src/manifest.json
+
+
+      - name: "All: Adjust OAuth keys"
+        uses: actions/github-script@v7
+        env:
+          KEYS: ${{ secrets.OAUTH_KEYS }}
+          FILENAME: ${{ github.event.release.prerelease && 'src/background/session.js' || 'src/legacy/modules/gdataSession.sys.mjs' }}
+        with:
+          script: |
+            const fs = require("fs");
+            const regex = /\/\* BEGIN OAUTH \*\/[\s\S]*?\/\* END OAUTH \*\//;
+
+            const content = fs.readFileSync(process.env.FILENAME, "utf8");
+            const decodedKeys = Buffer.from(process.env.KEYS, "base64").toString("utf8");
+            const indentedKeys = decodedKeys.split("\n").join("\n    ");
+
+            const newContent = content.replace(regex, `/* BEGIN OAUTH */\n    ${indentedKeys}\n    /* END OAUTH */`);
+            fs.writeFileSync(process.env.FILENAME, newContent, "utf8");
+
+      - name: "All: Build"
+        run: npm run build
+
+      # - name: "Release: web-ext sign"
+      #   if: ${{ ! github.event.release.prerelease }}
+      #   uses: kewisch/action-web-ext@v1
+      #   with:
+      #     cmd: sign
+      #     source: dist/gdata-provider.xpi
+      #     channel: listed
+      #     apiUrlPrefix: "https://addons.thunderbird.net/api/v4"
+      #     apiKey: ${{ secrets.AMO_SIGN_KEY }}
+      #     apiSecret: ${{ secrets.AMO_SIGN_SECRET }}
+
+      - name: "Beta: Checkout gh_pages"
+        if: ${{ github.event.release.prerelease }}
+        uses: actions/checkout@v4
+        with:
+          ref: gh_pages
+          path: gh_pages
+          fetch-depth: 0
+
+      - name: "Beta: Add new release to updates.json"
+        if: ${{ github.event.release.prerelease }}
+        uses: actions/github-script@v7
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        with:
+          script: |
+            const fs = require("fs");
+
+            const updateManifest = JSON.parse(fs.readFileSync("gh_pages/update.json", "utf8"));
+            const addonManifest = JSON.parse(fs.readFileSync("src/manifest.json", "utf8"));
+            const geckoId = addonManifest.browser_specific_settings.gecko.id;
+
+            const newUpdate = {
+              version: addonManifest.version,
+              update_link: `https://github.com/kewisch/gdata-provider/releases/download/${process.env.TAG_NAME}/gdata-provider.xpi`,
+              applications: {
+                gecko: {
+                  strict_min_version: addonManifest.browser_specific_settings.gecko.strict_min_version,
+                  strict_max_version: addonManifest.browser_specific_settings.gecko.strict_max_version
+                }
+              }
+            };
+
+            updateManifest.addons[geckoId].updates.unshift(newUpdate);
+            fs.writeFileSync("gh_pages/update.json", JSON.stringify(updateManifest, null, 2), "utf8");
+
+      - name: "All: Attach release assets"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload ${{ github.event.release.tag_name }} \
+            dist/gdata-provider.xpi
+
+      - name: "Beta: Push back gh_pages"
+        if: ${{ github.event.release.prerelease }}
+        working-directory: gh_pages
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          git diff
+
+          git commit -a -m "Release $TAG_NAME"
+          git push origin gh_pages
