@@ -38,6 +38,9 @@ jobs:
 
       - name: "All: Adjust OAuth keys"
         uses: actions/github-script@v7
+        env:
+          KEYS: ${{ secrets.OAUTH_KEYS }}
+          FILENAME: ${{ github.event.release.prerelease && 'src/background/session.js' || 'src/legacy/modules/gdataSession.sys.mjs' }}
         with:
           script: |
             const fs = require("fs");
