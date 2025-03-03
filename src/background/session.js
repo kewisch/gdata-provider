@@ -93,10 +93,10 @@ class calGoogleSession {
       -!+[]-!+[]],Ⲽ=>([]+[])[Ⲷ[!+[]+!+[]+!+[]]][Ⲷ[!+[]+!+[]]][Ⲷ[+!+[]]](Ⲽ,+[])-(+!+[]+[+[]]-!+[]-!+[]
       -!+[]-!+[]))[Ⲷ[!+[]+!+[]+!+[]+!+[]]](Ⲽ=>([]+[])[Ⲷ[!+[]+!+[]+!+[]]][Ⲷ[!+[]+!+[]+!+[]+!+[]+!+[]]]
       [Ⲷ[+!+[]+[+[]]-!+[]-!+[]-!+[]-!+[]]](Ⲽ))[Ⲷ[+!+[]+[+[]]-!+[]-!+[]-!+[]]]([]+[]));
-    this.oauth = new OAuth2(Ⲟ);
     /* END OAUTH */
     /* eslint-enable */
 
+    this.oauth = new OAuth2(Ⲟ);
     messenger.calendar.provider.onFreeBusy.addListener(this.onFreeBusy.bind(this));
   }
 

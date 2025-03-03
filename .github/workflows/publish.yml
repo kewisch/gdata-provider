@@ -35,23 +35,20 @@ jobs:
           diff -u src/manifest.json src/manifest.json~ || true
           mv src/manifest.json~ src/manifest.json
 
-      - name: "All: Adjust OAuth keys"
-        env:
-          KEYS: ${{ secrets.OAUTH_KEYS }}
-          FILENAME: ${{ github.event.release.prerelease && 'src/background/session.js' || 'src/legacy/modules/gdataSession.sys.mjs' }}
-        run: |
-          if [ -z "$KEYS" ]
-          then
-            exit 0
-          fi
 
-          awk -v keys="$KEYS" '
-              /\/\* BEGIN OAUTH \*\// {print; inside=1; print keys | "base64 -d"; next}
-              /\/\* END OAUTH \*\// {inside=0}
-              !inside
-          ' $FILENAME > $FILENAME~
-          diff -u $FILENAME $FILENAME~ || true
-          mv $FILENAME~ $FILENAME
+      - name: "All: Adjust OAuth keys"
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const regex = /\/\* BEGIN OAUTH \*\/[\s\S]*?\/\* END OAUTH \*\//;
+
+            const content = fs.readFileSync(process.env.FILENAME, "utf8");
+            const decodedKeys = Buffer.from(process.env.KEYS, "base64").toString("utf8");
+            const indentedKeys = decodedKeys.split("\n").join("\n    ");
+
+            const newContent = content.replace(regex, `/* BEGIN OAUTH */\n    ${indentedKeys}\n    /* END OAUTH */`);
+            fs.writeFileSync(process.env.FILENAME, newContent, "utf8");
 
       - name: "All: Build"
         run: npm run build
@@ -77,25 +74,30 @@ jobs:
 
       - name: "Beta: Add new release to updates.json"
         if: ${{ github.event.release.prerelease }}
-        working-directory: gh_pages
+        uses: actions/github-script@v7
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
-        run: |
-          jq --arg tag_name $TAG_NAME -s '
-            .[0].addons[.[1].browser_specific_settings.gecko.id].updates =
-              [{
-                version: .[1].version,
-                update_link: "https://github.com/kewisch/gdata-provider/releases/download/\($tag_name)/gdata-provider.xpi",
-                applictions: {
-                  gecko: {
-                    strict_min_version: .[1].browser_specific_settings.gecko.strict_min_version,
-                    strict_max_version: .[1].browser_specific_settings.gecko.strict_max_version
-                  }
+        with:
+          script: |
+            const fs = require("fs");
+
+            const updateManifest = JSON.parse(fs.readFileSync("gh_pages/update.json", "utf8"));
+            const addonManifest = JSON.parse(fs.readFileSync("src/manifest.json", "utf8"));
+            const geckoId = addonManifest.browser_specific_settings.gecko.id;
+
+            const newUpdate = {
+              version: addonManifest.version,
+              update_link: `https://github.com/kewisch/gdata-provider/releases/download/${process.env.TAG_NAME}/gdata-provider.xpi`,
+              applications: {
+                gecko: {
+                  strict_min_version: addonManifest.browser_specific_settings.gecko.strict_min_version,
+                  strict_max_version: addonManifest.browser_specific_settings.gecko.strict_max_version
                 }
-              }] + .[0].addons[.[1].browser_specific_settings.gecko.id].updates | .[0]
-          ' update.json ../src/manifest.json > update.json~
-          diff -u update.json update.json~ || true
-          mv update.json~ update.json
+              }
+            };
+
+            updateManifest.addons[geckoId].updates.unshift(newUpdate);
+            fs.writeFileSync("gh_pages/update.json", JSON.stringify(updateManifest, null, 2), "utf8");
 
       - name: "All: Attach release assets"
         env:
