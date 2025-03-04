@@ -2,14 +2,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
-  "gdataMigration.sys.mjs"
-);
-
 var lazy = {};
 
 ChromeUtils.defineLazyGetter(lazy, "messenger", () => {
-  let { getMessenger } = ChromeUtils.importESModule(
+  let { loadGdataModule } = ChromeUtils.importESModule(
+    "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1"
+  );
+  let { getMessenger } = loadGdataModule(
     "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs"
   );
 

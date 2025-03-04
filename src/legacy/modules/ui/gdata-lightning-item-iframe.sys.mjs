@@ -2,44 +2,36 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
-  "ui/gdata-lightning-item-iframe.sys.mjs"
-);
+export function gdataInitUI(window, document, version) {
+  const { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
+  const { monkeyPatch, getMessenger } = ChromeUtils.importESModule(
+    `resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs?version=${version}`
+  );
+  const { CONFERENCE_ROW_FRAGMENT, initConferenceRow } = ChromeUtils.importESModule(
+    `resource://gdata-provider/legacy/modules/ui/gdata-dialog-utils.sys.mjs?version=${version}`
+  );
+  const messenger = getMessenger();
 
-var lazy = {};
-
-/* global cal, monkeyPatch, getMessenger, CONFERENCE_ROW_FRAGMENT, initConferenceRow */
-ChromeUtils.defineESModuleGetters(lazy, {
-  cal: "resource:///modules/calendar/calUtils.sys.mjs",
-  monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
-  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
-  CONFERENCE_ROW_FRAGMENT: "resource://gdata-provider/legacy/modules/ui/gdata-dialog-utils.sys.mjs",
-  initConferenceRow: "resource://gdata-provider/legacy/modules/ui/gdata-dialog-utils.sys.mjs",
-});
-
-ChromeUtils.defineLazyGetter(lazy, "messenger", () => lazy.getMessenger());
-
-export function gdataInitUI(window, document) {
-  let { getCurrentCalendar } = window;
+  const { getCurrentCalendar } = window;
 
   (function() {
     /* initXUL */
     let defaultReminderItem = document.createXULElement("menuitem");
     defaultReminderItem.id = "gdata-reminder-default-menuitem";
-    defaultReminderItem.label = lazy.messenger.i18n.getMessage("gdata.reminder.default");
+    defaultReminderItem.label = messenger.i18n.getMessage("gdata.reminder.default");
     defaultReminderItem.value = "default";
     defaultReminderItem.setAttribute("provider", "gdata");
 
     let separator = document.getElementById("reminder-none-separator");
     separator.parentNode.insertBefore(defaultReminderItem, separator);
 
-    let confFragment = window.MozXULElement.parseXULToFragment(lazy.CONFERENCE_ROW_FRAGMENT);
+    let confFragment = window.MozXULElement.parseXULToFragment(CONFERENCE_ROW_FRAGMENT);
     document
       .getElementById("event-grid")
       .insertBefore(confFragment, document.getElementById("event-grid-location-row").nextSibling);
   })();
 
-  lazy.monkeyPatch(window, "updateCalendar", function(protofunc, ...args) {
+  monkeyPatch(window, "updateCalendar", function(protofunc, ...args) {
     let rv = protofunc.apply(this, args);
     let calendar = getCurrentCalendar();
     let isGoogleCalendar = calendar.type == "gdata";
@@ -63,7 +55,7 @@ export function gdataInitUI(window, document) {
       // Show a notification to indicate OOO and focus time events
       if (isOooEvent || isFocusEvent) {
         window.gEventNotification.appendNotification("gdata-info-event-type", {
-          label: lazy.messenger.i18n.getMessage(
+          label: messenger.i18n.getMessage(
             "eventdialog." + (isOooEvent ? "oooEvent" : "focusEvent")
           ),
           priority: window.gEventNotification.PRIORITY_INFO_LOW,
@@ -100,7 +92,7 @@ export function gdataInitUI(window, document) {
       }
 
       // Update conference row
-      lazy.initConferenceRow(document, lazy.messenger, window.calendarItem, calendar);
+      initConferenceRow(document, messenger, window.calendarItem, calendar);
 
       // Set up default reminder items
       let reminderList = document.getElementById("item-alarm");
@@ -152,11 +144,11 @@ export function gdataInitUI(window, document) {
       // Adjust timezones for Google Tasks
       if (window.gEndTime) {
         if (isGoogleTask) {
-          let floating = lazy.cal.dtz.floating;
+          let floating = cal.dtz.floating;
           if (window.gEndTimezone != floating) {
             window.gOldEndTimezone = window.gEndTimezone;
           }
-          window.gEndTimezone = lazy.cal.dtz.floating;
+          window.gEndTimezone = cal.dtz.floating;
           window.gEndTime = window.gEndTime.getInTimezone(window.gEndTimezone);
           window.gEndTime.isDate = true;
         } else {
@@ -182,13 +174,13 @@ export function gdataInitUI(window, document) {
       }
 
       // Update conference row (to hide it)
-      lazy.initConferenceRow(document, lazy.messenger, window.calendarItem, calendar);
+      initConferenceRow(document, messenger, window.calendarItem, calendar);
     }
 
     return rv;
   });
 
-  lazy.monkeyPatch(window, "updateCategoryMenulist", function(protofunc, ...args) {
+  monkeyPatch(window, "updateCategoryMenulist", function(protofunc, ...args) {
     let rv;
     let calendar = window.getCurrentCalendar();
     if (calendar.type == "gdata" && window.calendarItem.isTodo()) {
@@ -202,7 +194,7 @@ export function gdataInitUI(window, document) {
     return rv;
   });
 
-  lazy.monkeyPatch(window, "updateReminderDetails", function(protofunc, ...args) {
+  monkeyPatch(window, "updateReminderDetails", function(protofunc, ...args) {
     let rv = protofunc.apply(this, args);
     let reminderList = document.getElementById("item-alarm");
 
@@ -216,7 +208,7 @@ export function gdataInitUI(window, document) {
     return rv;
   });
 
-  lazy.monkeyPatch(window, "saveReminder", function(protofunc, item, ...args) {
+  monkeyPatch(window, "saveReminder", function(protofunc, item, ...args) {
     let calendar = window.getCurrentCalendar();
     let reminderList = document.getElementById("item-alarm");
     if (calendar.type == "gdata" && reminderList.value == "default") {
@@ -235,7 +227,7 @@ export function gdataInitUI(window, document) {
     }
   });
 
-  lazy.monkeyPatch(window, "loadReminders", function(protofunc, reminders, ...args) {
+  monkeyPatch(window, "loadReminders", function(protofunc, reminders, ...args) {
     let reminderList = document.getElementById("item-alarm");
 
     // Set up the default reminders item
@@ -267,7 +259,7 @@ export function gdataInitUI(window, document) {
     return rv;
   });
 
-  lazy.monkeyPatch(window, "editReminder", function(protofunc, ...args) {
+  monkeyPatch(window, "editReminder", function(protofunc, ...args) {
     let rv = protofunc.apply(this, args);
 
     // Now that the custom reminders were changed, we need to remove the
@@ -293,14 +285,14 @@ export function gdataInitUI(window, document) {
     "X-DEFAULT-ALARM",
   ];
 
-  lazy.monkeyPatch(window, "isItemChanged", function(protofunc, ...args) {
+  monkeyPatch(window, "isItemChanged", function(protofunc, ...args) {
     let calendar = window.getCurrentCalendar();
     if (calendar.type == "gdata") {
       let newItem = window.saveItem();
       let oldItem = window.calendarItem;
       return (
         newItem.calendar.id != oldItem.calendar.id ||
-        !lazy.cal.item.compareContent(newItem, oldItem, IGNORE_PROPS)
+        !cal.item.compareContent(newItem, oldItem, IGNORE_PROPS)
       );
     } else {
       return protofunc.apply(this, args);

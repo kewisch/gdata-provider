@@ -30,28 +30,31 @@ this.gdata = class extends ExtensionAPI {
       Ci.amIAddonManagerStartup
     );
     let manifestURI = Services.io.newURI("manifest.json", null, this.extension.rootURI);
+    let version = this.extension.temporarilyInstalled ? new Date().getTime() : this.extension.version;
 
     this.chromeHandle = aomStartup.registerChrome(manifestURI, [
       ["content", "gdata-provider", "legacy/content/"],
     ]);
 
+    // Load this first to make sure the loader is set up for future loads
+    let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1");
+    gdataUI.setExtensionVersion(version);
+
     // Load this early to get the messenger up and running for SyncPrefs
-    let { getMessenger } = ChromeUtils.importESModule(
+    let { getMessenger } = gdataUI.loadGdataModule(
       "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs"
     );
 
     Services.obs.addObserver(this, "passwordmgr-storage-changed");
 
     getMessenger().gdataSyncPrefs.initComplete.then(() => {
-      let { calGoogleCalendar } = ChromeUtils.importESModule(
-        "resource://gdata-provider/legacy/modules/gdataCalendar.sys.mjs"
-      );
+      let { calGoogleCalendar } = gdataUI.loadGdataModule("resource://gdata-provider/legacy/modules/gdataCalendar.sys.mjs");
+
       if (cal.manager.wrappedJSObject.hasCalendarProvider("gdata")) {
         cal.manager.wrappedJSObject.unregisterCalendarProvider("gdata", true);
       }
       cal.manager.wrappedJSObject.registerCalendarProvider("gdata", calGoogleCalendar);
 
-      let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs");
       gdataUI.register();
     });
   }
@@ -63,7 +66,8 @@ this.gdata = class extends ExtensionAPI {
 
     cal.manager.wrappedJSObject.unregisterCalendarProvider("gdata", true);
 
-    let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs");
+    let version = this.extension.manifest.version;
+    let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1");
     gdataUI.unregister();
 
     Services.obs.removeObserver(this, "passwordmgr-storage-changed");
@@ -75,10 +79,6 @@ this.gdata = class extends ExtensionAPI {
 
     this.chromeHandle.destruct();
     this.chromeHandle = null;
-
-    // if (this.extension.addonData.temporarilyInstalled) {
-    Services.obs.notifyObservers(null, "startupcache-invalidate");
-    // }
   }
 
   getAPI(context) {
@@ -118,8 +118,9 @@ this.gdata = class extends ExtensionAPI {
       data == "removeLogin" &&
       subject.httpRealm == "Google Calendar OAuth Token"
     ) {
+      let version = this.extension.temporarilyInstalled ? new Date().getTime() : this.extension.version;
       let { getGoogleSessionManager } = ChromeUtils.importESModule(
-        "resource://gdata-provider/legacy/modules/gdataSession.sys.mjs"
+        `resource://gdata-provider/legacy/modules/gdataSession.sys.mjs?version=${version}`
       );
 
       let session = getGoogleSessionManager().getSessionById(subject.username, false);

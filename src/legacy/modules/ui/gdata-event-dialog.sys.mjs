@@ -2,24 +2,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var { recordModule, recordWindow } = ChromeUtils.importESModule(
-  "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs"
-);
-recordModule("ui/gdata-event-dialog.sys.mjs");
+export function gdataInitUI(window, document, version) {
+  const { recordWindow } = ChromeUtils.importESModule(
+    `resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?version=${version}`
+  );
 
-var lazy = {};
+  const { monkeyPatch, getMessenger } = ChromeUtils.importESModule(
+    `resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs?version=${version}`
+  );
 
-/* global monkeyPatch, getMessenger */
-ChromeUtils.defineESModuleGetters(lazy, {
-  monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
-  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
-});
+  const messenger = getMessenger();
 
-ChromeUtils.defineLazyGetter(lazy, "messenger", () => lazy.getMessenger());
+  const ITEM_IFRAME_URL = "chrome://calendar/content/calendar-item-iframe.xhtml";
 
-const ITEM_IFRAME_URL = "chrome://calendar/content/calendar-item-iframe.xhtml";
-
-export function gdataInitUI(window, document) {
   // For event dialogs, record the window so it is closed when the extension is unloaded
   if (
     window.location.href == "chrome://calendar/content/calendar-event-dialog.xhtml" &&
@@ -31,8 +26,8 @@ export function gdataInitUI(window, document) {
   (function() {
     /* initXUL */
     const optionsPrivacyItem = document.createXULElement("menuitem");
-    optionsPrivacyItem.label = lazy.messenger.i18n.getMessage("gdata.privacy.default.label");
-    optionsPrivacyItem.accesskey = lazy.messenger.i18n.getMessage("gdata.privacy.default.accesskey");
+    optionsPrivacyItem.label = messenger.i18n.getMessage("gdata.privacy.default.label");
+    optionsPrivacyItem.accesskey = messenger.i18n.getMessage("gdata.privacy.default.accesskey");
     optionsPrivacyItem.type = "radio";
     optionsPrivacyItem.setAttribute("privacy", "DEFAULT");
     optionsPrivacyItem.setAttribute("provider", "gdata");
@@ -76,7 +71,7 @@ export function gdataInitUI(window, document) {
 
     let frame = document.getElementById(frameId);
     let frameScript = ChromeUtils.importESModule(
-      "resource://gdata-provider/legacy/modules/ui/gdata-lightning-item-iframe.sys.mjs"
+      `resource://gdata-provider/legacy/modules/ui/gdata-lightning-item-iframe.sys.mjs?version=${version}`
     );
 
     if (
@@ -98,7 +93,7 @@ export function gdataInitUI(window, document) {
   if (window.location.href == "chrome://calendar/content/calendar-event-dialog.xhtml") {
     window.setTimeout(() => loadPanel(), 0);
   } else {
-    lazy.monkeyPatch(window, "onLoadCalendarItemPanel", (protofunc, passedFrameId, ...args) => {
+    monkeyPatch(window, "onLoadCalendarItemPanel", (protofunc, passedFrameId, ...args) => {
       let rv = protofunc(passedFrameId, ...args);
       loadPanel(passedFrameId);
       return rv;
@@ -133,7 +128,7 @@ export function gdataInitUI(window, document) {
         break;
       }
       case "gdataSettingsMigrate":
-        lazy.messenger.storage.local.set({ "settings.migrate": aEvent.data.value });
+        messenger.storage.local.set({ "settings.migrate": aEvent.data.value });
         break;
     }
   });

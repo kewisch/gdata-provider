@@ -2,22 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
-  "ui/gdata-event-dialog-reminder.sys.mjs"
-);
+export function gdataInitUI(window, document, version) {
+  const { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
+  const { monkeyPatch, getMessenger } = ChromeUtils.importESModule(
+    `resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs?version=${version}`
+  );
 
-var lazy = {};
+  const messenger = getMessenger();
 
-/* global cal, monkeyPatch, getMessenger */
-ChromeUtils.defineESModuleGetters(lazy, {
-  cal: "resource:///modules/calendar/calUtils.sys.mjs",
-  monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
-  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
-});
-
-ChromeUtils.defineLazyGetter(lazy, "messenger", () => lazy.getMessenger());
-
-export function gdataInitUI(window, document) {
   let item = window.arguments[0].item;
   let calendar = window.arguments[0].calendar;
   if (calendar.type != "gdata") {
@@ -26,7 +18,7 @@ export function gdataInitUI(window, document) {
 
   const FOUR_WEEKS_BEFORE = -2419200;
 
-  let reminderOutOfRange = lazy.messenger.i18n.getMessage("reminderOutOfRange");
+  let reminderOutOfRange = messenger.i18n.getMessage("reminderOutOfRange");
   let notificationbox;
   let checkPending;
 
@@ -35,9 +27,9 @@ export function gdataInitUI(window, document) {
     if (aAlarm.related == Ci.calIAlarm.ALARM_RELATED_ABSOLUTE) {
       let returnDate;
       if (aRelated === undefined || aRelated == Ci.calIAlarm.ALARM_RELATED_START) {
-        returnDate = aItem[lazy.cal.dtz.startDateProp(aItem)];
+        returnDate = aItem[cal.dtz.startDateProp(aItem)];
       } else if (aRelated == Ci.calIAlarm.ALARM_RELATED_END) {
-        returnDate = aItem[lazy.cal.dtz.endDateProp(aItem)];
+        returnDate = aItem[cal.dtz.endDateProp(aItem)];
       }
 
       if (returnDate && aAlarm.alarmDate) {
@@ -99,7 +91,7 @@ export function gdataInitUI(window, document) {
     }
   }
 
-  lazy.monkeyPatch(window, "updateReminder", function(protofunc, event) {
+  monkeyPatch(window, "updateReminder", function(protofunc, event) {
     let rv = protofunc.apply(this, Array.from(arguments).slice(1));
     if (
       window.suppressListUpdate ||
@@ -116,7 +108,7 @@ export function gdataInitUI(window, document) {
     return rv;
   });
 
-  lazy.monkeyPatch(window, "loadReminders", function(protofunc, ...args) {
+  monkeyPatch(window, "loadReminders", function(protofunc, ...args) {
     let rv = protofunc.apply(this, args);
     checkAllReminders();
 

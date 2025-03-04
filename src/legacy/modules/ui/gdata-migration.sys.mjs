@@ -2,49 +2,37 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
-  "ui/gdata-migration.sys.mjs"
-);
-
-var lazy = {};
-
-/* global cal, migrateCalendars, getMigratableCalendars */
-ChromeUtils.defineESModuleGetters(lazy, {
-  migrateCalendars: "resource://gdata-provider/legacy/modules/gdataMigration.sys.mjs",
-  getMigratableCalendars: "resource://gdata-provider/legacy/modules/gdataMigration.sys.mjs",
-});
-
-ChromeUtils.defineLazyGetter(lazy, "messenger", () => {
-  let { getMessenger } = ChromeUtils.importESModule(
-    "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs"
+export async function gdataInitUI(window, document, version) {
+  const { getMessenger } = ChromeUtils.importESModule(
+    `resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs?version=${version}`
   );
+  const { migrateCalendars, getMigratableCalendars } = ChromeUtils.importESModule(
+    `resource://gdata-provider/legacy/modules/gdataMigration.sys.mjs?version=${version}`
+  );
+  const messenger = getMessenger();
 
-  return getMessenger();
-});
-
-export async function gdataInitUI(window, document) {
   // Strings. Doing these manually since there are just a few.
-  document.title = lazy.messenger.i18n.getMessage("gdata.migration.title");
-  document.getElementById("gdata-migration-description").textContent = lazy.messenger.i18n.getMessage(
+  document.title = messenger.i18n.getMessage("gdata.migration.title");
+  document.getElementById("gdata-migration-description").textContent = messenger.i18n.getMessage(
     "gdata.migration.description"
   );
 
   let dialog = document.getElementById("gdata-migration-dialog");
   dialog.setAttribute(
     "buttonlabelaccept",
-    lazy.messenger.i18n.getMessage("gdata.migration.upgrade.label")
+    messenger.i18n.getMessage("gdata.migration.upgrade.label")
   );
   dialog.setAttribute(
     "buttonaccesskeyaccept",
-    lazy.messenger.i18n.getMessage("gdata.migration.upgrade.accesskey")
+    messenger.i18n.getMessage("gdata.migration.upgrade.accesskey")
   );
 
   let showAgain = document.getElementById("showagain-checkbox");
-  showAgain.setAttribute("label", lazy.messenger.i18n.getMessage("gdata.migration.showagain.label"));
+  showAgain.setAttribute("label", messenger.i18n.getMessage("gdata.migration.showagain.label"));
 
   // Load the listbox with calendars to migrate
   let listbox = document.getElementById("calendars-listbox");
-  for (let calendar of window.sortCalendarArray(lazy.getMigratableCalendars())) {
+  for (let calendar of window.sortCalendarArray(getMigratableCalendars())) {
     let item = document.createXULElement("checkbox");
     item.setAttribute("label", calendar.name);
     item.setAttribute("value", calendar.id);
@@ -53,7 +41,7 @@ export async function gdataInitUI(window, document) {
   }
 
   // Set up the "always check" field
-  let prefs = await lazy.messenger.storage.local.get({ "settings.migrate": true });
+  let prefs = await messenger.storage.local.get({ "settings.migrate": true });
   showAgain.checked = prefs["settings.migrate"];
 
   // Set up listeners. Don't close the window until we are done.
@@ -63,7 +51,7 @@ export async function gdataInitUI(window, document) {
     for (let item of listbox.querySelectorAll("checkbox[checked]")) {
       calendars.push(item.calendar);
     }
-    lazy.migrateCalendars(calendars);
+    migrateCalendars(calendars);
     window.opener.postMessage({ command: "gdataSettingsMigrate", value: showAgain.checked });
     window.close();
   });

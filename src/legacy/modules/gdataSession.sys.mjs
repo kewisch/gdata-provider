@@ -4,28 +4,28 @@
 
 /* globals OAUTH_BASE_URI, OAUTH_SCOPE, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET */
 
-ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
-  "gdataSession.sys.mjs"
+var { defineGdataModuleGetters } = ChromeUtils.importESModule(
+  "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1"
 );
 
 var lazy = {};
 
 /* global calGoogleRequest, API_BASE, cal, LOGinterval, OAuth2 */
 ChromeUtils.defineESModuleGetters(lazy, {
-  calGoogleRequest: "resource://gdata-provider/legacy/modules/gdataRequest.sys.mjs",
-  API_BASE: "resource://gdata-provider/legacy/modules/gdataRequest.sys.mjs",
   cal: "resource:///modules/calendar/calUtils.sys.mjs",
   setTimeout: "resource://gre/modules/Timer.sys.mjs",
+});
+
+defineGdataModuleGetters(lazy, {
+  calGoogleRequest: "resource://gdata-provider/legacy/modules/gdataRequest.sys.mjs",
+  API_BASE: "resource://gdata-provider/legacy/modules/gdataRequest.sys.mjs",
   LOGinterval: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
+  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
   OAuth2: "resource://gdata-provider/legacy/modules/OAuth2.sys.mjs",
 });
 
 ChromeUtils.defineLazyGetter(lazy, "messenger", () => {
-  let { getMessenger } = ChromeUtils.importESModule(
-    "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs"
-  );
-
-  return getMessenger();
+  return lazy.getMessenger();
 });
 
 var NOTIFY_TIMEOUT = 60 * 1000;

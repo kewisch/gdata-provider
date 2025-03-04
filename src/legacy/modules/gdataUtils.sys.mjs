@@ -2,8 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
-  "gdataUtils.sys.mjs"
+var { defineGdataModuleGetters } = ChromeUtils.importESModule(
+  "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1"
 );
 
 var lazy = {};
@@ -21,15 +21,16 @@ ChromeUtils.defineESModuleGetters(lazy, {
   CalTodo: "resource:///modules/CalTodo.sys.mjs",
 
   cal: "resource:///modules/calendar/calUtils.sys.mjs",
+  ExtensionParent: "resource://gre/modules/ExtensionParent.sys.mjs",
+});
 
+defineGdataModuleGetters(lazy, {
   LOGitem: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
   LOGverbose: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
   stringException: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
 
   calGoogleRequest: "resource://gdata-provider/legacy/modules/gdataRequest.sys.mjs",
   windowsTimezoneMap: "resource://gdata-provider/legacy/modules/timezoneMap.sys.mjs",
-
-  ExtensionParent: "resource://gre/modules/ExtensionParent.sys.mjs",
 });
 
 var FOUR_WEEKS_IN_MINUTES = 40320;

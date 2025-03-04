@@ -14,7 +14,6 @@ export default [
       "!eslint.config.mjs",
       "!commitlint.config.js",
 
-      "src/api/**",
       "test/xpcshell/**",
     ]
   },

@@ -1,10 +1,6 @@
 // Mappings Copyright © 1991-2013 Unicode, Inc. with modifications.
 // http://unicode.org/repos/cldr/trunk/common/supplemental/windowsZones.xml
 
-ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
-  "timezoneMap.sys.mjs"
-);
-
 export var windowsTimezoneMap = {
   "Afghanistan Standard Time": "Asia/Kabul",
   "Alaskan Standard Time": "America/Anchorage",

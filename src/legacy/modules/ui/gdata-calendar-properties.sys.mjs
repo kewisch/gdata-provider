@@ -2,12 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-export function gdataInitUI(window, document) {
-  ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs").recordModule(
-    "ui/gdata-calendar-properties.sys.mjs"
-  );
+export function gdataInitUI(window, document, version) {
   const { monkeyPatch } = ChromeUtils.importESModule(
-    "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs"
+    `resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs?version=${version}`
   );
 
   function gdataOnLoad() {

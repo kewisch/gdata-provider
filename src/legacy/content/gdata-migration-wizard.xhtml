@@ -22,7 +22,8 @@
   </dialog>
   <script src="chrome://calendar/content/calendar-ui-utils.js"/>
   <script><![CDATA[
-    var { gdataInitUI } = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/ui/gdata-migration.sys.mjs");
-    gdataInitUI(window, window.document);
+    var version = new Date().getTime();
+    var { gdataInitUI } = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/ui/gdata-migration.sys.mjs?version=" + version);
+    gdataInitUI(window, window.document, version);
   ]]></script>
 </window>
