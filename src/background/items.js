@@ -789,11 +789,6 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
     item: addVCalendar(vevent)
   };
 
-  if (entry.originalStartTime) {
-    let recId = jsonToDate("recurrence-id", entry.originalStartTime, defaultTimezone, "UTC");
-    shell.instance = recId[3];
-  }
-
   return shell;
 }
 
