@@ -29,7 +29,7 @@ export async function migrateCalendars(ids) {
 export async function checkCalendarMigration() {
   let prefs = await messenger.storage.local.get({ "settings.migrate": true });
   let calendars = await getMigratableCalendars();
-  if (prefs["settings.migrate"] && calendars) {
+  if (prefs["settings.migrate"] && calendars.length) {
     let clickListener = (notificationId) => {
       messenger.notifications.onClicked.removeListener(clickListener);
       messenger.notifications.clear("gdata-migrate");

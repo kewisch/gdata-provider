@@ -72,6 +72,10 @@ test("checkCalendarMigration", async () => {
   expect(messenger.notifications.create).not.toHaveBeenCalled();
 
   await messenger.storage.local.set({ "settings.migrate": true });
+  await checkCalendarMigration();
+  expect(messenger.notifications.create).not.toHaveBeenCalled();
+
+  await messenger.storage.local.set({ "settings.migrate": true });
   global.messenger.calendar.calendars._calendars = [
     { id: "id1", type: "ics", url: "https://example.com/feed.ics" },
     {
