@@ -2,25 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-  "ui/gdata-event-dialog-reminder.jsm"
-);
+export function gdataInitUI(window, document, version) {
+  const { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
+  const { monkeyPatch, getMessenger } = ChromeUtils.importESModule(
+    `resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs?version=${version}`
+  );
+  const messenger = getMessenger();
+  const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
 
-var EXPORTED_SYMBOLS = ["gdataInitUI"];
-
-var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-XPCOMUtils.defineLazyModuleGetters(this, {
-  cal: "resource:///modules/calendar/calUtils.jsm",
-  monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
-  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
-});
-
-ChromeUtils.defineLazyGetter(this, "messenger", () => getMessenger());
-
-const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
-
-function gdataInitUI(window, document) {
   let item = window.arguments[0].item;
   let calendar = window.arguments[0].calendar;
   if (calendar.type != GDATA_CALENDAR_TYPE) {

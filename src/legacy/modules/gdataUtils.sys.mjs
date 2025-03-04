@@ -2,14 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var EXPORTED_SYMBOLS = [
-  "getMessenger",
-  "monkeyPatch",
-];
+var lazy = {};
 
-var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-XPCOMUtils.defineLazyModuleGetters(this, {
-  ExtensionParent: "resource://gre/modules/ExtensionParent.jsm",
+ChromeUtils.defineESModuleGetters(lazy, {
+  ExtensionParent: "resource://gre/modules/ExtensionParent.sys.mjs",
 });
 
 function getWXAPI(extension, name, sync = false) {
@@ -44,13 +40,13 @@ function getWXAPI(extension, name, sync = false) {
 
 var messengerInstance;
 
-function getMessenger(extension) {
+export function getMessenger(extension) {
   if (messengerInstance) {
     return messengerInstance;
   }
 
   if (!extension) {
-    extension = ExtensionParent.GlobalManager.getExtension(
+    extension = lazy.ExtensionParent.GlobalManager.getExtension(
       "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}"
     );
   }
@@ -60,7 +56,6 @@ function getMessenger(extension) {
   ChromeUtils.defineLazyGetter(messengerInstance, "storage", () =>
     getWXAPI(extension, "storage", true)
   );
-  console.log(messengerInstance);
   return messengerInstance;
 }
 
@@ -73,7 +68,7 @@ function getMessenger(extension) {
  * @param name          The string name of the function.
  * @param func          The function to monkey patch with.
  */
-function monkeyPatch(obj, x, func) {
+export function monkeyPatch(obj, x, func) {
   let old = obj[x];
   obj[x] = function() {
     let parent = old.bind(obj);
@@ -82,7 +77,7 @@ function monkeyPatch(obj, x, func) {
     try {
       return func.apply(obj, args);
     } catch (e) {
-      console.error(e); // eslint-disable-line no-console
+      console.error(e);
       throw e;
     }
   };

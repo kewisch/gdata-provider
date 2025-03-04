@@ -2,26 +2,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var { recordModule, recordWindow } = ChromeUtils.import(
-  "resource://gdata-provider/legacy/modules/gdataUI.jsm"
-);
-recordModule("ui/gdata-event-dialog.jsm");
+export function gdataInitUI(window, document, version) {
+  const { recordWindow } = ChromeUtils.importESModule(
+    `resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?version=${version}`
+  );
 
-var EXPORTED_SYMBOLS = ["gdataInitUI"];
+  const { monkeyPatch, getMessenger } = ChromeUtils.importESModule(
+    `resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs?version=${version}`
+  );
+  const messenger = getMessenger();
 
-var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+  const ITEM_IFRAME_URL = "chrome://calendar/content/calendar-item-iframe.xhtml";
+  const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
 
-XPCOMUtils.defineLazyModuleGetters(this, {
-  monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
-  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
-});
-
-ChromeUtils.defineLazyGetter(this, "messenger", () => getMessenger());
-
-const ITEM_IFRAME_URL = "chrome://calendar/content/calendar-item-iframe.xhtml";
-const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
-
-function gdataInitUI(window, document) {
   // For event dialogs, record the window so it is closed when the extension is unloaded
   if (
     window.location.href == "chrome://calendar/content/calendar-event-dialog.xhtml" &&
@@ -77,8 +70,8 @@ function gdataInitUI(window, document) {
     }
 
     let frame = document.getElementById(frameId);
-    let frameScript = ChromeUtils.import(
-      "resource://gdata-provider/legacy/modules/ui/gdata-lightning-item-iframe.jsm"
+    let frameScript = ChromeUtils.importESModule(
+      `resource://gdata-provider/legacy/modules/ui/gdata-lightning-item-iframe.sys.mjs?version=${version}`
     );
 
     if (

@@ -2,28 +2,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-  "ui/gdata-lightning-item-iframe.jsm"
-);
+export function gdataInitUI(window, document, version) {
+  const { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
+  const { monkeyPatch, getMessenger } = ChromeUtils.importESModule(
+    `resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs?version=${version}`
+  );
+  const { CONFERENCE_ROW_FRAGMENT, initConferenceRow } = ChromeUtils.importESModule(
+    `resource://gdata-provider/legacy/modules/ui/gdata-dialog-utils.sys.mjs?version=${version}`
+  );
+  const messenger = getMessenger();
+  const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
 
-var EXPORTED_SYMBOLS = ["gdataInitUI"];
-
-var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-XPCOMUtils.defineLazyModuleGetters(this, {
-  cal: "resource:///modules/calendar/calUtils.jsm",
-  monkeyPatch: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
-  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.jsm",
-  CONFERENCE_ROW_FRAGMENT: "resource://gdata-provider/legacy/modules/ui/gdata-dialog-utils.jsm",
-  initConferenceRow: "resource://gdata-provider/legacy/modules/ui/gdata-dialog-utils.jsm",
-});
-
-ChromeUtils.defineLazyGetter(this, "messenger", () => getMessenger());
-
-const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
-
-function gdataInitUI(window, document) {
-  let { getCurrentCalendar } = window;
+  const { getCurrentCalendar } = window;
 
   (function() {
     /* initXUL */
@@ -59,12 +49,10 @@ function gdataInitUI(window, document) {
       isGoogleCalendar && window.calendarItem.getProperty("X-GOOGLE-EVENT-TYPE") == "focusTime";
 
     window.sendMessage({ command: "gdataIsTask", isGoogleTask: isGoogleTask });
-  
 
     // Hide/show all elements with provider=GDATA_CALENDAR_TYPE
     for (let elem of document.getElementsByAttribute("provider", GDATA_CALENDAR_TYPE)) {
       elem.style.display = isGoogleCalendar ? "" : "none";
-      console.log("LOAD", isGoogleCalendar, elem);
     }
 
     if (isEvent) {
@@ -268,7 +256,6 @@ function gdataInitUI(window, document) {
       reminderList.value = "default";
 
       // remember the selected index
-      // eslint-disable-next-line no-undef
       window.gLastAlarmSelection = reminderList.selectedIndex;
     } else {
       rv = protofunc.call(this, reminders, ...args);

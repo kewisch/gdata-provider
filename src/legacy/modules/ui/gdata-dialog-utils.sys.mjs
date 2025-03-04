@@ -2,22 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var EXPORTED_SYMBOLS = ["CONFERENCE_ROW_FRAGMENT", "initConferenceRow"];
+var lazy = {};
 
-ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm").recordModule(
-  "ui/gdata-dialog-utils.jsm"
-);
-
-ChromeUtils.defineModuleGetter(
-  this,
-  "cal",
-  "resource:///modules/calendar/calUtils.jsm"
-); /* global cal */
+ChromeUtils.defineESModuleGetters(lazy, {
+  cal: "resource:///modules/calendar/calUtils.sys.mjs" /* global cal */
+});
 
 const CODE_TYPES = ["meetingCode", "accessCode", "passcode", "password", "pin"];
 const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
 
-const CONFERENCE_ROW_FRAGMENT = `
+export const CONFERENCE_ROW_FRAGMENT = `
   <html:tr provider="${GDATA_CALENDAR_TYPE}" id="gdata-conference-row">
     <html:th>
       <label id="gdata-conf-label" value="Conference:" control="gdata-conf-info-cell"/>
@@ -100,11 +94,11 @@ function showOrHideItemURL(url) {
   }
   // Only show if its either an internal protocol handler, or its external
   // and there is an external app for the scheme
-  handler = cal.wrapInstance(handler, Ci.nsIExternalProtocolHandler);
+  handler = lazy.cal.wrapInstance(handler, Ci.nsIExternalProtocolHandler);
   return !handler || handler.externalAppExistsForScheme(uri.scheme);
 }
 
-function initConferenceRow(document, messenger, item, calendar) {
+export function initConferenceRow(document, messenger, item, calendar) {
   function noconference() {
     document.getElementById("gdata-conference-row").style.display = "none";
     return null;

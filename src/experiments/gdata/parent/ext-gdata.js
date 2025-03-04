@@ -33,12 +33,14 @@ this.gdata = class extends ExtensionAPI {
       Ci.amIAddonManagerStartup
     );
     const manifestURI = Services.io.newURI("manifest.json", null, this.extension.rootURI);
+    const version = this.extension.temporarilyInstalled ? new Date().getTime() : this.extension.version;
 
     this.chromeHandle = aomStartup.registerChrome(manifestURI, [
       ["content", "gdata-provider", "legacy/content/"],
     ]);
 
-    let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
+    let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1");
+    gdataUI.setExtensionVersion(version);
     gdataUI.register();
   }
 
@@ -47,7 +49,7 @@ this.gdata = class extends ExtensionAPI {
       return;
     }
 
-    let gdataUI = ChromeUtils.import("resource://gdata-provider/legacy/modules/gdataUI.jsm");
+    let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1");
     gdataUI.unregister();
 
     Services.io
@@ -57,10 +59,6 @@ this.gdata = class extends ExtensionAPI {
 
     this.chromeHandle.destruct();
     this.chromeHandle = null;
-
-    // if (this.extension.addonData.temporarilyInstalled) {
-    Services.obs.notifyObservers(null, "startupcache-invalidate");
-    // }
   }
 
   getAPI(_context) {

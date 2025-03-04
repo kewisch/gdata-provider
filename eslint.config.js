@@ -413,7 +413,7 @@ export default [
     }
   },
   {
-    files: ["src/experiments/**/*.js"],
+    files: ["src/experiments/**/*.js", "src/legacy/**/*.mjs"],
     languageOptions: {
       globals: {
         Cr: true,
@@ -421,6 +421,8 @@ export default [
         Cu: true,
         Cc: true,
         ChromeUtils: true,
+        Services: true,
+        console: true,
       }
     }
   },
