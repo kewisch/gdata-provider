@@ -1,0 +1,221 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  color-scheme: light dark;
+  background-color: light-dark(#f4f4f4, #151516);
+  color: light-dark(#666, #f4f4f5);
+}
+
+body {
+  font-family: sans-serif;
+  line-height: 1.6;
+  width: 960px;
+  margin: 0 auto;
+  padding: 20px;
+  font-size: 18px;
+}
+
+body.platform-mac .platform-default,
+body:not(.platform-mac) .platform-mac {
+  display: none;
+}
+
+h1,
+h2 {
+  color: light-dark(#333, #fff);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2em;
+  padding: 2em;
+  background: light-dark(#fff, #27272a);
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.section {
+  justify-content: space-between;
+  align-items: start;
+  width: 100%;
+  margin-bottom: 2em;
+  text-align: left;
+  padding: 1ex 0 0;
+}
+.section:not(:last-child) {
+  border-bottom: 1px solid #c4c4c4;
+  padding: 1ex 0;
+}
+.section.header,
+.section.footer {
+  flex-direction: column;
+  z-index: 1;
+  position: relative;
+}
+.section.header:before {
+  background-image: url("../icon.png");
+  background-repeat: no-repeat;
+  background-position: top left;
+  background-size: 100%;
+  opacity: 0.2;
+  z-index: -1;
+  content: "";
+  position: absolute;
+  top: -6.3em;
+  left: -11.2em;
+  width: 38%;
+  height: 200%;
+}
+
+.section.image-right img {
+  float: right;
+  margin: 0 0 15px 15px;
+}
+.section.image-left img {
+  float: left;
+  margin: 0 15px 15px 0;
+}
+.section ul {
+  padding-inline-start: 2em;
+}
+
+.section.image-left ul {
+  padding-inline-start: calc(50% + 2em);
+}
+
+.clear {
+  clear: both;
+}
+
+.section > img {
+  width: 50%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
+}
+
+.section p.warning {
+  border: 1px solid #eed936;
+  background: #fff7b8;
+  border-radius: 3px;
+  padding-inline-start: 90px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  position: relative;
+}
+.section p.warning::before {
+  content: "⚠️";
+  font-size: 50px;
+  display: block;
+  position: absolute;
+  top: calc(50% - 0.5em);
+  left: 20px;
+  line-height: 1;
+}
+
+.section p {
+  margin-bottom: 1em;
+  color: light-dark(#666, #ddd);
+}
+.section p.donatebutton {
+  text-align: center;
+  width: 100%;
+  margin-top: 3ex;
+}
+.section p.donatebutton .button {
+  padding: 20px;
+  border-radius: 30px;
+}
+.section p.donatebutton .button .icon-box {
+  background-color: light-dark(#fff, #27272a);
+  padding: 7px 5px 3px;
+  border-radius: 20px;
+}
+
+.section form {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: 0 auto 1em;
+}
+
+.section input[type="text"] {
+  padding: 10px;
+  margin-bottom: 1em;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.section input[type="radio"] {
+  width: 16px;
+  height: 16px;
+}
+
+.section input[type="submit"],
+.section .button {
+  padding: 10px;
+  color: #fff;
+  background-color: #0a84ff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    0.3s background-color,
+    0.3s box-shadow,
+    0.3s margin;
+}
+
+.section .button:hover {
+  box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.section .button img {
+  vertical-align: middle;
+}
+
+.section .button:active {
+  box-shadow: inset 5px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+
+.prefernces {
+  list-style-type: none;
+}
+
+.preferences li {
+  text-indent: -1em;
+}
+
+.preferences li label {
+  font-weight: bold;
+}
+
+.beta {
+  font-size: 28px;
+  font-weight: bold;
+  color: #fff;
+}
+.beta {
+  position: fixed;
+  top: 0;
+  right: 0;
+  line-height: 1.8;
+  padding-inline: 1.5lh;
+  border-image: conic-gradient(#0008 0 0) 51%/0;
+  transform: translate(calc((1 - cos(45deg))*100%), -100%) rotate(45deg);
+  transform-origin: 0% 100%;
+  background-color: #c50a07;
+}

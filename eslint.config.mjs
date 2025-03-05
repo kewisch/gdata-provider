@@ -405,6 +405,7 @@ export default [
       "src/legacy/content/**/*.js",
       "src/options/**/*.js",
       "src/background.js",
+      "src/onboarding/**/*.js",
     ],
     languageOptions: {
       globals: {

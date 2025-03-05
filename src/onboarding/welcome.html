@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
+   - Portions Copyright (C) Philipp Kewisch -->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title data-l10n-id="extensionName"></title>
+    <script defer src="onboarding.js"></script>
+</head>
+<body>
+    <div class="content">
+        <div class="section header">
+          <h1 data-l10n-id="extensionName"></h1>
+          <p data-l10n-id="onboarding.welcome.p1"></p>
+          <p data-l10n-id="onboarding.welcome.p2"></p>
+          <p>
+            <span data-l10n-id="onboarding.welcome.p3.prelink"></span>
+            <a href="#preferences" data-l10n-id="onboarding.welcome.p3.linktext"></a>
+            <span data-l10n-id="onboarding.welcome.p3.postlink"></span>
+          </p>
+        </div>
+        <div class="section image-right">
+          <h2 data-l10n-id="onboarding.getstarted.title"></h2>
+          <img src="images/new-calendar.png" data-l10n-attrs-alt="onboarding.getstarted.imgalt">
+          <p data-l10n-id="onboarding.getstarted.p1"></p>
+        </div>
+        <div class="section image-left">
+          <h2 data-l10n-id="onboarding.providertype.title"></h2>
+          <img src="images/provider-type.png" data-l10n-attrs-alt="onboarding.providertype.imgalt">
+          <p data-l10n-id="onboarding.providertype.p1"></p>
+          <p data-l10n-id="onboarding.providertype.p2"></p>
+        </div>
+        <div class="section image-right">
+          <h2 data-l10n-id="onboarding.selectcalendars.title"></h2>
+          <img src="images/subscribe-calendars.png" data-l10n-attrs-alt="onboarding.selectcalendars.imgalt">
+          <p data-l10n-id="onboarding.selectcalendars.p1"></p>
+          <p data-l10n-id="onboarding.selectcalendars.p2"></p>
+        </div>
+        <div class="section image-left">
+          <h2 data-l10n-id="onboarding.allset.title"></h2>
+          <img src="images/task-dialog.png" data-l10n-attrs-alt="onboarding.allset.imgalt">
+          <p data-l10n-id="onboarding.allset.p1"></p>
+          <p data-l10n-id="onboarding.allset.p2"></p>
+        </div>
+        <div class="section" id="preferences">
+          <h2 data-l10n-id="onboarding.scheduling.title"></h2>
+          <p data-l10n-id="onboarding.scheduling.p1"></p>
+          <p>
+            <ul class="preferences">
+              <li>
+                <input type="checkbox" id="enableEmailInvitations"> <label for="enableEmailInvitations" data-l10n-id="settings.enableEmailInvitations"></label>:
+                <span data-l10n-id="onboarding.scheduling.enableEmailInvitations"></span>
+              </li>
+              <li>
+                <input type="checkbox" id="sendEventNotifications"> <label for="sendEventNotifications" data-l10n-id="settings.sendEventNotifications"></label>:
+                <span data-l10n-id="onboarding.scheduling.sendEventNotifications"></span>
+              </li>
+              <li>
+                <input type="checkbox" id="enableAttendees"> <label for="enableAttendees" data-l10n-id="settings.enableAttendees"></label>:
+                <span data-l10n-id="onboarding.scheduling.enableAttendees"></span>
+              </li>
+            </ul>
+          </p>
+          <p data-l10n-id="onboarding.scheduling.p2"></p>
+          <p>
+            <span data-l10n-id="onboarding.scheduling.p3.prelink"></span>
+            <a id="openOptions" href="#" data-l10n-id="onboarding.scheduling.p3.linktext"></a>
+            <span data-l10n-id="onboarding.scheduling.p3.postlink"></span>
+          </p>
+        </div>
+        <div class="section image-right">
+          <h2 data-l10n-id="onboarding.weblate.title"></h2>
+          <img src="images/weblate.png" data-l10n-attrs-alt="onboarding.weblate.imgalt">
+          <p data-l10n-id="onboarding.weblate.p1">
+          </p>
+          <p>
+            <span data-l10n-id="onboarding.weblate.p2.prelink"></span>
+            <a href="https://hosted.weblate.org/engage/provider-for-google-calendar/" target="_blank" data-l10n-id="onboarding.weblate.p2.linktext"></a>
+            <span data-l10n-id="onboarding.weblate.p2.postlink"></span>
+          </p>
+        </div>
+        <div class="section footer">
+          <p>
+            <span data-l10n-id="onboarding.footer.p1.prelink"></span>
+            <a href="https://github.com/kewisch/gdata-provider" target="_blank" data-l10n-id="onboarding.footer.p1.linktext"></a>
+            <span data-l10n-id="onboarding.footer.p1.postlink"></span>
+          </p>
+          <p data-l10n-id="onboarding.footer.p2"></p>
+          <p class="donatebutton">
+            <a class="button" href="https://paypal.me/kewisch/AMOUNT" target="_blank"><span data-l10n-id="onboarding.footer.donate.text"></span> <span class="icon-box">❤️</span></a>
+          </p>
+        </div>
+    </div>
+</body>
+</html>
+
