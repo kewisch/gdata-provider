@@ -65,6 +65,12 @@ export async function initMessageListener() {
   });
 }
 
+browser.runtime.onInstalled.addListener(({ reason }) => {
+  if (reason == "install") {
+    browser.tabs.create({ url: "/onboarding/beta-welcome.html" });
+  }
+});
+
 /* istanbul ignore next */
 (async () => {
   if (await isTesting()) {

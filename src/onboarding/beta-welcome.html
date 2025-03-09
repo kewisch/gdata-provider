@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
+   - Portions Copyright (C) Philipp Kewisch -->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Provider for Google Calendar</title>
+</head>
+<body>
+   <div class="beta">beta</div>
+    <div class="content">
+        <div class="section header">
+          <h1>Provider for Google Calendar</h1>
+          <p>
+            Welcome to the beta version of the Provider for Google Calendar. Thank you for helping
+            me move across the finish line, and helping to resolve any remaining issues before they
+            affect so many other people.
+          </p>
+        </div>
+        <div class="section image-right">
+          <h2>Get started: Re-subscribe to your calendars</h2>
+          <img src="images/new-calendar.png">
+          <p>
+            The final version will have a migration step to take care of this, but for now you'll
+            need to re-subscribe to all your Google Calendars. The internal calendar type identifier
+            needs to be different in the new version, so your other calendars will appear as if they
+            are not supported.
+          </p>
+        </div>
+        <div class="section">
+          <h2>Testing Plan</h2>
+          <p>
+            A good starting point from there is the testing plan originally written for the legacy version of
+            this add-on. It roughly contains all the things you can do with this add-on. The new
+            version should behave roughly the same, though there may be some tweaks on the UX. There
+            are certain aspects that should actually work better, such as dismissing alarms on
+            meetings.
+          </p>
+          <p>
+            You can find the testing plan <a href="https://github.com/kewisch/gdata-provider/blob/legacy/TESTING.md">on the github repository</a>.
+            Before you start, <a href="https://github.com/kewisch/gdata-provider/wiki#enabling-debugging">enable debugging</a>.
+          </p>
+        </div>
+        <div class="section image-right">
+          <h2>Event dialog: more changes to come</h2>
+          <img src="images/task-dialog.png">
+          <p>
+            Thunderbird doesn't have a built-in calendar API as of current. This add-on will be the
+            start for changing that. Together with the add-on rewrite, I've also written a
+            <a href="https://github.com/thunderbird/webext-experiments/tree/main/calendar/">calendar experiment API</a>
+            that other add-on developers can make use of. It will eventually be part of Thunderbird
+            itself.
+          </p>
+          <p>
+            One downside of the Web/MailExtensions API is that it isn't quite as flexible in the
+            user interface. There should only be a few defined entry points. Customizing the event
+            dialog to wrap an API around it has proven to be difficult as an experiment, and should
+            likely be handled in the application itself.
+          </p>
+          <p>
+            So for now, the event dialog is still fully customized using the legacy code. There
+            shouldn't be an impact to you as a user, but if you notice that the event dialog is not
+            working it may be related to this.
+          </p>
+          <p>
+            Once I have mockups or implementation of the new event dialog design, I'll keep you
+            updated and make sure you have a chance to test and provide feedback.
+          </p>
+        </div>
+        <div class="section">
+          <h2>Providing Feedback</h2>
+          <p>
+            Thank you for being a beta tester! There are a few ways to provide feedback:
+            <ul>
+              <li>Join the discussion in the <a href="https://github.com/kewisch/gdata-provider/discussions/categories/beta" target="_blank">beta discussion category</a></li>
+              <li>If you are sure there is a bug, <a href="https://github.com/kewisch/gdata-provider/issues" target="_blank">file an issue</a>
+              <li>If you know how to fix it, <a href="https://github.com/kewisch/gdata-provider/pulls" target="_blank">send a pull request</a> to the <code>main</code> branch</li>
+            </ul>
+          </p>
+        </div>
+        <div class="section footer">
+          <p>
+            I'm looking forward to getting the new version out of the door, thanks to your help.
+            Like what you see so far? Click the button to show your appreciation.
+          </p>
+          <p class="donatebutton">
+            <a class="button" href="https://paypal.me/kewisch/15eur" target="_blank">Send me a token of appreciation <span class="icon-box">❤️</span></a>
+          </p>
+        </div>
+    </div>
+</body>
+</html>
+
