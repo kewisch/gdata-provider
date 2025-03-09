@@ -1,7 +1,6 @@
 {
   "name": "gdata-provider",
   "description": "Provider for Google Calendar",
-  "version": "128.0.0",
   "private": true,
   "type": "module",
   "author": "Philipp Kewisch <mozilla@kewis.ch>",
@@ -40,8 +39,6 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "build": "rm -f dist/gdata-provider.xpi; (cd src && zip -9r ../dist/gdata-provider.xpi `git ls-files | grep -v 'package\\(-lock\\)\\?.json' | grep -v eslintrc`)",
     "clean": "rm -f dist/gdata-provider.xpi",
-    "bump": "bumper() { npm version --no-git-tag-version ${*:-patch} ; sed 's/^  \"version\": \".*\"/  \"version\": \"'`jq -r .version package.json`'\"/' src/manifest.json > src/manifest.json~  && mv src/manifest.json~ src/manifest.json; }; bumper",
-    "tag": "git tag v$(jq -r '.version' src/manifest.json)",
     "lint": "commitlint -f origin/main && eslint"
   },
   "devDependencies": {
