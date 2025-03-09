@@ -3,6 +3,16 @@
     "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}": {
       "updates": [
         {
+          "version": "139.9.1",
+          "update_link": "https://github.com/kewisch/gdata-provider/releases/download/v139.9.1/gdata-provider.xpi",
+          "applications": {
+            "gecko": {
+              "strict_min_version": "128.0",
+              "strict_max_version": "138.*"
+            }
+          }
+        },
+        {
           "version": "139.9.0",
           "update_link": "https://github.com/kewisch/gdata-provider/releases/download/v139.9.0/gdata-provider.xpi",
           "applications": {
