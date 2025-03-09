@@ -6,7 +6,7 @@ import fs from "fs";
 import { jest } from "@jest/globals";
 import createMessenger from "./helpers/webext-api.js";
 import { main as creationMain } from "../../src/content/calendar-creation.js";
-import { initMessageListener } from "../../src/background/index.js";
+import { initListeners } from "../../src/background/index.js";
 import sessions from "../../src/background/session.js";
 
 const html = fs.readFileSync(
@@ -22,7 +22,7 @@ beforeEach(async () => {
   jest.spyOn(global.console, "log").mockImplementation(() => {});
   document.documentElement.innerHTML = html;
   global.messenger = global.browser = createMessenger();
-  await initMessageListener();
+  await initListeners();
 });
 
 test("main", async () => {

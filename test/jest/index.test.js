@@ -1,6 +1,6 @@
 import { jest } from "@jest/globals";
 import createMessenger from "./helpers/webext-api.js";
-import { migrateLegacyPrefs, initMessageListener } from "../../src/background/index";
+import { migrateLegacyPrefs, initListeners } from "../../src/background/index";
 
 beforeEach(() => {
   global.messenger = createMessenger();
@@ -34,7 +34,7 @@ test("migrate no prefs", async () => {
 
 test("message listener", async () => {
   // Most covered in the content tests
-  await initMessageListener();
+  await initListeners();
 
   expect(await messenger.runtime.sendMessage({ something: "else" })).toBe(null);
 });

@@ -189,6 +189,7 @@ export default function createMessenger() {
     runtime: {
       id: "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
       onMessage: new WebExtListener(),
+      onInstalled: new WebExtListener(),
       sendMessage: jest.fn(message => {
         return messenger.runtime.onMessage.mockResponse(message, {}, null);
       }),

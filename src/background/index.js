@@ -30,7 +30,7 @@ async function installDebugCalendar() {
   }
 }
 
-export async function initMessageListener() {
+export async function initListeners() {
   messenger.runtime.onMessage.addListener(async (message, sender) => {
     if (message.action == "getSessions") {
       return sessions.ids;
@@ -63,13 +63,13 @@ export async function initMessageListener() {
     }
     return null;
   });
-}
 
-browser.runtime.onInstalled.addListener(({ reason }) => {
-  if (reason == "install") {
-    browser.tabs.create({ url: "/onboarding/beta-welcome.html" });
-  }
-});
+  messenger.runtime.onInstalled.addListener(({ reason }) => {
+    if (reason == "install") {
+      browser.tabs.create({ url: "/onboarding/beta-welcome.html" });
+    }
+  });
+}
 
 /* istanbul ignore next */
 (async () => {
@@ -80,7 +80,7 @@ browser.runtime.onInstalled.addListener(({ reason }) => {
   // Do this early to augment ICAL.js TimezoneService
   TimezoneService.init();
 
-  initMessageListener();
+  initListeners();
   calGoogleCalendar.initListeners();
   await migrateLegacyPrefs();
   await checkCalendarMigration();
