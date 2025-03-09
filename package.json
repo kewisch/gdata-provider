@@ -42,14 +42,14 @@
     "lint": "commitlint -f origin/main && eslint"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.6.1",
-    "@commitlint/config-conventional": "^19.6.0",
-    "@stylistic/eslint-plugin": "^2.13.0",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@stylistic/eslint-plugin": "^4.2.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "conventional-changelog": "^6.0.0",
     "conventional-changelog-cli": "^5.0.0",
-    "eslint": "^9.18.0",
+    "eslint": "^9.22.0",
     "eslint-plugin-jest": "^28.11.0",
     "ical.js": "^2.1.0",
     "jest": "^29.7.0",
