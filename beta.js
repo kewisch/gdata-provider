@@ -1,0 +1,15 @@
+
+async function main() {
+  let res = await fetch("./update.json");
+  let json = await res.json();
+
+  let update = json.addons["{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}"].updates?.[0];
+
+  document.getElementById("version").textContent = update.version;
+  document.getElementById("min-version").textContent = update.applications.gecko.strict_min_version;
+  document.getElementById("max-version").textContent = update.applications.gecko.strict_max_version;
+
+  document.getElementById("download-btn").href = update.update_link;
+}
+
+main();
