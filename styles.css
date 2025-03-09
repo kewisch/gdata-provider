@@ -188,6 +188,18 @@ h2 {
     0.3s margin;
 }
 
+#download-warning {
+  transition: color 0.4s ease-in-out, text-shadow 0.2s ease-in-out;
+}
+#download-warning.active {
+  color: #DD0000;
+  text-shadow:
+    -.3px -.3px 0 #DD0000,
+    .3px -.3px 0 #DD0000,
+    -.3px .3px 0 #DD0000,
+    .3px .3px 0 #DD0000;
+}
+
 #download-btn {
   background-color: #4CAF50;
   color: white;

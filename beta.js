@@ -12,4 +12,24 @@ async function main() {
   document.getElementById("download-btn").href = update.update_link;
 }
 
+async function download() {
+  if (!navigator.userAgent.toLowerCase().includes('firefox')) {
+   document.getElementById("download-warning").remove();
+    return;
+  }
+
+  document.getElementById("download-btn").addEventListener("click", (event) => {
+    if (event.button == 0) {
+      event.preventDefault();
+      document.getElementById("download-warning").classList.add("active");
+    }
+  });
+  document.getElementById("download-warning").addEventListener("transitionend", (event) => {
+    setTimeout(() => {
+      document.getElementById("download-warning").classList.remove("active");
+    }, 500);
+  });
+}
+
 main();
+download();
