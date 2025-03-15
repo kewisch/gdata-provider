@@ -196,5 +196,128 @@
   },
   "taskListsHeader": {
     "message": "Aufgabenlisten"
+  },
+  "onboarding.welcome.p2": {
+    "message": "Du bist jetzt ein Teil dieser Reise. Deine Unterstützung bedeutet mir viel, und ich kann mir eine Zukunft ohne dieses Add-on nicht vorstellen."
+  },
+  "onboarding.welcome.p1": {
+    "message": "Der Provider für Google Kalender war mein Einstieg in die Open Source Welt. Im Jahr 2006 gab es keine einfache Möglichkeit, Thunderbird mit Google Kalender zu verbinden. Aus Neugier und dem Wunsch zu helfen, setzte ich mich mit Googles APIs auseinander und fand eine Lösung, die es unzähligen Thunderbird-Nutzern ermöglichte, auf Google Kalender zuzugreifen. Diese Erfahrung gab mir nicht nur eine klare Aufgabe, sondern ebnete auch den Weg für eine berufliche Laufbahn, in der Open Source heute ein fester Bestandteil meines Alltags ist."
+  },
+  "onboarding.welcome.p3.postlink": {
+    "message": "an. So kannst du die richtige Entscheidung treffen, wie Teilnehmer in Terminen angezeigt werden und wie Einladungen gehandhabt werden."
+  },
+  "onboarding.welcome.p3.prelink": {
+    "message": " Bevor du diese Seite überspringst, sieh dir bitte den"
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "Auf dem nächsten Bildschirm wählst du die Kalender und Aufgabenlisten aus, die du abonnieren möchtest. Bereits abonnierte Kalender werden als hinzugefügt angezeigt. Zum Abbestellen verwende das Kontextmenü in der Kalenderliste von Thunderbird, nicht das Dialogfeld „Neuer Kalender“."
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "Die Seitenleiste in der Kalenderansicht von Thunderbird mit der Schaltfläche „Neuer Kalender“ unten"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Das Dialogfeld „Neuer Kalender“ mit der Option zur Auswahl von Google Kalender"
+  },
+  "onboarding.providertype.p2": {
+    "message": "Gib auf dem nächsten Bildschirm deine E-Mail-Adresse ein. Auch wenn du den Kalender einer anderen Person abonnierst, verwende deine eigene E-Mail. Wenn du den Kalender bereits auf der Google Kalendar-Website abonniert hast, wird er in deinem Konto angezeigt."
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Als Nächstes wirst du aufgefordert, dich anzumelden. Das Anmeldefenster zeigt die E-Mail-Adresse an, die verwendet werden soll. Achte darauf, dass du das richtige Konto auswählst. Falls du später erneut zur Anmeldung aufgefordert wirst, stelle sicher, dass du das angegebene Konto verwendest."
+  },
+  "onboarding.providertype.p1": {
+    "message": "Du siehst drei Optionen: „Auf meinem Computer“, „Im Netzwerk“ und „Provider für Google Kalender“. Obwohl Google Kalender technisch gesehen im Netzwerk ist, wähle die spezifische Option für den Provider."
+  },
+  "onboarding.footer.p1.prelink": {
+    "message": "Wenn du Fragen hast, melde dich über die"
+  },
+  "onboarding.allset.p1": {
+    "message": "Das war’s. Die erste Synchronisierung kann einige Zeit dauern, besonders wenn du viele Termine hast. Während dieses Vorgangs kann Thunderbird vorübergehend nicht reagieren, da es die Ereignisse verarbeitet. Lass es bis zu einer halben Stunde laufen, bevor du von einem Problem ausgehst. In den meisten Fällen ist die Synchronisierung jedoch innerhalb einer Minute abgeschlossen."
+  },
+  "onboarding.scheduling.p2": {
+    "message": "Wenn die E-Mail-Planung aktiviert ist und etwas schiefläuft, kann Thunderbird statt der korrekten Annahme eines bestehenden Termins ein neues Ereignis erstellen. Bei großen Meetings, wie einer unternehmensweiten Veranstaltung, könnte es dann so aussehen, als würdest du alle zu einem doppelten Termin einladen."
+  },
+  "onboarding.scheduling.p3.linktext": {
+    "message": "Add-on-Optionen"
+  },
+  "onboarding.welcome.p3.linktext": {
+    "message": "Abschnitt zu den Terminplanungsoptionen"
+  },
+  "onboarding.getstarted.title": {
+    "message": "Erste Schritte"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Nicht sicher, wo du anfangen sollst? Zuerst musst du deine Kalender abonnieren. Wechsle zum Kalender-Tab in Thunderbird und klicke unten in der Seitenleiste auf „Neuer Kalender“."
+  },
+  "onboarding.providertype.title": {
+    "message": "Im Netzwerk?"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Wähle deine Kalender"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Eine Liste von Kalendern mit Ankreuzfeld an der Seite"
+  },
+  "onboarding.allset.title": {
+    "message": "Das war's!"
+  },
+  "onboarding.allset.imgalt": {
+    "message": "Das Dialogfeld „Neue Aufgabe“ mit nur den relevanten Feldern"
+  },
+  "onboarding.scheduling.title": {
+    "message": "Planungsprobleme"
+  },
+  "onboarding.scheduling.sendEventNotifications": {
+    "message": "Wenn aktiviert, sendet Google Benachrichtigungen, wenn du einen Termin änderst. Ist diese Option deaktiviert, verhält es sich so, als würdest du jedes Mal auf „Nicht senden“ klicken, wenn du ein geplantes Ereignis aktualisierst."
+  },
+  "onboarding.scheduling.p3.prelink": {
+    "message": "Wenn du diese Einstellungen später ändern möchtest, gehe in die"
+  },
+  "onboarding.weblate.title": {
+    "message": "Diese Inhalte in deiner Sprache?"
+  },
+  "onboarding.weblate.p2.linktext": {
+    "message": "Hilf mit bei den Übersetzungen"
+  },
+  "onboarding.weblate.p2.postlink": {
+    "message": " ! Kannst du deine Sprache auf 100% bringen?"
+  },
+  "onboarding.weblate.p2.prelink": {
+    "message": " "
+  },
+  "onboarding.footer.p1.linktext": {
+    "message": "GitHub Seite des Add-ons"
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Zeige deine Wertschätzung"
+  },
+  "onboarding.footer.p1.postlink": {
+    "message": ". Dort kannst du auch zur Weiterentwicklung zukünftiger Versionen beitragen."
+  },
+  "onboarding.scheduling.enableAttendees": {
+    "message": "Wenn du Termine mit Teilnehmern hast, solltest du diese Option aktiviert lassen. Andernfalls werden bei Änderungen an einem Termin alle Teilnehmer entfernt. Falls du diese Einstellung änderst, vergiss nicht, deine Kalender neu zu abonnieren."
+  },
+  "onboarding.donate.amount": {
+    "message": "15eur"
+  },
+  "onboarding.footer.p2": {
+    "message": "Danke, dass du bis zum Ende gelesen hast! Wenn du es bis hierher geschafft hast, hoffe ich, dass du genauso begeistert von diesem Add-on bist wie ich. Probier es erst einmal aus, und wenn es dich überzeugt, freue ich mich über deine Unterstützung."
+  },
+  "onboarding.allset.p2": {
+    "message": "Was kommt als Nächstes? Jetzt kannst du Termine planen. Ein Vorteil des Provider für Google Kalender gegenüber der integrierten CalDAV-Verbindung ist die zusätzliche Anpassung im Termindialog. Du kannst Standard-Erinnerungen festlegen und die voreingestellten Datenschutzoptionen anpassen. Außerdem kannst du Google Aufgaben direkt in Thunderbird verwalten."
+  },
+  "onboarding.scheduling.p1": {
+    "message": "Die Terminplanung zwischen Thunderbird und Google kann herausfordernd sein. Thunderbird gibt nicht immer klar an, ob ein Termin eine angenommene Einladung oder ein neu erstelltes Ereignis ist. Hier sind ein paar Einstellungen, die du beachten solltest:"
+  },
+  "onboarding.scheduling.p3.postlink": {
+    "message": "dieses Add-ons."
+  },
+  "onboarding.scheduling.enableEmailInvitations": {
+    "message": "Hiermit kannst du Einladungen über die Leiste oberhalb der E-Mail-Einladung annehmen. Das ist zwar praktisch, aber es ist meist besser, diese Option deaktiviert zu lassen und stattdessen die Einstellung „Termine automatisch zu meinem Kalender hinzufügen“ in den Google Kalender Webeinstellungen zu verwenden."
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Screenshot von Weblate, bei dem ein Text von Englisch auf Deutsch übersetzt wird"
+  },
+  "onboarding.weblate.p1": {
+    "message": "Der Provider für Google Kalender nutzt Weblate für Übersetzungen, sodass du ganz einfach Texte in deine Sprache übersetzen kannst. Sprichst du eine andere Sprache und möchtest mithelfen?"
   }
 }
