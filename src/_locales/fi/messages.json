@@ -136,5 +136,59 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Lähetä sähköposti-ilmoituksia tapahtuman vieraille"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Keskittymisaika"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Puhelin"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Tunnusluku"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Poissa"
+  },
+  "settings.forcePlainText": {
+    "message": "Pakota käyttämään tavallista tekstiä tapahtumakuvauksissa"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Ota sähköpostin aikataulutus käyttöön"
+  },
+  "settings.enableAttendees": {
+    "message": "Synkronoi tapahtuman osallistujat"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konferenssi:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Liity videoneuvottelun kautta"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Lisää tietoa konferenssista"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Kokouskoodi"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Käyttöoikeuskoodi"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Salasana"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "Monet käyttäjät kirjautuvat sisään juuri nyt, Google on ilmoittanut, että kirjautumiskiintiö on ylitetty. Yritä myöhemmin uudelleen."
+  },
+  "settings.warning": {
+    "message": "Näiden asetusten avulla voit käyttää sähköpostin aikataulutusta Google-kalenterin kautta. On myös raportoitu, että sähköpostiviestejä on lähetetty ylimääräisiä ilmoituksia. Testaa ensin pienellä kokouksella."
   }
 }
