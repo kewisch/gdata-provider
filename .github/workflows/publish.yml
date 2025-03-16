@@ -102,12 +102,13 @@ jobs:
             updateManifest.addons[geckoId].updates.unshift(newUpdate);
             fs.writeFileSync("gh_pages/update.json", JSON.stringify(updateManifest, null, 2), "utf8");
 
-      - name: "All: Attach release assets"
+      - name: "All: Attach release assets and notes"
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
-          gh release upload ${{ github.event.release.tag_name }} \
-            dist/gdata-provider.xpi
+          gh release upload $TAG_NAME dist/gdata-provider.xpi
+          npx conventional-changelog -p angular -r 2 | gh release edit $TAG_NAME --notes-file -
 
       - name: "Beta: Push back gh_pages"
         if: ${{ github.event.release.prerelease }}

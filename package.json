@@ -20,7 +20,7 @@
     "build": "rm -f dist/gdata-provider.xpi; (cd src && zip -9r ../dist/gdata-provider.xpi `git ls-files`)",
     "clean": "rm -f dist/gdata-provider.xpi",
     "lint": "commitlint -g commitlint.config.js -f origin/legacy && eslint",
-    "changelog": "conventional-changelog -p angular -r 2"
+    "changelog": "conventional-changelog -p angular"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
