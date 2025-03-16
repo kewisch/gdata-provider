@@ -64,8 +64,8 @@ jobs:
           source: dist/gdata-provider.xpi
           channel: listed
           apiUrlPrefix: "https://addons.thunderbird.net/api/v4"
-          apiKey: ${{ secrets.AMO_SIGN_KEY }}
-          apiSecret: ${{ secrets.AMO_SIGN_SECRET }}
+          apiKey: ${{ secrets.ATN_SIGN_KEY }}
+          apiSecret: ${{ secrets.ATN_SIGN_SECRET }}
 
       - name: "Beta: Checkout gh_pages"
         if: ${{ github.event.release.prerelease }}
