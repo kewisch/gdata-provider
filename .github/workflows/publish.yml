@@ -56,16 +56,16 @@ jobs:
       - name: "All: Build"
         run: npm run build
 
-      # - name: "Release: web-ext sign"
-      #   if: ${{ ! github.event.release.prerelease }}
-      #   uses: kewisch/action-web-ext@v1
-      #   with:
-      #     cmd: sign
-      #     source: dist/gdata-provider.xpi
-      #     channel: listed
-      #     apiUrlPrefix: "https://addons.thunderbird.net/api/v4"
-      #     apiKey: ${{ secrets.AMO_SIGN_KEY }}
-      #     apiSecret: ${{ secrets.AMO_SIGN_SECRET }}
+      - name: "Release: web-ext sign"
+        if: ${{ ! github.event.release.prerelease }}
+        uses: kewisch/action-web-ext@v1
+        with:
+          cmd: sign
+          source: dist/gdata-provider.xpi
+          channel: listed
+          apiUrlPrefix: "https://addons.thunderbird.net/api/v4"
+          apiKey: ${{ secrets.ATN_SIGN_KEY }}
+          apiSecret: ${{ secrets.ATN_SIGN_SECRET }}
 
       - name: "Beta: Checkout gh_pages"
         if: ${{ github.event.release.prerelease }}
@@ -102,12 +102,15 @@ jobs:
             updateManifest.addons[geckoId].updates.unshift(newUpdate);
             fs.writeFileSync("gh_pages/update.json", JSON.stringify(updateManifest, null, 2), "utf8");
 
-      - name: "All: Attach release assets"
+      - name: "All: Attach release assets and notes"
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
-          gh release upload ${{ github.event.release.tag_name }} \
-            dist/gdata-provider.xpi
+          gh release upload $TAG_NAME dist/gdata-provider.xpi
+          jq -r '"Initial compatibility with Thunderbird " + .applications.gecko.strict_min_version + "–" + .applications.gecko.strict_max_version' src/manifest.json > dist/CHANGELOG.md
+          npx conventional-changelog -p angular -r 2 | tail -n +7 >> dist/CHANGELOG.md
+          gh release edit $TAG_NAME --notes-file dist/CHANGELOG.md
 
       - name: "Beta: Push back gh_pages"
         if: ${{ github.event.release.prerelease }}
