@@ -16,7 +16,7 @@ browser.runtime.onInstalled.addListener(({ reason, previousVersion }) => {
   let versionParts = previousVersion?.split(".") || [];
   let majorMinorVersion = parseInt(versionParts[0] + versionParts[1], 10);
 
-  if (reason == "update" && majorMinorVersion < 1281) {
+  if (reason == "update" && majorMinorVersion < 1285) {
     browser.tabs.create({ url: "/onboarding/changes-128.html" });
   } else if (reason == "install") {
     browser.tabs.create({ url: "/onboarding/welcome.html" });
