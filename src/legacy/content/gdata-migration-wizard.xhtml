@@ -22,8 +22,16 @@
   </dialog>
   <script src="chrome://calendar/content/calendar-ui-utils.js"/>
   <script><![CDATA[
-    var version = new Date().getTime();
-    var { gdataInitUI } = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/ui/gdata-migration.sys.mjs?version=" + version);
-    gdataInitUI(window, window.document, version);
+    (function() {
+      var { loadGdataUIModule } = ChromeUtils.importESModule(
+        "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1"
+      );
+
+      loadGdataUIModule(
+        "resource://gdata-provider/legacy/modules/ui/gdata-migration.sys.mjs",
+        window,
+        true
+      );
+    })();
   ]]></script>
 </window>

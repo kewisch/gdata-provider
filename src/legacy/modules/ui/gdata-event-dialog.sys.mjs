@@ -78,11 +78,11 @@ export function gdataInitUI(window, document, version) {
       frame.contentDocument.location == ITEM_IFRAME_URL &&
       frame.contentDocument.readyState == "complete"
     ) {
-      frameScript.gdataInitUI(frame.contentWindow, frame.contentDocument);
+      frameScript.gdataInitUI(frame.contentWindow, frame.contentDocument, version);
     } else {
       let loader = function() {
         if (frame.contentDocument.location == ITEM_IFRAME_URL) {
-          frameScript.gdataInitUI(frame.contentWindow, frame.contentDocument);
+          frameScript.gdataInitUI(frame.contentWindow, frame.contentDocument, version);
           frame.removeEventListener("load", loader, { capture: true });
         }
       };

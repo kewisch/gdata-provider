@@ -39,6 +39,15 @@ export function loadGdataModule(module) {
   return ChromeUtils.importESModule(module + "?version=" + extensionVersion);
 }
 
+export function loadGdataUIModule(module, window, record = false) {
+  let { gdataInitUI } = loadGdataModule(module);
+  gdataInitUI(window, window.document, extensionVersion);
+
+  if (record) {
+    recordWindow(window);
+  }
+}
+
 function registerWindowListener(id, version, chromeURLs, record = true) {
   lazy.ExtensionSupport.registerWindowListener(id, {
     chromeURLs: chromeURLs,
