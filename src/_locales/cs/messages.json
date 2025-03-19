@@ -71,7 +71,7 @@
     "message": "Tato verze poskytovatele je zastaralá, aktualizujte jej prosím na nejnovější verzi."
   },
   "reminderOutOfRange": {
-    "message": "Google Calendar umožňuje připomenutí maximálně 4 týdny před začátkem události."
+    "message": "Kalendář Google umožňuje připomenutí nejdéle 4 týdny před začátkem události."
   },
   "syncProgressEvent": {
     "message": "Synchronizace $num_events_synced$ událostí z $total_events_to_sync$ v kalendáři $calendar_name$",
@@ -133,5 +133,182 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "onboarding.welcome.p3.prelink": {
+    "message": " Ještě než přeskočíte čtení této stránky, podívejte se"
+  },
+  "onboarding.getstarted.title": {
+    "message": "Začínáme"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "Postranní panel v kalendáři Thunderbirdu s novým tlačítkem kalendáře ve spod"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Vyberte si kalendáře"
+  },
+  "onboarding.allset.imgalt": {
+    "message": "Dialogové okno Nového úkolu, zobrazuje pouze pole relevantní pro dialog"
+  },
+  "onboarding.scheduling.title": {
+    "message": "Potíže s plánováním"
+  },
+  "onboarding.scheduling.enableAttendees": {
+    "message": "Pokud máte události s účastníky, budete to pravděpodobně chtít Zapnuto. Jinak, každá změna v události odstraní všechny účastníky. Pokud změníte toto nastavení, znovu se přihlašte do kalendářů."
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Více informací o konferenci"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Kód pro přístup"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Povolit plánování e-mailů"
+  },
+  "settings.enableAttendees": {
+    "message": "Synchronizovat účastníky události"
+  },
+  "settings.warning": {
+    "message": "Tato nastavení Vám umožní využívat plánování e-mailů prostřednictvím Kalendáře Google, bylo ale také hlášeno zasílání příliš mnoha e-mailů s upozorněním. Nejprve otestujte na malé schůzce."
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "V současnosti se přihlašuje mnoho uživatelů, Google hlásí, že byl překročen limit počtu přihlášení. Zkuste to prosím později."
+  },
+  "settings.sendEventNotifications": {
+    "message": "Poslat upozornění hostům události"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konference:"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Heslo"
+  },
+  "settings.forcePlainText": {
+    "message": "Používat pouze prostý text v popisu události"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Mimo kancelář"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Připojit se prostřednictvím videokonference"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefon"
+  },
+  "taskListsHeader": {
+    "message": "Seznamy úkolů"
+  },
+  "onboarding.welcome.p2": {
+    "message": "Nyní jste na této cestě se mnou. Vaše podpora pro mě hodně znamená a já si nedovedu představit budoucnost bez tohoto doplňku."
+  },
+  "onboarding.providertype.p2": {
+    "message": "Na další obrazovce zadejte e-mailovou adresu. Použijte svůj vlastní e-mailI, i když chcete užívat kalendář někoho dalšího, ke kterému jste se přihlásili na webové stránce Google Kalendáře, objeví se v rámci vašeho účtu."
+  },
+  "onboarding.scheduling.p1": {
+    "message": "Plánování mezi Thunderbird a Google může být složité. Společnost Thunderbird neposkytuje vždy jasné informace o tom, zda je událost přijatá pozvánka nebo nová událost. Zde je několik nastavení ke zvážení:"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Kód meetingu"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Přístupový kód"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Seznam kalendářů s zaškrtávacími poli na boku"
+  },
+  "onboarding.welcome.p3.linktext": {
+    "message": "do části o předvolbách plánování,"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Nejste si jisti, kde začít? Nejprve je třeba se přihlásit ke kalendářům. Přejděte na kartu kalendáře v Thunderbirdu a klikněte na \"Nový kalendář\" ve spodní části postranního panelu."
+  },
+  "onboarding.allset.title": {
+    "message": "Vše je hotovo!"
+  },
+  "onboarding.welcome.p1": {
+    "message": "Poskytovatel pro Google Calendar označil začátek mé cesty k open source. V roce 2006 neexistoval jednoduchý způsob, jak propojit Thunderbird s Kalendářem Google. Hnán zvědavostí a touhou pomáhat jsem prozkoumal API Google a našel způsob, jak tuto mezeru překlenout a umožnit bezpočtu uživatelů Thunderbirdu propojení s Google Kalendářem. Tato zkušenost mě nejen nasměrovala, ale také mi otevřela dveře k profesionální kariéře, kde se open source stal nedílnou součástí mého každodenního života."
+  },
+  "onboarding.welcome.p3.postlink": {
+    "message": "jak správně zvolit, jak jsou zobrazeni účastníci v akcích a jak jsou zpracovány pozvánky."
+  },
+  "onboarding.providertype.title": {
+    "message": "Na síti?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Dialogové okno Nový kalendář, zobrazující možnosti vybrat Google Kalendář"
+  },
+  "onboarding.providertype.p1": {
+    "message": "Uvidíte tři možnosti: Na mém počítači, na síti a Poskytovatel pro Kalendář Google. Google Kalendář je sice technicky na síti, ale vyberte možnost specifického poskytovatele."
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Dále budete vyzváni k přihlášení. Přihlašovací okno určuje e-mailovou adresu, ujistěte se, že se používáte do správný účet. Pokud budete požádáni o přihlášení znovu pozděi, ujistěte se, že používáte uvedený účet."
+  },
+  "onboarding.allset.p1": {
+    "message": "To je vše. První synchronizace může chvíli trvat, zejména pokud máte mnoho událostí. Thunderbird může během zpracování těchto události zamrznout. Může to trvat i půl hodiny. Většinou však synchronizace doběhne během minuty."
+  },
+  "onboarding.allset.p2": {
+    "message": "Co dál? Čas naplánovat nějaké události. Jednou z výhod použití poskytovatele pro Kalendář Google namísto vestavěného připojení CalDAV je více možných úprav dialogovém okně události. Můžete nastavit výchozí alarmy a upravit výchozí nastavení soukromí. Navíc můžete spravovat úkoly Google přímo v Thunderbirdu."
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "Na následující obrazovce vyberte kalendáře a seznamy úkolů, které chcete přidat. Dříve přidané kalendáře budou již označeny. K odebrání použijte kontextové menu v seznamu Kalendáře Thunderbird namísto dilagu nový kalendář."
+  },
+  "onboarding.scheduling.enableEmailInvitations": {
+    "message": "Toto vám umožní přijímat pozvánky pomocí pásu nad e-mailovou pozvánkou. I když je to pohodlné, je obecně lepší, tuto možnost vypnout a spoléhat na nastavení \"Automaticky přidat událost do kalendáře\" ve webovém nastavení Google Kalendáře."
+  },
+  "onboarding.scheduling.sendEventNotifications": {
+    "message": "Zapnuto: Google odesílá upozornění při změně události. Vypnuto: funguje jako stisknutí tlačítka \"Nezasílát\" pokaždé, když aktualizujete plánovanou událost."
+  },
+  "onboarding.scheduling.p2": {
+    "message": "Pokud je plánování e-mailů povoleno a něco se pokazí, Thunderbird může místo řádného přijetí existující vytvořit novou událost. U velkých schůzek, jako je celofiremní událost, to může vypadat, že zvete všechny na duplicitní událost."
+  },
+  "onboarding.scheduling.p3.postlink": {
+    "message": "pro tento doplňek."
+  },
+  "onboarding.scheduling.p3.linktext": {
+    "message": "možnosti doplňků"
+  },
+  "onboarding.donate.amount": {
+    "message": "375czk"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Snímek obrazovky Weblate s překladem textu z angličtiny do němčiny"
+  },
+  "onboarding.weblate.p2.linktext": {
+    "message": "Pomozte s překladem"
+  },
+  "onboarding.weblate.p2.postlink": {
+    "message": " již dnes! Dokážete dotáhnout překlad do vašeho jazyka na 100 %?"
+  },
+  "onboarding.footer.p1.prelink": {
+    "message": "Pokud máte nějaké dotazy, zkuste se podívat na stránky doplňku na"
+  },
+  "onboarding.footer.p1.linktext": {
+    "message": "GitHub"
+  },
+  "onboarding.footer.p1.postlink": {
+    "message": ". Tam také můžete pomoci s vylepšováním budoucích verzí doplňku."
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Pošlete mi projev uznání"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Čas na soustředění"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "onboarding.footer.p2": {
+    "message": "Díky, že jste dočetli až sem! Pokud jste se dostali takhle daleko, doufám, že jste z tohoto doplňku tak nadšeni jako já. Tak do toho a zkuste jak funguje. Pokud již doplněk používáte, ocením vaši podporu."
+  },
+  "onboarding.scheduling.p3.prelink": {
+    "message": "Pokud chcete změnit tato nastavení později, jděte na"
+  },
+  "onboarding.weblate.title": {
+    "message": "Chcete vidět tento obsah ve vašem jazyce?"
+  },
+  "onboarding.weblate.p1": {
+    "message": "Poskytovatel Google kalendáře používá Weblate, kde můžete snadno překládat texty do sého jazyka. Ovládáte jiný jazyk než angličtinu a chcete pomoci?"
   }
 }

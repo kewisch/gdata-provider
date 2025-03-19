@@ -21,7 +21,7 @@
     "message": "Kalender umwandeln"
   },
   "gdata.migration.description": {
-    "message": "Eine Überprüfung durch den Provider für Google Kalender hat ergeben, dass die unten aufgeführten Kalender bisher nur über lesenden Zugriff auf Google Kalender verfügen. Falls Sie Kalendern auch schreibenden Zugriff ermöglichen und sie daher umwandeln möchten, wählen Sie sie bitte unten aus."
+    "message": "Eine Überprüfung durch den Provider für Google Kalender hat ergeben, dass die unten aufgeführten Kalender bisher nur über einen Lesezugriff auf Google Kalender verfügen. Falls Sie Kalendern auch einen Schreibzugriff ermöglichen und sie daher umwandeln möchten, wählen Sie sie bitte unten aus."
   },
   "gdata.migration.upgrade.label": {
     "message": "Umwandeln"
@@ -65,7 +65,7 @@
     }
   },
   "providerOutdated": {
-    "message": "Diese Version des Providers ist veraltet, bitte aktualisieren Sie auf die neueste Version."
+    "message": "Diese Version des Providers ist veraltet, bitte aktualisieren Sie ihn auf die neueste Version."
   },
   "reminderOutOfRange": {
     "message": "Google Kalender erlaubt Erinnerungen nur innerhalb von 4 Wochen vor Beginn eines Termins."
@@ -132,7 +132,7 @@
     }
   },
   "errors.rate_limit_exceeded": {
-    "message": "Viele Benutzer melden sich gerade an. Google meldet, dass das Anmeldekontingent überschritten ist. Bitte versuche es später nochmal.",
+    "message": "Gerade melden sich viele Benutzer an. Google meldet, dass das Anmeldekontingent überschritten ist. Bitte versuchen Sie es später noch einmal.",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -150,7 +150,7 @@
     "message": "Diese Einstellungen ermöglichen das Versenden von Email-Einladungen über Google Kalender, aber es gab in der Vergangenheit Berichte über ungewollte zusätzliche Benachrichtigungsemails. Bitte zunächst mit einem kleinen Meeting testen."
   },
   "eventdialog.codeType.meetingCode": {
-    "message": "Meeting-Code"
+    "message": "Besprechungscode"
   },
   "settings.sendEventNotifications": {
     "message": "Benachrichtigungen an Terminteilnehmer versenden"
@@ -231,7 +231,7 @@
     "message": "Wenn du Fragen hast, melde dich über die"
   },
   "onboarding.allset.p1": {
-    "message": "Das war’s. Die erste Synchronisierung kann einige Zeit dauern, besonders wenn du viele Termine hast. Während dieses Vorgangs kann Thunderbird vorübergehend nicht reagieren, da es die Ereignisse verarbeitet. Lass es bis zu einer halben Stunde laufen, bevor du von einem Problem ausgehst. In den meisten Fällen ist die Synchronisierung jedoch innerhalb einer Minute abgeschlossen."
+    "message": "Das war’s. Die initiale Synchronisierung kann einige Zeit in Anspruch nehmen, insbesondere wenn du viele Ereignisse hast. Thunderbird könnte während dieses Vorgangs eingefroren oder abgestürzt wirken, da alle Ereignisse erst verarbeitet werden müssen. Lass den Prozess bis zu einer halben Stunde laufen, bevor du von einem Problem ausgehst. In den meisten Fällen ist die Synchronisierung innerhalb einer Minute abgeschlossen."
   },
   "onboarding.scheduling.p2": {
     "message": "Wenn die E-Mail-Planung aktiviert ist und etwas schiefläuft, kann Thunderbird statt der korrekten Annahme eines bestehenden Termins ein neues Ereignis erstellen. Bei großen Meetings, wie einer unternehmensweiten Veranstaltung, könnte es dann so aussehen, als würdest du alle zu einem doppelten Termin einladen."
@@ -264,7 +264,7 @@
     "message": "Das Dialogfeld „Neue Aufgabe“ mit nur den relevanten Feldern"
   },
   "onboarding.scheduling.title": {
-    "message": "Planungsprobleme"
+    "message": "Probleme bei der Terminplanung"
   },
   "onboarding.scheduling.sendEventNotifications": {
     "message": "Wenn aktiviert, sendet Google Benachrichtigungen, wenn du einen Termin änderst. Ist diese Option deaktiviert, verhält es sich so, als würdest du jedes Mal auf „Nicht senden“ klicken, wenn du ein geplantes Ereignis aktualisierst."
@@ -280,9 +280,6 @@
   },
   "onboarding.weblate.p2.postlink": {
     "message": " ! Kannst du deine Sprache auf 100% bringen?"
-  },
-  "onboarding.weblate.p2.prelink": {
-    "message": " "
   },
   "onboarding.footer.p1.linktext": {
     "message": "GitHub Seite des Add-ons"

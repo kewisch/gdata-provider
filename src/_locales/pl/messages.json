@@ -136,5 +136,14 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.warning": {
+    "message": "Ustawienia te pozwolą na korzystanie z harmonogramu e-mail za pośrednictwem Kalendarza Google, ale pojawiły się również doniesienia o wysyłaniu dodatkowych wiadomości e-mail z powiadomieniami. Przetestuj najpierw na małym spotkaniu."
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Włącz planowanie wiadomości e-mail"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "W tej chwili loguje się wielu użytkowników, Google poinformował, że limit logowania został przekroczony. Spróbuj ponownie później."
   }
 }

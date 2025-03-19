@@ -130,5 +130,83 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "onboarding.welcome.p3.linktext": {
+    "message": "secțiune privind preferințele de programare"
+  },
+  "onboarding.welcome.p3.postlink": {
+    "message": "pentru a face alegerea corectă cu privire la modul în care apar participanții la evenimente și la modul în care sunt gestionate invitațiile."
+  },
+  "onboarding.getstarted.title": {
+    "message": "Introducere"
+  },
+  "settings.warning": {
+    "message": "Aceste setări vă vor permite să utilizați programarea e-mail-urilor prin Google Calendar, dar au existat rapoarte despre trimiterea de e-mailuri de notificare străine. Vă rugăm să testați mai întâi cu un grup mic de persoane."
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Activați programarea e-mailului"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Conferință:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Alăturați-vă prin videoconferință"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefon"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Mai multe informații despre conferință"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Codul sesiunii"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Cod PIN"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Nu sunt la birou"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Momentul cheie"
+  },
+  "settings.sendEventNotifications": {
+    "message": "Trimiteți notificări prin e-mail invitaților la eveniment"
+  },
+  "settings.enableAttendees": {
+    "message": "Sincronizați participanții la eveniment"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Codul de acces"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Parolă"
+  },
+  "settings.forcePlainText": {
+    "message": "Forțați utilizarea textului simplu în descrierile evenimentelor"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "Foarte mulți utilizatori conectați, Google a indicat că a fost depășită cota de conectare. Vă rugăm să încercați din nou mai târziu."
+  },
+  "calendarsHeader": {
+    "message": "Calendare"
+  },
+  "taskListsHeader": {
+    "message": "Liste de sarcini"
+  },
+  "onboarding.welcome.p1": {
+    "message": "Extensia pentru Google Calendar a marcat începutul călătoriei mele spre open source. În 2006, nu exista o modalitate ușoară de a conecta Thunderbird la Google Calendar. Impulsionat de curiozitate și dorința de a ajuta, am explorat API-urile Google și am găsit o modalitate de a reduce această diferență, permițând nenumăraților utilizatori Thunderbird să acceseze Google Calendar. Această experiență nu numai că mi-a dat sentimentul că am un scop, dar mi-a deschis și ușile către o carieră profesională în care open source a devenit o parte integrantă a vieții mele de zi cu zi."
+  },
+  "onboarding.welcome.p2": {
+    "message": "Acum faci parte din această călătorie alături de mine. Sprijinul tău înseamnă foarte mult pentru mine și nu-mi pot imagina un viitor fără această extensie."
+  },
+  "onboarding.welcome.p3.prelink": {
+    "message": " Înainte de a sări peste citirea acestei pagini, vă rugăm să verificați"
   }
 }

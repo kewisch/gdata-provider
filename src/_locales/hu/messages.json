@@ -136,5 +136,71 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "onboarding.footer.p1.postlink": {
+    "message": "Ott tudsz hozzájárulni a jövőbeni verziók fejlesztéséhez."
+  },
+  "settings.forcePlainText": {
+    "message": "Sima szöveg (plain text) erőltetése az eseményleírásokban"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konferencia:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Csatlakozás videókonferencián keresztül"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "További információk a konferenciáról"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "settings.enableAttendees": {
+    "message": "Az események résztvevőinek szinkronizálása"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Jelszó"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Email meghívók engedélyezése"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefon"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Hozzáférési kód"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Hivatalból"
+  },
+  "onboarding.scheduling.sendEventNotifications": {
+    "message": "Ha engedélyezve van, a Google értesítést küld, ha megváltoztatsz egy eseményt. Ha kikapcsolod, akkor úgy működik, mintha minden alkalommal, amikor egy ütemezett eseményt frissítesz, a „Ne küldd” gombra kattintanál."
+  },
+  "settings.sendEventNotifications": {
+    "message": "E-mail értesítések küldése az esemény vendégeinek"
+  },
+  "onboarding.welcome.p3.prelink": {
+    "message": " Mielőtt átugranád ennek az oldalnak az olvasását, kérlek ellenőrizd"
+  },
+  "onboarding.donate.amount": {
+    "message": "6000huf"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Hozzáférési kód"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Megbeszéléskód"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "Jelenleg sok felhasználó szeretne bejelentkezni és a Google jelezte, hogy a bejelentkezési kvótát túllépték. Kérjük, próbálja meg később."
+  },
+  "eventdialog.focusEvent": {
+    "message": "Fókusz idő"
+  },
+  "settings.warning": {
+    "message": "Ezek a beállítások lehetővé teszik, hogy az e-mailek ütemezését a Google Naptáron keresztül használja, de érkeztek bejelentések nem odaillő értesítési e-mailekről is. Kérjük, tesztelje először egy kis megbeszéléssel."
   }
 }

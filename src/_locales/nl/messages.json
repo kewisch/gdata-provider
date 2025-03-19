@@ -18,10 +18,10 @@
     "message": "s"
   },
   "gdata.migration.title": {
-    "message": "Alleen-lezenagenda’s migreren"
+    "message": "Alleen-lezen agenda’s migreren"
   },
   "gdata.migration.description": {
-    "message": "De provider voor Google Agenda heeft gedetecteerd dat u bestaande agenda’s hebt die Google Agenda alleen in alleen-lezenmodus kunnen benaderen. Als u een of meer van deze agenda’s wilt bijwerken, selecteer deze dan hieronder."
+    "message": "De provider voor Google Agenda heeft gedetecteerd dat u bestaande agenda’s hebt die Google Agenda alleen in alleen-lezen modus kan benaderen. Als u een of meer van deze agenda’s wilt bijwerken, selecteer deze dan hieronder."
   },
   "gdata.migration.upgrade.label": {
     "message": "Bijwerken"
@@ -33,7 +33,7 @@
     "message": "Altijd controleren"
   },
   "gdata.reminder.default": {
-    "message": "Standaardherinnering"
+    "message": "Standaard herinnering"
   },
   "gdata.wizard.session.description": {
     "message": "Kies een bestaande sessie of voer uw e-mailadres in om een nieuwe sessie aan te maken. U hebt maar één sessie per account nodig."
@@ -130,5 +130,128 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "onboarding.welcome.p2": {
+    "message": "Je maakt nu deel uit van deze reis met mij. Jouw steun betekent heel veel voor mij en ik kan me geen toekomst zonder deze add-on inbeelden."
+  },
+  "onboarding.welcome.p3.prelink": {
+    "message": " Vooraleer je deze pagina overslaat, bekijk alstublieft"
+  },
+  "onboarding.welcome.p3.linktext": {
+    "message": "sectie over planningsvoorkeuren"
+  },
+  "settings.enableAttendees": {
+    "message": "Synchroniseer deelnemers van het evenement"
+  },
+  "settings.forcePlainText": {
+    "message": "Dwing het gebruik van platte tekst af in gebeurtenisbeschrijvingen"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Deelnemen via videoconferentie"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefoon"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Toegangscode"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Niet op kantoor"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Focustijd"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Wachtwoord"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Toegangscode"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Vergadercode"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Meer conferentie-informatie"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Conferentie:"
+  },
+  "onboarding.welcome.p1": {
+    "message": "Met de Provider for Google Calendar startte mijn reis in het Open Source domein. In 2006 was er geen gemakkelijke manier om Thunderbird te verbinden met Google Calendar. Gedreven door nieuwsgierigheid en een verlangen om te helpen, onderzocht ik de API's van Google en vond een manier om die kloof te overbruggen, waardoor talloze Thunderbird-gebruikers toegang kregen tot Google Calendar. Die ervaring gaf me niet alleen een gevoel van zingeving, maar opende ook deuren naar een professionele carrière waarin open source een integraal onderdeel is geworden van mijn dagelijkse leven."
+  },
+  "onboarding.welcome.p3.postlink": {
+    "message": "om de juiste keuze te maken hoe deelnemers getoond worden in afspraken en hoe uitnodigingen worden afgehandeld."
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "settings.sendEventNotifications": {
+    "message": "Zend E-mail notificaties naar gasten"
+  },
+  "calendarsHeader": {
+    "message": "Kalenders"
+  },
+  "taskListsHeader": {
+    "message": "Takenlijst"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "Veel gebruikers zijn nu aan het inloggen, Google heeft aangegeven dat de login quota is overschreden. Probeer later nog eens a.u.b."
+  },
+  "settings.warning": {
+    "message": "Deze instellingen laten u gebruik maken van het inplannen van E-mail via Google Calender, maar er zijn meldingen over het zenden van buitensporige E-mail notificaties. Test eerst met een kleine vergadering a.u.b."
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Zet E-mail inplannen aan"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Selecteer je agenda's"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Een lijst van agenda's met selectievakjes ernaast"
+  },
+  "onboarding.getstarted.title": {
+    "message": "Aan de slag"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "De zijbalk in het kalenderoverzicht van Thunderbird met de nieuwe agendaknop onderaan"
+  },
+  "onboarding.scheduling.title": {
+    "message": "Planningsproblemen"
+  },
+  "onboarding.providertype.title": {
+    "message": "Op het netwerk?"
+  },
+  "onboarding.allset.title": {
+    "message": "Je bent klaar om aan de slag te gaan!"
+  },
+  "onboarding.scheduling.p3.postlink": {
+    "message": "voor deze add-on."
+  },
+  "onboarding.weblate.title": {
+    "message": "Deze content in jouw taal?"
+  },
+  "onboarding.scheduling.p3.linktext": {
+    "message": "add-onopties"
+  },
+  "onboarding.scheduling.p3.prelink": {
+    "message": "Als je deze instellingen later wil aanpassen, ga naar de"
+  },
+  "onboarding.footer.p1.linktext": {
+    "message": "GitHubpagina"
+  },
+  "onboarding.weblate.p2.linktext": {
+    "message": "Help mee met de vertalingen"
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Stuur me een blijk van waardering"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Screenshot van weblate, vertalen van een string van het Engels naar het Duits"
+  },
+  "onboarding.donate.amount": {
+    "message": "15eur"
   }
 }

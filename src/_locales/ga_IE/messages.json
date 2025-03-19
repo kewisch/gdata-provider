@@ -130,5 +130,29 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.forcePlainText": {
+    "message": "Wymuszenie używania zwykłego tekstu w opisach zdarzeń"
+  },
+  "settings.warning": {
+    "message": "Ustawienia te pozwolą na korzystanie z harmonogramu e-mail za pośrednictwem Kalendarza Google, ale pojawiły się również doniesienia o wysyłaniu dodatkowych wiadomości e-mail z powiadomieniami. Przetestuj najpierw na małym spotkaniu."
+  },
+  "taskListsHeader": {
+    "message": "Lista zadań"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Włącz planowanie wiadomości e-mail"
+  },
+  "settings.enableAttendees": {
+    "message": "Synchronizowanie uczestników wydarzeń"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Więcej informacji o konferencji"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "W tej chwili loguje się wielu użytkowników, Google poinformował, że limit logowania został przekroczony. Spróbuj ponownie później."
+  },
+  "settings.sendEventNotifications": {
+    "message": "Wysyłanie powiadomień e-mail do gości wydarzenia"
   }
 }
