@@ -79,6 +79,8 @@ this.gdata = class extends ExtensionAPI {
 
     this.chromeHandle.destruct();
     this.chromeHandle = null;
+
+    Services.obs.notifyObservers(null, "startupcache-invalidate");
   }
 
   getAPI(context) {
