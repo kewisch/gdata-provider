@@ -136,5 +136,23 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.enableAttendees": {
+    "message": "同步事件的參與人"
+  },
+  "settings.forcePlainText": {
+    "message": "在事件描述強制使用純文字模式"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "允許使用E-mail進行會議邀請"
+  },
+  "settings.sendEventNotifications": {
+    "message": "發送會議通知信給事件的受邀人"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "目前有大量的使用者登入中，已超過Google 服務器提供的配額。請稍候再試。"
+  },
+  "settings.warning": {
+    "message": "此設定將允許使用Google日曆發送會議通知，但有可能會發出超乎預期數量的通知信。請先以一場小型的會議做測試。"
   }
 }

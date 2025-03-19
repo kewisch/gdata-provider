@@ -294,7 +294,7 @@
     "description": "This is the accessibility alt text for the image of the This Content in your Language section"
   },
   "onboarding.weblate.p1": {
-    "message":  "The Provider for Google Calendar uses Weblate for translations, where you can easily translate strings into your language. Do you speak a non-English language and want to help?"
+    "message": "The Provider for Google Calendar uses Weblate for translations, where you can easily translate strings into your language. Do you speak a non-English language and want to help?"
   },
   "onboarding.weblate.p2.prelink": {
     "message": "",

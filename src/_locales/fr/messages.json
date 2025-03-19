@@ -74,7 +74,7 @@
     "message": "Cette version du fournisseur a expiré, veuillez la mettre à jour vers la version la plus récente."
   },
   "reminderOutOfRange": {
-    "message": "Google Calendar permet de définir des rappels au maximum 4 semaines avant le début de l’évènement."
+    "message": "Google Agenda permet de définir des rappels au maximum 4 semaines avant le début de l’évènement."
   },
   "syncProgressEvent": {
     "message": "Synchronisation de l’évènement $num_events_synced$ sur $total_events_to_sync$ de $calendar_name$",
@@ -136,5 +136,179 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "onboarding.welcome.p2": {
+    "message": "Vous partagez désormais mon expérience. Votre aide m'est précieuse car je ne peux imaginer un avenir sans cette extension."
+  },
+  "onboarding.welcome.p3.postlink": {
+    "message": "pour faire le bon choix sur la façon dont les invités apparaissent dans les événements et la manière dont les invitations sont traitées."
+  },
+  "onboarding.getstarted.title": {
+    "message": "Guide de démarrage"
+  },
+  "onboarding.providertype.title": {
+    "message": "Sur le réseau?"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "Un nombre important d'utilisateurs sont connectés et Google nous indique que le quota de connexions simultanées a été dépassé. Merci d'essayer à nouveau un peu plus tard."
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Rejoindre par visioconférence"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Activer la programmation d'envoi de courriels"
+  },
+  "settings.sendEventNotifications": {
+    "message": "Envoyer un courriel de notification aux invités de l'évènement"
+  },
+  "settings.forcePlainText": {
+    "message": "Forcer l'utilisation de texte non formaté dans la description de l’événement"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Plus d'informations sur la conférence"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Référence de la réunion"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Code de connexion"
+  },
+  "onboarding.welcome.p3.prelink": {
+    "message": " Avant de passer cette page, vérifiez"
+  },
+  "settings.warning": {
+    "message": "Ces réglages vous permettent de programmer l'envoi de courriels à partir de Google Agenda, mais nous avons eu des retours sur l'envoi de messages superflus. Veuillez tester cette fonctionnalité d'abord sur une petite réunion."
+  },
+  "onboarding.welcome.p1": {
+    "message": "Le Fournisseur pour Google Agenda a marqué le début de mon aventure au sein de l'open-source. En 2006, il n'y avait pas de méthode aisée pour connecter Thunderbird à Google Agenda. Poussé par la curiosité et l'envie d'aider, j'ai étudié les APIs de Google et trouvé un moyen de combler ce manque, permettant ainsi à d’innombrables utilisateurs de Thunderbird d'accéder facilement à Google Agenda. Cette expérience m' a non seulement donné un but mais aussi ouvert les portes d'une carrière professionnelle dans le domaine de l'open-source qui fait désormais partie intégrante de mon quotidien."
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Vous ne savez pas par où commencer ? La première chose à faire est de vous abonner à vos agendas. Accédez à l’onglet Agenda dans Thunderbird et cliquez sur « Nouvel agenda » en bas de la barre latérale."
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "Barre latérale de la vue Agenda de Thunderbird avec en bas le bouton Nouvel agenda"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Sélectionnez vos agendas"
+  },
+  "onboarding.footer.p1.linktext": {
+    "message": "page Github"
+  },
+  "onboarding.footer.p1.postlink": {
+    "message": "du module. C'est également ici que vous pouvez aider à améliorer les futures versions du module."
+  },
+  "onboarding.donate.amount": {
+    "message": "15eur"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Mot de passe"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Téléphone"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Code d'accès"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Absent du Bureau"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Temps de concentration"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Capture d'écran de Weblate, traduisant une chaîne de l'Anglais vers l'Allemand"
+  },
+  "onboarding.footer.p1.prelink": {
+    "message": "Si vous avez des questions, veuillez nous contacter via la"
+  },
+  "settings.enableAttendees": {
+    "message": "Synchroniser les participants à l'événement"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Conférence:"
+  },
+  "onboarding.welcome.p3.linktext": {
+    "message": "section de réglages de planification"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Dialogue de nouvel agenda, proposant de sélectionner Google Agenda"
+  },
+  "onboarding.providertype.p2": {
+    "message": "Sur le prochain écran, saisissez votre adresse e-mail. Même si vous vous abonnez à l'agenda de quelqu'un d'autre, utilisez votre propre e-mail. Si vous vous êtes déjà abonné·e à leur calendrier sur le site Web Google Agenda, il apparaîtra au sein de votre compte."
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Une liste d'agendas avec des cases à cocher sur le côté"
+  },
+  "onboarding.providertype.p1": {
+    "message": "Vous verrez trois options: Sur mon ordinateur, Sur le réseau, et Google Agenda. Même si Google Agenda est techniquement sur le réseau, sélectionner l'option dédiée à Google Agenda."
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "Sur l'écran suivant, sélectionnez les agendas et listes de tâches auxquels vous désirez vous abonner. Les agendas auxquels vous êtes déjà abonné apparaitront comme déjà ajoutés. Pour vous désabonner, utilisez le menu contextuel dans la liste d'agendas de Thunderbird et non le dialogue d'ajout de nouvel agenda."
+  },
+  "onboarding.allset.title": {
+    "message": "Vous voilà prêt!"
+  },
+  "onboarding.allset.imgalt": {
+    "message": "Fenêtre d'ajout de tâche, affichant uniquement les champs applicables"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "En suivant, il vous sera demandé de vous connecter. Le dialogue de connexion va spécifier l'adresse e-mail à utiliser, faite attention de vous connecter au compte correspondant. S'il vous est demandé plus tard de vous connecter à nouveau, vérifiez que vous utilisez le compte indiqué."
+  },
+  "onboarding.allset.p1": {
+    "message": "C'est fait. La synchronisation initiale peut prendre quelque temps, surtout si vous avez beaucoup d'événements. Thunderbird risque de paraitre sans réponse durant cette procédure du fait de sa méthode de gestion des événements. Laissez faire et attendez au moins une demi-heure avant de supposer qu'il y a un problème. Dans la majorité des cas, la synchronisation est complétée en moins d'une minute."
+  },
+  "onboarding.scheduling.title": {
+    "message": "Difficultés de planification"
+  },
+  "onboarding.allset.p2": {
+    "message": "Et maintenant ? Il est temps de planifier des événements. La paramétrisation supplémentaire disponible dans la fenêtre d'événement est un avantage du Fournisseur pour Google Agenda par rapport à la connexion CalDAV intégrée. Vous pouvez y paramétrer les valeurs par défaut pour les alarmes et la confidentialité. De plus, vous pouvez gérer les Tâches Google directement dans Thunderbird."
+  },
+  "onboarding.scheduling.p1": {
+    "message": "La planification entre Thunderbird et Google peut être délicate. Thunderbird n'indique pas toujours clairement si un évènement provient d'une invitation acceptée ou d'un nouvel évènement. Voici quelques paramètres à considérer :"
+  },
+  "onboarding.scheduling.enableEmailInvitations": {
+    "message": "Ceci vous permet d'accepter les invitations à l'aide de la barre au dessus du courriel d'invitation. Bien que pratique, il est généralement préférable de désactiver ce paramètre et de plutôt se fier au paramètre \"Ajouter des invitations à mon agenda\" de l'Agenda Google web."
+  },
+  "onboarding.scheduling.enableAttendees": {
+    "message": "Si vos évènements comportent des invités, vous voudrez probablement que ce paramètre soit activé. Lorsque désactivé, les modifications que vous faites à un évènement retireront tous les invités. Si vous modifiez ce paramètre, assurez-vous de vous ré-abonner à vos agendas."
+  },
+  "onboarding.weblate.p2.linktext": {
+    "message": "Aider avec les traductions"
+  },
+  "onboarding.weblate.p2.postlink": {
+    "message": " dès maintenant! Pouvez-vous compléter votre langue à 100%?"
+  },
+  "onboarding.footer.p2": {
+    "message": "Merci d'avoir lu jusqu'au bout! Si vous vous êtes rendu jusqu'ici, j'espère que vous être aussi enthousiaste que moi à propos de ce module. Allez-y et essayez-le d'abord, mais si vous êtes déjà convaincu, j'apprécierais votre support."
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Envoyez-moi un témoignage d'appréciation"
+  },
+  "onboarding.scheduling.p2": {
+    "message": "Si la planification de courriel est active et qu'un problème survient, Thunderbird créera potentiellement un nouvel évènement au lieu d'accepter celui existant. Pour de grandes réunions comme par exemple un évènement corporatif complet, celà pourra laisser croire que vous invitez tout le monde à une copie de l'évènement."
+  },
+  "onboarding.scheduling.sendEventNotifications": {
+    "message": "Si activé, Google envoie des notifications lorsque vous modifiez un évènement. Lorsque désactivé, le comportement équivaut à cliquer \"Ne pas envoyer\" à chaque modification de l'évènement."
+  },
+  "onboarding.scheduling.p3.prelink": {
+    "message": "Si vous voulez modifier ces paramètres plus tard, allez à"
+  },
+  "onboarding.scheduling.p3.linktext": {
+    "message": "options du module"
+  },
+  "onboarding.scheduling.p3.postlink": {
+    "message": "pour ce module."
+  },
+  "onboarding.weblate.title": {
+    "message": "Ce contenu dans votre langue?"
+  },
+  "onboarding.weblate.p1": {
+    "message": "Le Fournisseur pour Google Agenda utilise Weblate pour ses traductions, vous pouvez facilement y traduire des phrases dans votre langue. Vous parlez une langue qui n'est pas l'anglais et vous voulez aider ?"
   }
 }

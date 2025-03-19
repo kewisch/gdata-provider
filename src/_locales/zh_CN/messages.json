@@ -1,6 +1,6 @@
 {
   "extensionName": {
-    "message": "Google 日历提供器",
+    "message": "Google 日历提供程序",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "extensionDescription": {
@@ -21,7 +21,7 @@
     "message": "迁移只读日历"
   },
   "gdata.migration.description": {
-    "message": "Google 日历提供者发现您拥有一些只读的 Google 日历。如果您想要修改其中的日历，请从下面选择。"
+    "message": "Google 日历提供程序检测到你的现有日历仅能以只读模式来访问 Google 日历。如果你想要提升针对这些日历的访问权限，请在下面作出选择。"
   },
   "gdata.migration.upgrade.label": {
     "message": "升级"
@@ -30,13 +30,13 @@
     "message": "U"
   },
   "gdata.migration.showagain.label": {
-    "message": "一律检查"
+    "message": "每次都检查"
   },
   "gdata.reminder.default": {
-    "message": "预设提醒"
+    "message": "默认预设提醒"
   },
   "gdata.wizard.session.description": {
-    "message": "请选择现有的会话，或者输入您的电子邮件地址以建立新的会话。每个账号您只需建立一个会话。"
+    "message": "请选择已有会话，或者输入你的电子邮件地址以创建新会话。每个账号仅需一个会话。"
   },
   "gdata.wizard.calendars.description": {
     "message": "请选择您要订阅的日历与任务列表。"
@@ -74,10 +74,10 @@
     "message": "此版本的提供者已经过期，请更新到最新版本。"
   },
   "reminderOutOfRange": {
-    "message": "Google Calendar 仅允许最早于活动四个星期前的提醒。"
+    "message": "Google 日历仅允许在活动开始前最多四周内设置提醒。"
   },
   "syncProgressEvent": {
-    "message": "正在同步 $calendar_name$ 的第 $num_events_synced$ 个事件，共 $total_events_to_sync$ 条",
+    "message": "正在同步 $calendar_name$ 的第 $num_events_synced$ 项活动，共 $total_events_to_sync$ 项",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -120,7 +120,7 @@
     }
   },
   "requestWindowDescription": {
-    "message": "Google Calendar 提供者想要访问您的 $session_id$ 账号以便取回您的事件和任务。您的账号密码将会直接从电脑传送给 Google，不会被其他人知晓。",
+    "message": "Google 日历提供商程序希望访问你的帐户 $session_id$ 以检索活动和任务。凭证和日历数据仅会于你的电脑和 Google 之间进行传输，不涉及任何第三方网站。",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -136,5 +136,83 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "手机"
+  },
+  "settings.enableAttendees": {
+    "message": "同步活动参与人员"
+  },
+  "settings.forcePlainText": {
+    "message": "在活动描述中强制使用纯文本"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "目前有很多用户正在作登录尝试，Google 指出登录配额已超出。请稍后重试。"
+  },
+  "settings.warning": {
+    "message": "这些设置将允许您通过 Google 日历使用电子邮件日程安排，这些设置将允许您通过 Google 日历使用电子邮件安排，但也有人报告说会发送无关的通知邮件。请先进行小型会面安排测试。"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "启用邮件日程安排"
+  },
+  "settings.sendEventNotifications": {
+    "message": "向活动受邀对象发送电子邮件通知"
+  },
+  "onboarding.welcome.p2": {
+    "message": "这个项目的发展有你的一份贡献。你的支持对我来说至关重要，我无法想象没有这个附加组件的未来。"
+  },
+  "onboarding.welcome.p3.prelink": {
+    "message": " 在跳过阅读此页面之前，请查看"
+  },
+  "onboarding.welcome.p3.linktext": {
+    "message": "日程安排设置部分"
+  },
+  "onboarding.getstarted.title": {
+    "message": "开始使用"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "底部有新建日历按钮的 Thunderbird 日历视图侧边栏"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "会议："
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "会面代码"
+  },
+  "eventdialog.codeType.password": {
+    "message": "密码"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.focusEvent": {
+    "message": "专注时间"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "更多会议信息"
+  },
+  "eventdialog.oooEvent": {
+    "message": "外出"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "访问代码"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "通过视频会议加入"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "通行码"
+  },
+  "onboarding.welcome.p1": {
+    "message": "Google 日历提供程序是我开始涉足开源领域的标志性项目。早在 2006 年，那时还没有简单的方法将 Thunderbird 与 Google 日历连接起来。在好奇心和帮助他人的愿望的驱使之下，我仔细研究了 Google 的 API，并找到了弥合这一差距的方法，无数 Thunderbird 用户得以籍此来访问 Google 日历。这段经历不仅让我有了目标感，还为我打开了职业生涯的大门，让开源成为了我日常生活中不可或缺的一部分。"
+  },
+  "onboarding.welcome.p3.postlink": {
+    "message": "恰当选择参与人员在活动中的显示方式以及邀请的处理方式。"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "不知道从哪里开始？你需要先订阅日历。然后转到 Thunderbird 中的日历标签页，接着单击侧边栏底部的“新建日历”。"
   }
 }

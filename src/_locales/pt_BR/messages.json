@@ -136,5 +136,179 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "onboarding.welcome.p3.linktext": {
+    "message": "seção sobre preferências de agendamento"
+  },
+  "onboarding.welcome.p3.postlink": {
+    "message": "para fazer a escolha certa sobre como os participantes aparecem nos eventos e como os convites são tratados."
+  },
+  "onboarding.getstarted.title": {
+    "message": "Começando"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "A barra lateral na visualização do calendário do Thunderbird com o novo botão de calendário na parte inferior"
+  },
+  "onboarding.providertype.title": {
+    "message": "Na rede?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Nova caixa de diálogo de calendário, mostrando a opção de selecionar o Google Agenda"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Selecione seus calendários"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "A lista de calendários com checkboxes ao lado"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Em seguida, você será solicitado a fazer login. O diálogo de login especificará o endereço de e-mail a ser usado, então certifique-se de estar fazendo login na conta correta. Se for solicitado a fazer login novamente mais tarde, certifique-se de usar a conta indicada."
+  },
+  "onboarding.allset.title": {
+    "message": "Tudo pronto!"
+  },
+  "onboarding.allset.imgalt": {
+    "message": "A nova caixa de diálogo de tarefas, mostrando apenas os campos relevantes para a caixa de diálogo"
+  },
+  "onboarding.allset.p1": {
+    "message": "É isso. A sincronização inicial pode levar algum tempo, especialmente se você tiver muitos eventos. O Thunderbird pode parecer congelado durante esse processo devido à forma como ele lida com eventos. Deixe-o rodar por até meia hora antes de assumir que há um problema. Na maioria dos casos, no entanto, a sincronização é concluída em um minuto."
+  },
+  "onboarding.scheduling.title": {
+    "message": "Problemas de agendamento"
+  },
+  "onboarding.scheduling.enableEmailInvitations": {
+    "message": "Isso permite que você aceite convites usando a barra acima da mensagem de convite por e-mail. Embora seja conveniente, geralmente é melhor manter isso desativado e, em vez disso, confiar na configuração \"Adicionar eventos automaticamente ao seu calendário\" nas configurações da web do Google Agenda."
+  },
+  "onboarding.scheduling.sendEventNotifications": {
+    "message": "Quando habilitado, o Google envia notificações quando você altera um evento. Se desabilitado, funciona como clicar em \"Não Enviar\" toda vez que você atualiza um evento agendado."
+  },
+  "onboarding.scheduling.p3.prelink": {
+    "message": "Se você quiser alterar essas configurações mais tarde, vá para"
+  },
+  "onboarding.scheduling.p3.linktext": {
+    "message": "opções do add-on"
+  },
+  "onboarding.scheduling.p3.postlink": {
+    "message": "para este add-on."
+  },
+  "onboarding.weblate.title": {
+    "message": "Isso contém sua língua?"
+  },
+  "onboarding.weblate.p1": {
+    "message": "O Provider for Google Calendar usa Weblate para traduções, onde você pode traduzir strings facilmente para seu idioma. Você fala uma língua que não seja o inglês e quer ajudar?"
+  },
+  "onboarding.weblate.p2.linktext": {
+    "message": "Ajude com as traduções"
+  },
+  "onboarding.weblate.p2.postlink": {
+    "message": " hoje! Você consegue 100% da sua língua?"
+  },
+  "onboarding.footer.p1.prelink": {
+    "message": "Se você tiver alguma dúvida, entre em contato por meio dos complementos"
+  },
+  "onboarding.footer.p1.linktext": {
+    "message": "Página do GitHub"
+  },
+  "onboarding.footer.p1.postlink": {
+    "message": ". É aqui também que você pode ajudar a melhorar versões futuras do complemento."
+  },
+  "onboarding.footer.p2": {
+    "message": "Obrigado por ler até o fim! Se você chegou até aqui, espero que esteja tão animado com este add-on quanto eu. Vá em frente e experimente primeiro, mas se você já estiver convencido, eu apreciaria seu apoio."
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Envie-me uma amostra de agradecimento"
+  },
+  "onboarding.donate.amount": {
+    "message": "93brl"
+  },
+  "settings.warning": {
+    "message": "Essas configurações irão permitir você fazer o uso do agendamento de email pelo Google Calendar, mas há informes sobre muitas notificações sendo enviadas. Por favor teste com um pequeno encontro primeiro."
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Ativar agendamento de email"
+  },
+  "settings.enableAttendees": {
+    "message": "Sincronizar os participantes do evento"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefone"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Código de Acesso"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Palavra chave"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Hora de Foco"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Mais informações da conferência"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Fora do Escritório"
+  },
+  "settings.sendEventNotifications": {
+    "message": "Enviar notificações de email para os convidados do evento"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Juntar-se por conferência em vídeo"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Senha"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Conferência:"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "Muitos usuários estão logados agora, o Google reportou que a quota de logins foi excedida. Por favor tente novamente depois."
+  },
+  "onboarding.providertype.p2": {
+    "message": "Na próxima tela, insira seu endereço de e-mail. Mesmo se você estiver assinando o calendário de outra pessoa, use seu próprio e-mail. Se você já tiver assinado o calendário dela no site do Google Agenda, ele aparecerá na sua conta."
+  },
+  "onboarding.providertype.p1": {
+    "message": "Você verá três opções: No meu computador, Na rede e Provedor do Google Agenda. Embora o Google Agenda esteja tecnicamente na rede, selecione a opção específica do provedor."
+  },
+  "onboarding.scheduling.p2": {
+    "message": "Se o agendamento de e-mail estiver habilitado e algo der errado, o Thunderbird pode criar um novo evento em vez de aceitar corretamente um existente. Para reuniões grandes, como um evento de toda a empresa, isso pode fazer parecer que você está convidando todos para um evento duplicado."
+  },
+  "settings.forcePlainText": {
+    "message": "Forçar o uso de texto plano nas descrições dos eventos"
+  },
+  "onboarding.welcome.p2": {
+    "message": "Agora você faz parte dessa jornada comigo. Seu apoio significa muito para mim, e não consigo imaginar um futuro sem esse add-on."
+  },
+  "onboarding.welcome.p3.prelink": {
+    "message": " Antes de pular essa página, por favor cheque o"
+  },
+  "onboarding.welcome.p1": {
+    "message": "O Provider for Google Calendar marcou o início da minha jornada para o código aberto. Em 2006, não havia uma maneira fácil de conectar o Thunderbird ao Google Calendar. Motivado pela curiosidade e pelo desejo de ajudar, explorei as APIs do Google e encontrei uma maneira de preencher essa lacuna, permitindo que inúmeros usuários do Thunderbird acessassem o Google Calendar. Essa experiência não apenas me deu um senso de propósito, mas também abriu portas para uma carreira profissional em que o código aberto se tornou parte integrante da minha vida diária."
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "Na tela seguinte, selecione os calendários e listas de tarefas que você deseja assinar. Calendários assinados anteriormente aparecerão como já adicionados. Para cancelar a assinatura, use o menu de contexto na lista de calendários do Thunderbird em vez do diálogo de novo calendário."
+  },
+  "onboarding.allset.p2": {
+    "message": "O que vem a seguir? Hora de agendar alguns eventos. Uma vantagem de usar o Provider for Google Calendar em vez da conexão CalDAV integrada é a personalização adicional disponível na caixa de diálogo de eventos. Você pode definir alarmes padrão e ajustar as configurações de privacidade padrão. Além disso, você pode gerenciar o Google Tasks diretamente no Thunderbird."
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Código da conferência"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Não sabe por onde começar? Você precisa assinar seus calendários primeiro. Vá até a aba de calendário no Thunderbird e clique em \"Novo Calendário\" na parte inferior da barra lateral."
+  },
+  "onboarding.scheduling.p1": {
+    "message": "O agendamento entre o Thunderbird e o Google pode ser complicado. O Thunderbird nem sempre fornece informações claras sobre se um evento é um convite aceito ou um novo evento. Aqui estão algumas configurações a serem consideradas:"
+  },
+  "onboarding.scheduling.enableAttendees": {
+    "message": "Se você tiver eventos com participantes, provavelmente vai querer isso habilitado. Sem isso, qualquer alteração que você fizer em um evento removerá todos os participantes. Se você alterar essa configuração, certifique-se de assinar novamente seus calendários."
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Captura de tela do weblate, traduzindo uma string do inglês para o alemão"
   }
 }

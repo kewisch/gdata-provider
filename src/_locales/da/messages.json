@@ -74,10 +74,10 @@
     "message": "Denne version af leverandørmodulet er forældet, opdatér til den nyeste version."
   },
   "reminderOutOfRange": {
-    "message": "Google Kalender tillader kun påmindelser op til fire uger for en begivenhed starter."
+    "message": "Google Kalender tillader kun påmindelser op til fire uger før en begivenhed starter."
   },
   "syncProgressEvent": {
-    "message": "Synkroniserer begivenheder $num_events_synced$ af $total_events_to_sync$ i kalenderen $calendar_name$",
+    "message": "Synkroniserer begivenhed $num_events_synced$ af $total_events_to_sync$ i kalenderen $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -94,7 +94,7 @@
     }
   },
   "syncProgressTask": {
-    "message": "Synkroniserer opgaver $num_tasks_synced$ af $total_tasks_to_sync$ i kalenderen $calendar_name$",
+    "message": "Synkroniserer opgave $num_tasks_synced$ af $total_tasks_to_sync$ i kalenderen $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -111,7 +111,7 @@
     }
   },
   "syncStatus": {
-    "message": "Synkroniserer kalenderen $calendar_name$",
+    "message": "Synkroniserer kalender $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -136,5 +136,98 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.forcePlainText": {
+    "message": "Tving brug af uformateret tekst i begivenhedsbeskrivelser"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Adgangskode"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefon"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Adgangskode"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konference:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Deltag via video konference"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Ikke til stede"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "Mange brugere logger ind lige nu. Google indikerer at kvota for logins er overskredet. Prøv venligst senere."
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "onboarding.welcome.p2": {
+    "message": "Du er nu en del af denne rejse med mig. Din støtte betyder meget for mig, og jeg kan ikke forestille mig en fremtid uden denne tilføjelse."
+  },
+  "settings.warning": {
+    "message": "Disse indstillinger vil tillade dig at bruge e-mail-planlægning via Google Calendar, men der har været rapporter om at der er blevet sendt ekstra e-mail notifikationer. Test venligst først med et lille møde."
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "onboarding.welcome.p1": {
+    "message": "Provider to Google Calendar markerede begyndelsen på min rejse ind i open source verdenen. Tilbage i 2006 var der ingen nem måde at forbinde Thunderbird med Google Calendar. Drevet af nysgerrighed og et ønske om at hjælpe, udforskede jeg Googles API'er og fandt en måde at bygge bro over dette hul på, hvilket gjorde det muligt for utallige Thunderbird-brugere at få adgang til Google Calendar. Den oplevelse gav mig ikke kun en følelse af formål, men åbnede også døre til en professionel karriere, hvor open source er blevet en integreret del af mit daglige liv."
+  },
+  "eventdialog.focusEvent": {
+    "message": "Fokus tid"
+  },
+  "settings.enableAttendees": {
+    "message": "Synkroniser deltagerlisten"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Aktiver e-mail-planlægning"
+  },
+  "settings.sendEventNotifications": {
+    "message": "Send e-mail notifikationer til deltagere"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Yderligere konference information"
+  },
+  "onboarding.scheduling.p3.linktext": {
+    "message": "indstillingerne"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Ved ikke, hvor du skal starte? Du skal først abonnere på din kalendere. Gå til kalender-fanen i Thunderbird, og klik på \"Ny Kalender\" i bunden af sidevinduet."
+  },
+  "onboarding.footer.p1.prelink": {
+    "message": "Har du spørgsmål, henvende dig til udvidelsens"
+  },
+  "onboarding.scheduling.p3.prelink": {
+    "message": "Skal du ændre denne indstillinger senere, gå til"
+  },
+  "onboarding.getstarted.title": {
+    "message": "Kom i gang"
+  },
+  "onboarding.providertype.title": {
+    "message": "På netværket ?"
+  },
+  "onboarding.scheduling.p3.postlink": {
+    "message": "for denne udvidelse."
+  },
+  "onboarding.weblate.title": {
+    "message": "Dette indhold på dit sprog?"
+  },
+  "onboarding.footer.p1.linktext": {
+    "message": "GitHub-side"
+  },
+  "onboarding.footer.p1.postlink": {
+    "message": ". Her kan du også hjælpe, med at forbedre fremtidige versioner af udvidelsen."
+  },
+  "onboarding.donate.amount": {
+    "message": "115dkk"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Kodeord"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Mødekode"
   }
 }

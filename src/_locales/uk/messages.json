@@ -4,7 +4,7 @@
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "extensionDescription": {
-    "message": "Дозволяє двосторонній доступ до Календаря Google",
+    "message": "Дозволяє двонаправлений доступ до Календаря Google",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdata-provider.label": {
@@ -21,7 +21,7 @@
     "message": "Перемістити календарі, призначені лише для читання"
   },
   "gdata.migration.description": {
-    "message": "Постачальник Календаря Google визначив, що у вас є календарі, які можуть мати доступ до Календаря Google лише у режимі читання. Оберіть календар для оновлення за потреби."
+    "message": "Постачальник для Календаря Google визначив, що у вас є календарі, які можуть мати доступ до Календаря Google лише у режимі читання. Оберіть календар для оновлення за потреби."
   },
   "gdata.migration.upgrade.label": {
     "message": "Оновити"
@@ -36,13 +36,13 @@
     "message": "Типове нагадування"
   },
   "gdata.wizard.session.description": {
-    "message": "Виберіть наявний сеанс або введіть свою адресу електронної пошти для створення нового сеансу. Вам потрібен лише один сеанс на обліковий запис."
+    "message": "Оберіть наявний сеанс або введіть свою адресу електронної пошти для створення нового сеансу. Вам потрібен лише один сеанс на обліковий запис."
   },
   "gdata.wizard.calendars.description": {
-    "message": "Виберіть календарі та списки завдань, на які ви бажаєте підписатися."
+    "message": "Оберіть календарі та списки завдань, на які ви бажаєте підписатися."
   },
   "gdata.wizard.nextstep.description": {
-    "message": "Перейдіть до наступного кроку для встановлення своїх календарів."
+    "message": "Перейдіть до наступного кроку, щоб налаштувати свої календарі."
   },
   "busyTitle": {
     "message": "Зайнятий ($calendar_name$)",
@@ -55,7 +55,7 @@
     }
   },
   "quotaExceeded": {
-    "message": "Обмеження для $session_id$ було перевищене, спробуйте будь ласка пізніше.",
+    "message": "Обмеження для $session_id$ було перевищене, спробуйте, будь ласка, пізніше.",
     "description": "This is shown when the request quota has been exceeded.",
     "placeholders": {
       "session_id": {
@@ -65,7 +65,7 @@
     }
   },
   "providerOutdated": {
-    "message": "Термін дії версії цього провайдера завершився, оновіть будь ласка до останньої версії."
+    "message": "Термін дії версії цього провайдера було завершено, оновіть, будь ласка, до останньої версії."
   },
   "reminderOutOfRange": {
     "message": "Календар Google дозволяє встановлювати нагадування лише за 4 тижні до початку події."
@@ -114,7 +114,7 @@
     }
   },
   "requestWindowDescription": {
-    "message": "Провайдер календаря Google бажає отримати доступ до вашого облікового запису $session_id$ для отримання подій та завдань. Особисті дані й дані календаря передаються лише між вашим комп'ютером і Google, жодні сайти третіх сторін не долучаються.",
+    "message": "Постачальник для Календаря Google бажає отримати доступ до вашого облікового запису $session_id$ , щоб отримувати події та завдання. Особисті дані й дані календаря передаються лише між вашим комп'ютером і Google, жодні сайти третіх сторін не долучаються.",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -130,5 +130,98 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "onboarding.welcome.p3.prelink": {
+    "message": " Перш ніж пропустити цю сторінку, перевірте"
+  },
+  "onboarding.getstarted.title": {
+    "message": "Початок роботи"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "Бічна панель у режимі перегляду календаря Thunderbird із кнопкою нового календаря внизу"
+  },
+  "onboarding.providertype.title": {
+    "message": "У мережі?"
+  },
+  "calendarsHeader": {
+    "message": "Календарі"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Увімкнути планування електронною поштою"
+  },
+  "settings.sendEventNotifications": {
+    "message": "Надіслати гостям електронного листа про подію"
+  },
+  "settings.enableAttendees": {
+    "message": "Синхронізувати учасників події"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Пароль"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN (персональний ідентифікаційний номер)"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Не на роботі"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Зайнятий/та"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP (протокол встановлення сесії)"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "Зараз багато користувачів входять в систему, Google вказав, що квоту входу за кількістю перевищено. Спробуйте, будь ласка, пізніше."
+  },
+  "settings.forcePlainText": {
+    "message": "Примусово використовувати звичайний текст в описах подій"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Більше інформації про конференцію"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Приєднатись через відеоконференцію"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Код доступу"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Не знаєте, з чого почати? Спочатку потрібно підписатися на свої календарі. Перейдіть на вкладку календаря в Thunderbird і натисніть «Новий календар» у нижній частині бічної панелі."
+  },
+  "taskListsHeader": {
+    "message": "Cписок завдань"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Телефон"
+  },
+  "onboarding.welcome.p1": {
+    "message": "Постачальник для Календаря Google розпочав мою подорож до відкритого коду. У 2006 році не було простого способу зв’язати Thunderbird із Календарем Google. Керований цікавістю та бажанням допомогти, я досліджував API Google і знайшов спосіб подолати цю прогалину, надаючи незліченній кількості користувачів Thunderbird доступ до Календаря Google. Цей досвід не лише дав мені відчуття мети, але й відкрив двері до професійної кар’єри, де відкритий код став невід’ємною частиною мого повсякденного життя."
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Код-пароль"
+  },
+  "settings.warning": {
+    "message": "Ці налаштування дозволять вам використовувати планування розкладу електронною поштою через Календар Google, разом з цим були повідомлення про надсилання сторонніх сповіщень електронною поштою. Будь ласка, спочатку протестуйте на невеликій зустрічі."
+  },
+  "onboarding.welcome.p2": {
+    "message": "Тепер ви є частиною цієї подорожі зі мною. Ваша підтримка дуже важлива для мене, і я не можу уявити своє майбутнє без цього розширення."
+  },
+  "onboarding.welcome.p3.postlink": {
+    "message": "зробити правильний вибір щодо того, як учасники відображатимуться на подіях та як оброблятимуться запрошення."
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Конференція:"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Код зустрічі"
+  },
+  "onboarding.welcome.p3.linktext": {
+    "message": "розділ параментрів планування"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Діалогове вікно нового календаря з можливістю вибору календаря Google"
+  },
+  "onboarding.providertype.p1": {
+    "message": "Ви побачите три варіанти: На моєму комп’ютері, У мережі та Постачальник для Календаря Google. Хоча Google Календар технічно підключений до мережі, оберіть опцію для конкретного постачальника."
   }
 }

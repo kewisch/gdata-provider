@@ -130,5 +130,188 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "onboarding.providertype.title": {
+    "message": "A la xarxa?"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Seleccioneu els vostres calendaris"
+  },
+  "onboarding.allset.title": {
+    "message": "Ja està tot a punt!"
+  },
+  "onboarding.scheduling.title": {
+    "message": "Mals de planificació"
+  },
+  "onboarding.scheduling.p1": {
+    "message": "La planificació entre Thunderbird i Google pot ser complicada. Thunderbird no sempre proporciona informació clara sobre si un esdeveniment és una invitació acceptada o un esdeveniment nou. Aquí hi ha alguns paràmetres a tenir en compte:"
+  },
+  "onboarding.scheduling.sendEventNotifications": {
+    "message": "Quan està activat, Google envia notificacions quan canvies un esdeveniment. Si està desactivat, funciona com fer clic a \"No enviar\" cada vegada que actualitzeu un esdeveniment programat."
+  },
+  "onboarding.scheduling.p3.postlink": {
+    "message": "per a aquest complement."
+  },
+  "onboarding.weblate.p2.linktext": {
+    "message": "Ajuda amb les traduccions"
+  },
+  "onboarding.weblate.p2.prelink": {
+    "message": " "
+  },
+  "onboarding.footer.p1.linktext": {
+    "message": "Pàgina del GitHub"
+  },
+  "onboarding.footer.p2": {
+    "message": "Gràcies per llegir-nos fins al final! Si has arribat fins aquí, espero que estiguis tan entusiasmat amb aquest complement com jo. Aneu endavant i proveu-ho primer, però si ja esteu venuts us agrairia el vostre suport."
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Envieu-me una mostra d'agraïment"
+  },
+  "onboarding.donate.amount": {
+    "message": "15eur"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Fora de l'oficina"
+  },
+  "settings.sendEventNotifications": {
+    "message": "Envia notificacions per email als convidats"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Temps d'enfocament"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "calendarsHeader": {
+    "message": "Calendaris"
+  },
+  "errors.rate_limit_exceeded": {
+    "message": "Ara mateix hi ha molts usuaris accedint al sistema i Google ens diu que hem arribat al màxim. Torneu-ho a provar més tard."
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Permetre la planificació d'email"
+  },
+  "settings.forcePlainText": {
+    "message": "Força l'ús de text pla a les descripcions d'esdeveniments"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telèfon"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Conferència:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Uniu-vos-hi mitjançant videoconferència"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Més informació sobre la conferència"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Codi d'accés"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "codi de pas"
+  },
+  "taskListsHeader": {
+    "message": "Llistes de tasques"
+  },
+  "eventdialog.codeType.password": {
+    "message": "contrasenya"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "La barra lateral a la vista del calendari del Thunderbird amb el botó de calendari nou a la part inferior"
+  },
+  "onboarding.scheduling.enableEmailInvitations": {
+    "message": "Això us permet acceptar invitacions mitjançant la barra que hi ha a sobre del missatge d'invitació per correu electrònic. Tot i que és convenient, en general és millor desactivar-ho i confiar en la configuració \"Afegeix esdeveniments automàticament al teu calendari\" a la configuració web de Google Calendar."
+  },
+  "settings.enableAttendees": {
+    "message": "Sincronitza els assistents a l'esdeveniment"
+  },
+  "onboarding.weblate.title": {
+    "message": "Aquest contingut en el vostre idioma?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Diàleg de calendari nou, que mostra l'opció de seleccionar Google Calendar"
+  },
+  "settings.warning": {
+    "message": "Aquests paràmetres us permetran fer anar la planificació d'email via el Google Calendar, però també hi ha hagut informes sobre correus electrònics de notificació aliens que s'han enviat. Millor que ho proveu primer amb un grup petit."
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Codi de reunió"
+  },
+  "onboarding.welcome.p3.postlink": {
+    "message": "per prendre la decisió correcta sobre com apareixen els assistents als esdeveniments i com es gestionen les invitacions."
+  },
+  "onboarding.weblate.p2.postlink": {
+    "message": " avui! Pots aconseguir el teu idioma al 100%?"
+  },
+  "onboarding.providertype.p2": {
+    "message": "A la pantalla següent, introduïu la vostra adreça de correu electrònic. Fins i tot si estàs subscrit al calendari d'una altra persona, fes servir el teu propi correu electrònic. Si ja us heu subscrit al seu calendari al lloc web de Google Calendar, apareixerà al vostre compte."
+  },
+  "onboarding.scheduling.p2": {
+    "message": "Si la programació de correu electrònic està activada i alguna cosa va malament, el Thunderbird pot crear un esdeveniment nou en lloc d'acceptar correctament un d'existent. Per a reunions grans, com ara un esdeveniment de tota l'empresa, això podria fer semblar que estàs convidant tothom a un esdeveniment duplicat."
+  },
+  "onboarding.welcome.p1": {
+    "message": "El proveïdor de Google Calendar va marcar l'inici del meu viatge cap al codi obert. L'any 2006, no hi havia una manera fàcil de connectar Thunderbird amb Google Calendar. Impulsat per la curiositat i el desig d'ajudar, vaig explorar les API de Google i vaig trobar una manera de superar aquesta bretxa, permetent a innombrables usuaris de Thunderbird accedir a Google Calendar. Aquesta experiència no només em va donar un sentit de propòsit, sinó que també em va obrir les portes a una carrera professional on el codi obert s'ha convertit en una part integral de la meva vida diària."
+  },
+  "onboarding.welcome.p2": {
+    "message": "Ara formeu part d'aquest viatge amb mi. El vostre suport significa molt per a mi i no puc imaginar un futur sense aquest complement."
+  },
+  "onboarding.welcome.p3.linktext": {
+    "message": "secció sobre preferències de planificació"
+  },
+  "onboarding.welcome.p3.prelink": {
+    "message": " Abans de saltar-vos aquesta pàgina sense llegir, si us plau, comproveu"
+  },
+  "onboarding.getstarted.title": {
+    "message": "Per començar"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "A continuació, se us demanarà que inicieu sessió. El diàleg d'inici de sessió especificarà l'adreça de correu electrònic que voleu utilitzar, així que assegureu-vos que esteu iniciant la sessió al compte correcte. Si se us demana que torneu a iniciar sessió més endavant, assegureu-vos d'utilitzar el compte indicat."
+  },
+  "onboarding.allset.p1": {
+    "message": "Això és tot. La sincronització inicial pot trigar una mica, sobretot si teniu molts esdeveniments. Thunderbird pot semblar congelat durant aquest procés a causa de com gestiona els esdeveniments. Deixeu-ho funcionar fins a mitja hora abans de suposar que hi ha un problema. En la majoria dels casos, però, la sincronització es completa en un minut."
+  },
+  "onboarding.getstarted.p1": {
+    "message": "No sabeu per on començar? Primer us heu de subscriure als vostres calendaris. Aneu a la pestanya del calendari del Thunderbird i feu clic a \"Calendari nou\" a la part inferior de la barra lateral."
+  },
+  "onboarding.providertype.p1": {
+    "message": "Veureu tres opcions: Al meu ordinador, A la xarxa i Proveïdor de Google Calendar. Tot i que Google Calendar està tècnicament a la xarxa, seleccioneu l'opció específica del proveïdor."
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Una llista de calendaris amb caselles de selecció al costat"
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "A la pantalla següent, seleccioneu els calendaris i les llistes de tasques als quals us voleu subscriure. Els calendaris subscrits anteriorment apareixeran com a ja afegits. Per cancel·lar la subscripció, utilitzeu el menú contextual de la llista de calendaris del Thunderbird en lloc del diàleg de calendari nou."
+  },
+  "onboarding.allset.imgalt": {
+    "message": "El diàleg de la tasca nova, que mostra només els camps rellevants per al diàleg"
+  },
+  "onboarding.allset.p2": {
+    "message": "Quin és el següent pas? És hora de programar alguns esdeveniments. Un dels avantatges d'utilitzar el proveïdor per a Google Calendar en comptes de la connexió CalDAV integrada és la personalització addicional disponible al diàleg d'esdeveniments. Podeu configurar alarmes predeterminades i ajustar la configuració de privadesa predeterminada. A més, podeu gestionar les tasques de Google directament a Thunderbird."
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Captura de pantalla del weblate, traduint una cadena de l'anglès a l'alemany"
+  },
+  "onboarding.scheduling.enableAttendees": {
+    "message": "Si teniu esdeveniments amb assistents, probablement voldreu activar-ho. Sense això, qualsevol canvi que feu a un esdeveniment eliminarà tots els assistents. Si canvieu aquesta configuració, assegureu-vos de tornar-vos a subscriure als vostres calendaris."
+  },
+  "onboarding.weblate.p1": {
+    "message": "El proveïdor de Google Calendar utilitza Weblate per a les traduccions, on podeu traduir fàcilment les cadenes al vostre idioma. Parles un idioma que no és l'anglès i vols ajudar?"
+  },
+  "onboarding.footer.p1.postlink": {
+    "message": ". Aquí també podeu ajudar a millorar futures versions del complement."
+  },
+  "onboarding.scheduling.p3.prelink": {
+    "message": "Si voleu canviar aquests paràmetres més endavant, aneu a"
+  },
+  "onboarding.scheduling.p3.linktext": {
+    "message": "opcions de complements"
+  },
+  "onboarding.footer.p1.prelink": {
+    "message": "Si teniu cap pregunta, poseu-vos en contacte amb els dels complements"
   }
 }
