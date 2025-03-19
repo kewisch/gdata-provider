@@ -155,9 +155,15 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
     const protocols = ["http", "https", "webcal", "webcals"];
     this.mUri = aUri;
     if (aUri && aUri.schemeIs("googleapi")) {
+      let fullUser, path;
+      if (aUri.pathQueryRef.substr(0, 2) == "//") {
+        // TB128 COMPAT
+        [fullUser, path] = aUri.pathQueryRef.substr(2).split("/", 2);
+      } else {
+        [, fullUser] = aUri.prePath.split("//", 2);
+        path = aUri.pathQueryRef.substr(1);
+      }
       // new format:  googleapi://session-id/?calendar=calhash@group.calendar.google.com&tasks=taskhash
-      let [, fullUser] = aUri.prePath.split("//", 2);
-      let path = aUri.pathQueryRef.substr(1);
 
       let keyvalues = path
         .substr(1)

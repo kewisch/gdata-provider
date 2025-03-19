@@ -58,8 +58,14 @@ var calGoogleSessionManager = {
     }
 
     if (uri.schemeIs("googleapi")) {
-      let [, fullUser] = uri.prePath.split("//", 2);
-      let path = uri.pathQueryRef.substr(1);
+      let fullUser, path;
+      if (uri.pathQueryRef.substr(0, 2) == "//") {
+        // TB128 COMPAT
+        [fullUser, path] = uri.pathQueryRef.substr(2).split("/", 2);
+      } else {
+        [, fullUser] = uri.prePath.split("//", 2);
+        path = uri.pathQueryRef.substr(1);
+      }
 
       id = fullUser || lazy.cal.getUUID();
     } else if (
