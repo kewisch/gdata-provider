@@ -5,6 +5,7 @@
 
 const { ExtensionCommon } = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
 const { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
+const { setTimeout } = ChromeUtils.importESModule("resource://gre/modules/Timer.sys.mjs");
 
 const { ExtensionAPI } = ExtensionCommon;
 
@@ -36,27 +37,35 @@ this.gdata = class extends ExtensionAPI {
       ["content", "gdata-provider", "legacy/content/"],
     ]);
 
-    // Load this first to make sure the loader is set up for future loads
-    let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1");
-    gdataUI.setExtensionVersion(version);
+    // Make sure we're not using cached modules when upgrading/downgrading
+    if (this.extension.startupReason == "ADDON_UPGRADE" || this.extension.startupReason == "ADDON_DOWNGRADE") {
+      Services.obs.notifyObservers(null, "startupcache-invalidate");
+    }
 
-    // Load this early to get the messenger up and running for SyncPrefs
-    let { getMessenger } = gdataUI.loadGdataModule(
-      "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs"
-    );
+    // Do this in the next tick in case the startup cache needs more time to clear
+    setTimeout(() => {
+      // Load this first to make sure the loader is set up for future loads
+      let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=2");
+      gdataUI.setExtensionVersion(version);
 
-    Services.obs.addObserver(this, "passwordmgr-storage-changed");
+      // Load this early to get the messenger up and running for SyncPrefs
+      let { getMessenger } = gdataUI.loadGdataModule(
+        "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs"
+      );
 
-    getMessenger().gdataSyncPrefs.initComplete.then(() => {
-      let { calGoogleCalendar } = gdataUI.loadGdataModule("resource://gdata-provider/legacy/modules/gdataCalendar.sys.mjs");
+      Services.obs.addObserver(this, "passwordmgr-storage-changed");
 
-      if (cal.manager.wrappedJSObject.hasCalendarProvider("gdata")) {
-        cal.manager.wrappedJSObject.unregisterCalendarProvider("gdata", true);
-      }
-      cal.manager.wrappedJSObject.registerCalendarProvider("gdata", calGoogleCalendar);
+      getMessenger().gdataSyncPrefs.initComplete.then(() => {
+        let { calGoogleCalendar } = gdataUI.loadGdataModule("resource://gdata-provider/legacy/modules/gdataCalendar.sys.mjs");
 
-      gdataUI.register();
-    });
+        if (cal.manager.wrappedJSObject.hasCalendarProvider("gdata")) {
+          cal.manager.wrappedJSObject.unregisterCalendarProvider("gdata", true);
+        }
+        cal.manager.wrappedJSObject.registerCalendarProvider("gdata", calGoogleCalendar);
+
+        gdataUI.register();
+      });
+    }, 0);
   }
 
   onShutdown(isAppShutdown) {
@@ -67,7 +76,7 @@ this.gdata = class extends ExtensionAPI {
     cal.manager.wrappedJSObject.unregisterCalendarProvider("gdata", true);
 
     let version = this.extension.manifest.version;
-    let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1");
+    let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=2");
     gdataUI.unregister();
 
     Services.obs.removeObserver(this, "passwordmgr-storage-changed");
@@ -79,8 +88,6 @@ this.gdata = class extends ExtensionAPI {
 
     this.chromeHandle.destruct();
     this.chromeHandle = null;
-
-    Services.obs.notifyObservers(null, "startupcache-invalidate");
   }
 
   getAPI(context) {

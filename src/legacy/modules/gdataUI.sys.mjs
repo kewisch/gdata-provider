@@ -4,7 +4,7 @@
  * Portions Copyright (C) Philipp Kewisch, 2020 */
 
 
-/* IF YOU CHANGE ANYTHING IN THIS FILE YOU NEED TO INCREASE bump=1 in all other modules loading it */
+/* IF YOU CHANGE ANYTHING IN THIS FILE YOU NEED TO INCREASE bump=2 in all other modules loading it */
 
 var lazy = {};
 
@@ -24,6 +24,7 @@ export function recordWindow(window) {
 
 export function setExtensionVersion(version) {
   extensionVersion = version;
+  console.log("[gdataUI] Future modules will load with version " + extensionVersion); // eslint-disable-line no-console
 }
 
 

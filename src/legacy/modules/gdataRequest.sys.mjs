@@ -10,7 +10,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
 
 ChromeUtils.defineLazyGetter(lazy, "messenger", () => {
   let { loadGdataModule } = ChromeUtils.importESModule(
-    "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1"
+    "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=2"
   );
   let { getMessenger } = loadGdataModule(
     "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs"

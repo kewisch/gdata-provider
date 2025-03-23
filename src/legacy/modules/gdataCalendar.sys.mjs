@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 var { defineGdataModuleGetters } = ChromeUtils.importESModule(
-  "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1"
+  "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=2"
 );
 
 var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");

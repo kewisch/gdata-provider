@@ -5,7 +5,7 @@
 /* globals OAUTH_BASE_URI, OAUTH_SCOPE, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET */
 
 var { defineGdataModuleGetters } = ChromeUtils.importESModule(
-  "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1"
+  "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=2"
 );
 
 var lazy = {};
