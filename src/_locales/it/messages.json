@@ -68,7 +68,7 @@
     "message": "Questa versione del provider è scaduta, aggiornare all'ultima versione."
   },
   "reminderOutOfRange": {
-    "message": "Calendario Google consente solamente promemoria di massimo 4 settimane prima dell'inizio dell'evento."
+    "message": "Google Calendar consente promemoria solo fino a 4 settimane prima dell'inizio dell'evento."
   },
   "syncProgressEvent": {
     "message": "Sincronizzazione di $calendar_name$, evento $num_events_synced$ di $total_events_to_sync$",
@@ -144,7 +144,7 @@
     "message": "Attiva la pianificazione delle email"
   },
   "settings.sendEventNotifications": {
-    "message": "Invia notifiche via email agli ospiti dell'evento"
+    "message": "Invia notifiche via email ai partecipanti all'evento"
   },
   "settings.warning": {
     "message": "Queste impostazioni ti consentiranno di utilizzare la pianificazione delle email tramite Calendario Google, ma sono stati segnalati anche casi di invio di email di notifica superflue. Per favore, inizia con una piccola riunione di prova."

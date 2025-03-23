@@ -1,6 +1,6 @@
 {
   "extensionName": {
-    "message": "Furnizor pentru Google Calendar",
+    "message": "Provider pentru Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "extensionDescription": {
@@ -8,26 +8,26 @@
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdata-provider.label": {
-    "message": "Calendar Google",
+    "message": "Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdata.privacy.default.label": {
     "message": "Implicit de la Google"
   },
   "gdata.privacy.default.accesskey": {
-    "message": "d"
+    "message": "D"
   },
   "gdata.migration.title": {
     "message": "Migrare calendare disponibile numai pentru citire"
   },
   "gdata.migration.description": {
-    "message": "Furnizorul pentru Google Calendar a detectat că ai calendare existente care sunt capabile să acceseze Google Calendar în modul numai citire. Dacă dorești să actualizezi oricare dintre aceste calendare, te rugăm să le selectezi mai jos."
+    "message": "Provider pentru Google Calendar a detectat că ai calendare existente care accesează Google Calendar doar în modul citire. Dacă dorești să actualizezi oricare dintre aceste calendare, te rugăm să le selectezi mai jos."
   },
   "gdata.migration.upgrade.label": {
     "message": "Actualizare"
   },
   "gdata.migration.upgrade.accesskey": {
-    "message": "u"
+    "message": "U"
   },
   "gdata.migration.showagain.label": {
     "message": "Verifică întotdeauna"
@@ -45,7 +45,7 @@
     "message": "Te rugăm să treci la pasul următor pentru a configura calendarele."
   },
   "busyTitle": {
-    "message": "Ocupat ($calendar_name$)",
+    "message": "($calendar_name$) ocupat",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
     "placeholders": {
       "calendar_name": {
@@ -55,7 +55,7 @@
     }
   },
   "quotaExceeded": {
-    "message": "S-a depășit cota pentru $session_id$; te rugăm să încerci din nou mai târziu.",
+    "message": "Limita pentru $session_id$ a fost depășită; te rugăm să încerci din nou mai târziu.",
     "description": "This is shown when the request quota has been exceeded.",
     "placeholders": {
       "session_id": {
@@ -65,10 +65,10 @@
     }
   },
   "providerOutdated": {
-    "message": "Această versiune a furnizorului a expirat, te rugăm să o actualizezi la ultima versiune."
+    "message": "Versiunea actuală a Provider a expirat, te rugăm să actualizezi la ultima versiune."
   },
   "reminderOutOfRange": {
-    "message": "Google Calendar permite doar reamintiri de până la 4 săptămâni înainte de începerea evenimentului."
+    "message": "Google Calendar permite doar reamintiri cu până la 4 săptămâni înainte de începerea evenimentului."
   },
   "syncProgressEvent": {
     "message": "Sincronizez $calendar_name$ cu evenimentul $num_events_synced$ din $total_events_to_sync$",
@@ -114,7 +114,7 @@
     }
   },
   "requestWindowDescription": {
-    "message": "Furnizorul pentru Google Calendar dorește să-ți acceseze contul $session_id$ pentru a obține evenimentele și sarcinile. Datele de autentificare și ale calendarului sunt transferate doar între calculator și Google, niciun site terț nu este implicat.",
+    "message": "Provider pentru Google Calendar necesită accesarea contului $session_id$ pentru a obține evenimentele și sarcinile. Datele de autentificare și ale calendarului sunt transferate doar între calculatorul tău și Google, niciun site terț nu este implicat.",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -141,10 +141,10 @@
     "message": "Introducere"
   },
   "settings.warning": {
-    "message": "Aceste setări vă vor permite să utilizați programarea e-mail-urilor prin Google Calendar, dar au existat rapoarte despre trimiterea de e-mailuri de notificare străine. Vă rugăm să testați mai întâi cu un grup mic de persoane."
+    "message": "Aceste setări vă vor permite să utilizați programarea transmiterii e-mail-urilor prin Google Calendar, dar au existat rapoarte despre trimiterea de e-mailuri de notificare străine. Vă rugăm să testați mai întâi cu un grup mic de persoane."
   },
   "settings.enableEmailInvitations": {
-    "message": "Activați programarea e-mailului"
+    "message": "Activați programarea transmiterii e-mailului"
   },
   "eventdialog.conferenceLabel": {
     "message": "Conferință:"
@@ -201,12 +201,117 @@
     "message": "Liste de sarcini"
   },
   "onboarding.welcome.p1": {
-    "message": "Extensia pentru Google Calendar a marcat începutul călătoriei mele spre open source. În 2006, nu exista o modalitate ușoară de a conecta Thunderbird la Google Calendar. Impulsionat de curiozitate și dorința de a ajuta, am explorat API-urile Google și am găsit o modalitate de a reduce această diferență, permițând nenumăraților utilizatori Thunderbird să acceseze Google Calendar. Această experiență nu numai că mi-a dat sentimentul că am un scop, dar mi-a deschis și ușile către o carieră profesională în care open source a devenit o parte integrantă a vieții mele de zi cu zi."
+    "message": "Extensia Provider pentru Google Calendar a marcat începutul călătoriei mele spre open source. În 2006, nu exista o modalitate ușoară de a conecta Thunderbird la Google Calendar. Impulsionat de curiozitate și dorința de a ajuta, am explorat API-urile Google și am găsit o modalitate de a realiza acest lucru, permițând nenumăraților utilizatori Thunderbird să acceseze Google Calendar. Această experiență nu numai că mi-a dat sentimentul că am un scop, dar mi-a deschis și ușile către o carieră profesională în care open source a devenit o parte integrantă a vieții mele de zi cu zi."
   },
   "onboarding.welcome.p2": {
     "message": "Acum faci parte din această călătorie alături de mine. Sprijinul tău înseamnă foarte mult pentru mine și nu-mi pot imagina un viitor fără această extensie."
   },
   "onboarding.welcome.p3.prelink": {
     "message": " Înainte de a sări peste citirea acestei pagini, vă rugăm să verificați"
+  },
+  "onboarding.weblate.p2.prelink": {
+    "message": "tbd"
+  },
+  "onboarding.providertype.title": {
+    "message": "În rețea?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Noua fereastră de dialog pentru calendar, care prezintă opțiunea de a selecta Google Calendar"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Selectați calendarele dvs"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "O listă de calendare cu casete de selectare laterale"
+  },
+  "onboarding.allset.title": {
+    "message": "Totul este pregătit!"
+  },
+  "onboarding.scheduling.title": {
+    "message": "Probleme de planificare"
+  },
+  "onboarding.scheduling.sendEventNotifications": {
+    "message": "Atunci când este activată, Google trimite notificări la modificarea unui eveniment. Dacă este dezactivată, funcționează ca și cum ați face clic pe „Nu trimite”, de fiecare dată când actualizați un eveniment programat."
+  },
+  "onboarding.scheduling.p3.prelink": {
+    "message": "Dacă doriți să modificați aceste setări ulterior, accesați"
+  },
+  "onboarding.scheduling.p3.postlink": {
+    "message": "pentru acest add-on."
+  },
+  "onboarding.weblate.title": {
+    "message": "Doriți acest conținut în limba dumneavoastră?"
+  },
+  "onboarding.weblate.p2.linktext": {
+    "message": "Ajutați cu traducerea"
+  },
+  "onboarding.footer.p1.linktext": {
+    "message": "paginii GitHub"
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Trimiteți-mi un semn de apreciere"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Apoi, vi se va solicita să vă reconectați. Dialogul de conectare va specifica adresa de e-mail care trebuie utilizată, deci asigurați-vă că vă conectați la contul corect. Dacă la o dată ulterioară vi se solicită să vă reautentificați, asigurați-vă că utilizați contul indicat."
+  },
+  "onboarding.allset.imgalt": {
+    "message": "Fereastră de dialog pentru sarcină nouă, ce afișează doar câmpurile relevante pentru dialog"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "Meniul lateral al ferestrei calendar din Thunderbird cu noul buton pentru calendar în partea de jos"
+  },
+  "onboarding.providertype.p2": {
+    "message": "Pe ecranul următor, introduceți adresa dvs. de e-mail. Chiar dacă vă abonați la calendarul altcuiva, utilizați propriul e-mail. Dacă v-ați abonat deja la calendarul lor pe site-ul Google Calendar, acesta va apărea în contul dvs."
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Nu sunteți sigur de unde să începeți? Mai întâi trebuie să vă abonați la calendarul dvs. Mergeți la pagina calendar din Thunderbird și faceți clic pe „Calendar nou” în partea de jos a barei laterale."
+  },
+  "onboarding.providertype.p1": {
+    "message": "Veți vedea trei opțiuni: Pe computerul meu, În rețea și Provider pentru Google Calendar. Deși Google Calendar se află tehnic în rețea, selectați opțiunea specifică pentru Provider."
+  },
+  "onboarding.footer.p1.postlink": {
+    "message": "a add-on-ului. Tot aici puteți contribui la îmbunătățirea versiunilor viitoare ale add-on-ului."
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "În următorul ecran, selectați calendarele și listele de sarcini la care doriți să vă abonați. Calendarele la care v-ați abonat anterior vor apărea ca fiind deja adăugate. Pentru a vă dezabona, utilizați meniul din lista de calendare a Thunderbird, în locul ferestrei de dialog pentru calendar nou."
+  },
+  "onboarding.donate.amount": {
+    "message": "15eur"
+  },
+  "onboarding.footer.p2": {
+    "message": "Vă mulțumim că ați citit până la sfârșit! Dacă ați ajuns până aici, sper că sunteți la fel de încântați de acest add-on ca și mine. Dați-i drumul și încercați-l întâi, dar dacă deja folosiți altul, aș aprecia sprijinul dvs."
+  },
+  "onboarding.scheduling.p2": {
+    "message": "Dacă programarea prin e-mail este activată și ceva nu merge bine, Thunderbird poate crea un nou eveniment în loc să accepte corect unul existent. Pentru întâlnirile mari, cum ar fi un eveniment al întregii companii, acest lucru ar putea face să pară că îi invitați pe toți la un eveniment dublat."
+  },
+  "onboarding.footer.p1.prelink": {
+    "message": "Dacă aveți întrebări, vă rugăm să ne contactați prin intermediul"
+  },
+  "onboarding.allset.p1": {
+    "message": "Asta este tot. Sincronizarea inițială poate dura ceva timp, mai ales dacă aveți multe evenimente. Thunderbird poate părea blocat în timpul acestui proces din cauza modului în care gestionează evenimentele. Lăsați-l să ruleze timp de până la o jumătate de oră înainte de a presupune că există o problemă. Cu toate acestea, în majoritatea cazurilor, sincronizarea se finalizează în decurs de un minut."
+  },
+  "onboarding.allset.p2": {
+    "message": "Ce urmează? Este timpul să programați câteva evenimente. Un avantaj al utilizării Provider pentru Google Calendar în locul conexiunii CalDAV încorporate, este personalizarea suplimentară disponibilă în dialogul evenimentului. Puteți seta alarme implicite și puteți ajusta setările implicite de confidențialitate. În plus, puteți gestiona Google Tasks direct în Thunderbird."
+  },
+  "onboarding.scheduling.p1": {
+    "message": "Programarea între Thunderbird și Google poate fi complicată. Thunderbird nu oferă întotdeauna informații clare cu privire la faptul dacă un eveniment este o invitație acceptată sau un eveniment nou. Iată câteva setări de luat în considerare:"
+  },
+  "onboarding.scheduling.enableAttendees": {
+    "message": "Dacă aveți evenimente cu participanți, este de preferat să activați această opțiune. Fără aceasta, orice modificări făcute unui eveniment, va elimina toți participanții. Dacă modificați această setare, asigurați-vă că vă reabonați la calendare."
+  },
+  "onboarding.weblate.p1": {
+    "message": "Provider pentru Google Calendar utilizează Weblate pentru traduceri, unde puteți traduce cu ușurință șirurile de caractere în limba dvs. Vorbiți o altă limbă decât engleza și doriți să ajutați?"
+  },
+  "onboarding.scheduling.p3.linktext": {
+    "message": "opțiuni pentru add-on"
+  },
+  "onboarding.scheduling.enableEmailInvitations": {
+    "message": "Acest lucru vă permite să acceptați invitații utilizând bara de deasupra mesajului de invitație prin e-mail. Deși este convenabil, în general este mai bine să dezactivați această opțiune și să vă bazați în schimb pe setarea „Adăugați automat evenimente în calendar” din setările web ale Google Calendar."
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Captură de ecran a traducătorului Weblate, traducând un șir de caractere din engleză în germană"
+  },
+  "onboarding.weblate.p2.postlink": {
+    "message": " astăzi! Puteți să aduceți localizarea la 100%?"
   }
 }

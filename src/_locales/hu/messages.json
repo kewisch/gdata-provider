@@ -174,7 +174,7 @@
     "message": "Hozzáférési kód"
   },
   "eventdialog.oooEvent": {
-    "message": "Hivatalból"
+    "message": "Távollét"
   },
   "onboarding.scheduling.sendEventNotifications": {
     "message": "Ha engedélyezve van, a Google értesítést küld, ha megváltoztatsz egy eseményt. Ha kikapcsolod, akkor úgy működik, mintha minden alkalommal, amikor egy ütemezett eseményt frissítesz, a „Ne küldd” gombra kattintanál."
@@ -183,7 +183,7 @@
     "message": "E-mail értesítések küldése az esemény vendégeinek"
   },
   "onboarding.welcome.p3.prelink": {
-    "message": " Mielőtt átugranád ennek az oldalnak az olvasását, kérlek ellenőrizd"
+    "message": " Mielőtt átugranád ennek az oldalnak az olvasását, kérlek, nézd meg az"
   },
   "onboarding.donate.amount": {
     "message": "6000huf"
@@ -202,5 +202,113 @@
   },
   "settings.warning": {
     "message": "Ezek a beállítások lehetővé teszik, hogy az e-mailek ütemezését a Google Naptáron keresztül használja, de érkeztek bejelentések nem odaillő értesítési e-mailekről is. Kérjük, tesztelje először egy kis megbeszéléssel."
+  },
+  "onboarding.welcome.p2": {
+    "message": "Mostantól együtt vagyunk ezen az úton. Nagyon sokat jelent számomra a támogatásod, és el sem tudom képzelni a jövőt e kiegészítő nélkül."
+  },
+  "onboarding.welcome.p3.linktext": {
+    "message": "ütemezési beállításokkal foglalkozó részt"
+  },
+  "onboarding.getstarted.title": {
+    "message": "Kezdő lépések"
+  },
+  "onboarding.providertype.title": {
+    "message": "A hálózaton?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Új naptár párbeszédablak, benne a Google Naptár kiválasztási lehetőségével"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Válaszd ki a naptáraidat"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Egy lista a naptárakról, mellettük jelölőnégyzetekkel"
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "A következő képernyőn válaszd ki azokat a naptárakat és feladatlistákat, amelyekre fel szeretnél iratkozni. A korábban már feliratkozott naptárak automatikusan megjelennek. Ha le szeretnél iratkozni valamelyikről, azt a Thunderbird naptárlistájában a helyi menüből teheted meg, ne az új naptár párbeszédablakban."
+  },
+  "onboarding.allset.title": {
+    "message": "Minden készen áll!"
+  },
+  "onboarding.allset.imgalt": {
+    "message": "Az új feladat párbeszédablak, csak a releváns mezőket megjelenítve"
+  },
+  "onboarding.scheduling.title": {
+    "message": "Ütemezési nehézségek"
+  },
+  "onboarding.scheduling.enableEmailInvitations": {
+    "message": "Ez lehetővé teszi, hogy a meghívó e-mail fölötti sáv segítségével fogadj el meghívásokat. Bár ez kényelmes lehet, általában jobb ezt kikapcsolva hagyni, és inkább a Google Naptár webes beállításai között található „Események automatikus hozzáadása a naptárhoz” opcióra hagyatkozni."
+  },
+  "onboarding.scheduling.p3.linktext": {
+    "message": "kiegészítő beállításaihoz"
+  },
+  "onboarding.scheduling.p3.postlink": {
+    "message": "."
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Képernyőkép a Weblate felületéről, ahol egy angol szöveget fordítanak németre"
+  },
+  "onboarding.weblate.p2.linktext": {
+    "message": "Segíts a fordításban"
+  },
+  "onboarding.weblate.p2.postlink": {
+    "message": " ma! El tudod juttatni a saját nyelvedet 100%-ra?"
+  },
+  "onboarding.footer.p1.linktext": {
+    "message": "GitHub-oldal"
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Küldj egy kis jelképes köszönetet"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Ezután a rendszer kérni fogja, hogy jelentkezz be. A bejelentkezési ablak meg fogja mutatni, melyik e-mail címet kell használnod, ezért ügyelj arra, hogy a megfelelő fiókba lépj be. Ha később újra be kell jelentkezned, győződj meg róla, hogy ugyanazt a megadott fiókot használod."
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "A Thunderbird naptárnézetének oldalsávja, alul az új naptár gombbal"
+  },
+  "onboarding.weblate.title": {
+    "message": "Ez a tartalom a te nyelveden?"
+  },
+  "onboarding.weblate.p1": {
+    "message": "A Provider for Google Calendar a Weblate felületet használja a fordításokhoz, ahol könnyedén lefordíthatod a szövegeket a saját nyelvedre. Beszélsz angoltól eltérő nyelvet, és szívesen segítenél?"
+  },
+  "onboarding.allset.p1": {
+    "message": "Ennyi az egész. Az első szinkronizálás eltarthat egy ideig, különösen, ha sok eseményed van. A Thunderbird ilyenkor lefagyottnak tűnhet, mivel így kezeli az eseményeket. Hagyd futni akár fél óráig is, mielőtt problémára gyanakodnál. A legtöbb esetben azonban a szinkronizálás egy percen belül befejeződik."
+  },
+  "onboarding.scheduling.p1": {
+    "message": "Az ütemezés a Thunderbird és a Google között néha trükkös lehet. A Thunderbird nem mindig jelzi egyértelműen, hogy egy esemény meghívás elfogadása vagy új esemény. Íme néhány beállítás, amit érdemes átnézni:"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Nem tudod, hol kezdd? Először fel kell iratkoznod a naptáraidra. Lépj a Thunderbird naptár fülére, majd kattints az oldalsáv alján található „Új naptár” gombra."
+  },
+  "onboarding.footer.p1.prelink": {
+    "message": "Ha bármilyen kérdésed van, vedd fel a kapcsolatot a kiegészítő"
+  },
+  "onboarding.allset.p2": {
+    "message": "Mi a következő lépés? Itt az ideje eseményeket ütemezni. Az egyik előnye a Google Calendar Provider használatának a beépített CalDAV-kapcsolattal szemben, hogy az események párbeszédablakában több testreszabási lehetőség érhető el. Beállíthatod az alapértelmezett emlékeztetőket és a titkossági beállításokat is. Ráadásul a Google Feladatokat is közvetlenül kezelheted a Thunderbirdben."
+  },
+  "onboarding.providertype.p1": {
+    "message": "Három lehetőséget fogsz látni: A saját gépemen, A hálózaton, és Provider for Google Calendar. Bár a Google Naptár technikailag a hálózaton van, válaszd a kifejezetten a providerhez tartozó lehetőséget."
+  },
+  "onboarding.footer.p2": {
+    "message": "Köszönöm, hogy végigolvastad! Ha eddig eljutottál, remélem, legalább annyira lelkesedsz a kiegészítőért, mint én. Próbáld ki bátran, és ha már most meggyőzött, nagyon hálás lennék a támogatásodért."
+  },
+  "onboarding.scheduling.p3.prelink": {
+    "message": "Ha később módosítani szeretnéd ezeket a beállításokat, menj a"
+  },
+  "onboarding.providertype.p2": {
+    "message": "A következő képernyőn add meg az e-mail címedet. Akkor is a saját címedet használd, ha más naptárára iratkozol fel. Ha már előzőleg feliratkoztál az adott naptárra a Google Naptár weboldalán, az meg fog jelenni a fiókodban."
+  },
+  "onboarding.welcome.p1": {
+    "message": "A Provider for Google Calendar jelentette az én utamat az open source világába. 2006-ban még nem létezett egyszerű módja annak, hogy a Thunderbirdet összekössük a Google Naptárral. A kíváncsiság és a segíteni akarás hajtott, így beleástam magam a Google API-kba, és megtaláltam a módját, hogyan lehet áthidalni ezt a szakadékot – lehetővé téve, hogy rengeteg Thunderbird-felhasználó elérje a Google Naptárt. Ez a tapasztalat nemcsak célt adott, hanem megnyitotta számomra a professzionális karrier kapuját is, ahol az open source mára a mindennapjaim szerves részévé vált."
+  },
+  "onboarding.scheduling.enableAttendees": {
+    "message": "Ha olyan eseményeid vannak, amelyekhez résztvevők tartoznak, érdemes ezt a beállítást bekapcsolni. Enélkül bármilyen módosítás az eseményen eltávolítja az összes résztvevőt. Ha módosítod ezt a beállítást, mindenképp iratkozz fel újra a naptáraidra."
+  },
+  "onboarding.scheduling.p2": {
+    "message": "Ha az e-mailes ütemezés engedélyezve van, és valami félremegy, a Thunderbird előfordulhat, hogy egy új eseményt hoz létre ahelyett, hogy helyesen elfogadna egy meglévőt. Nagyobb megbeszélések, például egy teljes céges esemény esetén ez azt a benyomást keltheti, mintha mindenkit meghívnál egy duplikált eseményre."
+  },
+  "onboarding.welcome.p3.postlink": {
+    "message": "is – így biztosan jól döntesz arról, hogyan jelennek meg a résztvevők az eseményekben, és hogyan kezelődnek a meghívók."
   }
 }

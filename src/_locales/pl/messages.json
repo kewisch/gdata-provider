@@ -145,5 +145,173 @@
   },
   "errors.rate_limit_exceeded": {
     "message": "W tej chwili loguje się wielu użytkowników, Google poinformował, że limit logowania został przekroczony. Spróbuj ponownie później."
+  },
+  "onboarding.welcome.p1": {
+    "message": "Provider dla Kalendarza Google był początkiem mojej podróży do open source. W 2006 roku nie było łatwego sposobu na połączenie Thunderbirda z Kalendarzem Google. Kierując się ciekawością i chęcią pomocy, zbadałem interfejsy API Google i znalazłem sposób na wypełnienie tej luki, umożliwiając niezliczonym użytkownikom Thunderbirda dostęp do Kalendarza Google. To doświadczenie nie tylko dało mi poczucie celu, ale także otworzyło drzwi do kariery zawodowej, w której open source stał się integralną częścią mojego codziennego życia."
+  },
+  "onboarding.scheduling.sendEventNotifications": {
+    "message": "Po włączeniu, Google wysyła powiadomienia o zmianie wydarzenia. Jeśli jest wyłączona, działa jak kliknięcie „Nie wysyłaj” za każdym razem, gdy aktualizujesz zaplanowane wydarzenie."
+  },
+  "onboarding.allset.imgalt": {
+    "message": "Nowe okno dialogowe zadania, wyświetlające tylko pola istotne dla okna dialogowego"
+  },
+  "onboarding.providertype.p2": {
+    "message": "Na następnym ekranie wprowadź swój adres e-mail. Nawet jeśli subskrybujesz kalendarz innej osoby, użyj własnego adresu e-mail. Jeśli zasubskrybowałeś już kalendarz tej osoby w witrynie Kalendarza Google, pojawi się on na Twoim koncie."
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Następnie zostaniesz poproszony o zalogowanie się. Okno dialogowe logowania określi adres e-mail, którego należy użyć, więc upewnij się, że logujesz się na właściwe konto. Jeśli zostaniesz poproszony o ponowne zalogowanie się w późniejszym czasie, upewnij się, że używasz wskazanego konta."
+  },
+  "onboarding.scheduling.p3.prelink": {
+    "message": "Jeśli będziesz później chciał zmienić te ustawienia, przejdź do sekcji"
+  },
+  "onboarding.weblate.p2.prelink": {
+    "message": " "
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "Na następnym ekranie wybierz kalendarze i listy zadań, które chcesz subskrybować. Wcześniej subskrybowane kalendarze będą wyświetlane jako już dodane. Aby anulować subskrypcję, użyj menu kontekstowego na liście kalendarzy Thunderbirda zamiast okna dialogowego nowego kalendarza."
+  },
+  "onboarding.allset.p1": {
+    "message": "To wszystko. Początkowa synchronizacja może zająć trochę czasu, zwłaszcza jeśli masz wiele zdarzeń. Thunderbird może wydawać się zawieszony podczas tego procesu ze względu na sposób obsługi zdarzeń. Pozwól mu działać do pół godziny, zanim założysz, że wystąpił problem. W większości przypadków synchronizacja kończy się jednak w ciągu minuty."
+  },
+  "onboarding.footer.p1.prelink": {
+    "message": "Jeśli masz jakieś pytania, skontaktuj się z nami za pośrednictwem dodatku"
+  },
+  "onboarding.scheduling.p1": {
+    "message": "Planowanie między Thunderbirdem a Google może być trudne. Thunderbird nie zawsze dostarcza jasnych informacji o tym, czy wydarzenie jest zaakceptowanym zaproszeniem, czy nowym wydarzeniem. Oto kilka ustawień do rozważenia:"
+  },
+  "onboarding.scheduling.enableEmailInvitations": {
+    "message": "Umożliwia to akceptowanie zaproszeń za pomocą paska nad wiadomością e-mail z zaproszeniem. Choć jest to wygodne, generalnie lepiej jest wyłączyć tę opcję i zamiast tego polegać na ustawieniu „Automatycznie dodawaj wydarzenia do kalendarza” w ustawieniach internetowych Kalendarza Google."
+  },
+  "onboarding.scheduling.p2": {
+    "message": "Jeśli planowanie wiadomości e-mail jest włączone i coś pójdzie nie tak, Thunderbird może utworzyć nowe wydarzenie zamiast poprawnie zaakceptować istniejące. W przypadku dużych spotkań, takich jak wydarzenie dla całej firmy, może to sprawiać wrażenie, że zapraszasz wszystkich na zduplikowane wydarzenie."
+  },
+  "onboarding.welcome.p2": {
+    "message": "Jesteś teraz częścią tej podróży razem ze mną. Wasze wsparcie wiele dla mnie znaczy i nie wyobrażam sobie przyszłości bez tego dodatku."
+  },
+  "onboarding.welcome.p3.prelink": {
+    "message": " Zanim pominiesz czytanie tej strony, sprawdź"
+  },
+  "onboarding.welcome.p3.linktext": {
+    "message": "sekcja dotycząca preferencji planowania"
+  },
+  "onboarding.welcome.p3.postlink": {
+    "message": "aby dokonać właściwego wyboru sposobu wyświetlania uczestników wydarzeń i sposobu obsługi zaproszeń."
+  },
+  "onboarding.getstarted.title": {
+    "message": "Rozpoczęcie pracy"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "Pasek boczny w widoku kalendarza Thunderbirda z nowym przyciskiem kalendarza na dole"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Nie wiesz od czego zacząć? Najpierw musisz zasubskrybować swoje kalendarze. Przejdź do karty kalendarza w Thunderbirdzie i kliknij „Nowy kalendarz” u dołu paska bocznego."
+  },
+  "onboarding.providertype.title": {
+    "message": "W sieci?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Nowe okno dialogowe kalendarza, pokazujące opcje wyboru Kalendarza Google"
+  },
+  "onboarding.providertype.p1": {
+    "message": "Zobaczysz trzy opcje: Na moim komputerze, W sieci i Dostawca Kalendarza Google. Chociaż Kalendarz Google jest technicznie dostępny w sieci, wybierz opcję specyficzną dla dostawcy."
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Wskaż swoje kalendarze"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Lista kalendarzy z polami wyboru z boku"
+  },
+  "onboarding.allset.title": {
+    "message": "Wszystko gotowe!"
+  },
+  "onboarding.allset.p2": {
+    "message": "Co dalej? Czas zaplanować kilka wydarzeń. Jedną z zalet korzystania z dostawcy Kalendarza Google zamiast wbudowanego połączenia CalDAV jest dodatkowe dostosowanie dostępne w oknie dialogowym wydarzenia. Możesz ustawić domyślne alarmy i dostosować domyślne ustawienia prywatności. Dodatkowo, możesz zarządzać zadaniami Google bezpośrednio w Thunderbirdzie."
+  },
+  "onboarding.scheduling.title": {
+    "message": "Problemy z harmonogramem"
+  },
+  "onboarding.scheduling.enableAttendees": {
+    "message": "Jeśli masz wydarzenia z uczestnikami, prawdopodobnie będziesz chciał włączyć tę opcję. Bez niej wszelkie zmiany wprowadzone w wydarzeniu spowodują usunięcie wszystkich uczestników. Jeśli zmienisz to ustawienie, pamiętaj o ponownym zasubskrybowaniu kalendarzy."
+  },
+  "onboarding.scheduling.p3.linktext": {
+    "message": "opcje dodatkowe"
+  },
+  "onboarding.scheduling.p3.postlink": {
+    "message": "dla tego dodatku."
+  },
+  "onboarding.weblate.title": {
+    "message": "Czy ta zawartość jest w twoim języku?"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Zrzut ekranu z weblate, tłumaczący ciąg znaków z angielskiego na niemiecki"
+  },
+  "onboarding.weblate.p1": {
+    "message": "Dostawca dla Kalendarza Google używa Weblate do tłumaczeń, gdzie można łatwo przetłumaczyć ciągi na swój język. Mówisz w języku innym niż angielski i chcesz pomóc?"
+  },
+  "onboarding.weblate.p2.linktext": {
+    "message": "Pomoc przy tłumaczeniach"
+  },
+  "onboarding.weblate.p2.postlink": {
+    "message": " dzisiaj! Czy możesz osiągnąć 100% znajomości języka?"
+  },
+  "onboarding.footer.p1.linktext": {
+    "message": "Strona GitHub"
+  },
+  "onboarding.footer.p1.postlink": {
+    "message": ". Jest to również miejsce, w którym możesz pomóc ulepszyć przyszłe wersje dodatku."
+  },
+  "onboarding.footer.p2": {
+    "message": "Dziękuję za przeczytanie do końca! Jeśli dotarłeś tak daleko, mam nadzieję, że jesteś tak samo podekscytowany tym dodatkiem jak ja. Śmiało, wypróbuj go najpierw, ale jeśli już się zdecydowałeś, będę wdzięczny za wsparcie."
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Wyślij mi dowód wdzięczności"
+  },
+  "onboarding.donate.amount": {
+    "message": "15eur"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konferencja:"
+  },
+  "settings.forcePlainText": {
+    "message": "Wymuszenie używania zwykłego tekstu w opisach zdarzeń"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Dołącz za pośrednictwem wideokonferencji"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefon"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Więcej informacji o konferencji"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Kod dostępu"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Kod dostępu"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Hasło"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Poza biurem"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Czas na skupienie"
+  },
+  "settings.enableAttendees": {
+    "message": "Synchronizacja uczestników wydarzenia"
+  },
+  "settings.sendEventNotifications": {
+    "message": "Wysyłanie powiadomień e-mail do gości wydarzenia"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Kod spotkania"
   }
 }
