@@ -130,5 +130,17 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "onboarding.footer.p1.linktext": {
+    "message": "„GitHub“ puslapis"
+  },
+  "calendarsHeader": {
+    "message": "Kalendoriai"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Slaptažodis"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
   }
 }
