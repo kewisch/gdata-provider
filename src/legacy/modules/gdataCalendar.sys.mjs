@@ -339,7 +339,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
       case "itip.transport":
         if (
           !this.isDefaultCalendar ||
-          !messenger.gdataSyncPrefs.get("settings.enableEmailInvitations", false)
+          !lazy.messenger.gdataSyncPrefs.get("settings.enableEmailInvitations", false)
         ) {
           // If we explicitly return null here, then these calendars
           // will not be included in the list of calendars to accept
