@@ -255,7 +255,7 @@
     "message": "Fuori Ufficio"
   },
   "eventdialog.codeType.passcode": {
-    "message": "Codice di accesso"
+    "message": "Codice segreto"
   },
   "onboarding.scheduling.enableAttendees": {
     "message": "Se hai eventi con invitati, probabilmente vorrai abilitare questa opzione. Senza di essa, qualsiasi modifica apportata a un evento rimuoverà tutti gli invitati. Se modifichi questa impostazione, assicurati di riabbonarti ai tuoi calendari."
