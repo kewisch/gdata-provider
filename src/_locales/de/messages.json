@@ -204,10 +204,10 @@
     "message": "Der Provider für Google Kalender war mein Einstieg in die Open Source Welt. Im Jahr 2006 gab es keine einfache Möglichkeit, Thunderbird mit Google Kalender zu verbinden. Aus Neugier und dem Wunsch zu helfen, setzte ich mich mit Googles APIs auseinander und fand eine Lösung, die es unzähligen Thunderbird-Nutzern ermöglichte, auf Google Kalender zuzugreifen. Diese Erfahrung gab mir nicht nur eine klare Aufgabe, sondern ebnete auch den Weg für eine berufliche Laufbahn, in der Open Source heute ein fester Bestandteil meines Alltags ist."
   },
   "onboarding.welcome.p3.postlink": {
-    "message": "an. So kannst du die richtige Entscheidung treffen, wie Teilnehmer in Terminen angezeigt werden und wie Einladungen gehandhabt werden."
+    "message": "um die richtige Entscheidung treffen, wie Teilnehmer in Terminen angezeigt werden und wie Einladungen gehandhabt werden."
   },
   "onboarding.welcome.p3.prelink": {
-    "message": " Bevor du diese Seite überspringst, sieh dir bitte den"
+    "message": " Bevor du diese Seite überspringst, überprüfe bitte den"
   },
   "onboarding.selectcalendars.p2": {
     "message": "Auf dem nächsten Bildschirm wählst du die Kalender und Aufgabenlisten aus, die du abonnieren möchtest. Bereits abonnierte Kalender werden als hinzugefügt angezeigt. Zum Abbestellen verwende das Kontextmenü in der Kalenderliste von Thunderbird, nicht das Dialogfeld „Neuer Kalender“."
@@ -261,7 +261,7 @@
     "message": "Das war's!"
   },
   "onboarding.allset.imgalt": {
-    "message": "Das Dialogfeld „Neue Aufgabe“ mit nur den relevanten Feldern"
+    "message": "Der \"Neue Aufgaben\" Dialog zeigt nur die für den Dialog relevanten Felder an"
   },
   "onboarding.scheduling.title": {
     "message": "Probleme bei der Terminplanung"
