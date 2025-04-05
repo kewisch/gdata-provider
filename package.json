@@ -36,7 +36,7 @@
     "verbose": true
   },
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "build": "rm -f dist/gdata-provider.xpi; (cd src && zip -9r ../dist/gdata-provider.xpi `git ls-files | grep -v 'package\\(-lock\\)\\?.json' | grep -v eslintrc`)",
     "clean": "rm -f dist/gdata-provider.xpi",
     "lint": "commitlint -f origin/main && eslint"
@@ -49,6 +49,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "conventional-changelog": "^6.0.0",
     "conventional-changelog-cli": "^5.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "^9.22.0",
     "eslint-plugin-jest": "^28.11.0",
     "ical.js": "^2.1.0",
