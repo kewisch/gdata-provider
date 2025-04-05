@@ -267,6 +267,7 @@ class calGoogleSession {
         this.console.log("The client_id and client_secret are invalid, best upgrade to the latest Thunderbird/Provider");
         this.notifyOutdated();
         throw new TokenFailureError();
+      case "unauthorized_client":
       case "invalid_grant":
         this.console.log("The refresh token is invalid, need to start over with authentication");
         await this.invalidate();
@@ -277,7 +278,14 @@ class calGoogleSession {
           throw new TokenFailureError();
         }
         break;
+      case "invalid_request":
+      case "unsupported_grant_type":
+      case "invalid_scope":
+        this.console.error(`An unhandled OAuth2 failure occurred: '${reason}'. Upgrading to the latest Thunderbird/Provider might fix the issue.`);
+        this.notifyOutdated();
+        throw new TokenFailureError();
       default:
+        // should only happen when `reason === undefined` since all valid reasons have been covered above
         throw e;
     }
   }
