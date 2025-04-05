@@ -330,6 +330,99 @@ test("login", async () => {
   expect(messenger.gdata.setOAuthToken).toHaveBeenCalledWith("sessionId", "refreshToken");
 });
 
+
+const REQUEST_LOGIN = {
+  method: "POST",
+  url: "https://oauth2.googleapis.com/token",
+  headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" },
+  body: {
+    client_secret: "test_secret",
+    client_id: "test_id",
+    code: "authCode",
+    grant_type: "authorization_code",
+    redirect_uri: "http://localhost/"
+  }
+};
+
+const REQUEST_REFRESH_TOKEN = {
+  method: "POST",
+  url: "https://oauth2.googleapis.com/token",
+  headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" },
+  body: {
+    client_secret: "test_secret",
+    client_id: "test_id",
+    grant_type: "refresh_token",
+    refresh_token: "refreshToken"
+  }
+};
+
+const RESPONSE_LOGIN_SUCCESS = {
+  status: 200,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    access_token: "1/fFAGRNJru1FTz70BzhT3Zg",
+    refresh_token: "refreshToken",
+    expires_in: 300,
+    scope: "https://www.googleapis.com/auth/calendar",
+    token_type: "Bearer"
+  }),
+};
+const RESPONSE_REFRESH_TOKEN_SUCCESS = {
+  status: 200,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    access_token: "1/fFAGRNJru1FTz70BzhT3Zg",
+    expires_in: 300,
+    scope: "https://www.googleapis.com/auth/calendar",
+    token_type: "Bearer"
+  }),
+};
+
+const RESPONSE_INVALID_ACCESS_TOKEN = {
+  status: 401,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    error: {
+      errors: [{
+        reason: "unauthorized_client"
+      }]
+    }
+  }),
+};
+const RESPONSE_INVALID_REFRESH_TOKEN = {
+  status: 400,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    error: "invalid_grant",
+    error_description: "The refresh token is invalid"
+  }),
+};
+const RESPONSE_INVALID_CLIENT = {
+  status: 400,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    error: "invalid_client",
+    error_description: "The OAuth client was not found"
+  }),
+};
+const RESPONSE_RATE_LIMIT = {
+  status: 400,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    error: "userRateLimitExceeded",
+    error_description: "The OAuth client was not found"
+  }),
+};
+const RESPONSE_LOGIN_FAILED = {
+  status: 400,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    error: "invalid_grant",
+    error_description: "Malformed auth code"
+  })
+};
+
+
 describe("login paths", () => {
   beforeEach(() => {
     jest.useFakeTimers();
@@ -337,99 +430,6 @@ describe("login paths", () => {
   afterEach(() => {
     jest.useRealTimers();
   });
-
-  const REQUEST_LOGIN = {
-    method: "POST",
-    url: "https://oauth2.googleapis.com/token",
-    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" },
-    body: {
-      client_secret: "test_secret",
-      client_id: "test_id",
-      code: "authCode",
-      grant_type: "authorization_code",
-      redirect_uri: "http://localhost/"
-    }
-  };
-
-  const REQUEST_REFRESH_TOKEN = {
-    method: "POST",
-    url: "https://oauth2.googleapis.com/token",
-    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" },
-    body: {
-      client_secret: "test_secret",
-      client_id: "test_id",
-      grant_type: "refresh_token",
-      refresh_token: "refreshToken"
-    }
-  };
-
-  const RESPONSE_LOGIN_SUCCESS = {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      access_token: "1/fFAGRNJru1FTz70BzhT3Zg",
-      refresh_token: "refreshToken",
-      expires_in: 300,
-      scope: "https://www.googleapis.com/auth/calendar",
-      token_type: "Bearer"
-    }),
-  };
-  const RESPONSE_REFRESH_TOKEN_SUCCESS = {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      access_token: "1/fFAGRNJru1FTz70BzhT3Zg",
-      expires_in: 300,
-      scope: "https://www.googleapis.com/auth/calendar",
-      token_type: "Bearer"
-    }),
-  };
-
-  const RESPONSE_INVALID_ACCESS_TOKEN = {
-    status: 401,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      error: {
-        errors: [{
-          reason: "unauthorized_client"
-        }]
-      }
-    }),
-  };
-  const RESPONSE_INVALID_REFRESH_TOKEN = {
-    status: 400,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      error: "invalid_grant",
-      error_description: "The refresh token is invalid"
-    }),
-  };
-  const RESPONSE_INVALID_CLIENT = {
-    status: 400,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      error: "invalid_client",
-      error_description: "The OAuth client was not found"
-    }),
-  };
-  const RESPONSE_RATE_LIMIT = {
-    status: 400,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      error: "userRateLimitExceeded",
-      error_description: "The OAuth client was not found"
-    }),
-  };
-  const RESPONSE_LOGIN_FAILED = {
-    status: 400,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      error: "invalid_grant",
-      error_description: "Malformed auth code"
-    })
-  };
-
-
   test("refresh expired access token", async () => {
     jest.setSystemTime(new Date("2024-01-01T00:00:00Z"));
     session.oauth.expires = new Date("2023-12-31T23:59:59Z");
@@ -1035,4 +1035,57 @@ test("invalidate", async () => {
 
   expect(session.oauth.invalidate).toHaveBeenCalled();
   expect(messenger.gdata.setOAuthToken).toHaveBeenCalledWith("sessionId", "refreshToken");
+});
+
+describe("refreshAccessToken", () => {
+  test.each(["unauthorized_client", "invalid_grant"])("attempts a refresh on '%s'", async (error) => {
+    let fetchMocks = new FetchMocks([
+      {
+        request: REQUEST_REFRESH_TOKEN,
+        response: {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            error,
+            error_description: "The refresh token is invalid"
+          }),
+        }
+      },
+    ]);
+
+    await messenger.gdata.setOAuthToken(session.id, "refreshToken");
+    session.oauth.login = jest.fn(async () => {});
+
+    await session.refreshAccessToken(true);
+
+    expect(session.oauth.login).toHaveBeenCalled();
+    fetchMocks.expectFetchCount();
+  });
+
+  test.each([
+    "invalid_request",
+    "unsupported_grant_type",
+    "invalid_scope"
+  ])("attempts no refresh on '%s'", async (error) => {
+    // These errors are likely unrecoverable. If this assumption is wrong, the code and test should be changed.
+    let fetchMocks = new FetchMocks([
+      {
+        request: REQUEST_REFRESH_TOKEN,
+        response: {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            error,
+            error_description: error
+          }),
+        }
+      },
+    ]);
+
+    await messenger.gdata.setOAuthToken(session.id, "refreshToken");
+    session.oauth.login = jest.fn(async () => {});
+
+    await expect(session.refreshAccessToken(true)).rejects.toThrow("TOKEN_FAILURE");
+    fetchMocks.expectFetchCount();
+  });
 });
