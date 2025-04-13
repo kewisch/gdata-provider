@@ -203,6 +203,22 @@ describe("jsonToItem", () => {
       expect(jcal.getFirstProperty("organizer").getParameter("cn")).toBe(undefined);
     });
 
+    test("simple event ical lastack", async () => {
+      let defaultReminders = [{ method: "popup", minutes: 120 }];
+      let gcalItem = v8.deserialize(v8.serialize(gcalItems.simple_event));
+      gcalItem.extendedProperties.private["X-MOZ-LASTACK"] = "20140202T020202Z";
+
+      let item = await jsonToItem({
+        entry: gcalItem,
+        calendar,
+        defaultReminders,
+        defaultTimezone
+      });
+      let jcal = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
+
+      expect(jcal.getFirstPropertyValue("x-moz-lastack").toString()).toBe("2014-02-02T02:02:02Z");
+    });
+
     test("valarm_no_default_override event", async () => {
       let defaultReminders = [{ method: "popup", minutes: 120 }];
       let item = await jsonToItem({

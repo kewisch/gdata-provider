@@ -51,7 +51,7 @@ export function transformDateXprop(value) {
   } else if (value instanceof ICAL.Time) {
     // Core needs to allow x-props with params, then this will simply be parsed an ICAL.Time
     return value.toString();
-  } else if (value.length == 16 && value[value.length - 1] == "Z") {
+  } else if (value.length == 16 && value.endsWith("Z")) {
     // An ICAL string value like 20240102T030405Z
     return ICAL.design.icalendar.value["date-time"].fromICAL(value);
   }
@@ -753,8 +753,8 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
   }
 
   // We can set these directly as they are UTC RFC3339 timestamps, which works with jCal date-times
-  setIf("x-moz-lastack", "date-time", stripFractional(privateProps["X-MOZ-LASTACK"]));
-  setIf("x-moz-snooze-time", "date-time", stripFractional(privateProps["X-MOZ-SNOOZE-TIME"]));
+  setIf("x-moz-lastack", "date-time", transformDateXprop(stripFractional(privateProps["X-MOZ-LASTACK"])));
+  setIf("x-moz-snooze-time", "date-time", transformDateXprop(stripFractional(privateProps["X-MOZ-SNOOZE-TIME"])));
 
   let snoozeObj;
   try {
