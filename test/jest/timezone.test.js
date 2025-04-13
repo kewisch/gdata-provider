@@ -8,6 +8,7 @@ beforeEach(() => {
 
 test("service", () => {
   expect(TimezoneService.get("UTC")).toBeNull();
+  expect(TimezoneService.get(null)).toBeNull();
   TimezoneService.init();
   expect(TimezoneService.get("UTC")).toBe(ICAL.Timezone.utcTimezone);
   expect(TimezoneService.get("Z")).toBe(ICAL.Timezone.utcTimezone);

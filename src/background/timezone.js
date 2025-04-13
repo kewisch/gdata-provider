@@ -16,6 +16,10 @@ class TimezoneService {
   }
 
   get(tzid) {
+    if (!tzid) {
+      return null;
+    }
+
     if (tzid == "Z") {
       return this.#zoneCache.get("UTC");
     }

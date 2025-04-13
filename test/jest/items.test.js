@@ -1004,13 +1004,13 @@ describe("patchItem", () => {
     });
 
     test.each([
-      ["summary", "title", "changed"],
-      ["description", "notes", "changed"],
-      ["due", "due", "2008-01-01"],
-      ["completed", "completed", "2008-01-01"],
-      ["status", "status", "completed"],
-    ])("prop %s", (jprop, prop, changed) => {
-      task.updatePropertyWithValue(jprop, changed);
+      ["summary", "title", "changed", "changed"],
+      ["description", "notes", "changed", "changed"],
+      ["due", "due", "2008-01-01", "2008-01-01"],
+      ["completed", "completed", "2008-01-01", "2008-01-01"],
+      ["status", "status", "COMPLETED", "completed"],
+    ])("prop %s", (jprop, prop, jchanged, changed) => {
+      task.updatePropertyWithValue(jprop, jchanged);
       changes = patchItem(item, oldItem);
       expect(changes).toEqual({ [prop]: changed });
     });

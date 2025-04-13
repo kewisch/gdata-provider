@@ -383,7 +383,7 @@ function patchTask(item, oldItem) {
 
   setIfFirstProperty(entry, "title", "summary");
   setIfFirstProperty(entry, "status", "status", val => {
-    return val == "completed" ? "completed" : "needsAction";
+    return val == "COMPLETED" ? "completed" : "needsAction";
   });
   setIfFirstProperty(entry, "notes", "description");
 
@@ -602,7 +602,7 @@ export function jsonToDate(propName, dateObj, defaultTimezone, requestedZone = n
     return [propName, params, "date", dateObj.date];
   } else {
     let timeString = stripFractional(dateObj.dateTime);
-    if (targetZone && targetZone != defaultTimezone.tzid) {
+    if (defaultTimezone && targetZone && targetZone != defaultTimezone.tzid) {
       let time = ICAL.Time.fromDateTimeString(timeString);
       time.zone = defaultTimezone;
 
