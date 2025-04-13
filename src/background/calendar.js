@@ -211,7 +211,7 @@ export default class calGoogleCalendar {
   async onItemCreated(item, options = {}) {
     this.console.log(
       `Adding ${options.offline ? "offline " : ""}${options.invitation ? "invitation" : "regular"} ` +
-      `${item.type} ${item.title}`
+      `${item.type} ${item.id}`
     );
 
     let uri;
@@ -260,9 +260,9 @@ export default class calGoogleCalendar {
     }
 
     if (newItem) {
-      this.console.log(`Adding item ${newItem.id} (${item.title}) succeeded`);
+      this.console.log(`Adding item ${newItem.id} (${data.title}) succeeded`);
     } else {
-      this.console.log(`Adding item ${item.id} (${item.title}) failed`);
+      this.console.log(`Adding item ${item.id} (${data.title}) failed`);
     }
 
     return newItem;
@@ -271,7 +271,7 @@ export default class calGoogleCalendar {
   async onItemUpdated(item, oldItem, options = {}) {
     this.console.log(
       `Modifying ${options.offline ? "offline " : ""}${options.invitation ? "invitation" : "regular"} ` +
-      `${item.type} ${item.title} etag ${item.metadata.etag}`
+      `${item.type} ${item.id} etag ${item.metadata.etag}`
     );
     let uri;
 
@@ -358,7 +358,7 @@ export default class calGoogleCalendar {
   async onItemRemoved(item, options = {}) {
     this.console.log(
       `Removing ${options.offline ? "offline " : ""}${options.invitation ? "invitation" : "regular"} ` +
-      `${item.type} ${item.title}`
+      `${item.type} ${item.id}`
     );
     let uri;
     if (item.type == "event") {
