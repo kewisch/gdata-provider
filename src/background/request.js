@@ -46,11 +46,18 @@ export default class calGoogleRequest {
           throw new TokenFailureError();
         }
       case "variableTermLimitExceeded":
-      case "userRateLimitExceeded":
       case "dailyLimitExceeded":
       case "quotaExceeded":
         session.notifyQuotaExceeded();
         throw new QuotaFailureError();
+      case "rateLimitExceeded":
+      case "userRateLimitExceeded":
+        session.backoff();
+        if (session.isMaxBackoff) {
+          throw new QuotaFailureError();
+        } else {
+          return this.commit(session);
+        }
       case "insufficientPermissions":
         if (this.options.method == "GET") {
           throw new ReadFailedError();

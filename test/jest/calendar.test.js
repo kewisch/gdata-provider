@@ -1266,25 +1266,6 @@ describe("onSync", () => {
     calendar.session.oauth.accessToken = "accessToken";
     calendar.session.oauth.expires = new Date(new Date().getTime() + 10000);
     await expect(calendar.onSync()).rejects.toThrow("QUOTA_FAILURE");
-
-    // Make sure backoff has been called
-    const flushPromises = () => new Promise(jest.requireActual("timers").setImmediate);
-
-    jest.useFakeTimers();
-    try {
-      let completed = jest.fn();
-      let waiting = calendar.session.waitForBackoff().then(completed);
-
-      jest.advanceTimersByTime(1000);
-      await flushPromises();
-      expect(completed).not.toHaveBeenCalled();
-
-      jest.advanceTimersByTime(2000);
-      await flushPromises();
-      expect(completed).toHaveBeenCalled();
-    } finally {
-      jest.useRealTimers();
-    }
   });
 });
 

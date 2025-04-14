@@ -5,7 +5,7 @@
 
 import sessions from "./session.js";
 import calGoogleRequest from "./request.js";
-import { ItemError, ResourceGoneError, QuotaFailureError } from "./errors.js";
+import { ItemError, ResourceGoneError } from "./errors.js";
 import Console from "./log.js";
 import TimezoneService from "./timezone.js";
 import ICAL from "./libs/ical.js";
@@ -532,9 +532,7 @@ export default class calGoogleCalendar {
       await Promise.all(promises);
       this.session.resetBackoff();
     } catch (e) {
-      if (e instanceof QuotaFailureError) {
-        this.session.backoff();
-      } else if (e instanceof ResourceGoneError) {
+      if (e instanceof ResourceGoneError) {
         this.console.log("Server did not accept incremental update, resetting");
         await this.onResetSync();
         if (retry) {

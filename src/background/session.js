@@ -16,6 +16,8 @@ import {
   API_BASE,
 } from "./utils.js";
 
+const MAX_BACKOFF = 6;
+
 var console = new Console("calGoogleSession");
 
 var sessionMap = new Map();
@@ -114,8 +116,12 @@ class calGoogleSession {
   }
 
   backoff() {
-    this.#backoff = Math.min(6, this.#backoff + 1);
+    this.#backoff = Math.min(MAX_BACKOFF, this.#backoff + 1);
     return this.#backoff;
+  }
+
+  get isMaxBackoff() {
+    return this.#backoff >= MAX_BACKOFF;
   }
 
   async waitForBackoff() {

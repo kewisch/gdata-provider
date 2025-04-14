@@ -18,6 +18,8 @@ beforeEach(() => {
       url: "https://calendar.google.com/calendar/ical/user@example.com/private/full.ics",
     },
   ];
+
+  session.isMaxBackoff = false;
 });
 
 let session = {
@@ -27,6 +29,8 @@ let session = {
   notifyQuotaExceeded: jest.fn(),
   invalidate: jest.fn(async () => {}),
   waitForBackoff: jest.fn(async () => {}),
+  backoff: jest.fn(),
+  isMaxBackoff: false,
   oauth: {
     accessToken: null,
     invalidate: jest.fn(async () => {})
@@ -107,6 +111,7 @@ test("status code 204", async () => {
     method: "PUT",
     uri: "https://localhost/test",
     json: { foo: "bar" },
+    calendar: { id: "id1" }
   });
   fetch.mockResponseOnce(null, {
     status: 204,
@@ -115,6 +120,7 @@ test("status code 204", async () => {
   let res = await request.commit(session);
   expect(res).toEqual({ status: "No Content" });
   expect(request.response.status).toBe(204);
+  expect(messenger.calendar.calendars.update).toHaveBeenCalledWith("id1", { lastError: null });
 });
 
 test("status code 304", async () => {
@@ -217,6 +223,22 @@ test("status code 400 other", async () => {
   expect(request.response.status).toBe(400);
 });
 
+test("status code 400 missing error structure", async () => {
+  let request = new calGoogleRequest({
+    method: "PUT",
+    uri: "https://localhost/test",
+  });
+  fetch.mockResponseOnce(JSON.stringify({ bogus: 1 }), {
+    status: 400,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  await expect(request.commit(session)).rejects.toThrow("GENERAL_FAILURE");
+  expect(request.response.status).toBe(400);
+});
+
 describe("auth error", () => {
   test("401 invalid_client", async () => {
     let request = new calGoogleRequest({
@@ -299,10 +321,60 @@ describe("auth error", () => {
       method: "PUT",
       uri: "https://localhost/test",
     });
-    mockErrorResponse(403, { reason: "userRateLimitExceeded" });
+    fetch.mockResponses(
+      [
+        JSON.stringify({ error: { errors: [{ reason: "userRateLimitExceeded" }] } }),
+        { status: 403, headers: { "Content-Type": "application/json" } },
+      ],
+      [
+        JSON.stringify({ error: { errors: [{ reason: "userRateLimitExceeded" }] } }),
+        { status: 403, headers: { "Content-Type": "application/json" } },
+      ],
+      [
+        JSON.stringify({ result: 1 }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      ]
+    );
+    session.backoff
+      .mockImplementationOnce(() => {})
+      .mockImplementationOnce(() => {
+        session.isMaxBackoff = true;
+      });
+
     await expect(request.commit(session)).rejects.toThrow("QUOTA_FAILURE");
-    expect(session.notifyQuotaExceeded).toHaveBeenCalled();
+    expect(session.backoff).toHaveBeenCalledTimes(2);
     expect(request.response.status).toBe(403);
+  });
+  test("403 rateLimitExceeded with recovery", async () => {
+    let request = new calGoogleRequest({
+      method: "PUT",
+      uri: "https://localhost/test",
+    });
+    fetch.mockResponses(
+      [
+        JSON.stringify({ error: { errors: [{ reason: "rateLimitExceeded" }] } }),
+        { status: 403, headers: { "Content-Type": "application/json" } },
+      ],
+      [
+        JSON.stringify({ error: { errors: [{ reason: "rateLimitExceeded" }] } }),
+        { status: 403, headers: { "Content-Type": "application/json" } },
+      ],
+      [
+        JSON.stringify({ result: 1 }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      ]
+    );
+    session.backoff
+      .mockImplementationOnce(() => {})
+      .mockImplementationOnce(() => {})
+      .mockImplementationOnce(() => {
+        session.isMaxBackoff = true;
+      });
+
+    let res = await request.commit(session);
+    expect(session.backoff).toHaveBeenCalledTimes(2);
+    expect(request.response.status).toBe(200);
+    expect(res.result).toBe(1);
   });
 
   test("403 dailyLimitExceeded", async () => {

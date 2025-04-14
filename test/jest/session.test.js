@@ -113,7 +113,10 @@ describe("backoff", () => {
     session.backoff();
     session.backoff();
     session.backoff();
+
+    expect(session.isMaxBackoff).toBe(false);
     session.backoff();
+    expect(session.isMaxBackoff).toBe(true);
 
     let completed = jest.fn();
     let waiting = session.waitForBackoff().then(completed);
