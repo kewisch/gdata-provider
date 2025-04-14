@@ -156,11 +156,11 @@ this.calendar_calendars = class extends ExtensionAPI {
 
             if (updateProperties.lastError !== undefined) {
               if (updateProperties.lastError === null) {
-                calendar.setProperty("currentStatus", Cr.NS_ERROR_FAILURE);
-                calendar.setProperty("lastErrorMessage", updateProperties.lastError);
-              } else {
                 calendar.setProperty("currentStatus", Cr.NS_OK);
                 calendar.setProperty("lastErrorMessage", "");
+              } else {
+                calendar.setProperty("currentStatus", Cr.NS_ERROR_FAILURE);
+                calendar.setProperty("lastErrorMessage", updateProperties.lastError);
               }
             }
           },
