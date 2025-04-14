@@ -45,10 +45,13 @@ export async function initListeners() {
 
       return { calendars, tasks };
     } else if (message.action == "createCalendars") {
+      let existing = await messenger.calendar.calendars.query({});
+      let existingSet = new Set(existing.map(calendar => calendar.name));
+
       await Promise.all(
         message.calendars.map(async data => {
           let calendar = {
-            name: data.name,
+            name: existingSet.has(data.name) ? `${data.name} (${message.sessionId})` : data.name,
             type: "ext-" + messenger.runtime.id,
             url: `googleapi://${message.sessionId}/?${data.type}=${encodeURIComponent(data.id)}`,
             capabilities: {
