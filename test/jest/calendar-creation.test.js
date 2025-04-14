@@ -26,24 +26,21 @@ beforeEach(async () => {
 });
 
 test("main", async () => {
-  sessions.byId("sessionId", true);
+  sessions.byId("sessionId@example.com", true);
   await creationMain();
 
   let sessionContainer = qs("#gdata-existing-sessions");
   expect(sessionContainer.children.length).toBe(1);
 
-  expect(qs("#gdata-existing-sessions > label").textContent).toBe("sessionId");
-  expect(qs("#gdata-existing-sessions > label > input").value).toBe("sessionId");
+  expect(qs("#gdata-existing-sessions > label").textContent).toBe("sessionId@example.com");
+  expect(qs("#gdata-existing-sessions > label > input").value).toBe("sessionId@example.com");
   expect(messenger.calendar.provider._advanceAction).toEqual({ forward: "authenticate", back: null, label: "Authenticate" });
 });
 
 
 test("clickNewSession", async () => {
-  sessions.byId("sessionId", true);
+  sessions.byId("sessionId@example.com", true);
   await creationMain();
-
-  console.debug(qs("#gdata-existing-sessions").innerHTML);
-
 
   expect(qs("#gdata-existing-sessions input").checked).toBe(true);
   qs("#gdata-session-name").click();
@@ -52,7 +49,7 @@ test("clickNewSession", async () => {
 
 describe("auth", () => {
   beforeEach(async () => {
-    let session = sessions.byId("sessionId", true);
+    let session = sessions.byId("sessionId@example.com", true);
     session.oauth.accessToken = "accessToken";
     session.oauth.expires = new Date(new Date().getTime() + 10000);
     session.getCalendarList = jest.fn(async () => {
@@ -69,19 +66,19 @@ describe("auth", () => {
         id: "id1",
         cacheId: "cached-id1",
         type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
-        url: "googleapi://sessionId/?calendar=id1%40calendar.google.com&tasks=taskhash",
+        url: "googleapi://sessionId@example.com/?calendar=id1%40calendar.google.com&tasks=taskhash",
       },
       {
         id: "id7",
         cacheId: "cached-id7",
         type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
-        url: "googleapi://sessionId/?calendar=id7%40calendar.google.com",
+        url: "googleapi://sessionId@example.com/?calendar=id7%40calendar.google.com",
       },
       {
         id: "id8",
         cacheId: "cached-id8",
         type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
-        url: "googleapi://sessionId/?tasks=taskhash",
+        url: "googleapi://sessionId@example.com/?tasks=taskhash",
       },
     ];
   });
@@ -104,11 +101,11 @@ describe("auth", () => {
       return session;
     });
     qs("#gdata-new-session > input").checked = true;
-    document.getElementById("gdata-session-name").value = "newSessionId";
+    document.getElementById("gdata-session-name").value = "newSessionId@example.com";
     await messenger.calendar.provider.onAdvanceNewCalendar.mockResponse("authenticate");
 
 
-    expect(lastCreateArg).toEqual(["newSessionId", true]);
+    expect(lastCreateArg).toEqual(["newSessionId@example.com", true]);
 
     expect(qs("#calendar-list").children.length).toBe(1);
     expect(qs("#calendar-list > li > label").textContent).toBe("calendar1");
@@ -141,7 +138,7 @@ describe("auth", () => {
 
 test("create", async () => {
   await creationMain();
-  let session = sessions.byId("sessionId", true);
+  let session = sessions.byId("sessionId@example.com", true);
   session.oauth.accessToken = "accessToken";
   session.oauth.expires = new Date(new Date().getTime() + 10000);
   session.getCalendarList = jest.fn(async () => {
@@ -152,8 +149,11 @@ test("create", async () => {
   });
 
   qs("#gdata-new-session > input").checked = true;
-  document.getElementById("gdata-session-name").value = "sessionId";
+  document.getElementById("gdata-session-name").value = "sessionId@example.com";
   await messenger.calendar.provider.onAdvanceNewCalendar.mockResponse("authenticate");
+
+  expect(qs("#calendar-list").children.length).toBe(1);
+  expect(qs("#tasklist-list").children.length).toBe(1);
 
   qs("#calendar-list > li > label > input").checked = true;
 
@@ -162,7 +162,7 @@ test("create", async () => {
   expect(messenger.calendar.calendars.create).toHaveBeenCalledWith({
     name: "calendar1",
     type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
-    url: "googleapi://sessionId/?calendar=id1",
+    url: "googleapi://sessionId@example.com/?calendar=id1",
     capabilities: {
       events: true,
       tasks: false
@@ -170,8 +170,8 @@ test("create", async () => {
   });
 });
 
-test("advanceNewCalendar", async () => {
-  let session = sessions.byId("sessionId", true);
+test("validate", async () => {
+  let session = sessions.byId("sessionId@example.com", true);
   session.oauth.accessToken = "accessToken";
   session.oauth.expires = new Date(new Date().getTime() + 10000);
   session.getCalendarList = jest.fn(async () => {
@@ -182,6 +182,47 @@ test("advanceNewCalendar", async () => {
   });
   await creationMain();
 
+  await messenger.calendar.provider.onAdvanceNewCalendar.mockResponse("initial");
+  expect(messenger.calendar.provider._advanceAction).toEqual({ forward: "authenticate", back: null, label: "Authenticate" });
+
+  qs("#gdata-session-name").dispatchEvent(new InputEvent("input"));
+  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: false, forward: "authenticate", back: null, label: "Authenticate" });
+
+  messenger.calendar.provider._advanceAction = null;
+  qs("#gdata-session-name").value = "valid@example.com";
+  qs("#gdata-session-name").dispatchEvent(new InputEvent("input"));
+  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: true, forward: "authenticate", back: null, label: "Authenticate" });
+
+  messenger.calendar.provider._advanceAction = null;
+  qs("#gdata-session-name").value = "invalid";
+  qs("#gdata-session-name").dispatchEvent(new InputEvent("input"));
+  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: false, forward: "authenticate", back: null, label: "Authenticate" });
+
+  messenger.calendar.provider._advanceAction = null;
+  qs("#gdata-existing-sessions input").checked = true;
+  qs("#gdata-session").dispatchEvent(new Event("change"));
+  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: true, forward: "authenticate", back: null, label: "Authenticate" });
+
+  qs("#gdata-new-session input").checked = true;
+  qs("#gdata-session").dispatchEvent(new Event("change"));
+  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: false, forward: "authenticate", back: null, label: "Authenticate" });
+
+  let result = await messenger.calendar.provider.onAdvanceNewCalendar.mockResponse("authenticate");
+  expect(result).toBe(false);
+  expect(qs("#gdata-calendars").hidden).toBe(true);
+});
+
+test("advanceNewCalendar", async () => {
+  let session = sessions.byId("sessionId@example.com", true);
+  session.oauth.accessToken = "accessToken";
+  session.oauth.expires = new Date(new Date().getTime() + 10000);
+  session.getCalendarList = jest.fn(async () => {
+    return [{ id: "id1", summary: "calendar1" }];
+  });
+  session.getTasksList = jest.fn(async () => {
+    return [{ id: "id2", summary: "tasks1" }];
+  });
+  await creationMain();
 
   let result = await messenger.calendar.provider.onAdvanceNewCalendar.mockResponse("initial");
   expect(qs("#gdata-calendars").hidden).toBe(true);

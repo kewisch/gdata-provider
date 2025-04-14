@@ -27,7 +27,10 @@ export async function main() {
   }
 
   document.getElementById("gdata-session-name").addEventListener("click", clickNewSession);
+  document.getElementById("gdata-session-name").addEventListener("input", inputNewSession);
   document.querySelector("input[name='session']").checked = true;
+
+  document.getElementById("gdata-session").addEventListener("change", checkedSession, true);
 
   await messenger.calendar.provider.setAdvanceAction({ forward: "authenticate", back: null, label: "Authenticate" });
   messenger.calendar.provider.onAdvanceNewCalendar.addListener(advanceNewCalendar);
@@ -49,6 +52,21 @@ function clickNewSession() {
   document.querySelector("input[name='session'][value='_new']").checked = true;
 }
 
+function inputNewSession() {
+  let sessionName = document.getElementById("gdata-session-name");
+  let valid = sessionName.checkValidity();
+  messenger.calendar.provider.setAdvanceAction({ canForward: valid, forward: "authenticate", back: null, label: "Authenticate" });
+}
+
+function checkedSession() {
+  let sessionId = document.querySelector("input[name='session']:checked").value;
+  if (sessionId == "_new") {
+    inputNewSession();
+  } else {
+    messenger.calendar.provider.setAdvanceAction({ canForward: true, forward: "authenticate", back: null, label: "Authenticate" });
+  }
+}
+
 async function onInitial() {
   document.getElementById("gdata-calendars").setAttribute("hidden", "true");
   document.getElementById("gdata-session").removeAttribute("hidden");
@@ -59,7 +77,12 @@ async function onInitial() {
 async function onAuthenticate() {
   let sessionId = document.querySelector("input[name='session']:checked").value;
   if (sessionId == "_new") {
-    sessionId = document.getElementById("gdata-session-name").value;
+    let sessionName = document.getElementById("gdata-session-name");
+    if (!sessionName.checkValidity()) {
+      return false;
+    }
+
+    sessionId = sessionName.value;
   }
 
   let { calendars, tasks } = await messenger.runtime.sendMessage({

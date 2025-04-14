@@ -68,9 +68,10 @@
           {
             "type": "object",
             "properties": {
-              "forward": { "type": "string" },
+              "forward": { "type": "string", "optional": true },
               "back": { "type": "string", "optional": true },
-              "label": { "type": "string" }
+              "label": { "type": "string", "optional": true },
+              "canForward": { "type": "boolean", "optional": true }
             }
           }
         ]

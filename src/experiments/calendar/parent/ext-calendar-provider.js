@@ -607,6 +607,21 @@ this.calendar_provider = class extends ExtensionAPI {
 
           win.gAddonAdvance = new EventEmitter();
         }
+
+        let origCheckRequired = win.checkRequired;
+        win.checkRequired = () => {
+          origCheckRequired();
+          const addonPanel = win.document.getElementById("panel-addon-calendar-settings");
+          if (addonPanel.hidden) {
+            return;
+          }
+
+          const dialog = win.document.getElementById("calendar-creation-dialog");
+          if (addonPanel.dataset.addonNoForward == "true") {
+          } else {
+            dialog.removeAttribute("buttondisabledaccept");
+          }
+        };
       }
     });
   }
@@ -821,7 +836,7 @@ this.calendar_provider = class extends ExtensionAPI {
 
 
           // New calendar dialog
-          async setAdvanceAction({ forward, back, label }) {
+          async setAdvanceAction({ forward, back, label, canForward }) {
             const window = getNewCalendarWindow();
             if (!window) {
               throw new ExtensionError("New calendar wizard is not open");
@@ -842,6 +857,11 @@ this.calendar_provider = class extends ExtensionAPI {
             addonPanel.setAttribute("buttonlabelaccept", label);
             if (!addonPanel.hidden) {
               window.updateButton("accept", addonPanel);
+            }
+
+            if (typeof canForward === "boolean") {
+              addonPanel.dataset.addonNoForward = !canForward
+              window.checkRequired();
             }
           },
           onAdvanceNewCalendar: new EventManager({
