@@ -690,7 +690,7 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
     setIf("x-google-event-type", "text", entry.eventType);
   }
 
-  setIf("x-google-color-id", "text", String(entry.colorId));
+  setIf("x-google-color-id", "text", entry.colorId);
   setIf("x-google-confdata", "text", entry.conferenceData ? JSON.stringify(entry.conferenceData) : null);
 
   pushPropIf(jsonToDate("dtstart", entry.start, defaultTimezone));

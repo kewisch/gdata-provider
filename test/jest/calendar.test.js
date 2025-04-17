@@ -64,7 +64,7 @@ function mockCalendarListRequest(req, props) {
             description: "The calendar 1",
             location: "test",
             timeZone: "Europe/Berlin",
-            colorId: 17,
+            colorId: "17",
             backgroundColor: "#000000",
             foregroundColor: "#FFFFFF",
             hidden: false,
