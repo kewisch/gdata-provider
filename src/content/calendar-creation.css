@@ -66,6 +66,13 @@ section[hidden] {
   align-items: center;
 }
 
+#calendar-list li .color, #tasklist-list li .color {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  margin-inline-end: 4px;
+}
+
 #gdata-existing-sessions label {
   display: block;
 }

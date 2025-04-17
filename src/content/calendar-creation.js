@@ -112,13 +112,23 @@ async function onAuthenticate() {
     check.value = calendar.id;
     check.dataset.listType = "calendar";
 
+    let color = document.createElement("span");
+    color.style.backgroundColor = calendar.backgroundColor;
+    color.className = "color";
+    check.dataset.color = calendar.backgroundColor;
+
+    let name = document.createElement("span");
+    name.textContent = calendar.summary;
+    name.className = "name";
+
     if (existingSet.has(calendar.id)) {
       check.checked = true;
       check.disabled = true;
     }
 
     label.appendChild(check);
-    label.appendChild(document.createTextNode(calendar.summary));
+    label.appendChild(color);
+    label.appendChild(name);
   }
 
   for (let tasklist of tasks) {
@@ -130,13 +140,17 @@ async function onAuthenticate() {
     check.value = tasklist.id;
     check.dataset.listType = "tasks";
 
+    let name = document.createElement("span");
+    name.textContent = tasklist.title;
+    name.className = "name";
+
     if (existingSet.has(tasklist.id)) {
       check.checked = true;
       check.disabled = true;
     }
 
     label.appendChild(check);
-    label.appendChild(document.createTextNode(tasklist.title));
+    label.appendChild(name);
   }
 
   await messenger.calendar.provider.setAdvanceAction({ forward: "subscribe", back: "initial", label: "Subscribe" });
@@ -151,8 +165,9 @@ async function onCreate() {
   let selector = "#calendar-list input:checked:not([disabled]), #tasklist-list input:checked:not([disabled])";
   let calendars = [...document.querySelectorAll(selector)].map(input => {
     return {
-      name: input.nextSibling.nodeValue,
+      name: input.parentNode.querySelector(".name").textContent,
       id: input.value,
+      color: input.dataset.color,
       type: input.dataset.listType,
     };
   });

@@ -54,12 +54,14 @@ export async function initListeners() {
             name: existingSet.has(data.name) ? `${data.name} (${message.sessionId})` : data.name,
             type: "ext-" + messenger.runtime.id,
             url: `googleapi://${message.sessionId}/?${data.type}=${encodeURIComponent(data.id)}`,
+            color: data.color,
             capabilities: {
               events: data.type == "calendar",
               tasks: data.type == "tasks"
               // TODO more task properties
             }
           };
+
           return messenger.calendar.calendars.create(calendar);
         })
       );
