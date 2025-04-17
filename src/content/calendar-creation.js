@@ -103,9 +103,14 @@ async function onAuthenticate() {
     return url.searchParams.get("calendar") || url.searchParams.get("tasks");
   }));
 
+  let primary;
   for (let calendar of calendars) {
     let listItem = calendarList.appendChild(document.createElement("li"));
     let label = listItem.appendChild(document.createElement("label"));
+
+    if (calendar.primary) {
+      primary = listItem;
+    }
 
     let check = document.createElement("input");
     check.type = "checkbox";
@@ -129,6 +134,10 @@ async function onAuthenticate() {
     label.appendChild(check);
     label.appendChild(color);
     label.appendChild(name);
+  }
+
+  if (primary) {
+    primary.parentNode.insertBefore(primary, primary.parentNode.firstElementChild);
   }
 
   for (let tasklist of tasks) {
