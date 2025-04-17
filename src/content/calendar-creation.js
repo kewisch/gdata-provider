@@ -123,7 +123,7 @@ async function onAuthenticate() {
     check.dataset.color = calendar.backgroundColor;
 
     let name = document.createElement("span");
-    name.textContent = calendar.summary;
+    name.textContent = calendar.summaryOverride || calendar.summary;
     name.className = "name";
 
     if (existingSet.has(calendar.id)) {
