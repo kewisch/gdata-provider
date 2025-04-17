@@ -142,27 +142,32 @@ test("create", async () => {
   session.oauth.accessToken = "accessToken";
   session.oauth.expires = new Date(new Date().getTime() + 10000);
   session.getCalendarList = jest.fn(async () => {
-    return [{ id: "id1", summary: "calendar1" }];
+    return [
+      { id: "id1", summary: "calendar1", backgroundColor: "#00DD00" },
+      { id: "id2", summary: "calendar2", backgroundColor: "#DD0000", primary: true, summaryOverride: "calendar2-override" }
+    ];
   });
   session.getTasksList = jest.fn(async () => {
-    return [{ id: "id2", summary: "tasks1" }];
+    return [{ id: "id2", title: "tasks1" }];
   });
 
   qs("#gdata-new-session > input").checked = true;
   document.getElementById("gdata-session-name").value = "sessionId@example.com";
   await messenger.calendar.provider.onAdvanceNewCalendar.mockResponse("authenticate");
 
-  expect(qs("#calendar-list").children.length).toBe(1);
+  expect(qs("#calendar-list").children.length).toBe(2);
   expect(qs("#tasklist-list").children.length).toBe(1);
 
-  qs("#calendar-list > li > label > input").checked = true;
+  expect(qs("#calendar-list > li:first-child > label > input").value).toBe("id2");
+  qs("#calendar-list > li:first-child > label >input").checked = true;
 
   await messenger.calendar.provider.onAdvanceNewCalendar.mockResponse("subscribe");
 
   expect(messenger.calendar.calendars.create).toHaveBeenCalledWith({
-    name: "calendar1",
+    name: "calendar2-override",
     type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
-    url: "googleapi://sessionId@example.com/?calendar=id1",
+    url: "googleapi://sessionId@example.com/?calendar=id2",
+    color: "#DD0000",
     capabilities: {
       events: true,
       tasks: false
