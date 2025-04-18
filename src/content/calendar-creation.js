@@ -103,13 +103,21 @@ async function onAuthenticate() {
     return url.searchParams.get("calendar") || url.searchParams.get("tasks");
   }));
 
-  let primary;
+  let primary = [];
+  let selected = [];
+
+  calendarList.innerHTML = "";
+  tasklistList.innerHTML = "";
+
   for (let calendar of calendars) {
     let listItem = calendarList.appendChild(document.createElement("li"));
     let label = listItem.appendChild(document.createElement("label"));
 
     if (calendar.primary) {
-      primary = listItem;
+      primary.unshift(listItem);
+    }
+    if (calendar.selected) {
+      selected.unshift(listItem);
     }
 
     let check = document.createElement("input");
@@ -136,8 +144,11 @@ async function onAuthenticate() {
     label.appendChild(name);
   }
 
-  if (primary) {
-    primary.parentNode.insertBefore(primary, primary.parentNode.firstElementChild);
+  for (let listItem of selected) {
+    listItem.parentNode.insertBefore(listItem, listItem.parentNode.firstChild);
+  }
+  for (let listItem of primary) {
+    listItem.parentNode.insertBefore(listItem, listItem.parentNode.firstChild);
   }
 
   for (let tasklist of tasks) {
@@ -149,6 +160,10 @@ async function onAuthenticate() {
     check.value = tasklist.id;
     check.dataset.listType = "tasks";
 
+    let color = document.createElement("span");
+    color.style.backgroundColor = "#a8c2e1";
+    color.className = "color";
+
     let name = document.createElement("span");
     name.textContent = tasklist.title;
     name.className = "name";
@@ -159,6 +174,7 @@ async function onAuthenticate() {
     }
 
     label.appendChild(check);
+    label.appendChild(color);
     label.appendChild(name);
   }
 
