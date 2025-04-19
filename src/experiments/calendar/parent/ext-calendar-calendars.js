@@ -145,13 +145,21 @@ this.calendar_calendars = class extends ExtensionAPI {
             if (updateProperties.capabilities) {
               // TODO validate capability names
               const unwrappedCalendar = calendar.wrappedJSObject.mUncachedCalendar.wrappedJSObject;
+              let overrideCapabilities;
+              try {
+                overrideCapabilities = JSON.parse(calendar.getProperty("overrideCapabilities")) || {};
+              } catch(e) {
+                overrideCapabilities = {};
+              }
               for (const [key, value] of Object.entries(updateProperties.capabilities)) {
                 if (value === null) {
                   continue;
                 }
                 unwrappedCalendar.capabilities[key] = value;
+                overrideCapabilities[key] = value;
               }
-              calendar.setProperty("extensionCapabilities", JSON.stringify(unwrappedCalendar.capabilities));
+
+              calendar.setProperty("overrideCapabilities", JSON.stringify(overrideCapabilities));
             }
 
             if (updateProperties.lastError !== undefined) {

@@ -143,13 +143,15 @@ class ExtCalendar extends cal.provider.BaseClass {
   set id(val) {
     super.id = val;
     if (this.id && this.uri) {
+      let overrideCapabilities;
       try {
-        this.capabilities = JSON.parse(super.getProperty("extensionCapabilities"));
+        overrideCapabilities = JSON.parse(super.getProperty("overrideCapabilities")) || {};
       } catch (e) {
-        this.capabilities = null;
+        overrideCapabilities = {};
       }
 
-      this.capabilities ??= this.extension.manifest.calendar_provider.capabilities || {};
+      const manifestCapabilities = this.extension.manifest.calendar_provider.capabilities || {};
+      this.capabilities = Object.assign({}, manifestCapabilities, overrideCapabilities);
 
       this.extension.emit("calendar.provider.onInit", this);
     }
