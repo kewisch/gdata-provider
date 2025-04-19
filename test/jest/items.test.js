@@ -481,7 +481,7 @@ describe("itemToJson", () => {
         private: { "X-MOZ-LASTACK": "2014-01-01T01:01:01Z", "X-MOZ-SNOOZE-TIME": "2014-01-01T02:02:02Z" },
         shared: { "X-MOZ-CATEGORIES": "foo,bar" },
       },
-      icalUID: "go6ijb0b46hlpbu4eeu92njevo@google.com",
+      iCalUID: "go6ijb0b46hlpbu4eeu92njevo@google.com",
       summary: "New Event",
       description: "Description",
       location: "Hard Drive",
@@ -531,7 +531,7 @@ describe("itemToJson", () => {
         private: { "X-MOZ-LASTACK": "2014-01-01T01:01:01Z", "X-MOZ-SNOOZE-TIME": "2014-01-01T02:02:02Z" },
         shared: { "X-MOZ-CATEGORIES": "foo,bar" },
       },
-      icalUID: "swpefnfloqssxjdlbpyqlyqddb@google.com",
+      iCalUID: "swpefnfloqssxjdlbpyqlyqddb@google.com",
       summary: "busyTitle[calendarName]",
       description: "Description",
       location: "Hard Drive",
@@ -563,7 +563,7 @@ describe("itemToJson", () => {
   test("valarm_no_default_override", async () => {
     let data = itemToJson(jcalItems.valarm_no_default_override, calendar, false);
     expect(data).toEqual({
-      icalUID: "xkoaavctdghzjszjssqttcbhkv@google.com",
+      iCalUID: "xkoaavctdghzjszjssqttcbhkv@google.com",
       reminders: {
         useDefault: true,
       },
@@ -580,7 +580,7 @@ describe("itemToJson", () => {
   test("recurring event rrule", () => {
     let data = itemToJson(jcalItems.recur_rrule, calendar, false);
     expect(data).toEqual({
-      icalUID: "osndfnwejrgnejnsdjfwegjdfr@google.com",
+      iCalUID: "osndfnwejrgnejnsdjfwegjdfr@google.com",
       start: {
         date: "2006-06-10",
       },
@@ -599,7 +599,7 @@ describe("itemToJson", () => {
   test("recurring event instance", () => {
     let data = itemToJson(jcalItems.recur_instance, calendar, false);
     expect(data).toEqual({
-      icalUID: "osndfnwejrgnejnsdjfwegjdfr@google.com",
+      iCalUID: "osndfnwejrgnejnsdjfwegjdfr@google.com",
       recurringEventId: "osndfnwejrgnejnsdjfwegjdfr",
       start: {
         date: "2006-06-26",

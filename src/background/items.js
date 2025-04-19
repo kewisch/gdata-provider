@@ -86,7 +86,7 @@ function eventToJson(item, calendar, isImport) {
 
   let entry = patchEvent(item, oldItem);
   if (item.id) {
-    entry.icalUID = item.id;
+    entry.iCalUID = item.id;
   }
   return entry;
 }
