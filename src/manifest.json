@@ -26,7 +26,7 @@
         "floating": false,
         "UTC": true
       },
-      "attachments": false,
+      "attachments": true,
       "priority": false,
       "privacy": ["default", "public", "private"],
       "categories": {

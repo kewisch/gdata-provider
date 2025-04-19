@@ -28,6 +28,15 @@
         { "method": "popup", "minutes": 10 }
       ]
     },
+    "attachments": [
+      {
+        "fileUrl": "https://example.com/drive-url",
+        "title": "Attachment",
+        "mimeType": "text/plain",
+        "iconUrl": "https://example.com/drive-icon-url",
+        "fileId": "97e46c33-3fc7-4fb8-93d9-5e0f532d972f"
+      }
+    ],
     "attendees": [
       {
         "displayName": "attendee name",

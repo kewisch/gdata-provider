@@ -38,7 +38,8 @@
             [ "x-default-alarm", {}, "boolean", true ],
             [ "x-moz-lastack", {}, "date-time", "2014-01-01T01:01:01Z" ],
             [ "x-moz-snooze-time", {}, "date-time", "2014-01-01T02:02:02Z" ],
-            [ "categories", {}, "text", "foo", "bar" ]
+            [ "categories", {}, "text", "foo", "bar" ],
+            [ "attach", { "managed-id": "97e46c33-3fc7-4fb8-93d9-5e0f532d972f", "filename": "Attachment", "fmttype": "text/plain" }, "uri", "https://example.com/drive-url" ]
           ],
           [
              [

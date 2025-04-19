@@ -146,6 +146,12 @@ describe("jsonToItem", () => {
       expect(attendees[1].getParameter("partstat")).toBe("TENTATIVE");
       expect(attendees[1].getParameter("cutype")).toBe("RESOURCE");
 
+      let attachments = jcal.getAllProperties("attach");
+      expect(attachments.length).toBe(1);
+      expect(attachments[0].getParameter("fmttype")).toBe("text/plain");
+      expect(attachments[0].getParameter("managed-id")).toBe("97e46c33-3fc7-4fb8-93d9-5e0f532d972f");
+      expect(attachments[0].getParameter("filename")).toBe("Attachment");
+
       expect(jcal.getFirstProperty("categories").getValues()).toEqual(["foo", "bar"]);
       expect(jcal.getFirstPropertyValue("x-moz-lastack").toString()).toBe("2014-01-01T01:01:01Z");
       expect(jcal.getFirstPropertyValue("x-moz-snooze-time").toString()).toBe(
@@ -171,6 +177,7 @@ describe("jsonToItem", () => {
         "dtstart",
         "dtend",
         "attendee",
+        "attach",
         "categories",
         "x-moz-lastack",
         "x-moz-snooze-time",

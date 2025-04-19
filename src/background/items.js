@@ -541,7 +541,6 @@ function patchEvent(item, oldItem) {
   }
 
   // Categories
-
   function getAllCategories(vevent) {
     return vevent.getAllProperties("categories").reduce((acc, comp) => acc.concat(comp.getValues()), []);
   }
@@ -698,6 +697,7 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
     veventprops.push(jsonToDate("dtend", entry.end, defaultTimezone));
   }
 
+  // Organizer
   if (entry.organizer) {
     let id = entry.organizer.email
       ? "mailto:" + entry.organizer.email
@@ -733,6 +733,7 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
     veventprops.push(["attendee", params, "uri", id]);
   }
 
+  // Reminders
   if (entry.reminders) {
     if (entry.reminders.useDefault) {
       veventcomps.push(...defaultReminders.map(alarmEntry => jsonToAlarm(alarmEntry, true)));
@@ -776,6 +777,17 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
   let categories = categoriesStringToArray(sharedProps["X-MOZ-CATEGORIES"]);
   if (categories && categories.length) {
     veventprops.push(["categories", {}, "text", ...categories]);
+  }
+
+  // Attachments (read-only)
+  for (let attach of (entry.attachments || [])) {
+    let props = { "managed-id": attach.fileId, filename: attach.title };
+    if (attach.mimeType) {
+      props.fmttype = attach.mimeType;
+    }
+
+    veventprops.push(["attach", props, "uri", attach.fileUrl]);
+    console.log(["attach", props, "uri", attach.fileUrl]);
   }
 
   let shell = {
