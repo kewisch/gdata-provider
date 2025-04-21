@@ -101,6 +101,13 @@ this.calendar_calendars = class extends ExtensionAPI {
             if (typeof createProperties.showReminders != "undefined") {
               calendar.setProperty("suppressAlarms", !createProperties.showReminders);
             }
+            if (typeof createProperties.capabilities != "undefined") {
+              if (!isOwnCalendar(calendar, context.extension)) {
+                throw new ExtensionError("Cannot set capabilities on foreign calendar types");
+              }
+
+              calendar.setProperty("overrideCapabilities", JSON.stringify(createProperties.capabilities));
+            }
 
             cal.manager.registerCalendar(calendar);
 
