@@ -251,10 +251,11 @@ export default class calGoogleCalendar {
       });
     }
 
+    let title = data.summary || data.title;
     if (newItem) {
-      this.console.log(`Adding item ${newItem.id} (${data.title}) succeeded`);
+      this.console.log(`Adding item ${newItem.id} (${title}) succeeded`);
     } else {
-      this.console.log(`Adding item ${item.id} (${data.title}) failed`);
+      this.console.log(`Adding item ${item.id} (${title}) failed`);
     }
 
     return newItem;
