@@ -40,8 +40,9 @@
       "events": true,
       "removeModes": ["unsubscribe"],
       "requiresNetwork": true,
+      "scheduling": "none",
 
-      "minimumRefresh": 5
+      "minimumRefreshInterval": 5
     }
   },
 

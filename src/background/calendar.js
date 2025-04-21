@@ -161,14 +161,6 @@ export default class calGoogleCalendar {
       await messenger.calendar.calendars.update(this.id, { url: this.url });
       this.session = sessions.byCalendar(this, true);
     }
-
-    if (this.calendarName) {
-      await messenger.calendar.calendars.update(this.id, {
-        capabilities: {
-          organizer: this.calendarName,
-        },
-      });
-    }
   }
 
   createEventsURI(...extraParts) {
@@ -454,7 +446,9 @@ export default class calGoogleCalendar {
           let isReadOnly = data.accessRole == "freeBusyReader" || data.accessRole == "reader";
           await messenger.calendar.calendars.update(this.id, {
             capabilities: {
-              mutable: !isReadOnly
+              mutable: !isReadOnly,
+              scheduling: data.primary ? "server" : "none",
+              organizer: "mailto:" + this.calendarName
             }
           });
         })()
