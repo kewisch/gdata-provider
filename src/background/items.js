@@ -526,6 +526,7 @@ function patchEvent(item, oldItem) {
     entry.organizer = convertAttendee(organizer, organizer, true);
   } else if (oldOrganizerId != organizerId) {
     // Google requires a move() operation to do this, which is not yet implemented
+    // eslint-disable-next-line no-console
     console.warn(`[calGoogleCalendar(${entry.summary})] Changing organizer requires a move, which is not implemented`);
   }
 
@@ -787,7 +788,6 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
     }
 
     veventprops.push(["attach", props, "uri", attach.fileUrl]);
-    console.log(["attach", props, "uri", attach.fileUrl]);
   }
 
   let shell = {

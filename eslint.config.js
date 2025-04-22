@@ -346,6 +346,9 @@ export default [
       // Disallow arrow functions where they could be confused with comparisons
       "@stylistic/no-confusing-arrow": "error",
 
+      // No console messages
+      "no-console": "error",
+
       // Disallow Unnecessary Nested Blocks
       "no-lone-blocks": "error",
 
@@ -441,7 +444,10 @@ export default [
     },
 
     rules: {
-      ...jest.configs["flat/recommended"].rules
+      ...jest.configs["flat/recommended"].rules,
+
+      // Tests will have console messages
+      "no-console": "off"
     }
   },
   {

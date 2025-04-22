@@ -129,7 +129,7 @@ export default class calGoogleRequest {
         );
       }
     } catch (e) {
-      console.error("Could not parse API response as JSON", e);
+      this.console.error("Could not parse API response as JSON", e);
       throw e;
     }
 

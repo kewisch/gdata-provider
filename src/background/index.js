@@ -12,7 +12,7 @@ import TimezoneService from "./timezone.js";
 export async function migrateLegacyPrefs() {
   let legacyprefs = await messenger.gdata.getLegacyPrefs();
   if (legacyprefs) {
-    console.log("[gdata-provider] Migrating legacy prefs", legacyprefs);
+    console.log("[gdata-provider] Migrating legacy prefs", legacyprefs); // eslint-disable-line no-console
     await messenger.storage.local.set(legacyprefs);
     await messenger.gdata.purgeLegacyPrefs();
   }

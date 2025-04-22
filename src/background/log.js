@@ -3,6 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch */
 
+/* eslint-disable no-console */
+
 export default class Console {
   constructor(name) {
     this.name = name;

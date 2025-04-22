@@ -23,7 +23,7 @@ export async function migrateCalendars(ids) {
       await messenger.calendar.calendars.create(calendar);
       await messenger.calendar.calendars.remove(id);
     })
-  ).catch(console.error);
+  ).catch(console.error); // eslint-disable-line no-console
 }
 
 export async function checkCalendarMigration() {
