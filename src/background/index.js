@@ -72,6 +72,13 @@ export async function initListeners() {
   messenger.runtime.onInstalled.addListener(({ reason }) => {
     if (reason == "install") {
       browser.tabs.create({ url: "/onboarding/beta-welcome.html" });
+    } else if (reason == "update") {
+      const HAS_RELEASE_NOTES = ["139.9.2"];
+
+      let version = browser.runtime.getManifest().version;
+      if (HAS_RELEASE_NOTES.includes(version)) {
+        browser.tabs.create({ url: `/onboarding/beta-update-${version}.html` });
+      }
     }
   });
 }

@@ -118,7 +118,7 @@ h2 {
 }
 .section p.warning::before {
   content: "⚠️";
-  font-size: 50px;
+  font-size: 30px;
   display: block;
   position: absolute;
   top: calc(50% - 0.5em);

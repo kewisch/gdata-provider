@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
+   - Portions Copyright (C) Philipp Kewisch -->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Provider for Google Calendar</title>
+</head>
+<body>
+   <div class="beta">beta</div>
+    <div class="content">
+        <div class="section header">
+          <h1>Provider for Google Calendar</h1>
+          <p>
+            Thank you for being a beta tester for the Provider for Google Calendar!
+          </p>
+        </div>
+        <div class="section">
+          <h2>What's New in 139.9.2</h2>
+          <p>
+            <p class="warning">Please re-subscribe to your calendars with this update, some calendar properties were incorrectly set.</p>
+            <h3>Features</h3>
+            <ul>
+              <li>Read-only support for attachments</li>
+              <li>Sort primary and selected calendars first in the new calendar wizard</li>
+              <li>Show color dots in the new calendar dialog and use the calendar color</li>
+              <li>Do exponential backoff on all requests</li>
+              <li>Include email in calendar name if duplicate to an existing calendar</li>
+              <li>Add input validation in session screen</li>
+            </ul>
+            <h3>Fixes</h3>
+            <ul>
+              <li>Invitations can be accepted again (fix missing iCalUID error)</li>
+              <li>No longer send a client side invitation accept message, let the server handle it</li>
+              <li>Use summaryOverride calendar name if specified</li>
+              <li>Set correct colorId from API response</li>
+              <li>Don't constantly show the warning icon</li>
+              <li>Make it possible to complete tasks again</li>
+              <li>Fix a console message that showed "undefined" instead of a title</li>
+              <li>No longer break for events with differently formatted LASTACK and SNOOZE-TIME</li>
+              <li>Improve OAuth2 error handling</li>
+            </ul>
+          </p>
+          <p>
+            A big thank you to everyone who has already provided feedback or filed bugs. Special
+            thanks to jonschz who also sent a pull request!
+          </p>
+        </div>
+        <div class="section">
+          <h2>Providing Feedback</h2>
+          <p>
+            Here is how you can best provide feedback:
+            <ul>
+              <li>Join the discussion in the <a href="https://github.com/kewisch/gdata-provider/discussions/categories/beta" target="_blank">beta discussion category</a></li>
+              <li>If you are sure there is a bug, <a href="https://github.com/kewisch/gdata-provider/issues" target="_blank">file an issue</a>
+              <li>If you know how to fix it, <a href="https://github.com/kewisch/gdata-provider/pulls" target="_blank">send a pull request</a> to the <code>main</code> branch</li>
+            </ul>
+          </p>
+        </div>
+        <div class="section footer">
+          <p>
+            I'm looking forward to getting the new version out of the door, thanks to your help.
+            Like what you see so far? Click the button to show your appreciation.
+          </p>
+          <p class="donatebutton">
+            <a class="button" href="https://paypal.me/kewisch/15eur" target="_blank">Send me a token of appreciation <span class="icon-box">❤️</span></a>
+          </p>
+        </div>
+    </div>
+</body>
+</html>
