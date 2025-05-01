@@ -13,6 +13,7 @@
 #gdata-conf-logo {
   width: 24px;
   height: 24px;
+  pointer-events: none;
 }
 #gdata-conf-entrypoints {
   padding-inline-start: 0;
