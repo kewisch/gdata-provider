@@ -12,6 +12,12 @@ export function gdataInitUI(window, document, version) {
   const messenger = getMessenger();
 
   let confFragment = window.MozXULElement.parseXULToFragment(CONFERENCE_ROW_FRAGMENT);
+
+  let link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = `chrome://gdata-provider/content/conference.css?version=${version}`;
+  document.head.appendChild(link);
+
   document
     .querySelector(".calendar-summary-table")
     .insertBefore(confFragment, document.querySelector(".location-row").nextSibling);

@@ -5,7 +5,8 @@
 var lazy = {};
 
 ChromeUtils.defineESModuleGetters(lazy, {
-  cal: "resource:///modules/calendar/calUtils.sys.mjs" /* global cal */
+  cal: "resource:///modules/calendar/calUtils.sys.mjs", /* global cal */
+  MailE10SUtils: "resource:///modules/MailE10SUtils.sys.mjs" /* global MailE10SUtils */
 });
 
 const CODE_TYPES = ["meetingCode", "accessCode", "passcode", "password", "pin"];
@@ -17,7 +18,7 @@ export const CONFERENCE_ROW_FRAGMENT = `
     </html:th>
     <html:td id="gdata-conf-info-cell">
       <html:div id="gdata-conf-info">
-        <html:img width="24" height="24" id="gdata-conf-logo"/>
+        <browser id="gdata-conf-logo" type="content"/>
         <html:span id="gdata-conf-name"/>
       </html:div>
       <html:ul id="gdata-conf-entrypoints">
@@ -40,41 +41,6 @@ export const CONFERENCE_ROW_FRAGMENT = `
       </html:div>
     </html:li>
   </html:template>
-  <html:style>
-    #gdata-conference-row > th {
-      vertical-align: top;
-    }
-    #gdata-conf-info {
-      display: flex;
-      gap: 5px;
-      align-items: center;
-    }
-    #gdata-conf-entrypoints {
-      padding-inline-start: 0;
-      margin-block-end: 0;
-    }
-    #gdata-conf-entrypoints li {
-      list-style-type: none;
-      margin-block-end: 10px;
-    }
-    #gdata-conf-entrypoints li:last-child {
-      margin-block-end: 0;
-    }
-    #gdata-conf-entrypoints li button:empty,
-    #gdata-conf-entrypoints li .text-link:empty,
-    #gdata-conf-entrypoints li .label:empty {
-      display: none;
-    }
-    #gdata-conf-entrypoints li button,
-    #gdata-conf-entrypoints li .text-link {
-      margin: 0;
-    }
-    #gdata-conf-entrypoints li .pinvalue,
-    #gdata-conf-entrypoints li .label,
-    #gdata-conf-entrypoints li .text-link {
-      user-select: text;
-    }
-  </html:style>
 `;
 
 function showOrHideItemURL(url) {
@@ -114,7 +80,6 @@ export function initConferenceRow(document, messenger, item, calendar) {
   }
 
   let eventType = item.getProperty("X-GOOGLE-EVENT-TYPE");
-
   if (eventType == "outOfOffice" || eventType == "focusTime") {
     return noconference();
   }
@@ -138,8 +103,10 @@ export function initConferenceRow(document, messenger, item, calendar) {
   } else {
     document.getElementById("gdata-conf-label").value = i18n("conferenceLabel");
   }
-  document.getElementById("gdata-conf-logo").src = confdata.conferenceSolution?.iconUri;
   document.getElementById("gdata-conf-name").textContent = confdata.conferenceSolution?.name;
+
+  let logoBrowser = document.getElementById("gdata-conf-logo");
+  lazy.MailE10SUtils.loadURI(logoBrowser, confdata.conferenceSolution?.iconUri);
 
   for (let entry of confdata.entryPoints || []) {
     if (!showOrHideItemURL(entry?.uri)) {

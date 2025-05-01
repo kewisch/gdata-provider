@@ -25,6 +25,11 @@ export function gdataInitUI(window, document, version) {
     let separator = document.getElementById("reminder-none-separator");
     separator.parentNode.insertBefore(defaultReminderItem, separator);
 
+    let link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = `chrome://gdata-provider/content/conference.css?version=${version}`;
+    document.head.appendChild(link);
+
     let confFragment = window.MozXULElement.parseXULToFragment(CONFERENCE_ROW_FRAGMENT);
     document
       .getElementById("event-grid")
