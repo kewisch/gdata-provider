@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch */
 
-/* IF YOU CHANGE ANYTHING IN THIS FILE YOU NEED TO INCREASE bump=1 in all other modules loading it */
+/* IF YOU CHANGE ANYTHING IN THIS FILE YOU NEED TO INCREASE bump=3 in all other modules loading it */
 
 var lazy = {};
 
@@ -23,6 +23,7 @@ export function recordWindow(window) {
 
 export function setExtensionVersion(version) {
   extensionVersion = version;
+  console.log("[gdataUI] Future modules will load with version " + extensionVersion); // eslint-disable-line no-console
 }
 
 export function defineGdataModuleGetters(obj, modules) {
@@ -38,6 +39,7 @@ export function loadGdataModule(module) {
 }
 
 function registerWindowListener(id, version, chromeURLs, record = true) {
+  unregisterIds.push(id);
   lazy.ExtensionSupport.registerWindowListener(id, {
     chromeURLs: chromeURLs,
     onLoadWindow: window => {
@@ -50,12 +52,14 @@ function registerWindowListener(id, version, chromeURLs, record = true) {
       }
     },
   });
-  unregisterIds.push(id);
 }
 
 export function register() {
   registerWindowListener("gdata-event-dialog-reminder", extensionVersion, [
     "chrome://calendar/content/calendar-event-dialog-reminder.xhtml",
+  ]);
+  registerWindowListener("gdata-summary-dialog", extensionVersion, [
+    "chrome://calendar/content/calendar-summary-dialog.xhtml",
   ]);
   registerWindowListener(
     "gdata-event-dialog",

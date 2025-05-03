@@ -6,6 +6,7 @@
 /* global Services */
 
 var { ExtensionCommon: { ExtensionAPI } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
+var { setTimeout } = ChromeUtils.importESModule("resource://gre/modules/Timer.sys.mjs");
 
 var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
 
@@ -39,9 +40,17 @@ this.gdata = class extends ExtensionAPI {
       ["content", "gdata-provider", "legacy/content/"],
     ]);
 
-    let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1");
-    gdataUI.setExtensionVersion(version);
-    gdataUI.register();
+    // Make sure we're not using cached modules when upgrading/downgrading
+    if (this.extension.startupReason == "ADDON_UPGRADE" || this.extension.startupReason == "ADDON_DOWNGRADE") {
+      Services.obs.notifyObservers(null, "startupcache-invalidate");
+    }
+
+    // Do this in the next tick in case the startup cache needs more time to clear
+    setTimeout(() => {
+      let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=3");
+      gdataUI.setExtensionVersion(version);
+      gdataUI.register();
+    }, 0);
   }
 
   onShutdown(isAppShutdown) {
@@ -49,7 +58,7 @@ this.gdata = class extends ExtensionAPI {
       return;
     }
 
-    let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=1");
+    let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=3");
     gdataUI.unregister();
 
     Services.io
