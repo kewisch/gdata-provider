@@ -924,15 +924,15 @@ describe("paginatedRequest", () => {
     expect(onLast).toHaveBeenCalledWith({ fin: true });
 
     expect(fetch).toHaveBeenCalledTimes(3);
-    expect(fetch).toHaveBeenNthCalledWith(1, new URL("https://localhost/test"), expectMethod);
+    expect(fetch).toHaveBeenNthCalledWith(1, "https://localhost/test", expectMethod);
     expect(fetch).toHaveBeenNthCalledWith(
       2,
-      new URL("https://localhost/test?pageToken=1"),
+      "https://localhost/test?pageToken=1",
       expectMethod
     );
     expect(fetch).toHaveBeenNthCalledWith(
       3,
-      new URL("https://localhost/test?pageToken=2"),
+      "https://localhost/test?pageToken=2",
       expectMethod
     );
 
@@ -981,17 +981,17 @@ test("getCalendarList", async () => {
 
   expect(fetch).toHaveBeenNthCalledWith(
     1,
-    new URL("https://www.googleapis.com/calendar/v3/users/me/calendarList"),
+    "https://www.googleapis.com/calendar/v3/users/me/calendarList",
     expectMethod
   );
   expect(fetch).toHaveBeenNthCalledWith(
     2,
-    new URL("https://www.googleapis.com/calendar/v3/users/me/calendarList?pageToken=1"),
+    "https://www.googleapis.com/calendar/v3/users/me/calendarList?pageToken=1",
     expectMethod
   );
   expect(fetch).toHaveBeenNthCalledWith(
     3,
-    new URL("https://www.googleapis.com/calendar/v3/users/me/calendarList?pageToken=2"),
+    "https://www.googleapis.com/calendar/v3/users/me/calendarList?pageToken=2",
     expectMethod
   );
 });
@@ -1015,17 +1015,17 @@ test("getTasksList", async () => {
 
   expect(fetch).toHaveBeenNthCalledWith(
     1,
-    new URL("https://www.googleapis.com/tasks/v1/users/@me/lists"),
+    "https://www.googleapis.com/tasks/v1/users/@me/lists",
     expectMethod
   );
   expect(fetch).toHaveBeenNthCalledWith(
     2,
-    new URL("https://www.googleapis.com/tasks/v1/users/@me/lists?pageToken=1"),
+    "https://www.googleapis.com/tasks/v1/users/@me/lists?pageToken=1",
     expectMethod
   );
   expect(fetch).toHaveBeenNthCalledWith(
     3,
-    new URL("https://www.googleapis.com/tasks/v1/users/@me/lists?pageToken=2"),
+    "https://www.googleapis.com/tasks/v1/users/@me/lists?pageToken=2",
     expectMethod
   );
 });

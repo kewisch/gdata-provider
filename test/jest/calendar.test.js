@@ -369,10 +369,8 @@ describe("item functions", () => {
 
         expect(item).toEqual(expected);
         expect(fetch).toHaveBeenCalledWith(
-          new URL(
             "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events" +
-              (sendUpdates ? "?sendUpdates=all" : "")
-          ),
+              (sendUpdates ? "&sendUpdates=all" : ""),
           expect.objectContaining({
             method: "POST",
           })
@@ -405,9 +403,7 @@ describe("item functions", () => {
         await calendar.onItemCreated(newItem, { invitation: true });
 
         expect(fetch).toHaveBeenCalledWith(
-          new URL(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/import"
-          ),
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/import",
           expect.objectContaining({
             method: "POST",
           })
@@ -435,9 +431,7 @@ describe("item functions", () => {
         let createdItem = await calendar.onItemCreated(newItem);
 
         expect(fetch).toHaveBeenCalledWith(
-          new URL(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events"
-          ),
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events",
           expect.objectContaining({
             method: "POST",
           })
@@ -484,10 +478,8 @@ describe("item functions", () => {
         let result = await calendar.onItemUpdated(newItem, oldItem, {});
 
         expect(fetch).toHaveBeenCalledWith(
-          new URL(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo" +
-              (sendUpdates ? "?sendUpdates=all" : "")
-          ),
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo" +
+              (sendUpdates ? "&sendUpdates=all" : ""),
           expect.objectContaining({
             method: "PATCH",
             body: '{"summary":"changed"}',
@@ -528,9 +520,7 @@ describe("item functions", () => {
         expect(result).toEqual({ error: "CONFLICT" });
 
         expect(fetch).toHaveBeenCalledWith(
-          new URL(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
-          ),
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo",
           expect.objectContaining({
             method: "PATCH",
             body: '{"summary":"changed"}',
@@ -544,9 +534,7 @@ describe("item functions", () => {
         expect(result).toEqual({ error: "CONFLICT" });
 
         expect(fetch).toHaveBeenCalledWith(
-          new URL(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
-          ),
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo",
           expect.objectContaining({
             method: "PATCH",
             body: '{"summary":"changed"}',
@@ -622,9 +610,7 @@ describe("item functions", () => {
         let result = await calendar.onItemUpdated(newItem, oldItem, {});
 
         expect(fetch).toHaveBeenCalledWith(
-          new URL(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
-          ),
+          "https://www.googleapis.com/tasks/v1/lists/taskhash/tasks/lqohjsbhqoztdkusnpruvooacn",
           expect.objectContaining({
             method: "PATCH",
             body: '{"title":"changed"}',
@@ -735,10 +721,8 @@ describe("item functions", () => {
 
         // vcalendar -> vevent
         expect(fetch).toHaveBeenCalledWith(
-          new URL(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo" +
-              (sendUpdates ? "?sendUpdates=all" : "")
-          ),
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo" +
+              (sendUpdates ? "?sendUpdates=all" : ""),
           expect.objectContaining({
             method: "DELETE",
             headers: expect.objectContaining({
@@ -794,9 +778,7 @@ describe("item functions", () => {
         let error = await calendar.onItemRemoved(removedItem, {});
         expect(error).toEqual({ error: "CONFLICT" });
         expect(fetch).toHaveBeenCalledWith(
-          new URL(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
-          ),
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo",
           expect.objectContaining({
             method: "DELETE",
             headers: expect.objectContaining({
@@ -808,9 +790,7 @@ describe("item functions", () => {
         error = await calendar.onItemRemoved(removedItem, { force: true });
         expect(error).toEqual({ error: "CONFLICT" });
         expect(fetch).toHaveBeenCalledWith(
-          new URL(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
-          ),
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo",
           expect.objectContaining({
             method: "DELETE",
             headers: expect.objectContaining({
@@ -926,9 +906,7 @@ describe("item functions", () => {
       let result = await calendar.onItemUpdated(newItem, oldItem, {});
 
       expect(fetch).toHaveBeenCalledWith(
-        new URL(
-          "https://www.googleapis.com/tasks/v1/lists/taskhash/tasks/lqohjsbhqoztdkusnpruvooacn"
-        ),
+        "https://www.googleapis.com/tasks/v1/lists/taskhash/tasks/lqohjsbhqoztdkusnpruvooacn",
         expect.objectContaining({
           method: "PATCH",
           body: '{"title":"changed"}',
@@ -956,9 +934,7 @@ describe("item functions", () => {
 
       // vcalendar -> vevent
       expect(fetch).toHaveBeenCalledWith(
-        new URL(
-          "https://www.googleapis.com/tasks/v1/lists/taskhash/tasks/lqohjsbhqoztdkusnpruvooacn"
-        ),
+        "https://www.googleapis.com/tasks/v1/lists/taskhash/tasks/lqohjsbhqoztdkusnpruvooacn",
         expect.objectContaining({
           method: "DELETE",
         })

@@ -69,7 +69,7 @@ test("commit basics", async () => {
   res = await request.commit(session);
   expect(fetch.mock.calls[fetch.mock.calls.length - 1][1].body).toBe('{"foo":"bar"}');
   expect(fetch).toHaveBeenCalledWith(
-    new URL("https://localhost/test?foo=bar&arr=one&arr=two"),
+    "https://localhost/test?foo=bar&arr=one&arr=two",
     expect.objectContaining({
       method: "POST",
       body: '{"foo":"bar"}',

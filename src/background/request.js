@@ -117,7 +117,7 @@ export default class calGoogleRequest {
       return acc;
     }, []));
 
-    this.response = await fetch(uri, this.options);
+    this.response = await fetch(uri.toString(), this.options);
     try {
       if (this.response.headers.get("Content-Type")?.startsWith("application/json")) {
         this.json = await this.response.json();

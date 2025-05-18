@@ -208,13 +208,14 @@ export default class calGoogleCalendar {
 
     let uri;
     let itemData = itemToJson(item, this, options.invitation);
+    let params = {};
 
     /* istanbul ignore else - unreachable */
     if (item.type == "event") {
       uri = this.createEventsURI("events", options.invitation && "import");
       let prefs = await messenger.storage.local.get({ "settings.sendEventNotifications": false });
       if (prefs["settings.sendEventNotifications"]) {
-        uri += "?sendUpdates=all";
+        params.sendUpdates = "all";
       }
     } else if (item.type == "task") {
       uri = this.createTasksURI("tasks");
@@ -224,6 +225,7 @@ export default class calGoogleCalendar {
     let request = new calGoogleRequest({
       method: "POST",
       uri,
+      params,
       json: itemData,
       calendar: this,
     });
@@ -267,6 +269,7 @@ export default class calGoogleCalendar {
       `${item.type} ${item.id} etag ${item.metadata.etag}`
     );
     let uri;
+    let params = {};
 
     /* istanbul ignore else - caught in patchItem */
     if (item.type == "event") {
@@ -274,7 +277,7 @@ export default class calGoogleCalendar {
 
       let prefs = await messenger.storage.local.get({ "settings.sendEventNotifications": false });
       if (prefs["settings.sendEventNotifications"]) {
-        uri += "?sendUpdates=all";
+        params.sendUpdates = "all";
       }
     } else if (item.type == "task") {
       uri = this.createTasksURI("tasks", item.id);
@@ -285,6 +288,7 @@ export default class calGoogleCalendar {
     let request = new calGoogleRequest({
       method: "PATCH",
       uri,
+      params,
       json: itemData,
       headers: {
         "If-Match": getItemEtag(oldItem, options.force),
@@ -354,11 +358,12 @@ export default class calGoogleCalendar {
       `${item.type} ${item.id}`
     );
     let uri;
+    let params = {};
     if (item.type == "event") {
       uri = this.createEventsURI("events", getItemPath(item));
       let prefs = await messenger.storage.local.get({ "settings.sendEventNotifications": false });
       if (prefs["settings.sendEventNotifications"]) {
-        uri += "?sendUpdates=all";
+        params.sendUpdates = "all";
       }
     } else if (item.type == "task") {
       uri = this.createTasksURI("tasks", item.id);
@@ -369,6 +374,7 @@ export default class calGoogleCalendar {
     let request = new calGoogleRequest({
       method: "DELETE",
       uri,
+      params,
       headers: {
         "If-Match": getItemEtag(item, options.force),
       },
