@@ -244,12 +244,6 @@ test("onInit", async () => {
   let calendar = await calGoogleCalendar.get("id1");
   await calendar.onInit();
 
-  expect(global.messenger.calendar.calendars.update).toHaveBeenLastCalledWith("id1", {
-    capabilities: {
-      organizer: "id1@calendar.google.com",
-    },
-  });
-
   expect(calendar.calendarName).toBe("id1@calendar.google.com");
   expect(calendar.tasklistName).toBe("taskhash");
 
@@ -964,13 +958,15 @@ describe("onSync", () => {
 
     messenger.idle._idleState = "active";
 
+    let primary = accessRole == "owner";
+
     fetch.mockResponse(req => {
       let response;
 
       if ((response = mockCalendarRequest(req)) !== null) {
         return response;
       }
-      if ((response = mockCalendarListRequest(req, { accessRole })) !== null) {
+      if ((response = mockCalendarListRequest(req, { accessRole, primary })) !== null) {
         return response;
       }
       if ((response = mockTaskRequest(req)) !== null) {
@@ -990,7 +986,7 @@ describe("onSync", () => {
     expect(await calendar.getCalendarPref("foregroundColor")).toBe("#FFFFFF");
     expect(await calendar.getCalendarPref("description")).toBe("The calendar 1");
     expect(await calendar.getCalendarPref("location")).toBe("test");
-    expect(await calendar.getCalendarPref("primary")).toBe(true);
+    expect(await calendar.getCalendarPref("primary")).toBe(primary);
     expect(await calendar.getCalendarPref("summary")).toBe("calendar1");
     expect(await calendar.getCalendarPref("summaryOverride")).toBe("calendar1override");
     expect(await calendar.getCalendarPref("timeZone")).toBe("Europe/Berlin");
@@ -999,7 +995,13 @@ describe("onSync", () => {
     );
 
     let isReadOnly = (accessRole == "freeBusyReader");
-    expect(messenger.calendar.calendars.update).toHaveBeenCalledWith("id1", { capabilities: { mutable: !isReadOnly } });
+    expect(messenger.calendar.calendars.update).toHaveBeenCalledWith("id1", {
+      capabilities: {
+        mutable: !isReadOnly,
+        scheduling: primary ? "server" : "none",
+        organizer: "mailto:id1@calendar.google.com"
+      }
+    });
   });
 
   test("reset sync", async () => {
