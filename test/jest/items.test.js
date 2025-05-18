@@ -5,10 +5,13 @@ import { findRelevantInstance, transformDateXprop, jsonToItem, jsonToDate, itemT
 import calGoogleCalendar from "../../src/background/calendar";
 import ICAL from "../../src/background/libs/ical.js";
 import TimezoneService from "../../src/background/timezone.js";
-import v8 from "v8";
 import createMessenger from "./helpers/webext-api.js";
+import { deepFreeze, copy } from "./helpers/util.js";
 
 import { jest } from "@jest/globals";
+
+deepFreeze(gcalItems);
+deepFreeze(jcalItems);
 
 var defaultTimezone;
 
@@ -195,7 +198,7 @@ describe("jsonToItem", () => {
 
     test("simple event no cn", async () => {
       let defaultReminders = [{ method: "popup", minutes: 120 }];
-      let gcalItem = v8.deserialize(v8.serialize(gcalItems.simple_event));
+      let gcalItem = copy(gcalItems.simple_event);
       delete gcalItem.organizer.displayName;
 
       let item = await jsonToItem({
@@ -212,7 +215,7 @@ describe("jsonToItem", () => {
 
     test("simple event ical lastack", async () => {
       let defaultReminders = [{ method: "popup", minutes: 120 }];
-      let gcalItem = v8.deserialize(v8.serialize(gcalItems.simple_event));
+      let gcalItem = copy(gcalItems.simple_event);
       gcalItem.extendedProperties.private["X-MOZ-LASTACK"] = "20140202T020202Z";
 
       let item = await jsonToItem({
@@ -578,7 +581,8 @@ describe("itemToJson", () => {
   });
 
   test("recurring event rrule", () => {
-    let data = itemToJson(jcalItems.recur_rrule, calendar, false);
+    let item = copy(jcalItems.recur_rrule);
+    let data = itemToJson(item, calendar, false);
     expect(data).toEqual({
       iCalUID: "osndfnwejrgnejnsdjfwegjdfr@google.com",
       start: {
@@ -671,9 +675,10 @@ describe("patchItem", () => {
 
     describe("simple event", () => {
       beforeEach(() => {
-        oldItem = jcalItems.simple_event;
-        item = v8.deserialize(v8.serialize(oldItem));
+        oldItem = copy(jcalItems.simple_event);
+        item = copy(jcalItems.simple_event);
         event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
+        oldEvent = new ICAL.Component(oldItem.item).getFirstSubcomponent("vevent");
       });
 
       test("no changes", () => {
@@ -867,8 +872,8 @@ describe("patchItem", () => {
     });
 
     test("organizer partstat change", () => {
-        item = v8.deserialize(v8.serialize(jcalItems.organizer_partstat));
-        oldItem = v8.deserialize(v8.serialize(item));
+        item = copy(jcalItems.organizer_partstat);
+        oldItem = copy(item);
 
         oldEvent = new ICAL.Component(oldItem.item).getFirstSubcomponent("vevent");
         event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
@@ -916,7 +921,7 @@ describe("patchItem", () => {
       // Using a different event here, otherwise we hit the 5 alarms limit
       beforeEach(() => {
         oldItem = jcalItems.valarm_override;
-        item = v8.deserialize(v8.serialize(oldItem));
+        item = copy(oldItem);
         event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
       });
 
@@ -968,8 +973,8 @@ describe("patchItem", () => {
 
     describe("recurrence", () => {
       beforeEach(() => {
-        oldItem = jcalItems.recur_rrule;
-        item = v8.deserialize(v8.serialize(oldItem));
+        oldItem = copy(jcalItems.recur_rrule);
+        item = copy(jcalItems.recur_rrule);
         event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
       });
 
@@ -1006,7 +1011,7 @@ describe("patchItem", () => {
     let oldItem = jcalItems.simple_task;
 
     beforeEach(() => {
-      item = v8.deserialize(v8.serialize(oldItem));
+      item = copy(oldItem);
       task = new ICAL.Component(item.item).getFirstSubcomponent("vtodo");
     });
 
@@ -1097,7 +1102,7 @@ describe("ItemSaver", () => {
     });
 
     test("Master item removed", async () => {
-      let gitem = v8.deserialize(v8.serialize(gcalItems.valarm_no_default_override));
+      let gitem = copy(gcalItems.valarm_no_default_override);
       gitem.status = "cancelled";
 
       await saver.parseEventStream({
@@ -1145,7 +1150,9 @@ describe("ItemSaver", () => {
     });
 
     test("Parent item from database", async () => {
-      await messenger.calendar.items.create("calendarId#cache", jcalItems.recur_rrule);
+
+      let item = copy(jcalItems.recur_rrule);
+      await messenger.calendar.items.create("calendarId#cache", item);
       messenger.calendar.items.create.mockClear();
 
       await saver.parseEventStream({
@@ -1213,7 +1220,7 @@ describe("ItemSaver", () => {
     });
 
     test("recurring event master cancelled", async () => {
-      let gitem = v8.deserialize(v8.serialize(gcalItems.recur_rrule));
+      let gitem = copy(gcalItems.recur_rrule);
       gitem.status = "cancelled";
 
       await saver.parseEventStream({
@@ -1259,7 +1266,7 @@ describe("ItemSaver", () => {
     });
 
     test("recurring event missing parent with timezone recid", async () => {
-      let gitem = v8.deserialize(v8.serialize(gcalItems.recur_instance));
+      let gitem = copy(gcalItems.recur_instance);
       gitem.start = { dateTime: "2006-06-25T01:02:03", timeZone: "Europe/Berlin" };
       gitem.end = { dateTime: "2006-06-25T02:03:04", timeZone: "Europe/Berlin" };
       gitem.originalStartTime = { dateTime: "2006-06-25T05:06:07", timeZone: "Europe/Berlin" };
@@ -1294,7 +1301,7 @@ describe("ItemSaver", () => {
     });
 
     test("recurring event missing parent cancelled", async () => {
-      let gitem = v8.deserialize(v8.serialize(gcalItems.recur_instance));
+      let gitem = copy(gcalItems.recur_instance);
       gitem.status = "cancelled";
 
       await saver.parseEventStream({
@@ -1307,10 +1314,10 @@ describe("ItemSaver", () => {
       expect(messenger.calendar.items.create).not.toHaveBeenCalled();
     });
     test("recurring event missing parent found in storage", async () => {
-      let jitem = v8.deserialize(v8.serialize(jcalItems.recur_rrule));
+      let jitem = copy(jcalItems.recur_rrule);
       await messenger.calendar.items._create("calendarId#cache", jitem);
 
-      let gitem = v8.deserialize(v8.serialize(gcalItems.recur_instance));
+      let gitem = copy(gcalItems.recur_instance);
       gitem.status = "cancelled";
 
       await saver.parseEventStream({

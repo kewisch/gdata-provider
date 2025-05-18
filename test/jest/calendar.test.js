@@ -9,8 +9,11 @@ import calGoogleCalendar from "../../src/background/calendar";
 import sessions from "../../src/background/session";
 import gcalItems from "./fixtures/gcalItems.json";
 import jcalItems from "./fixtures/jcalItems.json";
-import v8 from "v8";
+import { deepFreeze, copy } from "./helpers/util.js";
 import ICAL from "ical.js";
+
+deepFreeze(gcalItems);
+deepFreeze(jcalItems);
 
 function authenticate(session) {
   session.oauth.accessToken = "accessToken";
@@ -335,7 +338,7 @@ describe("item functions", () => {
             )
           ) {
             // remove alarms in response
-            let gcalItemResponse = v8.deserialize(v8.serialize(gcalItems.simple_event));
+            let gcalItemResponse = copy(gcalItems.simple_event);
             delete gcalItemResponse.reminders.overrides;
 
             return {
@@ -348,8 +351,8 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
-        let expected = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let newItem = copy(jcalItems.simple_event);
+        let expected = copy(jcalItems.simple_event);
 
         // remove alarms
         new ICAL.Component(newItem.item)
@@ -393,7 +396,7 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let newItem = copy(jcalItems.simple_event);
         await calendar.onItemCreated(newItem, { invitation: true });
 
         expect(fetch).toHaveBeenCalledWith(
@@ -421,7 +424,7 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let newItem = copy(jcalItems.simple_event);
         let createdItem = await calendar.onItemCreated(newItem);
 
         expect(fetch).toHaveBeenCalledWith(
@@ -455,8 +458,8 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let oldItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
-        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let oldItem = copy(jcalItems.simple_event);
+        let newItem = copy(jcalItems.simple_event);
 
         if (!sendUpdates) {
           // Using this condition also to check the branch without an etag
@@ -501,8 +504,8 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let oldItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
-        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let oldItem = copy(jcalItems.simple_event);
+        let newItem = copy(jcalItems.simple_event);
 
         let vevent = new ICAL.Component(newItem.item);
         vevent
@@ -563,8 +566,8 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let oldItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
-        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let oldItem = copy(jcalItems.simple_event);
+        let newItem = copy(jcalItems.simple_event);
 
         let vevent = new ICAL.Component(newItem.item);
         vevent
@@ -592,8 +595,8 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let oldItem = v8.deserialize(v8.serialize(jcalItems.simple_task));
-        let newItem = v8.deserialize(v8.serialize(jcalItems.simple_task));
+        let oldItem = copy(jcalItems.simple_task);
+        let newItem = copy(jcalItems.simple_task);
 
         let vtodo = new ICAL.Component(newItem.item);
         vtodo
@@ -631,8 +634,8 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let oldItem = v8.deserialize(v8.serialize(jcalItems.recur_instance));
-        let newItem = v8.deserialize(v8.serialize(jcalItems.recur_instance));
+        let oldItem = copy(jcalItems.recur_instance);
+        let newItem = copy(jcalItems.recur_instance);
 
         let vevent = new ICAL.Component(newItem.item);
         vevent
@@ -648,8 +651,8 @@ describe("item functions", () => {
 
       test("onItemUpdated recurrence", async () => {
         // We need an item that has a modified occurrence
-        let oldItem = v8.deserialize(v8.serialize(jcalItems.recur_rrule));
-        oldItem.item[2].push(v8.deserialize(v8.serialize(jcalItems.recur_instance)).item[2][0]);
+        let oldItem = copy(jcalItems.recur_rrule);
+        oldItem.item[2].push(copy(jcalItems.recur_instance).item[2][0]);
 
         await messenger.calendar.items.create(calendar.cacheId, oldItem);
 
@@ -669,7 +672,7 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let newItem = v8.deserialize(v8.serialize(jcalItems.recur_rrule));
+        let newItem = copy(jcalItems.recur_rrule);
 
         let vevent = new ICAL.Component(newItem.item);
         vevent
@@ -704,7 +707,7 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let removedItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let removedItem = copy(jcalItems.simple_event);
 
         if (!sendUpdates) {
           // Using this also to check the branch without an etag
@@ -743,7 +746,7 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let removedItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let removedItem = copy(jcalItems.simple_event);
 
         let item = await calendar.onItemRemoved(removedItem, {});
 
@@ -767,7 +770,7 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let removedItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let removedItem = copy(jcalItems.simple_event);
 
         let error = await calendar.onItemRemoved(removedItem, {});
         expect(error).toEqual({ error: "CONFLICT" });
@@ -818,7 +821,7 @@ describe("item functions", () => {
           throw new Error("Unhandled request " + req.url);
         });
 
-        let removedItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+        let removedItem = copy(jcalItems.simple_event);
 
         await expect(calendar.onItemRemoved(removedItem)).rejects.toThrow("QUOTA_FAILURE");
       });
@@ -887,7 +890,7 @@ describe("item functions", () => {
       });
 
       let oldItem = jcalItems.simple_task;
-      let newItem = v8.deserialize(v8.serialize(jcalItems.simple_task));
+      let newItem = copy(jcalItems.simple_task);
 
       expect(oldItem.id).toBe("lqohjsbhqoztdkusnpruvooacn");
 
@@ -937,7 +940,7 @@ describe("item functions", () => {
   });
 
   test("invalid", async () => {
-    let newItem = v8.deserialize(v8.serialize(jcalItems.simple_event));
+    let newItem = copy(jcalItems.simple_event);
     newItem.type = "wat";
     await expect(calendar.onItemRemoved(newItem, {})).rejects.toThrow("Unknown item type: wat");
   });
