@@ -212,6 +212,7 @@ export default class calGoogleCalendar {
 
     /* istanbul ignore else - unreachable */
     if (item.type == "event") {
+      params.conferenceDataVersion = 1;
       uri = this.createEventsURI("events", options.invitation && "import");
       let prefs = await messenger.storage.local.get({ "settings.sendEventNotifications": false });
       if (prefs["settings.sendEventNotifications"]) {
@@ -273,6 +274,7 @@ export default class calGoogleCalendar {
 
     /* istanbul ignore else - caught in patchItem */
     if (item.type == "event") {
+      params.conferenceDataVersion = 1;
       uri = this.createEventsURI("events", getItemPath(item));
 
       let prefs = await messenger.storage.local.get({ "settings.sendEventNotifications": false });
@@ -400,6 +402,7 @@ export default class calGoogleCalendar {
     this.console.log("Resetting last updated counter");
     await this.setCalendarPref("eventSyncToken", null);
     await this.setCalendarPref("tasksLastUpdated", null);
+    await this.setCalendarPref("conferenceSolutions", null);
 
     await messenger.calendar.calendars.clear(this.cacheId);
   }

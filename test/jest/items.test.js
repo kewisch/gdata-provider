@@ -869,6 +869,28 @@ describe("patchItem", () => {
           extendedProperties: { shared: { "X-MOZ-CATEGORIES": "foo,bar,baz" } },
         });
       });
+
+      test("Conference data removed", () => {
+        oldEvent.addPropertyWithValue("x-google-confdata", JSON.stringify({ data: true }));
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({ conferenceData: null });
+      });
+
+      test("New conference", () => {
+        const UUID_REGEX = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/;
+        event.addPropertyWithValue("x-google-confnew", "hangoutsMeet");
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({
+          conferenceData: {
+            createRequest: {
+              requestId: expect.stringMatching(UUID_REGEX),
+              conferenceSolutionKey: {
+                type: "hangoutsMeet"
+              }
+            }
+          }
+        });
+      });
     });
 
     test("organizer partstat change", () => {
@@ -1037,15 +1059,25 @@ describe("patchItem", () => {
 
 describe("ItemSaver", () => {
   let saver;
+  let prefs;
   let calendar = {
     console,
     id: "calendarId",
     cacheId: "calendarId#cache",
     setCalendarPref: jest.fn(),
+    getCalendarPref: jest.fn()
   };
 
   beforeEach(() => {
+    prefs = {};
     saver = new ItemSaver(calendar);
+
+    calendar.setCalendarPref = jest.fn(async (name, value) => {
+      prefs[name] = value;
+    });
+    calendar.getCalendarPref = jest.fn(async (name, defaultValue) => {
+      return prefs[name] || defaultValue;
+    });
   });
   afterEach(() => {
     // eslint-disable-next-line jest/no-standalone-expect
@@ -1150,7 +1182,6 @@ describe("ItemSaver", () => {
     });
 
     test("Parent item from database", async () => {
-
       let item = copy(jcalItems.recur_rrule);
       await messenger.calendar.items.create("calendarId#cache", item);
       messenger.calendar.items.create.mockClear();
@@ -1350,6 +1381,67 @@ describe("ItemSaver", () => {
       expect(
         vevent.getAllProperties("exdate")?.map(prop => prop.getFirstValue()?.toICALString())
       ).toEqual(expect.arrayContaining(["20060625", "20070609"]));
+    });
+
+    const ORANGE_PIXEL_CACHE = [
+      137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0, 0, 0, 1, 8,
+      6, 0, 0, 0, 31, 21, 196, 137, 0, 0, 0, 13, 73, 68, 65, 84, 8, 91, 99, 248, 191, 148,
+      225, 63, 0, 6, 239, 2, 164, 151, 4, 63, 111, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96,
+      130
+    ];
+    const ORANGE_PIXEL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2P4v5ThPwAG7wKklwQ/bwAAAABJRU5ErkJggg==";
+
+    const BLUE_PIXEL_CACHE = [
+      137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0, 0, 0, 1, 8,
+      6, 0, 0, 0, 31, 21, 196, 137, 0, 0, 0, 13, 73, 68, 65, 84, 8, 91, 99, 96, 96, 248, 255,
+      31, 0, 3, 2, 1, 255, 120, 191, 70, 181, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130
+    ];
+    const BLUE_PIXEL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2NgYPj/HwADAgH/eL9GtQAAAABJRU5ErkJggg==";
+
+    test("Conference providers", async () => {
+      let solutions = {
+        "hangoutsMeet": {
+          "iconCache": ORANGE_PIXEL_CACHE,
+          "iconUri": ORANGE_PIXEL,
+          "key": { "type": "hangoutsMeet" },
+          "name": "Hangouts"
+        }
+      };
+
+      await calendar.setCalendarPref("conferenceSolutions", solutions);
+
+      let item1 = copy(gcalItems.valarm_no_default_override);
+      let item2 = copy(gcalItems.valarm_no_default_override);
+
+      item2.conferenceData.conferenceSolution.key.type = "zoom";
+      item2.conferenceData.conferenceSolution.name = "Zoom";
+      item2.conferenceData.conferenceSolution.iconUri = BLUE_PIXEL;
+
+      const fetchSpy = jest.spyOn(global, "fetch");
+
+      await saver.parseEventStream({
+        items: [item1, item2]
+      });
+      await saver.complete();
+
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+
+      solutions = await calendar.getCalendarPref("conferenceSolutions", {});
+
+      expect(solutions).toEqual({
+        "hangoutsMeet": {
+          "iconCache": ORANGE_PIXEL_CACHE,
+          "iconUri": ORANGE_PIXEL,
+          "key": { "type": "hangoutsMeet" },
+          "name": "Hangouts"
+        },
+        "zoom": {
+          "iconCache": BLUE_PIXEL_CACHE,
+          "iconUri": BLUE_PIXEL,
+          "key": { "type": "zoom" },
+          "name": "Zoom",
+        }
+      });
     });
   });
 

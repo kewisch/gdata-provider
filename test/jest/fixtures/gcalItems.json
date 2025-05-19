@@ -85,10 +85,10 @@
       "conferenceId": "4c8e9483-4ae3-44eb-94d4-206c3a3bfa3d",
       "conferenceSolution": {
         "key": {
-          "type": "eventHangout"
+          "type": "hangoutsMeet"
         },
         "name": "Hangouts",
-        "iconUri": "data:text/plain,no icon"
+        "iconUri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2P4v5ThPwAG7wKklwQ/bwAAAABJRU5ErkJggg=="
       },
       "entryPoints": [
         {

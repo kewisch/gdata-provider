@@ -26,6 +26,11 @@ export function gdataInitUI(window, document, version) {
     let separator = document.getElementById("reminder-none-separator");
     separator.parentNode.insertBefore(defaultReminderItem, separator);
 
+    let link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = `chrome://gdata-provider/content/conference.css?version=${version}`;
+    document.head.appendChild(link);
+
     let confFragment = window.MozXULElement.parseXULToFragment(CONFERENCE_ROW_FRAGMENT);
     document
       .getElementById("event-grid")
@@ -301,5 +306,24 @@ export function gdataInitUI(window, document, version) {
     } else {
       return protofunc.apply(this, args);
     }
+  });
+
+  monkeyPatch(window, "saveDialog", function(protofunc, item, ...args) {
+    let res = protofunc.call(this, item, ...args);
+
+    if (item.calendar.type == GDATA_CALENDAR_TYPE) {
+      let confOption = document.getElementById("gdata-conf-new");
+      if (confOption.value) {
+        item.setProperty("X-GOOGLE-CONFNEW", confOption.value);
+      }
+
+      let rowmode = document.getElementById("gdata-conference-row").getAttribute("mode");
+
+      if (rowmode == "delete") {
+        item.deleteProperty("X-GOOGLE-CONFDATA");
+      }
+    }
+
+    return res;
   });
 }

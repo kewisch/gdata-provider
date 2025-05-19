@@ -366,7 +366,7 @@ describe("item functions", () => {
 
         expect(item).toEqual(expected);
         expect(fetch).toHaveBeenCalledWith(
-            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events" +
+            "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events?conferenceDataVersion=1" +
               (sendUpdates ? "&sendUpdates=all" : ""),
           expect.objectContaining({
             method: "POST",
@@ -400,7 +400,7 @@ describe("item functions", () => {
         await calendar.onItemCreated(newItem, { invitation: true });
 
         expect(fetch).toHaveBeenCalledWith(
-          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/import",
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/import?conferenceDataVersion=1",
           expect.objectContaining({
             method: "POST",
           })
@@ -428,7 +428,7 @@ describe("item functions", () => {
         let createdItem = await calendar.onItemCreated(newItem);
 
         expect(fetch).toHaveBeenCalledWith(
-          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events",
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events?conferenceDataVersion=1",
           expect.objectContaining({
             method: "POST",
           })
@@ -475,7 +475,7 @@ describe("item functions", () => {
         let result = await calendar.onItemUpdated(newItem, oldItem, {});
 
         expect(fetch).toHaveBeenCalledWith(
-          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo" +
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo?conferenceDataVersion=1" +
               (sendUpdates ? "&sendUpdates=all" : ""),
           expect.objectContaining({
             method: "PATCH",
@@ -517,7 +517,7 @@ describe("item functions", () => {
         expect(result).toEqual({ error: "CONFLICT" });
 
         expect(fetch).toHaveBeenCalledWith(
-          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo",
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo?conferenceDataVersion=1",
           expect.objectContaining({
             method: "PATCH",
             body: '{"summary":"changed"}',
@@ -531,7 +531,7 @@ describe("item functions", () => {
         expect(result).toEqual({ error: "CONFLICT" });
 
         expect(fetch).toHaveBeenCalledWith(
-          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo",
+          "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo?conferenceDataVersion=1",
           expect.objectContaining({
             method: "PATCH",
             body: '{"summary":"changed"}',
@@ -546,7 +546,7 @@ describe("item functions", () => {
         fetch.mockResponse(req => {
           if (
             req.url.startsWith(
-              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo"
+              "https://www.googleapis.com/calendar/v3/calendars/id1%40calendar.google.com/events/go6ijb0b46hlpbu4eeu92njevo?conferenceDataVersion=1"
             )
           ) {
             return {

@@ -557,6 +557,24 @@ function patchEvent(item, oldItem) {
     entry.extendedProperties.shared["X-MOZ-CATEGORIES"] = categoriesArrayToString(newCatArray);
   }
 
+  // Conference info - we only support create and delete
+  let confnew = event.getFirstPropertyValue("x-google-confnew");
+  let confdata = event.getFirstPropertyValue("x-google-confdata");
+  let oldConfData = oldEvent.getFirstPropertyValue("x-google-confdata");
+
+  if (oldConfData && !confdata) {
+    entry.conferenceData = null;
+  } else if (confnew) {
+    entry.conferenceData = {
+      createRequest: {
+        requestId: crypto.randomUUID(),
+        conferenceSolutionKey: {
+          type: confnew
+        }
+      }
+    };
+  }
+
   // Last ack and snooze time are always in UTC, when serialized they'll contain a Z
   setIfFirstProperty(
     entry.extendedProperties.private,
@@ -634,7 +652,7 @@ function dateToJson(property) {
   return dateobj;
 }
 
-async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone, accessRole }) {
+async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone, accessRole, confSolutionCache }) {
   function setIf(prop, type, value, params = {}) {
     if (value) {
       veventprops.push([prop, params, type, value]);
@@ -692,6 +710,11 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
 
   setIf("x-google-color-id", "text", entry.colorId);
   setIf("x-google-confdata", "text", entry.conferenceData ? JSON.stringify(entry.conferenceData) : null);
+
+  if (entry.conferenceData && confSolutionCache) {
+    let solution = entry.conferenceData.conferenceSolution;
+    confSolutionCache[solution.key.type] = solution;
+  }
 
   pushPropIf(jsonToDate("dtstart", entry.start, defaultTimezone));
   if (!entry.endTimeUnspecified) {
@@ -824,6 +847,8 @@ export function jsonToAlarm(entry, isDefault = false) {
 }
 
 export class ItemSaver {
+  #confSolutionCache = {};
+
   missingParents = [];
   parentItems = Object.create(null);
 
@@ -867,7 +892,8 @@ export class ItemSaver {
           entry,
           calendar: this.calendar,
           defaultReminders: data.defaultReminders || [],
-          defaultTimezone
+          defaultTimezone,
+          confSolutionCache: this.#confSolutionCache
         });
         item.item = addVCalendar(item.item);
 
@@ -1009,5 +1035,28 @@ export class ItemSaver {
       })
     );
     this.parentItems = Object.create(null);
+
+    // Save the conference icon cache
+    let conferenceSolutions = await this.calendar.getCalendarPref("conferenceSolutions", {});
+
+    await Promise.all(Object.entries(this.#confSolutionCache).map(async ([key, solution]) => {
+      let savedSolution = conferenceSolutions[key];
+
+      if (savedSolution && savedSolution.iconUri == solution.iconUri) {
+        // The icon uri has not changed, take the icon from our cache
+        solution.iconCache = savedSolution.iconCache;
+      }
+
+      if (!solution.iconCache) {
+        try {
+          solution.iconCache = Array.from(await fetch(solution.iconUri).then(resp => resp.bytes()));
+        } catch (e) {
+          // Ok to fail
+        }
+      }
+    }));
+
+    Object.assign(conferenceSolutions, this.#confSolutionCache);
+    await this.calendar.setCalendarPref("conferenceSolutions", conferenceSolutions);
   }
 }

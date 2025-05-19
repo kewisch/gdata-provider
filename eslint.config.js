@@ -427,6 +427,8 @@ export default [
         ChromeUtils: true,
         Services: true,
         console: true,
+        fetch: true,
+        ImageDecoder: true
       }
     }
   },

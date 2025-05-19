@@ -5,7 +5,8 @@
 var lazy = {};
 
 ChromeUtils.defineESModuleGetters(lazy, {
-  cal: "resource:///modules/calendar/calUtils.sys.mjs" /* global cal */
+  cal: "resource:///modules/calendar/calUtils.sys.mjs", /* global cal */
+  MailE10SUtils: "resource:///modules/MailE10SUtils.sys.mjs" /* global MailE10SUtils */
 });
 
 const CODE_TYPES = ["meetingCode", "accessCode", "passcode", "password", "pin"];
@@ -17,9 +18,18 @@ export const CONFERENCE_ROW_FRAGMENT = `
       <label id="gdata-conf-label" value="Conference:" control="gdata-conf-info-cell"/>
     </html:th>
     <html:td id="gdata-conf-info-cell">
+      <html:div id="gdata-conf-deleted">
+        <html:span id="gdata-conf-deleted-none">None</html:span> <html:button id="gdata-conf-undo">Undo</html:button>
+      </html:div>
+      <menulist id="gdata-conf-new">
+        <menupopup id="gdata-conf-new-select-menupopup">
+          <menuitem id="gdata-conf-new-none" value="" label="None"></menuitem>
+        </menupopup>
+      </menulist>
       <html:div id="gdata-conf-info">
-        <html:img width="24" height="24" id="gdata-conf-logo"/>
+        <html:canvas id="gdata-conf-logo" width="24" height="24"></html:canvas>
         <html:span id="gdata-conf-name"/>
+        <html:button id="gdata-conf-remove">×</html:button>
       </html:div>
       <html:ul id="gdata-conf-entrypoints">
       </html:ul>
@@ -41,41 +51,6 @@ export const CONFERENCE_ROW_FRAGMENT = `
       </html:div>
     </html:li>
   </html:template>
-  <html:style>
-    #gdata-conference-row > th {
-      vertical-align: top;
-    }
-    #gdata-conf-info {
-      display: flex;
-      gap: 5px;
-      align-items: center;
-    }
-    #gdata-conf-entrypoints {
-      padding-inline-start: 0;
-      margin-block-end: 0;
-    }
-    #gdata-conf-entrypoints li {
-      list-style-type: none;
-      margin-block-end: 10px;
-    }
-    #gdata-conf-entrypoints li:last-child {
-      margin-block-end: 0;
-    }
-    #gdata-conf-entrypoints li button:empty,
-    #gdata-conf-entrypoints li .text-link:empty,
-    #gdata-conf-entrypoints li .label:empty {
-      display: none;
-    }
-    #gdata-conf-entrypoints li button,
-    #gdata-conf-entrypoints li .text-link {
-      margin: 0;
-    }
-    #gdata-conf-entrypoints li .pinvalue,
-    #gdata-conf-entrypoints li .label,
-    #gdata-conf-entrypoints li .text-link {
-      user-select: text;
-    }
-  </html:style>
 `;
 
 function showOrHideItemURL(url) {
@@ -103,9 +78,6 @@ export function initConferenceRow(document, messenger, item, calendar) {
     document.getElementById("gdata-conference-row").style.display = "none";
     return null;
   }
-  function i18n(str, subs) {
-    return messenger.i18n.getMessage("eventdialog." + str, subs);
-  }
 
   document.getElementById("gdata-conf-entrypoints").replaceChildren();
 
@@ -115,7 +87,6 @@ export function initConferenceRow(document, messenger, item, calendar) {
   }
 
   let eventType = item.getProperty("X-GOOGLE-EVENT-TYPE");
-
   if (eventType == "outOfOffice" || eventType == "focusTime") {
     return noconference();
   }
@@ -124,23 +95,99 @@ export function initConferenceRow(document, messenger, item, calendar) {
   try {
     confdata = JSON.parse(item.getProperty("X-GOOGLE-CONFDATA"));
   } catch (e) {
-    return noconference();
+    // will be handled down below
   }
 
-  if (!confdata) {
+  if (confdata) {
+    return initExistingConfdata(document, messenger, item, workingCalendar, confdata);
+  } else if (document.documentElement.id != "calendar-summary-dialog") { // eslint-disable-line no-negated-condition
+    return initNewConference(document, messenger, item, workingCalendar);
+  } else {
     return noconference();
   }
+}
+
+async function initNewConference(document, messenger, item, calendar) {
+  function i18n(str, subs) {
+    return messenger.i18n.getMessage("eventdialog." + str, subs);
+  }
+
+  let prefKey = `calendars.${calendar.id}.conferenceSolutions`;
+  let prefs = await messenger.storage.local.get(prefKey);
+  let conferenceSolutions = prefs[prefKey];
+  let confNew = document.getElementById("gdata-conf-new-select-menupopup");
+
+  document.getElementById("gdata-conference-row").setAttribute("mode", "new");
+  document.getElementById("gdata-conf-new-none").setAttribute("label", i18n("conferenceNone"));
+
+  for (let solution of Object.values(conferenceSolutions)) {
+    let option = document.createXULElement("menuitem");
+    option.value = solution.key.type;
+    option.label = solution.name;
+    confNew.appendChild(option);
+  }
+}
+
+function removeConfdata(event) {
+  let document = event.target.ownerDocument;
+  document.getElementById("gdata-conference-row").setAttribute("mode", "delete");
+}
+function undoRemoveConfdata(event) {
+  let document = event.target.ownerDocument;
+  document.getElementById("gdata-conference-row").setAttribute("mode", "existing");
+}
+
+async function initExistingConfdata(document, messenger, item, calendar, confdata) {
+  function i18n(str, subs) {
+    return messenger.i18n.getMessage("eventdialog." + str, subs);
+  }
+
+  document.getElementById("gdata-conference-row").setAttribute("mode", "existing");
 
   let confEntryPoints = document.getElementById("gdata-conf-entrypoints");
   let confEntryTemplate = document.getElementById("gdata-conf-entrypoint-template");
 
   if (document.documentElement.id == "calendar-summary-dialog") {
     document.getElementById("gdata-conf-label").parentNode.textContent = i18n("conferenceLabel");
+    document.getElementById("gdata-conference-row").setAttribute("readonly", "true");
   } else {
     document.getElementById("gdata-conf-label").value = i18n("conferenceLabel");
   }
-  document.getElementById("gdata-conf-logo").src = confdata.conferenceSolution?.iconUri;
+
+  document.getElementById("gdata-conf-deleted-none").textContent = i18n("conferenceNone");
+  document.getElementById("gdata-conf-undo").textContent = i18n("conferenceUndo");
+
   document.getElementById("gdata-conf-name").textContent = confdata.conferenceSolution?.name;
+
+  let prefKey = `calendars.${calendar.id}.conferenceSolutions`;
+  let prefs = await messenger.storage.local.get(prefKey);
+  let conferenceSolutions = prefs[prefKey];
+  let cachedSolution = conferenceSolutions[confdata.conferenceSolution.key.type];
+
+  let image;
+  if (cachedSolution?.iconCache) {
+    image = Uint8Array.from(cachedSolution.iconCache);
+  } else {
+    image = await fetch(confdata.conferenceSolution.iconUri).then(resp => resp.bytes()).catch(() => null);
+  }
+
+  let canvas = document.getElementById("gdata-conf-logo");
+  if (image) {
+    let decoder = new ImageDecoder({ type: "image/png", data: image, desiredWidth: 24, desiredHeight: 24 });
+    let decoded = await decoder.decode();
+
+    let context = canvas.getContext("2d");
+    context.drawImage(decoded.image, 0, 0);
+  } else {
+    canvas.style.display = "none";
+  }
+
+  let confRemove = document.getElementById("gdata-conf-remove");
+  confRemove.title = i18n("conferenceRemove");
+  confRemove.addEventListener("click", removeConfdata);
+
+  let confUndo = document.getElementById("gdata-conf-undo");
+  confUndo.addEventListener("click", undoRemoveConfdata);
 
   for (let entry of confdata.entryPoints || []) {
     if (!showOrHideItemURL(entry?.uri)) {

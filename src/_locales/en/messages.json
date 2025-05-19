@@ -178,6 +178,18 @@
     "message": "There are currently no read-only calendars to migrate"
   },
 
+  "eventdialog.conferenceLabel": {
+    "message": "Conference:"
+  },
+  "eventdialog.conferenceRemove": {
+    "message": "Remove Conference"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "None"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "Undo"
+  },
   "eventdialog.joinVia.video": {
     "message": "Join via video conferencing"
   },
