@@ -14,4 +14,7 @@ test("service", () => {
   expect(TimezoneService.get("Z")).toBe(ICAL.Timezone.utcTimezone);
 
   expect(TimezoneService.get("Europe/Berlin")).toBeInstanceOf(ICAL.Timezone);
+
+  // Windows timezone map
+  expect(TimezoneService.get("W. Europe Standard Time").tzid).toBe("Europe/Berlin");
 });
