@@ -8,18 +8,37 @@
 }
   
 html, body {
-  background: -moz-Dialog;
-  color: -moz-DialogText;
   font-family: -apple-system;
   font-size: 11px;
   margin: 0;
   padding: 0;
+  color-scheme: light dark;
+  background-color: light-dark(-moz-Dialog, #282828);
+  color: light-dark(-moz-DialogText, #f4f4f5);
 }
 
 input[type='checkbox'] {
   width: 16px;
   height: 16px;
   margin-inline-end: 0.534rem;
+}
+
+input[type='email'] {
+  appearance: none;
+  background-color: light-dark(Field, #3f3f46);
+  color: light-dark(FieldText, #f1f3fa);
+  border-radius: 3px;
+  border: 1px solid hsla(0, 0%, 70%, 0.4);
+  margin: 2px 4px;
+  padding: 4px;
+  min-width: 21em;
+}
+
+input[type='email']:focus {
+  outline: 1px solid AccentColor;
+}
+input[type='radio'] {
+  margin-block: 0;
 }
 
 section {

@@ -8,6 +8,9 @@ html, body {
   font: menu;
   box-sizing: border-box;
   height: 100%;
+  color-scheme: light dark;
+  background-color: light-dark(#fff, #27272a);
+  color: light-dark(#18181b, #f4f4f5);
 }
 
 body {
@@ -41,7 +44,11 @@ body {
   margin: 5px 6px 3px;
   min-width: 79px;
   font: menu;
-  padding: 1px 7px 2px;
+  padding: 5px 7px 6px;
+  color: #fff;
+  background-color: #0a84ff;
+  border: none;
+  border-radius: 5px;
 }
 
 #dialog-button-box > button[default]:not(:-moz-window-inactive) {
