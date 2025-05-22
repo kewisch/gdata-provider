@@ -154,5 +154,164 @@
   },
   "settings.sendEventNotifications": {
     "message": "Wysyłanie powiadomień e-mail do gości wydarzenia"
+  },
+  "onboarding.welcome.p3.prelink": {
+    "message": " Sula ndéanann tú dearmad ar an leathanach seo a léamh, féach ar an"
+  },
+  "onboarding.welcome.p3.linktext": {
+    "message": "alt ar roghanna sceidealaithe"
+  },
+  "onboarding.welcome.p3.postlink": {
+    "message": "chun an rogha cheart a dhéanamh maidir le conas a fheictear freastalaithe in imeachtaí agus conas a láimhseálfar cuirí."
+  },
+  "onboarding.getstarted.title": {
+    "message": "Ag tosú"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "An barra taoibh i radharc féilire Thunderbird leis an gcnaipe féilire nua ag an mbun"
+  },
+  "onboarding.providertype.title": {
+    "message": "Ar an líonra?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Dialóg féilire nua, ag taispeáint an rogha chun Féilire Google a roghnú"
+  },
+  "onboarding.providertype.p1": {
+    "message": "Feicfidh tú trí rogha: Ar mo ríomhaire, Ar an líonra, agus Soláthraí do Google Calendar. Cé go bhfuil Google Calendar ar an líonra go teicniúil, roghnaigh an rogha atá sainiúil don soláthraí."
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Roghnaigh do fhéilirí"
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "Ar an scáileán seo a leanas, roghnaigh na féilirí agus na liostaí tascanna ar mhaith leat liostáil leo. Feicfear féilirí a raibh liostáil déanta agat leo roimhe seo mar a bheadh siad curtha leis cheana féin. Chun díliostáil, bain úsáid as an roghchlár comhthéacs i liosta féilirí Thunderbird in ionad an dialóige féilire nua."
+  },
+  "onboarding.scheduling.title": {
+    "message": "Fadhbanna sceidealaithe"
+  },
+  "onboarding.scheduling.enableEmailInvitations": {
+    "message": "Ligeann sé seo duit cuireadh a ghlacadh trí úsáid a bhaint as an mbarra os cionn an teachtaireacht chuireadh ríomhphoist. Cé go bhfuil sé áisiúil, is fearr i gcoitinne é seo a choinneáil múchta agus brath ar an socrú \"Cuir imeachtaí le do fhéilire go huathoibríoch\" i socruithe gréasáin Google Calendar."
+  },
+  "onboarding.scheduling.p2": {
+    "message": "Má tá sceidealú ríomhphoist cumasaithe agus má théann rud éigin amú, féadfaidh Thunderbird imeacht nua a chruthú in ionad ceann atá ann cheana a ghlacadh i gceart. I gcás cruinnithe móra, amhail imeacht uile-chuideachta, d’fhéadfadh sé seo a dhéanamh cosúil go bhfuil tú ag tabhairt cuireadh do gach duine chuig imeacht dúblach."
+  },
+  "onboarding.scheduling.p3.linktext": {
+    "message": "roghanna breiseáin"
+  },
+  "onboarding.scheduling.p3.postlink": {
+    "message": "don bhreiseán seo."
+  },
+  "onboarding.weblate.title": {
+    "message": "An bhfuil an t-ábhar seo i do theanga féin?"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Scáileán de weblate, ag aistriú teaghrán ó Bhéarla go Gearmáinis"
+  },
+  "onboarding.weblate.p1": {
+    "message": "Úsáideann Soláthraí Google Calendar Weblate le haghaidh aistriúcháin, áit ar féidir leat teaghráin a aistriú go héasca chuig do theanga féin. An labhraíonn tú teanga nach Béarla í agus ar mhaith leat cabhrú?"
+  },
+  "onboarding.weblate.p2.linktext": {
+    "message": "Cabhair le haistriúcháin"
+  },
+  "onboarding.weblate.p2.postlink": {
+    "message": " Inniu! An féidir leat do theanga a chur i gcrích go 100%?"
+  },
+  "onboarding.footer.p1.linktext": {
+    "message": "Leathanach GitHub"
+  },
+  "onboarding.footer.p1.postlink": {
+    "message": "Seo an áit freisin ar féidir leat cabhrú le leaganacha amach anseo den bhreiseán a fheabhsú."
+  },
+  "onboarding.footer.p2": {
+    "message": "Go raibh maith agat as léamh go dtí an deireadh! Má tá tú tagtha chomh fada seo, tá súil agam go bhfuil tú chomh sásta leis an mbreiseán seo agus atá mise. Bain triail as ar dtús, ach má tá tú cinnte cheana féin, bheinn buíoch as do thacaíocht."
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Seol comhartha buíochais chugam"
+  },
+  "onboarding.donate.amount": {
+    "message": "16usd"
+  },
+  "onboarding.weblate.p2.prelink": {
+    "message": " "
+  },
+  "onboarding.footer.p1.prelink": {
+    "message": "Má tá aon cheist agat, déan teagmháil leis na breiseáin le do thoil"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Pasfhocal"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Comhdháil:"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Cód Cruinnithe"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Am Fócais"
+  },
+  "calendarsHeader": {
+    "message": "Féilirí"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Glac páirt trí fhíschomhdháil"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Fón"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Cód Rochtana"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Paschód"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "UAP"
+  },
+  "eventdialog.oooEvent": {
+    "message": "As an Oifig"
+  },
+  "onboarding.providertype.p2": {
+    "message": "Ar an scáileán seo chugainn, cuir isteach do sheoladh ríomhphoist. Fiú má tá tú ag liostáil le féilire duine eile, bain úsáid as do sheoladh ríomhphoist féin. Má tá tú liostáil cheana féin lena bhféilire ar shuíomh Gréasáin Google Calendar, beidh sé le feiceáil i do chuntas."
+  },
+  "onboarding.welcome.p2": {
+    "message": "Tá tú mar chuid den turas seo liom anois. Ciallaíonn do thacaíocht go leor domsa, agus ní féidir liom todhchaí a shamhlú gan an breiseán seo."
+  },
+  "onboarding.welcome.p1": {
+    "message": "Mharcáil Soláthraí do Google Calendar tús mo thurais isteach i bhfoinse oscailte. Siar in 2006, ní raibh aon bhealach éasca ann Thunderbird a nascadh le Google Calendar. Tiomáinte ag fiosracht agus fonn chun cabhrú, rinne mé iniúchadh ar APIanna Google agus fuair mé bealach chun an bhearna sin a dhúnadh, rud a chuir ar chumas líon mór úsáideoirí Thunderbird rochtain a fháil ar Google Calendar. Ní hamháin gur thug an taithí sin cuspóir dom ach d’oscail sí doirse freisin chuig gairm bheatha ghairmiúil ina bhfuil foinse oscailte ina cuid dhílis de mo shaol laethúil."
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Níl tú cinnte cá háit le tosú? Ní mór duit liostáil le do fhéilirí ar dtús. Téigh go dtí an cluaisín féilire i Thunderbird agus cliceáil \"Féilire Nua\" ag bun an bharra taoibh."
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Liosta féilirí le boscaí seiceála ar an taobh"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Ansin, iarrfar ort logáil isteach. Sonrófar an seoladh ríomhphoist atá le húsáid sa bhosca logála isteach, mar sin déan cinnte go bhfuil tú ag síniú isteach sa chuntas ceart. Má iarrtar ort logáil isteach arís ag am níos déanaí, déan cinnte go n-úsáideann tú an cuntas a léirítear."
+  },
+  "onboarding.allset.title": {
+    "message": "Tá tú réidh!"
+  },
+  "onboarding.allset.imgalt": {
+    "message": "An dialóg tascanna nua, ag taispeáint na réimsí a bhaineann leis an dialóg amháin"
+  },
+  "onboarding.scheduling.enableAttendees": {
+    "message": "Má tá imeachtaí agat le freastalaithe, is dócha gur mhaith leat é seo a chumasú. Gan é, bainfear na freastalaithe go léir le haon athruithe a dhéanann tú ar imeacht. Má athraíonn tú an socrú seo, déan cinnte athliostáil le do fhéilirí."
+  },
+  "onboarding.allset.p1": {
+    "message": "Sin é. D’fhéadfadh sé go dtógfadh an sioncrónú tosaigh roinnt ama, go háirithe má bhíonn go leor imeachtaí agat. D’fhéadfadh sé go mbeadh cuma reoite ar Thunderbird le linn an phróisis seo mar gheall ar an gcaoi a láimhseálann sé imeachtaí. Lig dó rith ar feadh suas le leathuair an chloig sula nglacann tú leis go bhfuil fadhb ann. I bhformhór na gcásanna, áfach, críochnaítear an sioncrónú laistigh de nóiméad."
+  },
+  "onboarding.allset.p2": {
+    "message": "Cad atá romhainn anois? Am chun roinnt imeachtaí a sceidealú. Buntáiste amháin a bhaineann le Soláthraí a úsáid do Google Calendar in ionad an nasc CalDAV ionsuite ná an saincheapadh breise atá ar fáil sa dialóg imeachtaí. Is féidir leat aláraim réamhshocraithe a shocrú agus socruithe príobháideachta réamhshocraithe a choigeartú. Ina theannta sin, is féidir leat Tascanna Google a bhainistiú go díreach i Thunderbird."
+  },
+  "onboarding.scheduling.p1": {
+    "message": "Is féidir go mbeadh sé deacair sceideal a dhéanamh idir Thunderbird agus Google. Ní sholáthraíonn Thunderbird faisnéis shoiléir i gcónaí faoi cibé an cuireadh glactha nó imeacht nua atá i gceist. Seo roinnt socruithe le breithniú:"
+  },
+  "onboarding.scheduling.sendEventNotifications": {
+    "message": "Nuair a bhíonn sé cumasaithe, seolann Google fógraí nuair a athraíonn tú imeacht. Má bhíonn sé díchumasaithe, feidhmíonn sé mar a chliceáiltear \"Ná Seol\" gach uair a dhéanann tú imeacht sceidealaithe a nuashonrú."
+  },
+  "onboarding.scheduling.p3.prelink": {
+    "message": "Más mian leat na socruithe seo a athrú níos déanaí, téigh chuig an"
   }
 }
