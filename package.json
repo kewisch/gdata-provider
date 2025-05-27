@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.1",
     "@eslint/js": "^9.27.0",
     "@stylistic/eslint-plugin": "^4.4.0",
     "babel-eslint": "^10.1.0",
