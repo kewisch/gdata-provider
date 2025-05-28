@@ -10,7 +10,7 @@ import Console from "./log.js";
 import TimezoneService from "./timezone.js";
 import ICAL from "./libs/ical.js";
 
-import { getItemPath, getItemEtag, sessionIdFromUrl, isEmail, GCAL_PATH_RE, API_BASE } from "./utils.js";
+import { getItemPath, getItemEtag, sessionIdFromUrl, isEmail, GCAL_PATH_RE, API_BASE, DEFAULT_EVENT_TYPES } from "./utils.js";
 import { itemToJson, jsonToItem, jsonToAlarm, patchItem, ItemSaver } from "./items.js";
 
 var console = new Console("calGoogleCalendar");
@@ -454,10 +454,11 @@ export default class calGoogleCalendar {
           );
 
           let isReadOnly = data.accessRole == "freeBusyReader" || data.accessRole == "reader";
+          let isBirthday = this.url.searchParams.get("eventTypes") == "birthday";
           await messenger.calendar.calendars.update(this.id, {
             capabilities: {
-              mutable: !isReadOnly,
-              scheduling: data.primary ? "server" : "none",
+              mutable: !isReadOnly && !isBirthday,
+              scheduling: data.primary && !isBirthday ? "server" : "none",
               organizer: "mailto:" + this.calendarName
             }
           });
@@ -466,13 +467,15 @@ export default class calGoogleCalendar {
 
       promises.push(
         (async () => {
+          let eventTypes = this.url.searchParams.get("eventTypes")?.split(",") || DEFAULT_EVENT_TYPES;
+
           let syncToken = await this.getCalendarPref("eventSyncToken");
           let request = new calGoogleRequest({
             method: "GET",
             uri: this.createEventsURI("events"),
             params: {
               maxResults: prefs["settings.maxResultsPerRequest"],
-              eventTypes: ["default", "focusTime", "outOfOffice"],
+              eventTypes: eventTypes,
               showDeleted: syncToken ? "true" : "false",
               syncToken: syncToken,
             },

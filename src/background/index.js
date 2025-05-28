@@ -50,10 +50,16 @@ export async function initListeners() {
 
       await Promise.all(
         message.calendars.map(async data => {
+          let url = `googleapi://${message.sessionId}/?${data.type}=${encodeURIComponent(data.id)}`;
+
+          if (data.eventTypes) {
+            url += "&eventTypes=" + data.eventTypes;
+          }
+
           let calendar = {
             name: existingSet.has(data.name) ? `${data.name} (${message.sessionId})` : data.name,
             type: "ext-" + messenger.runtime.id,
-            url: `googleapi://${message.sessionId}/?${data.type}=${encodeURIComponent(data.id)}`,
+            url: url,
             color: data.color,
             capabilities: {
               events: data.type == "calendar",

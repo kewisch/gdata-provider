@@ -58,6 +58,15 @@
   "gdata.wizard.calendars.description": {
     "message": "Please select the calendars and task lists you would like to subscribe to."
   },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Birthdays)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
 
   "gdata.wizard.nextstep.description": {
     "message": "Please advance to the next step to set up your calendars."
@@ -222,5 +231,31 @@
   },
   "eventdialog.focusEvent": {
     "message": "Focus Time"
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "Turning $age$ on $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "Turned $age$ on $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
   }
 }

@@ -10,6 +10,8 @@ const EMAIL_REGEX = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|
 
 export const GCAL_PATH_RE = /\/calendar\/(feeds|ical)\/([^/]+)\/(public|private|free-busy)-?([^/]+)?\/(full|basic)(.ics)?$/;
 
+export const DEFAULT_EVENT_TYPES = ["default", "focusTime", "outOfOffice"];
+
 export const NOTIFY_TIMEOUT = 60000;
 
 export const API_BASE = {

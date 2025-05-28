@@ -100,7 +100,10 @@ async function onAuthenticate() {
 
   let existingSet = new Set(existing.map(calendar => {
     let url = new URL(calendar.url);
-    return url.searchParams.get("calendar") || url.searchParams.get("tasks");
+    let id = url.searchParams.get("calendar") || url.searchParams.get("tasks");
+    let eventTypes = url.searchParams.get("eventTypes");
+
+    return `${id}#${eventTypes || ""}`;
   }));
 
   let primary = [];
@@ -134,7 +137,7 @@ async function onAuthenticate() {
     name.textContent = calendar.summaryOverride || calendar.summary;
     name.className = "name";
 
-    if (existingSet.has(calendar.id)) {
+    if (existingSet.has(calendar.id + "#")) {
       check.checked = true;
       check.disabled = true;
     }
@@ -145,10 +148,27 @@ async function onAuthenticate() {
   }
 
   for (let listItem of selected) {
-    listItem.parentNode.insertBefore(listItem, listItem.parentNode.firstChild);
+    calendarList.insertBefore(listItem, calendarList.firstChild);
   }
   for (let listItem of primary) {
-    listItem.parentNode.insertBefore(listItem, listItem.parentNode.firstChild);
+    let birthdayItem = listItem.cloneNode(true);
+    let check = birthdayItem.querySelector("input");
+    check.dataset.eventTypes = "birthday";
+
+    let birthdayName = messenger.i18n.getMessage("gdata.wizard.calendars.birthdays", [
+      birthdayItem.querySelector("span.name").textContent
+    ]);
+    birthdayItem.querySelector("span.name").textContent = birthdayName;
+
+    if (!existingSet.has(check.value + "#birthday")) {
+      check.checked = false;
+      check.disabled = false;
+    }
+
+    calendarList.insertBefore(birthdayItem, calendarList.firstChild);
+  }
+  for (let listItem of primary) {
+    calendarList.insertBefore(listItem, calendarList.firstChild);
   }
 
   for (let tasklist of tasks) {
@@ -194,6 +214,7 @@ async function onCreate() {
       id: input.value,
       color: input.dataset.color,
       type: input.dataset.listType,
+      eventTypes: input.dataset.eventTypes,
     };
   });
   await messenger.runtime.sendMessage({ action: "createCalendars", sessionId, calendars });

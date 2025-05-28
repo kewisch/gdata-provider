@@ -169,6 +169,12 @@ beforeEach(() => {
       type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
       url: "googleapi://9caa24c2-2cb1-4ac6-98ad-eaa1fd7656fb/?test=bar"
     },
+    {
+      id: "id10",
+      cacheId: "cached-id10",
+      type: "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
+      url: "googleapi://sessionId/?calendar=id10%40calendar.google.com&eventTypes=birthday"
+    },
   ];
 
   jest.spyOn(global.console, "log").mockImplementation(() => {});
@@ -279,6 +285,12 @@ test("onInit", async () => {
   calendar = await calGoogleCalendar.get("id9");
   await calendar.onInit();
   expect(calendar.calendarName).toBeFalsy();
+  expect(calendar.tasklistName).toBeFalsy();
+
+  calendar = await calGoogleCalendar.get("id10");
+  await calendar.onInit();
+
+  expect(calendar.calendarName).toBe("id10@calendar.google.com");
   expect(calendar.tasklistName).toBeFalsy();
 });
 
@@ -1212,6 +1224,41 @@ describe("onSync", () => {
 
     await calendar.onSync();
     expect(urls).toContain("https://www.googleapis.com/calendar/v3/calendars/id7%40calendar.google.com/events?maxResults=1000&eventTypes=default&eventTypes=focusTime&eventTypes=outOfOffice&showDeleted=true&syncToken=nextSyncToken");
+  });
+
+  test("birthday sync", async () => {
+    let calendar = await calGoogleCalendar.get("id10");
+    await calendar.onInit();
+
+    let urls = [];
+
+    fetch.mockResponse(req => {
+      let response;
+      urls.push(req.url);
+
+      if ((response = mockCalendarRequest(req)) !== null) {
+        return response;
+      }
+      if ((response = mockCalendarListRequest(req)) !== null) {
+        return response;
+      }
+      throw new Error("Unhandled request " + req.url);
+    });
+
+    calendar.session.oauth.accessToken = "accessToken";
+    calendar.session.oauth.expires = new Date(new Date().getTime() + 10000);
+    await calendar.onSync();
+
+    expect(await calendar.getCalendarPref("eventSyncToken")).toBe("nextSyncToken");
+    expect(urls).toContain("https://www.googleapis.com/calendar/v3/calendars/id10%40calendar.google.com/events?maxResults=1000&eventTypes=birthday&showDeleted=false");
+
+    expect(messenger.calendar.calendars.update).toHaveBeenCalledWith("id10", {
+      capabilities: {
+        mutable: false,
+        scheduling: "none",
+        organizer: "mailto:id10@calendar.google.com"
+      }
+    });
   });
 
   test("sync quota failure", async () => {
