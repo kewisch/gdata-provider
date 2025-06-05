@@ -26,7 +26,7 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@eslint/js": "^9.27.0",
-    "@stylistic/eslint-plugin": "^4.4.0",
+    "@stylistic/eslint-plugin": "^4.4.1",
     "babel-eslint": "^10.1.0",
     "conventional-changelog": "^7.0.2",
     "conventional-changelog-angular": "^8.0.0",
