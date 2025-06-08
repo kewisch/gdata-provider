@@ -349,9 +349,18 @@ function convertRecurringSnoozeTime(vevent) {
   // for recurring alarms or even retrieve them from the event. This should change when we have
   // multiple alarms support.
   let snoozeObj = {};
+
+  let lastAckString = transformDateXprop(vevent.getFirstPropertyValue("x-moz-lastack"));
+  let lastAck = lastAckString ? ICAL.Time.fromDateTimeString(lastAckString) : null;
+
   for (let property of vevent.getAllProperties()) {
     if (property.name.startsWith("x-moz-snooze-time-")) {
-      snoozeObj[property.name.substr(18)] = property.getFirstValue()?.toICALString();
+      let snoozeDateString = transformDateXprop(property.getFirstValue());
+      let snoozeDate = snoozeDateString ? ICAL.Time.fromDateTimeString(snoozeDateString) : null;
+
+      if (snoozeDate && (!lastAck || snoozeDate.compare(lastAck) >= 0)) {
+        snoozeObj[property.name.substr(18)] = property.getFirstValue();
+      }
     }
   }
   return Object.keys(snoozeObj).length ? JSON.stringify(snoozeObj) : null;

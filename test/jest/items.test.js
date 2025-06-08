@@ -991,6 +991,52 @@ describe("patchItem", () => {
           },
         });
       });
+
+      test("exceed property limit length", () => {
+        oldItem = copy(jcalItems.recur_rrule);
+        item = copy(oldItem);
+        event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
+
+        event.addPropertyWithValue("x-moz-lastack", "20250715T000000Z"); // 20250614T000000
+
+        // Instance on 20250614T000000 snoozed after the lastack. This one should be included
+        event.addPropertyWithValue("x-moz-snooze-time-174985200000000", "20250716T000000Z");
+
+        // Instance on 20250629T000000 snoozed before the lastack. This one should not be included.
+        event.addPropertyWithValue("x-moz-snooze-time-175114800000000", "20250701T000000Z");
+
+        changes = patchItem(item, oldItem);
+
+        expect(changes).toEqual({
+          extendedProperties: {
+            "private": {
+              "X-GOOGLE-SNOOZE-RECUR": JSON.stringify({
+                "174985200000000": "20250716T000000Z"
+              }),
+              "X-MOZ-LASTACK": "2025-07-15T00:00:00Z"
+            }
+          }
+        });
+      });
+
+      test("invalid lastack", () => {
+        oldItem = copy(jcalItems.recur_rrule);
+        item = copy(oldItem);
+        event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
+
+        event.addPropertyWithValue("x-moz-lastack", "bananaphone");
+        event.addPropertyWithValue("x-moz-snooze-time-174985200000000", "dup dup dup dup dup");
+
+        changes = patchItem(item, oldItem);
+
+        expect(changes).toEqual({
+          extendedProperties: {
+            "private": {
+              "X-MOZ-LASTACK": null
+            }
+          }
+        });
+      });
     });
 
     describe("recurrence", () => {
