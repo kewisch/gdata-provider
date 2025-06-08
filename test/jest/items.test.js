@@ -474,7 +474,7 @@ describe("itemToJson", () => {
   let calendar = { console, name: "calendarName" };
 
   test("simple_event", async () => {
-    let data = itemToJson(jcalItems.simple_event, calendar, false);
+    let data = itemToJson(jcalItems.simple_event, calendar, false, true);
 
     // TODO originalStartTime
     // TODO date value
@@ -894,49 +894,100 @@ describe("patchItem", () => {
     });
 
     test("organizer partstat change", () => {
-        item = copy(jcalItems.organizer_partstat);
-        oldItem = copy(item);
+      item = copy(jcalItems.organizer_partstat);
+      oldItem = copy(item);
 
-        oldEvent = new ICAL.Component(oldItem.item).getFirstSubcomponent("vevent");
-        event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
-        event.getFirstProperty("organizer").setParameter("partstat", "ACCEPTED");
+      oldEvent = new ICAL.Component(oldItem.item).getFirstSubcomponent("vevent");
+      event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
+      event.getFirstProperty("organizer").setParameter("partstat", "ACCEPTED");
 
-        // Ensure organizer partstat is propagated to attendee (to work around a Thunderbird bug)
-        changes = patchItem(item, oldItem);
-        expect(changes).toEqual({
-          "attendees": [
-            {
-              "displayName": "Eggs P. Seashell",
-              "email": "organizer@example.com",
-              "optional": false,
-              "resource": false,
-              "responseStatus": "accepted",
-            },
-            {
-              "displayName": "Eggs P. Seashell Jr.",
-              "email": "attendee@example.com",
-              "optional": false,
-              "resource": false,
-              "responseStatus": "accepted",
-            }
-          ],
-        });
-
-        // Shouldn't be able to change organizer if there was one set before
-        event.getFirstProperty("organizer").setValue("mailto:organizer2@example.com");
-        changes = patchItem(item, oldItem);
-        expect(changes).toEqual({});
-        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("Changing organizer requires a move"));
-
-        // But should be able to if there was not one before
-        oldEvent.removeProperty("organizer");
-        changes = patchItem(item, oldItem);
-        expect(changes).toEqual({
-          organizer: {
-            displayName: "Eggs P. Seashell",
-            email: "organizer2@example.com",
+      // Ensure organizer partstat is propagated to attendee (to work around a Thunderbird bug)
+      changes = patchItem(item, oldItem);
+      expect(changes).toEqual({
+        "attendees": [
+          {
+            "displayName": "Eggs P. Seashell",
+            "email": "organizer@example.com",
+            "optional": false,
+            "resource": false,
+            "responseStatus": "accepted",
+          },
+          {
+            "displayName": "Eggs P. Seashell Jr.",
+            "email": "attendee@example.com",
+            "optional": false,
+            "resource": false,
+            "responseStatus": "accepted",
           }
-        });
+        ],
+      });
+
+
+      // Ensure organizer is added as attendee if partstat changes
+      let attendees = event.getAllProperties("attendee");
+      let attendee = attendees.find(att => att.getFirstValue() == "mailto:organizer@example.com");
+      expect(attendee).not.toBe(null);
+
+      event.removeProperty(attendee);
+
+      changes = patchItem(item, oldItem);
+      expect(changes).toEqual({
+        "attendees": [
+          {
+            "displayName": "Eggs P. Seashell Jr.",
+            "email": "attendee@example.com",
+            "optional": false,
+            "resource": false,
+            "responseStatus": "accepted",
+          },
+          {
+            "displayName": "Eggs P. Seashell",
+            "email": "organizer@example.com",
+            "optional": false,
+            "resource": false,
+            "responseStatus": "accepted",
+          }
+        ],
+      });
+    });
+
+    test("organizer change", () => {
+      item = copy(jcalItems.organizer_partstat);
+      oldItem = copy(item);
+
+      oldEvent = new ICAL.Component(oldItem.item).getFirstSubcomponent("vevent");
+      event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
+
+      // Shouldn't be able to change organizer if there was one set before
+      event.getFirstProperty("organizer").setValue("mailto:organizer2@example.com");
+      expect(() => patchItem(item, oldItem)).toThrow("Changing organizer requires a move");
+
+      // But should be able to if there was not one before
+      oldEvent.removeProperty("organizer");
+      changes = patchItem(item, oldItem, false);
+      expect(changes).toEqual({
+        organizer: {
+          displayName: "Eggs P. Seashell",
+          email: "organizer2@example.com",
+        },
+        attendees: [
+          {
+            "displayName": "Eggs P. Seashell",
+            "email": "organizer@example.com",
+            "optional": false,
+            "resource": false,
+            "responseStatus": "needsAction",
+          },
+          {
+            "displayName": "Eggs P. Seashell Jr.",
+            "email": "attendee@example.com",
+            "optional": false,
+            "resource": false,
+            "responseStatus": "accepted",
+          }
+
+        ]
+      });
     });
 
     describe("reminders", () => {

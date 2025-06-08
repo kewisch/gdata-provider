@@ -59,17 +59,20 @@ export function transformDateXprop(value) {
   return null;
 }
 
-export function itemToJson(item, calendar, isImport) {
+  return null;
+}
+
+export function itemToJson(item, calendar, isImport, isCreate) {
   if (item.type == "event") {
-    return eventToJson(item, calendar, isImport);
+    return eventToJson(item, calendar, isImport, isCreate);
   } else if (item.type == "task") {
-    return taskToJson(item, calendar, isImport);
+    return taskToJson(item, calendar, isImport, isCreate);
   } else {
     throw new Error("Unknown item type: " + item.type);
   }
 }
 
-function eventToJson(item, calendar, isImport) {
+function eventToJson(item, calendar, isImport, isCreate) {
   let veventprops = [];
   let oldItem = {
     format: "jcal",
@@ -84,20 +87,20 @@ function eventToJson(item, calendar, isImport) {
     );
   }
 
-  let entry = patchEvent(item, oldItem);
+  let entry = patchEvent(item, oldItem, isCreate);
   if (item.id) {
     entry.iCalUID = item.id;
   }
   return entry;
 }
 
-function taskToJson(item, calendar, isImport) {
+function taskToJson(item, calendar, isImport, isCreate) {
   let oldItem = {
     format: "jcal",
     item: ["vcalendar", [], [["vtodo", [], []]]],
   };
 
-  let entry = patchTask(item, oldItem);
+  let entry = patchTask(item, oldItem, isCreate);
   if (item.id) {
     entry.id = item.id;
   }
@@ -242,13 +245,21 @@ function convertReminders(vevent) {
 }
 
 function haveAttendeesChanged(event, oldEvent) {
+  function attendeeChanged(oldAtt, newAtt) {
+    return newAtt?.getParameter("cn") != oldAtt?.getParameter("cn") ||
+      newAtt?.getParameter("role") != oldAtt?.getParameter("role") ||
+      newAtt?.getParameter("cutype") != oldAtt?.getParameter("cutype") ||
+      newAtt?.getParameter("partstat") != oldAtt?.getParameter("partstat");
+  }
+
   let oldAttendees = new Map(
     oldEvent.getAllProperties("attendee").map(attendee => [attendee.getFirstValue(), attendee])
   );
   let newAttendees = event.getAllProperties("attendee");
   let needsAttendeeUpdate = newAttendees.length != oldAttendees.size;
-  let organizer = event.getFirstProperty("organizer");
-  let organizerId = organizer?.getFirstParameter("partstat") ? organizer?.getFirstValue() : null;
+  let newOrganizer = event.getFirstProperty("organizer");
+  let newOrganizerId = newOrganizer?.getFirstParameter("partstat") ? newOrganizer?.getFirstValue() : null;
+  let oldOrganizer = oldEvent.getFirstProperty("organizer");
 
   if (!needsAttendeeUpdate) {
     for (let attendee of newAttendees) {
@@ -259,23 +270,25 @@ function haveAttendeesChanged(event, oldEvent) {
         break;
       }
 
-      if (attendeeId == organizerId) {
+      if (attendeeId == newOrganizerId) {
         // Thunderbird sets the participation status on the organizer, not the attendee
-        attendee = organizer;
-        oldAttendee = oldEvent.getFirstProperty("organizer");
+        attendee = newOrganizer;
+        oldAttendee = oldOrganizer;
       }
 
-      if (
-        attendee.getParameter("cn") != oldAttendee.getParameter("cn") ||
-        attendee.getParameter("role") != oldAttendee.getParameter("role") ||
-        attendee.getParameter("cutype") != oldAttendee.getParameter("cutype") ||
-        attendee.getParameter("partstat") != oldAttendee.getParameter("partstat")
-      ) {
+      if (attendeeChanged(attendee, oldAttendee)) {
         needsAttendeeUpdate = true;
         break;
       }
       oldAttendees.delete(attendeeId);
     }
+
+    if (attendeeChanged(oldOrganizer, newOrganizer)) {
+      // There are no new attendees, but the organizer changed participations status so we might
+      // need to add it.
+      needsAttendeeUpdate = true;
+    }
+
     if (oldAttendees.size > 0) {
       needsAttendeeUpdate = true;
     }
@@ -284,7 +297,7 @@ function haveAttendeesChanged(event, oldEvent) {
   return needsAttendeeUpdate;
 }
 
-function convertAttendee(attendee, organizer, isOrganizer) {
+function convertAttendee(attendee, organizer, isOrganizer, isCreate) {
   function setIf(att, prop, value) {
     if (value) {
       att[prop] = value;
@@ -295,8 +308,9 @@ function convertAttendee(attendee, organizer, isOrganizer) {
   let attendeeId = attendee.getFirstValue();
   let organizerId = organizer?.getFirstValue();
 
-  if (attendeeId == organizerId) {
-    // Thunderbird sets the participation status on the organizer, not the attendee.
+  if (!isCreate && attendeeId == organizerId) {
+    // On creation, the participation status is set on the attendee object. On participation
+    // changes, it is wrongly set on the organizer, not the attendee.
     attendee = organizer;
   }
 
@@ -366,7 +380,7 @@ function convertRecurringSnoozeTime(vevent) {
   return Object.keys(snoozeObj).length ? JSON.stringify(snoozeObj) : null;
 }
 
-export function patchItem(item, oldItem) {
+export function patchItem(item, oldItem, isCreate) {
   if (item.type == "event") {
     return patchEvent(...arguments);
   } else if (item.type == "task") {
@@ -376,7 +390,7 @@ export function patchItem(item, oldItem) {
   }
 }
 
-function patchTask(item, oldItem) {
+function patchTask(item, oldItem, isCreate) {
   function setIfFirstProperty(obj, prop, jprop, transform = null) {
     let oldValue = oldTask.getFirstPropertyValue(jprop);
     let newValue = task.getFirstPropertyValue(jprop);
@@ -402,7 +416,7 @@ function patchTask(item, oldItem) {
   return entry;
 }
 
-function patchEvent(item, oldItem) {
+function patchEvent(item, oldItem, isCreate) {
   function setIfFirstProperty(obj, prop, jprop = null, transform = null) {
     let oldValue = oldEvent.getFirstPropertyValue(jprop || prop);
     let newValue = event.getFirstPropertyValue(jprop || prop);
@@ -529,19 +543,30 @@ function patchEvent(item, oldItem) {
   // Organizer
   let organizer = event.getFirstProperty("organizer");
   let organizerId = organizer?.getFirstValue();
-  let oldOrganizerId = oldEvent.getFirstPropertyValue("organizer");
+  let oldOrganizer = oldEvent.getFirstProperty("organizer");
+  let oldOrganizerId = oldOrganizer?.getFirstValue();
   if (!oldOrganizerId && organizerId) {
     // This can be an import, add the organizer
-    entry.organizer = convertAttendee(organizer, organizer, true);
-  } else if (oldOrganizerId != organizerId) {
+    entry.organizer = convertAttendee(organizer, organizer, true, isCreate);
+  } else if (oldOrganizerId && oldOrganizerId != organizerId) {
     // Google requires a move() operation to do this, which is not yet implemented
-    // eslint-disable-next-line no-console
-    console.warn(`[calGoogleCalendar(${entry.summary})] Changing organizer requires a move, which is not implemented`);
+    throw new Error(`[calGoogleCalendar(${entry.summary})] Changing organizer requires a move, which is not implemented`);
   }
 
   // Attendees
   if (haveAttendeesChanged(event, oldEvent)) {
-    entry.attendees = event.getAllProperties("attendee").map(attendee => convertAttendee(attendee, organizer));
+    let attendees = event.getAllProperties("attendee");
+    entry.attendees = attendees.map(attendee => convertAttendee(attendee, organizer, false, isCreate));
+
+    // The participations status changed on the organizer, which means the organizer is now
+    // participating in some way. We need to make sure the organizer is an attendee.
+    if (
+      organizer && oldOrganizer &&
+      organizer.getParameter("partstat") != oldOrganizer.getParameter("partstat") &&
+      !attendees.some(attendee => attendee.getFirstValue() == organizerId)
+    ) {
+        entry.attendees.push(convertAttendee(organizer, organizer, false, isCreate));
+    }
   }
 
   let oldReminders = convertReminders(oldEvent);

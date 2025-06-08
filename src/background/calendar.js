@@ -207,7 +207,7 @@ export default class calGoogleCalendar {
     );
 
     let uri;
-    let itemData = itemToJson(item, this, options.invitation);
+    let itemData = itemToJson(item, this, options.invitation, true);
     let params = {};
 
     /* istanbul ignore else - unreachable */
