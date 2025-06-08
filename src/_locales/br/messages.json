@@ -106,7 +106,7 @@
   },
 
   "syncProgressTask": {
-    "message": "O goubredañ $calendar_name$ trevell $num_tasks_synced$ war $total_tasks_to_sync$\u0020",
+    "message": "O goubredañ $calendar_name$ trevell $num_tasks_synced$ war $total_tasks_to_sync$ ",
     "placeholders": {
       "calendar_name": {
         "content": "$1",

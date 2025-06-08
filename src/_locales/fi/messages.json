@@ -151,5 +151,47 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Lähetä sähköposti-ilmoituksia tapahtuman vieraille"
+  },
+  "settings.forcePlainText": {
+    "message": "Pakota käyttämään tavallista tekstiä tapahtumakuvauksissa"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konferenssi:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Liity videoneuvottelun kautta"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Puhelin"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Lisää tietoa konferenssista"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Kokouskoodi"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Käyttöoikeuskoodi"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Tunnusluku"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Salasana"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Poissa"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Keskittymisaika"
   }
 }

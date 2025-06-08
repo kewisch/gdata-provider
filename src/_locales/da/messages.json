@@ -151,5 +151,47 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Send e-mail notifikationer til deltagere"
+  },
+  "settings.forcePlainText": {
+    "message": "Tving brug af uformateret tekst i begivenhedsbeskrivelser"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konference:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Deltag via video konference"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefon"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Yderligere konference information"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Mødekode"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Adgangskode"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Kodeord"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Adgangskode"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Ikke til stede"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Fokus tid"
   }
 }

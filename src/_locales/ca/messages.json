@@ -151,5 +151,47 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Envia notificacions per email als convidats"
+  },
+  "settings.forcePlainText": {
+    "message": "Força l'ús de text pla a les descripcions d'esdeveniments"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Conferència:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Uniu-vos-hi mitjançant videoconferència"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telèfon"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Més informació sobre la conferència"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Codi de reunió"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Codi d'accés"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "codi de pas"
+  },
+  "eventdialog.codeType.password": {
+    "message": "contrasenya"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Fora de l'oficina"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Temps d'enfocament"
   }
 }

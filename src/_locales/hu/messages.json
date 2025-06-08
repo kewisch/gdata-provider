@@ -151,5 +151,47 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "E-mail értesítések küldése az esemény vendégeinek"
+  },
+  "settings.forcePlainText": {
+    "message": "Sima szöveg (plain text) erőltetése az eseményleírásokban"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konferencia:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Csatlakozás videókonferencián keresztül"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefon"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "További információk a konferenciáról"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Megbeszéléskód"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Hozzáférési kód"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Hozzáférési kód"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Jelszó"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Távollét"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Fókusz idő"
   }
 }

@@ -151,5 +151,47 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "向活动受邀对象发送电子邮件通知"
+  },
+  "settings.forcePlainText": {
+    "message": "在活动描述中强制使用纯文本"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "会议："
+  },
+  "eventdialog.joinVia.video": {
+    "message": "通过视频会议加入"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "手机"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "更多会议信息"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Meeting Code"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Access Code"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Passcode"
+  },
+  "eventdialog.codeType.password": {
+    "message": "密码"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "外出"
+  },
+  "eventdialog.focusEvent": {
+    "message": "专注时间"
   }
 }

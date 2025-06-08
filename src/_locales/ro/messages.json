@@ -151,5 +151,47 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Trimiteți notificări prin e-mail invitaților la eveniment"
+  },
+  "settings.forcePlainText": {
+    "message": "Forțați utilizarea textului simplu în descrierile evenimentelor"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Conferință:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Alăturați-vă prin videoconferință"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefon"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Mai multe informații despre conferință"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Codul sesiunii"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Codul de acces"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Cod PIN"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Parolă"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Nu sunt la birou"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Momentul cheie"
   }
 }

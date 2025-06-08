@@ -151,5 +151,14 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Wysyłanie powiadomień e-mail do gości wydarzenia"
+  },
+  "settings.forcePlainText": {
+    "message": "Wymuszenie używania zwykłego tekstu w opisach zdarzeń"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Więcej informacji o konferencji"
   }
 }

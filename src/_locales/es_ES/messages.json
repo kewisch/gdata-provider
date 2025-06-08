@@ -151,5 +151,47 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Enviar notificaciones por correo electrónico a los invitados"
+  },
+  "settings.forcePlainText": {
+    "message": "Forzar el uso de texto plano en las descripciones de eventos"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Conferencia:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Unirse por videoconferencia"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Teléfono"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Más información sobre la conferencia"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Código del encuentro"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Código de acceso"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Código"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Contraseña"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Fuera de la oficina"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Tiempo de concentración"
   }
 }

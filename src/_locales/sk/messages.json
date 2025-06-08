@@ -151,5 +151,44 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Pošlite e-mailové upozornenia pre hostí"
+  },
+  "settings.forcePlainText": {
+    "message": "Sila použitia jednoduchého textu v opisoch udalostí"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konferencia:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Pripojte sa k videokonferenciám"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefón"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Viac informácií o konferencii"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Kód stretnutia"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Prístupový kód"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Kód"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Heslo"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Mimo kanceláriu"
   }
 }

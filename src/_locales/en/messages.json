@@ -27,7 +27,7 @@
     "message": "Migrate read-only calendars"
   },
   "gdata.migration.description": {
-    "message": "The Provider for Google Calendar has detected that you have existing calendars that are only capable of accessing Google Calendar in read-only mode. If you would like to upgrade any of these calendars, please select them below"
+    "message": "The Provider for Google Calendar has detected that you have existing calendars that are only capable of accessing Google Calendar in read-only mode. If you would like to upgrade any of these calendars, please select them below."
   },
   "gdata.migration.upgrade.label": {
     "message": "Upgrade"

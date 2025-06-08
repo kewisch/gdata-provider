@@ -151,5 +151,47 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Надіслати гостям електронного листа про подію"
+  },
+  "settings.forcePlainText": {
+    "message": "Примусово використовувати звичайний текст в описах подій"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Конференція:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Приєднатись через відеоконференцію"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Телефон"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP (протокол встановлення сесії)"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Більше інформації про конференцію"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Код зустрічі"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Код доступу"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Код-пароль"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Пароль"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN (персональний ідентифікаційний номер)"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Не на роботі"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Зайнятий/та"
   }
 }

@@ -151,5 +151,47 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Poslat upozornění hostům události"
+  },
+  "settings.forcePlainText": {
+    "message": "Používat pouze prostý text v popisu události"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konference:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Připojit se prostřednictvím videokonference"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefon"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Více informací o konferenci"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Kód meetingu"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Přístupový kód"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Kód pro přístup"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Heslo"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Mimo kancelář"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Čas na soustředění"
   }
 }

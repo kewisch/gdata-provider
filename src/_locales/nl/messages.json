@@ -151,5 +151,47 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Zend E-mail notificaties naar gasten"
+  },
+  "settings.forcePlainText": {
+    "message": "Dwing het gebruik van platte tekst af in gebeurtenisbeschrijvingen"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Conferentie:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Deelnemen via videoconferentie"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefoon"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Meer conferentie-informatie"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Vergadercode"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Toegangscode"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Toegangscode"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Wachtwoord"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Niet op kantoor"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Focustijd"
   }
 }

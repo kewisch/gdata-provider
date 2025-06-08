@@ -151,5 +151,11 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "settings.sendEventNotifications": {
+    "message": "發送會議通知信給事件的受邀人"
+  },
+  "settings.forcePlainText": {
+    "message": "在事件描述強制使用純文字模式"
   }
 }
