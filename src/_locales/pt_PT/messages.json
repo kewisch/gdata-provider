@@ -206,9 +206,6 @@
   "onboarding.donate.amount": {
     "message": "15eur"
   },
-  "taskListsHeader": {
-    "message": "Listas de Tarefas"
-  },
   "settings.warning": {
     "message": "Estas definições permitirão que use o agendamento de email via Google Calendar, mas também existem relatos de notificações estranhas serem enviadas. Por favor teste primeiro com uma pequena reunião."
   },
