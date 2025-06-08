@@ -7,24 +7,21 @@
     "message": "Pozwala na dwukierunkowy dostęp do Kalendarza Google",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Kalendarz Google",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Domyślny"
   },
   "gdata.privacy.default.accesskey": {
     "message": "D"
   },
-
   "gdata.migration.title": {
     "message": "Uaktualnij kalendarze tylko do odczytu"
   },
   "gdata.migration.description": {
-    "message": "Dostawca dla Kalendarza Google wykrył kalendarze, które działają jedynie w trybie tylko do odczytu. Aby uaktualnić któreś z nich, należy wybrać je z poniższej listy"
+    "message": "Dostawca dla Kalendarza Google wykrył kalendarze, które działają jedynie w trybie tylko do odczytu. Aby uaktualnić któreś z nich, należy wybrać je z poniższej listy."
   },
   "gdata.migration.upgrade.label": {
     "message": "Uaktualnij"
@@ -33,31 +30,26 @@
     "message": "U"
   },
   "gdata.migration.showagain.label": {
-    "message": "Zawsze sprawdzaj "
+    "message": "Zawsze sprawdzaj"
   },
-
   "gdata.reminder.default": {
     "message": "Domyślne przypomnienie"
   },
-
   "gdata.wizard.session.description": {
     "message": "Wybierz istniejącą sesję lub wprowadź adres e-mail, by utworzyć nową. Potrzebna jest tylko jedna sesja dla każdego konta."
   },
   "gdata.wizard.calendars.description": {
     "message": "Wybierz kalendarze i listy zadań do subskrypcji."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Przejdź do następnego kroku, aby skonfigurować kalendarze."
   },
-
   "calendarsHeader": {
     "message": "Kalendarze"
   },
   "taskListsHeader": {
     "message": "Listy zadań"
   },
-
   "busyTitle": {
     "message": "Zajęty ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,9 +60,8 @@
       }
     }
   },
-
   "quotaExceeded": {
-    "message": "Limit dla „$session_id$” został przekroczony. Proszę spróbować później.",
+    "message": "Limit dla „$session_id$” został przekroczony. Spróbuj później.",
     "description": "This is shown when the request quota has been exceeded.",
     "placeholders": {
       "session_id": {
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Nieaktualna wersja dodatku. Proszę uaktualnić do najnowszej wersji."
   },
-
   "reminderOutOfRange": {
     "message": "Kalendarz Google pozwala na przypomnienia najwcześniej na cztery tygodnie przed rozpoczęciem wydarzenia."
   },
-
   "syncProgressEvent": {
     "message": "Synchronizowanie wydarzeń kalendarza „$calendar_name$” — $num_events_synced$ z $total_events_to_sync$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Synchronizowanie zadań kalendarza „$calendar_name$” — $num_tasks_synced$ z $total_tasks_to_sync$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Synchronizowanie kalendarza „$calendar_name$”",
     "placeholders": {
@@ -132,9 +119,8 @@
       }
     }
   },
-
   "requestWindowDescription": {
-    "message": "Dostawca dla Kalendarza Google chciałby uzyskać dostęp do konta „$session_id$”, aby pobrać zadania i wydarzenia. Dane logowania i zawartość kalendarza są przesyłane wyłącznie pomiędzy tym komputerem a Google i nie pośredniczą w tym żadne zewnętrzne podmioty.",
+    "message": "Dostawca dla Kalendarza Google chciałby uzyskać dostęp do konta „$session_id$”, aby pobrać zadania i wydarzenia. Dane logowania i zawartość kalendarza są przesyłane wyłącznie pomiędzy tym komputerem a Google i nie pośredniczą w tym żadne zewnętrzne podmioty.",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Zaloguj się do konta „$session_id$”",
     "placeholders": {

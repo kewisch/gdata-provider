@@ -7,24 +7,21 @@
     "message": "Tillåter dubbelriktad åtkomst till Google Kalender",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google Kalender",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Google standard"
   },
   "gdata.privacy.default.accesskey": {
     "message": "d"
   },
-
   "gdata.migration.title": {
     "message": "Migrera skrivskyddade kalendrar"
   },
   "gdata.migration.description": {
-    "message": "Leverantören av Google Kalender har upptäckt att du har kalendrar som endast kan användas i skrivskyddat läge. Om du vill uppgradera någon av dessa kalendrar, vänligen ange dem nedan"
+    "message": "Leverantören av Google Kalender har upptäckt att du har kalendrar som endast kan användas i skrivskyddat läge. Om du vill uppgradera någon av dessa kalendrar, vänligen ange dem nedan."
   },
   "gdata.migration.upgrade.label": {
     "message": "Uppgradera"
@@ -35,29 +32,24 @@
   "gdata.migration.showagain.label": {
     "message": "Kontrollera alltid"
   },
-
   "gdata.reminder.default": {
     "message": "Standard påminnelse"
   },
-
   "gdata.wizard.session.description": {
     "message": "Välj en befintlig session eller skriv in din e-postadress för att skapa en ny session. Du behöver bara en session per konto."
   },
   "gdata.wizard.calendars.description": {
     "message": "Välj de kalendrar och uppgiftslistor du vill prenumerera på."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Gå vidare till nästa steg för att konfigurera dina kalendrar."
   },
-
   "calendarsHeader": {
     "message": "Kalendrar"
   },
   "taskListsHeader": {
     "message": "Uppgiftslistor"
   },
-
   "busyTitle": {
     "message": "Upptagen ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "Kvoten för $session_id$ har överskridits, försök igen senare.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Denna version av leverantören har upphört, uppdatera till den senaste versionen."
   },
-
   "reminderOutOfRange": {
     "message": "Google Kalender tillåter endast påminnelser upp till 4 veckor innan händelsen startar."
   },
-
   "syncProgressEvent": {
     "message": "Synkroniserar $calendar_name$ händelse $num_events_synced$ av $total_events_to_sync$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Synkroniserar $calendar_name$ uppgift $num_tasks_synced$ av $total_tasks_to_sync$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Synkroniserar kalender $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Leverantören för Google Kalender vill komma åt ditt konto $session_id$ för att hämta händelser och aktiviteter. Inloggningsuppgifter och kalenderdata överförs endast mellan din dator och Google, inga tredjepartswebbplatser är inblandade.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Logga in på ditt konto $session_id$",
     "placeholders": {

@@ -7,24 +7,21 @@
     "message": "Permite acesso bidirecional ao Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Padrão do Google"
   },
   "gdata.privacy.default.accesskey": {
     "message": "P"
   },
-
   "gdata.migration.title": {
     "message": "Migrar agendas somente leitura"
   },
   "gdata.migration.description": {
-    "message": "O provedor do Google Calendar detectou que você possui agendas capazes apenas de acessar o Google Calendar no modo somente leitura. Se deseja atualizar algumas dessas agendas, selecione-as abaixo"
+    "message": "O provedor do Google Calendar detectou que você possui agendas capazes apenas de acessar o Google Calendar no modo somente leitura. Se deseja atualizar algumas dessas agendas, selecione-as abaixo."
   },
   "gdata.migration.upgrade.label": {
     "message": "Atualizar"
@@ -33,31 +30,26 @@
     "message": "A"
   },
   "gdata.migration.showagain.label": {
-    "message": "Checar sempre "
+    "message": "Checar sempre"
   },
-
   "gdata.reminder.default": {
     "message": "Lembrete padrão"
   },
-
   "gdata.wizard.session.description": {
     "message": "Escolha uma sessão existente ou digite seu endereço de e-mail para criar uma nova sessão. Você só precisa de uma sessão por conta."
   },
   "gdata.wizard.calendars.description": {
     "message": "Selecione as agendas e listas de tarefas que você deseja se inscrever."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Avance para o próximo passo para configurar suas agendas."
   },
-
   "calendarsHeader": {
     "message": "Agendas"
   },
   "taskListsHeader": {
     "message": "Listas de tarefas"
   },
-
   "busyTitle": {
     "message": "Ocupado ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "A cota para $session_id$ foi excedida, tente novamente mais tarde.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Esta versão do provedor expirou, por favor, atualize para a versão mais recente."
   },
-
   "reminderOutOfRange": {
     "message": "A agenda do Google permite apenas lembretes até 4 semanas antes do início do evento."
   },
-
   "syncProgressEvent": {
     "message": "Sincronizando $calendar_name$ evento $num_events_synced$ de $total_events_to_sync$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Sincronizando $calendar_name$ tarefa $num_tasks_synced$ de $total_tasks_to_sync$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Sincronizando agenda $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "O fornecedor da agenda do Google deseja acessar sua conta $session_id$ para obter eventos e tarefas. As credenciais e dados de agenda são transferidas apenas entre seu computador e a Google, nenhum site de terceiro é envolvido.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Entre em sua conta $session_id$",
     "placeholders": {

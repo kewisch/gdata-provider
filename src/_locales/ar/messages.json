@@ -7,24 +7,21 @@
     "message": "يسمح بالوصول من وإلى تقويم جوجل",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "تقويم جوجل",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "إعدادات جوجل المبدئية"
   },
   "gdata.privacy.default.accesskey": {
     "message": "م"
   },
-
   "gdata.migration.title": {
     "message": "ترحيل التقويمات التي للقراءة فقط"
   },
   "gdata.migration.description": {
-    "message": "اكتشف موفّر تقويم جوجل أن التقويمات الموجودة يمكنها الوصول إلى تقويم جوجل في وضع القراءة فقط. إن أردت ترقية أيّ من هذه التقويمات، فمن فضلك حددها أدناه"
+    "message": "اكتشف موفّر تقويم جوجل أن التقويمات الموجودة يمكنها الوصول إلى تقويم جوجل في وضع القراءة فقط. إن أردت ترقية أيّ من هذه التقويمات، فمن فضلك حددها أدناه."
   },
   "gdata.migration.upgrade.label": {
     "message": "رقِّ"
@@ -33,31 +30,20 @@
     "message": "ر"
   },
   "gdata.migration.showagain.label": {
-    "message": "تحقق دائما "
+    "message": "تحقق دائما"
   },
-
   "gdata.reminder.default": {
     "message": "التذكير الافتراضي"
   },
-
   "gdata.wizard.session.description": {
     "message": "من فضلك اختر جلسة أو أدخل عنوان بريدك الإلكتروني لإنشاء واحدة جيدة. تحتاج جلسة واحدة فقط لكل حساب."
   },
   "gdata.wizard.calendars.description": {
     "message": "من فضلك اختر قوائم التقويمات والمهام التي تريد الاشتراك فيها."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "من فضلك تقدم إلى الخطوة التالية لإعداد التقويمات."
   },
-
-  "calendarsHeader": {
-    "message": "Calendars"
-  },
-  "taskListsHeader": {
-    "message": "Task Lists"
-  },
-
   "busyTitle": {
     "message": "مشغول ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +54,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "تجاوزتَ حصّة $session_id$، من فضلك حاول ثانية فيما بعد.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +67,9 @@
   "providerOutdated": {
     "message": "أصبحت إصدارة المزود قديمة، من فضلك حدّثه إلى آخر نسخة."
   },
-
   "reminderOutOfRange": {
     "message": "يسمح تقويم جوجل بتذكيرك عن الحدث قبل 4 أسابيع على الأكثر من بدايته."
   },
-
   "syncProgressEvent": {
     "message": "يزامن الحدث $num_events_synced$ من $total_events_to_sync$ في التقويم ”$calendar_name$“",
     "placeholders": {
@@ -104,7 +87,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "يزامن المهمة $num_tasks_synced$ من $total_tasks_to_sync$ في التقويم ”$calendar_name$“",
     "placeholders": {
@@ -122,7 +104,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "يزامن التقويم ”$calendar_name$“",
     "placeholders": {
@@ -132,7 +113,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "يريد موفّر تقويم جوجل الوصول إلى حساب $session_id$ لجلب الأحداث والمهام. بيانات الولوج والتقويم ستُنقل بين حاسوبك وجوجل فقط، لن تطالعها أية مواقع أخرى.",
     "placeholders": {
@@ -142,7 +122,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "لِج إلى حسابك $session_id$",
     "placeholders": {

@@ -7,24 +7,21 @@
     "message": "Позволяет получить доступ на чтение и запись к Календарю Google",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Календарь Google",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Google по умолчанию"
   },
   "gdata.privacy.default.accesskey": {
     "message": "у"
   },
-
   "gdata.migration.title": {
     "message": "Перенос календарей только для чтения"
   },
   "gdata.migration.description": {
-    "message": "Провайдер для Календаря Google обнаружил, что у вас уже есть календари, которые доступны в режиме только для чтения. Если вы хотите обновить любой из этих календарей, выберите их ниже"
+    "message": "Провайдер для Календаря Google обнаружил, что у вас уже есть календари, которые доступны в режиме только для чтения. Если вы хотите обновить любой из этих календарей, выберите их ниже."
   },
   "gdata.migration.upgrade.label": {
     "message": "Обновить"
@@ -33,31 +30,26 @@
     "message": "О"
   },
   "gdata.migration.showagain.label": {
-    "message": "Всегда проверять "
+    "message": "Всегда проверять"
   },
-
   "gdata.reminder.default": {
     "message": "Оповещение по умолчанию"
   },
-
   "gdata.wizard.session.description": {
     "message": "Пожалуйста, выберите существующую сессию или введите свой адрес электронной почты для создания новой сессии. Вам нужен только одна сессия на учётную запись."
   },
   "gdata.wizard.calendars.description": {
     "message": "Пожалуйста, выберите календари и списки задач, на которые вы хотели бы подписаться."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Пожалуйста, перейдите к следующему шагу, чтобы настроить свои календари."
   },
-
   "calendarsHeader": {
     "message": "Календари"
   },
   "taskListsHeader": {
     "message": "Списки задач"
   },
-
   "busyTitle": {
     "message": "Занят ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "Квота для $session_id$ была превышена, повторите попытку позже.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Срок действия этой версии провайдера истёк, пожалуйста, обновитесь до последней версии."
   },
-
   "reminderOutOfRange": {
     "message": "Календарь Google позволяет создавать напоминания не ранее чем за 4 недели до начала мероприятия."
   },
-
   "syncProgressEvent": {
     "message": "Синхронизация $calendar_name$: $num_events_synced$ из $total_events_to_sync$ событий",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Синхронизация $calendar_name$: $num_tasks_synced$ из $total_tasks_to_sync$ задач",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Синхронизация календаря $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Поставщик для календаря Google хотел бы получить доступ к вашей учетной записи $session_id$ для извлечения событий и задач. Обмен учётными данными и данными календаря будет происходить только между вашим компьютером и Google, без участия сторонних сайтов.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Войти в свою учётную запись $session_id$",
     "placeholders": {
