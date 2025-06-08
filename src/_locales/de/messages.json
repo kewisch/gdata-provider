@@ -20,6 +20,9 @@
     "message": "S"
   },
 
+  "gdata.migration.notification": {
+    "message": "Bestehende Kalender können für den Provider für Google Kalender umgewandelt werden"
+  },
   "gdata.migration.title": {
     "message": "Kalender umwandeln"
   },
@@ -29,8 +32,17 @@
   "gdata.migration.upgrade.label": {
     "message": "Umwandeln"
   },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Nicht umwandeln"
+  },
   "gdata.migration.upgrade.accesskey": {
     "message": "U"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "Abbrechen"
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "A"
   },
   "gdata.migration.showagain.label": {
     "message": "Immer überprüfen "
@@ -45,6 +57,15 @@
   },
   "gdata.wizard.calendars.description": {
     "message": "Bitte wählen Sie die Kalender und Aufgabenlisten aus, die Sie abonnieren möchten."
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Geburtstage)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
   },
 
   "gdata.wizard.nextstep.description": {
@@ -152,17 +173,34 @@
       }
     }
   },
+
   "settings.sendEventNotifications": {
     "message": "Benachrichtigungen an Terminteilnehmer versenden"
   },
   "settings.forcePlainText": {
     "message": "Reines Textformat für Terminbeschreibungen forcieren"
   },
+  "settings.migrateCalendars": {
+    "message": "Kalender umwandeln"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "Aktuell gibt es keine Kalender zum Umwandeln"
+  },
+
   "eventdialog.conferenceLabel": {
     "message": "Konferenz:"
   },
+  "eventdialog.conferenceRemove": {
+    "message": "Konferenz entfernen"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "Keine"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "Rückgängig"
+  },
   "eventdialog.joinVia.video": {
-    "message": "An Videokonferenz teilnehmen"
+    "message": "Videokonferenz beitreten"
   },
   "eventdialog.joinVia.phone": {
     "message": "Telefon"
@@ -193,5 +231,31 @@
   },
   "eventdialog.focusEvent": {
     "message": "Fokuszeit"
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "Wird $age$ Jahre alt am $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "Wurde $age$ Jahre alt am $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
   }
 }
