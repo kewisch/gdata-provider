@@ -178,5 +178,67 @@
   },
   "eventdialog.focusEvent": {
     "message": "Focus Time"
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Birthdays)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
+  "gdata.migration.notification": {
+    "message": "Some of your calendars can be migrated to the Provider for Google Calendar"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Don't Upgrade"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "Cancel"
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "C"
+  },
+  "settings.migrateCalendars": {
+    "message": "Migrate read-only calendars"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "There are currently no read-only calendars to migrate"
+  },
+  "eventdialog.conferenceRemove": {
+    "message": "Remove Conference"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "None"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "Undo"
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "Turning $age$ on $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "Turned $age$ on $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
   }
 }
