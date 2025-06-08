@@ -7,19 +7,16 @@
     "message": "Erlaubt beidseitigen Zugriff auf Google Kalender",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google Kalender",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Google-Standardeinstellung"
   },
   "gdata.privacy.default.accesskey": {
     "message": "S"
   },
-
   "gdata.migration.notification": {
     "message": "Bestehende Kalender können für den Provider für Google Kalender umgewandelt werden"
   },
@@ -27,7 +24,7 @@
     "message": "Kalender umwandeln"
   },
   "gdata.migration.description": {
-    "message": "Eine Überprüfung durch den Provider für Google Kalender hat ergeben, dass die unten aufgeführten Kalender bisher nur über lesenden Zugriff auf Google Kalender verfügen. Falls Sie Kalendern auch schreibenden Zugriff ermöglichen und sie daher umwandeln möchten, wählen Sie sie bitte unten aus."
+    "message": "Eine Überprüfung durch den Provider für Google Kalender hat ergeben, dass die unten aufgeführten Kalender bisher nur über einen Lesezugriff auf Google Kalender verfügen. Falls Sie Kalendern auch einen Schreibzugriff ermöglichen und sie daher umwandeln möchten, wählen Sie sie bitte unten aus."
   },
   "gdata.migration.upgrade.label": {
     "message": "Umwandeln"
@@ -45,13 +42,11 @@
     "message": "A"
   },
   "gdata.migration.showagain.label": {
-    "message": "Immer überprüfen "
+    "message": "Immer überprüfen"
   },
-
   "gdata.reminder.default": {
     "message": "Standarderinnerung"
   },
-
   "gdata.wizard.session.description": {
     "message": "Bitte wählen Sie eine vorhandene Sitzung aus oder geben Sie Ihre E-Mail-Adresse ein, um eine neue Sitzung zu erstellen. Sie benötigen nur eine Sitzung pro Konto."
   },
@@ -67,18 +62,15 @@
       }
     }
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Bitte fahren Sie mit dem nächsten Schritt fort, um Ihre Kalender einzurichten."
   },
-
   "calendarsHeader": {
-    "message": "Calendars"
+    "message": "Kalender"
   },
   "taskListsHeader": {
-    "message": "Task Lists"
+    "message": "Aufgabenlisten"
   },
-
   "busyTitle": {
     "message": "Beschäftigt ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -89,7 +81,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "Das Kontingent für $session_id$ wurde überschritten, bitte versuchen Sie es später noch einmal.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -103,11 +94,9 @@
   "providerOutdated": {
     "message": "Diese Version des Providers ist veraltet, bitte aktualisieren Sie auf die neueste Version."
   },
-
   "reminderOutOfRange": {
     "message": "Google Kalender erlaubt Erinnerungen nur innerhalb von 4 Wochen vor Beginn eines Termins."
   },
-
   "syncProgressEvent": {
     "message": "Synchronisiere $calendar_name$ Termin $num_events_synced$ von $total_events_to_sync$",
     "placeholders": {
@@ -125,7 +114,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Synchronisiere $calendar_name$ Aufgabe $num_tasks_synced$ von $total_tasks_to_sync$",
     "placeholders": {
@@ -143,7 +131,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Synchronisiere Kalender $calendar_name$",
     "placeholders": {
@@ -153,7 +140,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Der Provider für Google Kalender möchte auf Ihr Konto $session_id$ zugreifen, um Termine und Aufgaben abzurufen. Zugangsdaten und Kalenderdaten werden ausschließlich zwischem Ihrem Computer und Google übertragen, es sind keine Websites von Fremdanbietern beteiligt.",
     "placeholders": {
@@ -163,7 +149,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Anmelden mit Ihrem Konto $session_id$",
     "placeholders": {
@@ -173,7 +158,6 @@
       }
     }
   },
-
   "settings.sendEventNotifications": {
     "message": "Benachrichtigungen an Terminteilnehmer versenden"
   },
@@ -186,7 +170,6 @@
   "settings.migrateCalendars.disabled": {
     "message": "Aktuell gibt es keine Kalender zum Umwandeln"
   },
-
   "eventdialog.conferenceLabel": {
     "message": "Konferenz:"
   },

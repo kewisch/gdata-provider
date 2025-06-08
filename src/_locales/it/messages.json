@@ -1,30 +1,27 @@
 {
   "extensionName": {
-    "message": "Provider per Google Calendar",
+    "message": "Provider per Calendario Google",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "extensionDescription": {
-    "message": "Permette l'accesso bidirezionale a Google Calendar",
+    "message": "Permette l'accesso bidirezionale a Calendario Google",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Predefinito Google"
   },
   "gdata.privacy.default.accesskey": {
     "message": "P"
   },
-
   "gdata.migration.title": {
-    "message": "Migra calendari in sola lettura"
+    "message": "Migra i calendari \"sola lettura\""
   },
   "gdata.migration.description": {
-    "message": "Provider for Google calendar ha rilevato che ci sono calendari esistenti in grado di accedere a Google Calendar solamente in lettura. Se si vuole aggiornare qualcuno di questo calendari, selezionarli sotto"
+    "message": "Provider for Google calendar ha rilevato che ci sono calendari esistenti in grado di accedere a Calendario Google solamente in lettura. Se si vuole aggiornare qualcuno di questo calendari, selezionarli sotto."
   },
   "gdata.migration.upgrade.label": {
     "message": "Aggiorna"
@@ -35,31 +32,26 @@
   "gdata.migration.showagain.label": {
     "message": "Controlla sempre"
   },
-
   "gdata.reminder.default": {
     "message": "Promemoria predefinito"
   },
-
   "gdata.wizard.session.description": {
     "message": "Scegliere una sessione esistente o inserire il proprio indirizzo email per crearne una nuova. È sufficiente una sola sessione per account."
   },
   "gdata.wizard.calendars.description": {
     "message": "Selezionare i calendari e le liste di attività da sottoscrivere."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Proseguire al passo successivo per configurare i calendari."
   },
-
   "calendarsHeader": {
-    "message": "Calendars"
+    "message": "Calendari"
   },
   "taskListsHeader": {
-    "message": "Task Lists"
+    "message": "Elenco attività"
   },
-
   "busyTitle": {
-    "message": " Occupato ($calendar_name$)",
+    "message": "Occupato ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
     "placeholders": {
       "calendar_name": {
@@ -68,9 +60,8 @@
       }
     }
   },
-
   "quotaExceeded": {
-    "message": " La quota per $session_id$ è stata superata, riprovare più tardi.",
+    "message": "La quota per $session_id$ è stata superata, riprovare più tardi.",
     "description": "This is shown when the request quota has been exceeded.",
     "placeholders": {
       "session_id": {
@@ -80,15 +71,13 @@
     }
   },
   "providerOutdated": {
-    "message": " Questa versione del provider è scaduta, aggiornare all'ultima versione."
+    "message": "Questa versione del provider è scaduta, aggiornare all'ultima versione."
   },
-
   "reminderOutOfRange": {
-    "message": " Google Calendar consente solamente promemoria di massimo quattro settimane prima dell'inizio dell'evento."
+    "message": "Google Calendar consente promemoria solo fino a 4 settimane prima dell'inizio dell'evento."
   },
-
   "syncProgressEvent": {
-    "message": " Sincronizzazione di $calendar_name$, evento $num_events_synced$ di $total_events_to_sync$",
+    "message": "Sincronizzazione di $calendar_name$, evento $num_events_synced$ di $total_events_to_sync$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -104,9 +93,8 @@
       }
     }
   },
-
   "syncProgressTask": {
-    "message": " Sincronizzazione di $calendar_name$, attività $num_tasks_synced$ di $total_tasks_to_sync$",
+    "message": "Sincronizzazione di $calendar_name$, attività $num_tasks_synced$ di $total_tasks_to_sync$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -122,9 +110,8 @@
       }
     }
   },
-
   "syncStatus": {
-    "message": " Sincronizzazione del calendario $calendar_name$",
+    "message": "Sincronizzazione del calendario $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -132,9 +119,8 @@
       }
     }
   },
-
   "requestWindowDescription": {
-    "message": " Provider for Google Calendar vorrebbe accedere all'account $session_id$ per scaricare gli eventi e le attività. Le credenziali e i dati del calendario vengono scambiati solamente tra i computer e Google, senza coinvolgimento di terze parti.",
+    "message": "Provider for Google Calendar vorrebbe accedere all'account $session_id$ per scaricare gli eventi e le attività. Le credenziali e i dati del calendario vengono scambiati solamente tra i computer e Google, senza coinvolgimento di terze parti.",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -142,9 +128,8 @@
       }
     }
   },
-
   "requestWindowTitle": {
-    "message": " Accedere al proprio account $session_id$",
+    "message": "Accedere al proprio account $session_id$",
     "placeholders": {
       "session_id": {
         "content": "$1",

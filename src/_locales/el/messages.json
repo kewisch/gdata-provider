@@ -7,24 +7,21 @@
     "message": "Επιτρέπει την αμφίδρομη πρόσβαση στο ημερολόγιο Google",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Ημερολόγιο Google",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Προεπιλογή Google"
   },
   "gdata.privacy.default.accesskey": {
     "message": "Π"
   },
-
   "gdata.migration.title": {
     "message": "Να γίνει μεταφορά ημερολογίων μόνο για ανάγνωση"
   },
   "gdata.migration.description": {
-    "message": "Η υπηρεσία παροχής για το ημερολόγιο Google έχει εντοπίσει ότι έχετε υπάρχοντα ημερολόγια που έχουν πρόσβαση στο ημερολόγιο Google σε λειτουργία μόνο για ανάγνωση. Εάν θα επιθυμούσατε να αναβαθμίσετε οποιοδήποτε από αυτά τα ημερολόγια, παρακαλούμε επιλέξτε το παρακάτω"
+    "message": "Η υπηρεσία παροχής για το ημερολόγιο Google έχει εντοπίσει ότι έχετε υπάρχοντα ημερολόγια που έχουν πρόσβαση στο ημερολόγιο Google σε λειτουργία μόνο για ανάγνωση. Εάν θα επιθυμούσατε να αναβαθμίσετε οποιοδήποτε από αυτά τα ημερολόγια, παρακαλούμε επιλέξτε το παρακάτω."
   },
   "gdata.migration.upgrade.label": {
     "message": "Αναβάθμιση"
@@ -33,31 +30,26 @@
     "message": "Α"
   },
   "gdata.migration.showagain.label": {
-    "message": "Να γίνεται πάντα έλεγχος "
+    "message": "Να γίνεται πάντα έλεγχος"
   },
-
   "gdata.reminder.default": {
     "message": "Προεπιλεγμένη υπενθύμιση"
   },
-
   "gdata.wizard.session.description": {
     "message": "Επιλέξτε μια υπάρχουσα σύνοδο ή εισάγετε τη διεύθυνση e-mail σας για να δημιουργήσετε νέα σύνοδο. Χρειάζεστε μόνο μία σύνοδο ανά λογαριασμό."
   },
   "gdata.wizard.calendars.description": {
     "message": "Παρακαλούμε επιλέξτε ημερολόγια και λίστες εργασιών στα οποία θα θέλατε να εγγραφείτε."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Παρακαλούμε προχωρήστε στο επόμενο βήμα για να εγκαταστήσετε τα ημερολόγιά σας."
   },
-
   "calendarsHeader": {
     "message": "Ημερολόγια"
   },
   "taskListsHeader": {
     "message": "Λίστες εργασιών"
   },
-
   "busyTitle": {
     "message": "Απασχολημένος/η ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "Η ποσόστωση για το $session_id$ έχει υπερβεί το όριο, παρακαλούμε δοκιμάστε ξανά αργότερα.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Αυτή η έκδοση της υπηρεσίας παροχής έχει λήξει, παρακαλούμε να κάνετε ενημέρωση στην πιο πρόσφατη έκδοση."
   },
-
   "reminderOutOfRange": {
     "message": "Το ημερολόγιο Google επιτρέπει μόνο υπενθυμίσεις μέχρι και 4 εβδομάδες πριν από την έναρξη του συμβάντος."
   },
-
   "syncProgressEvent": {
     "message": "Γίνεται συγχρονισμός του συμβάντος $num_events_synced$ από $total_events_to_sync$ του ημερολογίου $calendar_name$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Γίνεται συγχρονισμός της εργασίας $num_tasks_synced$ από $total_tasks_to_sync$ του ημερολογίου $calendar_name$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Γίνεται συγχρονισμός του ημερολογίου $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Η υπηρεσία παροχής για το ημερολόγιο Google θα ήθελε πρόσβαση στο λογαριασμό σας $session_id$ για να ανακτήσει συμβάντα και εργασίες. Διαπιστευτήρια και δεδομένα ημερολογίου ανταλλάσσονται μόνο μεταξύ του υπολογιστή σας και της Google, δεν εμπλέκονται ιστότοποι τρίτων.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Σύνδεση στο λογαριασμό σας $session_id$",
     "placeholders": {

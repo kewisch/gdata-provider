@@ -1,30 +1,27 @@
 {
   "extensionName": {
-    "message": "Google 日历提供器",
+    "message": "Google 日历提供程序",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "extensionDescription": {
     "message": "允许双向访问 Google 日历",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google 日历",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Google 默认"
   },
   "gdata.privacy.default.accesskey": {
     "message": "D"
   },
-
   "gdata.migration.title": {
     "message": "迁移只读日历"
   },
   "gdata.migration.description": {
-    "message": "Google 日历提供者发现您拥有一些只读的 Google 日历。如果您想要修改其中的日历，请从下面选择"
+    "message": "Google 日历提供程序检测到你的现有日历仅能以只读模式来访问 Google 日历。如果你想要提升针对这些日历的访问权限，请在下面作出选择。"
   },
   "gdata.migration.upgrade.label": {
     "message": "升级"
@@ -33,31 +30,26 @@
     "message": "U"
   },
   "gdata.migration.showagain.label": {
-    "message": "一律检查 "
+    "message": "每次都检查"
   },
-
   "gdata.reminder.default": {
-    "message": "预设提醒"
+    "message": "默认提醒"
   },
-
   "gdata.wizard.session.description": {
-    "message": "请选择现有的会话，或者输入您的电子邮件地址以建立新的会话。每个账号您只需建立一个会话。"
+    "message": "请选择已有会话，或者输入你的电子邮件地址以创建新会话。每个账号仅需一个会话。"
   },
   "gdata.wizard.calendars.description": {
     "message": "请选择您要订阅的日历与任务列表。"
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "请前往下一步设置您的日历。"
   },
-
   "calendarsHeader": {
     "message": "日历"
   },
   "taskListsHeader": {
     "message": "任务列表"
   },
-
   "busyTitle": {
     "message": "忙碌（$calendar_name$）",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "$session_id$ 的配额已经用完，请稍后再试。",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,13 +73,11 @@
   "providerOutdated": {
     "message": "此版本的提供者已经过期，请更新到最新版本。"
   },
-
   "reminderOutOfRange": {
     "message": "Google Calendar 仅允许最早于活动四个星期前的提醒。"
   },
-
   "syncProgressEvent": {
-    "message": "正在同步 $calendar_name$ 的第 $num_events_synced$ 个事件，共 $total_events_to_sync$ 条",
+    "message": "正在同步 $calendar_name$ 的第 $num_events_synced$ 项活动，共 $total_events_to_sync$ 项",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "正在同步 $calendar_name$ 的第 $num_tasks_synced$ 个任务，共 $total_tasks_to_sync$ 个",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "正在同步行日历 $calendar_name$",
     "placeholders": {
@@ -132,9 +119,8 @@
       }
     }
   },
-
   "requestWindowDescription": {
-    "message": "Google Calendar 提供者想要访问您的 $session_id$ 账号以便取回您的事件和任务。您的账号密码将会直接从电脑传送给 Google，不会被其他人知晓。",
+    "message": "Google 日历提供商程序希望访问你的帐户 $session_id$ 以检索活动和任务。凭证和日历数据仅会于你的电脑和 Google 之间进行传输，不涉及任何第三方网站。",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "登录您的账号 $session_id$",
     "placeholders": {
@@ -172,15 +157,6 @@
   },
   "eventdialog.joinVia.more": {
     "message": "更多会议信息"
-  },
-  "eventdialog.codeType.meetingCode": {
-    "message": "Meeting Code"
-  },
-  "eventdialog.codeType.accessCode": {
-    "message": "Access Code"
-  },
-  "eventdialog.codeType.passcode": {
-    "message": "Passcode"
   },
   "eventdialog.codeType.password": {
     "message": "密码"

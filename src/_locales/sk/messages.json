@@ -7,19 +7,16 @@
     "message": "Umožňuje obojsmerný prístup k službe Google Kalendár",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Kalendár Google",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Predvolený"
   },
   "gdata.privacy.default.accesskey": {
     "message": "d"
   },
-
   "gdata.migration.title": {
     "message": "Import kalendárov len na čítanie"
   },
@@ -33,31 +30,26 @@
     "message": "A"
   },
   "gdata.migration.showagain.label": {
-    "message": "Kontrolovať vždy "
+    "message": "Kontrolovať vždy"
   },
-
   "gdata.reminder.default": {
     "message": "Predvolená pripomienka"
   },
-
   "gdata.wizard.session.description": {
     "message": "Zvoľte existujúcu reláciu alebo zadajte svoju e-mailovú adresu a vytvoríte novú reláciu. Pre každý účet potrebujete len jednu reláciu."
   },
   "gdata.wizard.calendars.description": {
     "message": "Zvoľte kalendáre a zoznamy úloh, ktoré si prajete odoberať."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "V ďalšom kroku si nastavíte svoje kalendáre."
   },
-
   "calendarsHeader": {
     "message": "Kalendáre"
   },
   "taskListsHeader": {
     "message": "Zoznamy úloh"
   },
-
   "busyTitle": {
     "message": "Zaneprázdnený ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "Kvóta pre $session_id$ bola prekročená, skúste to znova neskôr.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Táto verzia poskytovateľa vypršala, aktualizujte na najnovšiu verziu."
   },
-
   "reminderOutOfRange": {
     "message": "Kalendár Google podporuje pripomienky len 4 týždne pred začiatkom udalosti."
   },
-
   "syncProgressEvent": {
     "message": "Synchronizuje sa kalendár $calendar_name$, udalosť $num_events_synced$ z $total_events_to_sync$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "Synchronizuje sa kalendár $calendar_name$ úloha $num_tasks_synced$ z $total_tasks_to_sync$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "Synchronizuje sa kalendár $calendar_name$",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Poskytovateľ Kalendára Google chce pristúp k vášmu účtu $session_id$ za účelom získania udalostí a úloh. Prihlasovacie údaje a údaje z kalendára sú prenášané len medzi vaším počítačom a spoločnosťou Google, bez účasti akejkoľvek tretej strany.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "Prihláste sa do vášho účtu $session_id$",
     "placeholders": {

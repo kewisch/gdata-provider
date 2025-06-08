@@ -7,24 +7,21 @@
     "message": "Google Calendar үшін екіжақты қатынауды рұқсат етеді",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata-provider.label": {
     "message": "Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-
   "gdata.privacy.default.label": {
     "message": "Google негізгісі"
   },
   "gdata.privacy.default.accesskey": {
     "message": "н"
   },
-
   "gdata.migration.title": {
     "message": "Тек оқу үшін арналған күнтізбелерді миграциялау"
   },
   "gdata.migration.description": {
-    "message": "Google Calendar үшін ұсынушы сіздің бар болып тұрған күнтізбелеріңіз Google Calendar тек оқу үшін режимде қатынай алатынын анықтады. Ол күнтізбелерді жаңартуды қаласаңыз, оларды төменде таңдаңыз"
+    "message": "Google Calendar үшін ұсынушы сіздің бар болып тұрған күнтізбелеріңіз Google Calendar тек оқу үшін режимде қатынай алатынын анықтады. Ол күнтізбелерді жаңартуды қаласаңыз, оларды төменде таңдаңыз."
   },
   "gdata.migration.upgrade.label": {
     "message": "Жаңарту"
@@ -35,29 +32,24 @@
   "gdata.migration.showagain.label": {
     "message": "Әрқашан тексеру"
   },
-
   "gdata.reminder.default": {
     "message": "Бастапқы еске салу"
   },
-
   "gdata.wizard.session.description": {
     "message": "Бар болып тұрған сессияны таңдаңыз, немесе жаңа сессияны жасау үшін эл. пошта адресіңізді енгізіңіз. Сізге бір тіркелгі үшін тек бір сессия керек."
   },
   "gdata.wizard.calendars.description": {
     "message": "Жазылу үшін күнтізбелер және тапсырмалар тізімдерін таңдаңыз."
   },
-
   "gdata.wizard.nextstep.description": {
     "message": "Күнтізбелеріңізді баптау үшін келесі қадамға ауысыңыз."
   },
-
   "calendarsHeader": {
     "message": "Күнтізбелер"
   },
   "taskListsHeader": {
     "message": "Тапсырмалар тізімдері"
   },
-
   "busyTitle": {
     "message": "Бос емес ($calendar_name$)",
     "description": "Events with only free/busy access don't have a title, they will use this title instead. The calendar name is used as a parameter, since its often named after the person whose calendar you are viewing.",
@@ -68,7 +60,6 @@
       }
     }
   },
-
   "quotaExceeded": {
     "message": "$session_id$ үшін квота асып кетті, кейінірек қайталап көріңіз.",
     "description": "This is shown when the request quota has been exceeded.",
@@ -82,11 +73,9 @@
   "providerOutdated": {
     "message": "Ұсынушының бұл нұсқасы ескірген, соңғы нұсқаға дейін жаңартыңыз."
   },
-
   "reminderOutOfRange": {
     "message": "Google Calendar оқиғаға басталғанға дейін тек 4 аптадан бастап еске салуларды орнатуды рұқсат етеді."
   },
-
   "syncProgressEvent": {
     "message": "$calendar_name$ синхрондау, оқиға $num_events_synced$, барлығы $total_events_to_sync$",
     "placeholders": {
@@ -104,7 +93,6 @@
       }
     }
   },
-
   "syncProgressTask": {
     "message": "$calendar_name$ синхрондау, тапсырма $num_tasks_synced$, барлығы $total_tasks_to_sync$",
     "placeholders": {
@@ -122,7 +110,6 @@
       }
     }
   },
-
   "syncStatus": {
     "message": "$calendar_name$ күнтізбесін синхрондау",
     "placeholders": {
@@ -132,7 +119,6 @@
       }
     }
   },
-
   "requestWindowDescription": {
     "message": "Google Calendar провайдері оқиғалар және тапсырмаларды алу үшін сіздің $session_id$ тіркелгіңізге қатынауды талап етеді. Тіркелу мәліметтері және күнтізбе деректері тек сіздің компьютеріңіз және Google арасында жүреді, ешбір үшінші жақ қатыспайды.",
     "placeholders": {
@@ -142,7 +128,6 @@
       }
     }
   },
-
   "requestWindowTitle": {
     "message": "$session_id$ тіркелгіңізге кіріңіз",
     "placeholders": {

@@ -126,7 +126,7 @@
     }
   },
   "requestWindowDescription": {
-    "message": "Asaǧǧaw i uwitay Google yezmer yebɣa ad yekcem ɣer umiḍan-inek $session_id$ akken ad d-inadi tidyanin akked twuriwin. Isefka n unekcum akked iwitayen ttwaznen kan gar uselkim inek akked Google, ulac ismal wis kraḍ ara yilin gar-asen. ",
+    "message": "Asaǧǧaw i uwitay Google yezmer yebɣa ad yekcem ɣer umiḍan-inek $session_id$ akken ad d-inadi tidyanin akked twuriwin. Isefka n unekcum akked iwitayen ttwaznen kan gar uselkim inek akked Google, ulac ismal wis kraḍ ara yilin gar-asen.",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -150,22 +150,13 @@
     "message": "SIP"
   },
   "eventdialog.codeType.password": {
-    "message": "Awal n uεeddi"
-  },
-  "eventdialog.codeType.password": {
     "message": "Awal n uɛeddi"
-  },
-  "eventdialog.codeType.pin": {
-    "message": "PIN"
   },
   "eventdialog.codeType.pin": {
     "message": "PIN"
   },
   "eventdialog.conferenceLabel": {
     "message": "Asarag:"
-  },
-  "eventdialog.joinVia.phone": {
-    "message": "Tiliɣri"
   },
   "eventdialog.conferenceNone": {
     "message": "Ula yiwen"
