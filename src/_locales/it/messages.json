@@ -120,7 +120,7 @@
     }
   },
   "requestWindowDescription": {
-    "message": "Provider for Google Calendar vorrebbe accedere all'account $session_id$ per scaricare gli eventi e le attività. Le credenziali e i dati del calendario vengono scambiati solamente tra i computer e Google, senza coinvolgimento di terze parti.",
+    "message": "Provider for Google Calendar vorrebbe accedere all'account $session_id$ per scaricare gli eventi e le attività. Le credenziali e i dati del calendario vengono scambiati solamente tra il vostro computer e Google, senza coinvolgimento di terze parti.",
     "placeholders": {
       "session_id": {
         "content": "$1",
