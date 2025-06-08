@@ -481,12 +481,9 @@ describe("itemToJson", () => {
   let calendar = { console, name: "calendarName" };
 
   test("simple_event", async () => {
-    let data = itemToJson(jcalItems.simple_event, calendar, false, true);
-
     // TODO originalStartTime
     // TODO date value
-
-    expect(data).toEqual({
+    let expected = {
       extendedProperties: {
         private: { "X-MOZ-LASTACK": "2014-01-01T01:01:01Z", "X-MOZ-SNOOZE-TIME": "2014-01-01T02:02:02Z" },
         shared: { "X-MOZ-CATEGORIES": "foo,bar" },
@@ -531,7 +528,14 @@ describe("itemToJson", () => {
       status: "confirmed",
       transparency: "transparent",
       visibility: "private",
-    });
+    };
+    let data = itemToJson(jcalItems.simple_event, calendar, false, true);
+    expect(data).toEqual(expected);
+
+    // Checks which properties are removed if it is an invitation
+    delete expected.visibility;
+    data = itemToJson(jcalItems.simple_event, calendar, true, true);
+    expect(data).toEqual(expected);
   });
 
   test("event 1", async () => {

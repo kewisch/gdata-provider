@@ -98,7 +98,7 @@ function eventToJson(item, calendar, isImport, isCreate) {
     );
   }
 
-  let entry = patchEvent(item, oldItem, isCreate);
+  let entry = patchEvent(item, oldItem, isImport, isCreate);
   if (item.id) {
     entry.iCalUID = item.id;
   }
@@ -111,7 +111,7 @@ function taskToJson(item, calendar, isImport, isCreate) {
     item: ["vcalendar", [], [["vtodo", [], []]]],
   };
 
-  let entry = patchTask(item, oldItem, isCreate);
+  let entry = patchTask(item, oldItem, isImport, isCreate);
   if (item.id) {
     entry.id = item.id;
   }
@@ -391,7 +391,7 @@ function convertRecurringSnoozeTime(vevent) {
   return Object.keys(snoozeObj).length ? JSON.stringify(snoozeObj) : null;
 }
 
-export function patchItem(item, oldItem, isCreate) {
+export function patchItem(item, oldItem, isImport, isCreate) {
   if (item.type == "event") {
     return patchEvent(...arguments);
   } else if (item.type == "task") {
@@ -401,7 +401,7 @@ export function patchItem(item, oldItem, isCreate) {
   }
 }
 
-function patchTask(item, oldItem, isCreate) {
+function patchTask(item, oldItem, isImport, isCreate) {
   function setIfFirstProperty(obj, prop, jprop, transform = null) {
     let oldValue = oldTask.getFirstPropertyValue(jprop);
     let newValue = task.getFirstPropertyValue(jprop);
@@ -427,7 +427,7 @@ function patchTask(item, oldItem, isCreate) {
   return entry;
 }
 
-function patchEvent(item, oldItem, isCreate) {
+function patchEvent(item, oldItem, isImport, isCreate) {
   function setIfFirstProperty(obj, prop, jprop = null, transform = null) {
     let oldValue = oldEvent.getFirstPropertyValue(jprop || prop);
     let newValue = event.getFirstPropertyValue(jprop || prop);
@@ -541,7 +541,11 @@ function patchEvent(item, oldItem, isCreate) {
 
   setIfFirstProperty(entry, "sequence");
   setIfFirstProperty(entry, "transparency", "transp", transparency => transparency?.toLowerCase());
-  setIfFirstProperty(entry, "visibility", "class", visibility => visibility?.toLowerCase());
+
+  if (!isImport) {
+    // We won't let an invitation item set PUBLIC visiblity
+    setIfFirstProperty(entry, "visibility", "class", visibility => visibility?.toLowerCase());
+  }
 
   setIfFirstProperty(entry, "status", "status", status => status?.toLowerCase());
   if (entry.status == "cancelled") {
