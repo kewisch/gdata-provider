@@ -141,12 +141,15 @@
     "message": "SIP"
   },
   "eventdialog.codeType.password": {
-    "message": "Awal n uεeddi"
+    "message": "Awal n uɛeddi"
   },
   "eventdialog.codeType.pin": {
     "message": "PIN"
   },
   "eventdialog.joinVia.phone": {
     "message": "Tiliɣri"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Asarag:"
   }
 }

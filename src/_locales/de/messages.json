@@ -171,7 +171,7 @@
     "message": "Email Einladungen aktivieren"
   },
   "eventdialog.joinVia.video": {
-    "message": "An Videokonferenz teilnehmen"
+    "message": "Videokonferenz beitreten"
   },
   "eventdialog.joinVia.sip": {
     "message": "SIP"

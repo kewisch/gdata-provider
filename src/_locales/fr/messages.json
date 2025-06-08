@@ -147,7 +147,7 @@
     "message": "Guide de démarrage"
   },
   "onboarding.providertype.title": {
-    "message": "Sur le réseau?"
+    "message": "Sur le réseau ?"
   },
   "errors.rate_limit_exceeded": {
     "message": "Un nombre important d'utilisateurs sont connectés et Google nous indique que le quota de connexions simultanées a été dépassé. Merci d'essayer à nouveau un peu plus tard."
@@ -231,7 +231,7 @@
     "message": "Synchroniser les participants à l'événement"
   },
   "eventdialog.conferenceLabel": {
-    "message": "Conférence:"
+    "message": "Conférence :"
   },
   "onboarding.welcome.p3.linktext": {
     "message": "section de réglages de planification"
@@ -246,13 +246,13 @@
     "message": "Une liste d'agendas avec des cases à cocher sur le côté"
   },
   "onboarding.providertype.p1": {
-    "message": "Vous verrez trois options: Sur mon ordinateur, Sur le réseau, et Google Agenda. Même si Google Agenda est techniquement sur le réseau, sélectionner l'option dédiée à Google Agenda."
+    "message": "Vous verrez trois options : Sur mon ordinateur, Sur le réseau, et Google Agenda. Même si Google Agenda est techniquement sur le réseau, sélectionner l'option dédiée à Google Agenda."
   },
   "onboarding.selectcalendars.p2": {
     "message": "Sur l'écran suivant, sélectionnez les agendas et listes de tâches auxquels vous désirez vous abonner. Les agendas auxquels vous êtes déjà abonné apparaitront comme déjà ajoutés. Pour vous désabonner, utilisez le menu contextuel dans la liste d'agendas de Thunderbird et non le dialogue d'ajout de nouvel agenda."
   },
   "onboarding.allset.title": {
-    "message": "Vous voilà prêt!"
+    "message": "Vous voilà prêt !"
   },
   "onboarding.allset.imgalt": {
     "message": "Fenêtre d'ajout de tâche, affichant uniquement les champs applicables"
@@ -282,10 +282,10 @@
     "message": "Aider avec les traductions"
   },
   "onboarding.weblate.p2.postlink": {
-    "message": " dès maintenant! Pouvez-vous compléter votre langue à 100%?"
+    "message": " dès maintenant ! Pouvez-vous compléter votre langue à 100% ?"
   },
   "onboarding.footer.p2": {
-    "message": "Merci d'avoir lu jusqu'au bout! Si vous vous êtes rendu jusqu'ici, j'espère que vous être aussi enthousiaste que moi à propos de ce module. Allez-y et essayez-le d'abord, mais si vous êtes déjà convaincu, j'apprécierais votre support."
+    "message": "Merci d'avoir lu jusqu'au bout ! Si vous vous êtes rendu jusqu'ici, j'espère que vous être aussi enthousiaste que moi à propos de ce module. Allez-y et essayez-le d'abord, mais si vous êtes déjà convaincu, j'apprécierais votre support."
   },
   "onboarding.footer.donate.text": {
     "message": "Envoyez-moi un témoignage d'appréciation"
@@ -306,7 +306,7 @@
     "message": "pour ce module."
   },
   "onboarding.weblate.title": {
-    "message": "Ce contenu dans votre langue?"
+    "message": "Ce contenu dans votre langue ?"
   },
   "onboarding.weblate.p1": {
     "message": "Le Fournisseur pour Google Agenda utilise Weblate pour ses traductions, vous pouvez facilement y traduire des phrases dans votre langue. Vous parlez une langue qui n'est pas l'anglais et vous voulez aider ?"

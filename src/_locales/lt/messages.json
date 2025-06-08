@@ -142,5 +142,8 @@
   },
   "eventdialog.codeType.pin": {
     "message": "PIN"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Prieigos kodas"
   }
 }

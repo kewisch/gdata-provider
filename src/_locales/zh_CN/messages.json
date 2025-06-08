@@ -179,9 +179,6 @@
   "eventdialog.joinVia.sip": {
     "message": "SIP"
   },
-  "eventdialog.codeType.meetingCode": {
-    "message": "Meeting Code"
-  },
   "eventdialog.codeType.password": {
     "message": "密码"
   },
@@ -197,14 +194,8 @@
   "eventdialog.oooEvent": {
     "message": "外出"
   },
-  "eventdialog.codeType.accessCode": {
-    "message": "Access Code"
-  },
   "eventdialog.joinVia.video": {
     "message": "通过视频会议加入"
-  },
-  "eventdialog.codeType.passcode": {
-    "message": "Passcode"
   },
   "onboarding.welcome.p1": {
     "message": "Google 日历提供程序是我开始涉足开源领域的标志性项目。早在 2006 年，那时还没有简单的方法将 Thunderbird 与 Google 日历连接起来。在好奇心和帮助他人的愿望的驱使之下，我仔细研究了 Google 的 API，并找到了弥合这一差距的方法，无数 Thunderbird 用户得以籍此来访问 Google 日历。这段经历不仅让我有了目标感，还为我打开了职业生涯的大门，让开源成为了我日常生活中不可或缺的一部分。"

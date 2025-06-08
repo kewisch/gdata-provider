@@ -55,7 +55,7 @@
     }
   },
   "quotaExceeded": {
-    "message": "Se han mandado demasiadas peticiones en $session_id$, superando el límite admitido, vuelve a intentarlo más tarde.",
+    "message": "La cuota de $session_id$ se ha excedido, vuelve a intentarlo más tarde.",
     "description": "This is shown when the request quota has been exceeded.",
     "placeholders": {
       "session_id": {
@@ -65,13 +65,13 @@
     }
   },
   "providerOutdated": {
-    "message": "Esta versión del proveedor ha caducado, actualiza a la última versión."
+    "message": "Esta versión del proveedor ha caducado, actualízala a la última versión."
   },
   "reminderOutOfRange": {
     "message": "Google Calendar sólo permite recordatorios hasta 4 semanas antes de que comience el evento."
   },
   "syncProgressEvent": {
-    "message": "Sincronizando el evento $num_events_synced$ de $total_events_to_sync$ en $calendar_name$",
+    "message": "Sincronizando $calendar_name$ evento $num_events_synced$ de $total_events_to_sync$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -88,7 +88,7 @@
     }
   },
   "syncProgressTask": {
-    "message": "Sincronizando tarea $num_tasks_synced$ de $total_tasks_to_sync$ en $calendar_name$",
+    "message": "Sincronizando $calendar_name$ tarea $num_tasks_synced$ de $total_tasks_to_sync$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -105,7 +105,7 @@
     }
   },
   "syncStatus": {
-    "message": "Sincronizando el calendario $calendar_name$",
+    "message": "Sincronizando calendario $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -147,7 +147,7 @@
     "message": "Calendarios"
   },
   "errors.rate_limit_exceeded": {
-    "message": "Muchos usuarios están iniciando sesión en este momento, Google ha indicado que se ha superado el límite de inicios de sesión simultáneos. Inténtalo de nuevo más tarde."
+    "message": "Hay muchos usuarios iniciando sesión en este momento, Google ha indicado que se ha superado el límite de inicios de sesión simultáneos. Inténtalo de nuevo más tarde."
   },
   "settings.warning": {
     "message": "Estos ajustes te permitirán usar la programación de correo electrónico a través de Google Calendar, pero algunos usuarios han informado de problemas con correos electrónicos de notificación que se envían de forma errónea. Recomendamos probarlo primero con una pequeña reunión."
@@ -210,7 +210,7 @@
     "message": "SIP"
   },
   "taskListsHeader": {
-    "message": "Lista de tareas"
+    "message": "Listas de tareas"
   },
   "settings.enableEmailInvitations": {
     "message": "Activar programación de correos"
