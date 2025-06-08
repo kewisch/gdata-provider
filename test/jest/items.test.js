@@ -1,7 +1,7 @@
 import gcalItems from "./fixtures/gcalItems.json";
 import jcalItems from "./fixtures/jcalItems.json";
 
-import { findRelevantInstance, transformDateXprop, jsonToItem, jsonToDate, itemToJson, patchItem, ItemSaver } from "../../src/background/items";
+import { findRelevantInstance, transformDateXprop, transformDateXpropICAL, jsonToItem, jsonToDate, itemToJson, patchItem, ItemSaver } from "../../src/background/items";
 import calGoogleCalendar from "../../src/background/calendar";
 import ICAL from "../../src/background/libs/ical.js";
 import TimezoneService from "../../src/background/timezone.js";
@@ -58,6 +58,13 @@ test("transformDateXprop", () => {
   expect(transformDateXprop(ICAL.Time.fromString("2024-01-01T01:02:03Z"))).toBe("2024-01-01T01:02:03Z");
   expect(transformDateXprop("20240101T010203Z")).toBe("2024-01-01T01:02:03Z");
   expect(transformDateXprop("2024aaaa0101T010203Z")).toBe(null);
+});
+test("transformDateXpropICAL", () => {
+  expect(transformDateXpropICAL(null)).toBeNull();
+  expect(transformDateXpropICAL("20240101T010203Z")).toBe("20240101T010203Z");
+  expect(transformDateXpropICAL(ICAL.Time.fromString("2024-01-01T01:02:03Z"))).toBe("20240101T010203Z");
+  expect(transformDateXpropICAL("2024-01-01T01:02:03Z")).toBe("20240101T010203Z");
+  expect(transformDateXpropICAL("2024aaaa0101T010203Z")).toBe(null);
 });
 
 describe("jsonToItem", () => {

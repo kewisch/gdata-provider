@@ -58,6 +58,17 @@ export function transformDateXprop(value) {
 
   return null;
 }
+export function transformDateXpropICAL(value) {
+  if (!value || (value.length == 16 && value.endsWith("Z"))) {
+    // No value, or an ICAL string value like 20240102T030405Z
+    return value;
+  } else if (value instanceof ICAL.Time) {
+    // Convert to an ICAL String
+    return value.toICALString();
+  } else if (value[4] == "-") {
+    // A jCal/rfc3339 time
+    return ICAL.design.icalendar.value["date-time"].toICAL(value);
+  }
 
   return null;
 }
@@ -373,7 +384,7 @@ function convertRecurringSnoozeTime(vevent) {
       let snoozeDate = snoozeDateString ? ICAL.Time.fromDateTimeString(snoozeDateString) : null;
 
       if (snoozeDate && (!lastAck || snoozeDate.compare(lastAck) >= 0)) {
-        snoozeObj[property.name.substr(18)] = property.getFirstValue();
+        snoozeObj[property.name.substr(18)] = transformDateXpropICAL(property.getFirstValue());
       }
     }
   }
