@@ -18,7 +18,7 @@
     "message": "D"
   },
   "gdata.migration.notification": {
-    "message": "Algunos de sus calendarios se pueden migrar al proveedor de Google Calendar"
+    "message": "Algunos calendarios se pueden migrar al proveedor para Google Calendar"
   },
   "gdata.migration.title": {
     "message": "Migrar calendarios de sólo lectura"
@@ -69,7 +69,7 @@
     "message": "Calendarios"
   },
   "taskListsHeader": {
-    "message": "Listas de Tareas"
+    "message": "Listas de tareas"
   },
   "busyTitle": {
     "message": "Ocupado ($calendar_name$)",
@@ -82,7 +82,7 @@
     }
   },
   "quotaExceeded": {
-    "message": "La cuota de $session_id$ se ha excedido, vuelva a intentarlo más tarde.",
+    "message": "La cuota de $session_id$ se ha excedido, vuelve a intentarlo más tarde.",
     "description": "This is shown when the request quota has been exceeded.",
     "placeholders": {
       "session_id": {
@@ -92,7 +92,7 @@
     }
   },
   "providerOutdated": {
-    "message": "Esta versión del proveedor ha caducado, actualice a la última versión."
+    "message": "Esta versión del proveedor ha caducado, actualízala a la última versión."
   },
   "reminderOutOfRange": {
     "message": "Google Calendar sólo permite recordatorios hasta 4 semanas antes de que comience el evento."
@@ -141,7 +141,7 @@
     }
   },
   "requestWindowDescription": {
-    "message": "El proveedor de Google Calendar desea acceder a su cuenta $session_id$ para recuperar eventos y tareas. Los datos de credenciales y calendario solo se transfieren entre su equipo y Google, sin que intervengan sitios de terceros.",
+    "message": "El proveedor para Google Calendar necesita acceder a tu cuenta $session_id$ para descargar eventos y tareas. Las credenciales y datos del calendario se transfieren directamente entre tu equipo y Google, sin que intervenga ningún tercero.",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -150,7 +150,7 @@
     }
   },
   "requestWindowTitle": {
-    "message": "Inicie sesión en su cuenta: $session_id$",
+    "message": "Iniciar sesión en la cuenta $session_id$",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -167,20 +167,20 @@
   "settings.migrateCalendars": {
     "message": "Migrar calendarios de sólo lectura"
   },
-  "eventdialog.conferenceLabel": {
-    "message": "Conferencia:"
+  "settings.migrateCalendars.disabled": {
+    "message": "No hay ningún calendario de solo lectura que migrar"
   },
   "eventdialog.conferenceLabel": {
     "message": "Conferencia:"
   },
-  "eventdialog.oooEvent": {
-    "message": "Fuera de la oficina"
+  "eventdialog.conferenceRemove": {
+    "message": "Quitar conferencia"
   },
-  "eventdialog.focusEvent": {
-    "message": "Tiempo de concentración"
+  "eventdialog.conferenceNone": {
+    "message": "Ninguno"
   },
-  "settings.sendEventNotifications": {
-    "message": "Enviar notificaciones por correo electrónico a los invitados"
+  "eventdialog.conferenceUndo": {
+    "message": "Deshacer"
   },
   "eventdialog.joinVia.video": {
     "message": "Unirse por videoconferencia"
@@ -214,5 +214,31 @@
   },
   "eventdialog.focusEvent": {
     "message": "Tiempo de concentración"
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "Cumple $age$ el $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "Cumplió $age$ el $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
   }
 }
