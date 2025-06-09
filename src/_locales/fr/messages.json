@@ -159,13 +159,13 @@
     "message": "Plus d'informations sur la conférence"
   },
   "eventdialog.codeType.meetingCode": {
-    "message": "Référence de la réunion"
+    "message": "Code de la réunion"
   },
   "eventdialog.codeType.accessCode": {
     "message": "Code d'accès"
   },
   "eventdialog.codeType.passcode": {
-    "message": "Code de connexion"
+    "message": "Code secret"
   },
   "eventdialog.codeType.password": {
     "message": "Mot de passe"
@@ -178,5 +178,67 @@
   },
   "eventdialog.focusEvent": {
     "message": "Temps de concentration"
+  },
+  "gdata.migration.notification": {
+    "message": "Certains de vos calendriers peuvent être migrés vers le fournisseur pour Google Calendar"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Ne pas mettre à jour"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "Annuler"
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "A"
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Anniversaires)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
+  "settings.migrateCalendars": {
+    "message": "Migrer les calendriers en lecture seule"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "Il n'y a actuellement aucun calendrier en lecture seule à migrer"
+  },
+  "eventdialog.conferenceRemove": {
+    "message": "Supprimer conférence"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "Aucun"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "Défaire"
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "Aura $age$ ans le $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "A eu $age$ ans le $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
   }
 }

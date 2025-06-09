@@ -74,7 +74,7 @@
     "message": "Denne version af leverandørmodulet er forældet, opdatér til den nyeste version."
   },
   "reminderOutOfRange": {
-    "message": "Google Kalender tillader kun påmindelser op til fire uger for en begivenhed starter."
+    "message": "Google Kalender tillader kun påmindelser op til fire uger før en begivenhed starter."
   },
   "syncProgressEvent": {
     "message": "Synkroniserer begivenhed $num_events_synced$ af $total_events_to_sync$ i kalenderen $calendar_name$",

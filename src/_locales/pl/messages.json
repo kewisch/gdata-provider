@@ -12,7 +12,7 @@
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdata.privacy.default.label": {
-    "message": "Domyślny"
+    "message": "Domyślny Google"
   },
   "gdata.privacy.default.accesskey": {
     "message": "D"
@@ -36,10 +36,10 @@
     "message": "Domyślne przypomnienie"
   },
   "gdata.wizard.session.description": {
-    "message": "Wybierz istniejącą sesję lub wprowadź adres e-mail, by utworzyć nową. Potrzebna jest tylko jedna sesja dla każdego konta."
+    "message": "Wybierz istniejącą sesję lub wprowadź swój adres e-mail, aby utworzyć nową sesję. Potrzebujesz tylko jednej sesji na konto."
   },
   "gdata.wizard.calendars.description": {
-    "message": "Wybierz kalendarze i listy zadań do subskrypcji."
+    "message": "Wybierz kalendarze i listy zadań, które chcesz subskrybować."
   },
   "gdata.wizard.nextstep.description": {
     "message": "Przejdź do następnego kroku, aby skonfigurować kalendarze."
@@ -71,7 +71,7 @@
     }
   },
   "providerOutdated": {
-    "message": "Nieaktualna wersja dodatku. Proszę uaktualnić do najnowszej wersji."
+    "message": "Ta wersja dostawcy wygasła. Uaktualnij do najnowszej wersji."
   },
   "reminderOutOfRange": {
     "message": "Kalendarz Google pozwala na przypomnienia najwcześniej na cztery tygodnie przed rozpoczęciem wydarzenia."
@@ -178,5 +178,67 @@
   },
   "eventdialog.focusEvent": {
     "message": "Czas na skupienie"
+  },
+  "gdata.migration.notification": {
+    "message": "Niektóre z twoich kalendarzy można przenieść do Dostawcy dla Kalendarza Google"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Nie aktualizuj"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "Anuluj"
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "A"
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Urodziny)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
+  "settings.migrateCalendars": {
+    "message": "Migracja kalendarzy tylko do odczytu"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "Obecnie nie ma do migracji kalendarzy tylko do odczytu"
+  },
+  "eventdialog.conferenceRemove": {
+    "message": "Usuń konferencję"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "Brak"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "Cofnij"
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "Ukończył/a $age$, $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "Ukończy $age$, $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
   }
 }

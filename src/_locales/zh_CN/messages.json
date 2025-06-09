@@ -74,7 +74,7 @@
     "message": "此版本的提供者已经过期，请更新到最新版本。"
   },
   "reminderOutOfRange": {
-    "message": "Google Calendar 仅允许最早于活动四个星期前的提醒。"
+    "message": "Google 日历仅允许在活动开始前最多四周内设置提醒。"
   },
   "syncProgressEvent": {
     "message": "正在同步 $calendar_name$ 的第 $num_events_synced$ 项活动，共 $total_events_to_sync$ 项",
