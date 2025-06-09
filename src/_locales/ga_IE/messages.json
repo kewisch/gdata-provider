@@ -169,5 +169,76 @@
   },
   "eventdialog.oooEvent": {
     "message": "As an Oifig"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Comhdháil:"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Glac páirt trí fhíschomhdháil"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Cód Cruinnithe"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "Ceal"
+  },
+  "gdata.migration.notification": {
+    "message": "Is féidir cuid de do fhéilirí a aistriú chuig an Soláthraí do Google Calendar"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "Dada"
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Laethanta Breithe)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Ná hUasghrádaigh"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "Cealaigh"
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "C"
+  },
+  "settings.migrateCalendars": {
+    "message": "Imirce féilirí léite amháin"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "Níl aon fhéilirí inléite amháin le haistriú faoi láthair"
+  },
+  "eventdialog.conferenceRemove": {
+    "message": "Bain Comhdháil"
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "Ag casadh $age$ ar $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "Chas $age$ ar $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
   }
 }

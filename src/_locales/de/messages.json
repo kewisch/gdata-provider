@@ -92,7 +92,7 @@
     }
   },
   "providerOutdated": {
-    "message": "Diese Version des Providers ist veraltet, bitte aktualisieren Sie auf die neueste Version."
+    "message": "Diese Version des Providers ist veraltet, bitte aktualisieren Sie ihn auf die neueste Version."
   },
   "reminderOutOfRange": {
     "message": "Google Kalender erlaubt Erinnerungen nur innerhalb von 4 Wochen vor Beginn eines Termins."

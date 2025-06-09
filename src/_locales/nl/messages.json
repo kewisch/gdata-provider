@@ -33,7 +33,7 @@
     "message": "Altijd controleren"
   },
   "gdata.reminder.default": {
-    "message": "Standaardherinnering"
+    "message": "Standaard herinnering"
   },
   "gdata.wizard.session.description": {
     "message": "Kies een bestaande sessie of voer uw e-mailadres in om een nieuwe sessie aan te maken. U hebt maar één sessie per account nodig."
@@ -178,5 +178,67 @@
   },
   "eventdialog.focusEvent": {
     "message": "Focustijd"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "Annuleer"
+  },
+  "gdata.migration.notification": {
+    "message": "Sommige van uw kalenders kunnen worden gemigreerd naar de Provider voor Google Kalender"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Niet bijwerken"
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Verjaardagen)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
+  "settings.migrateCalendars": {
+    "message": "Migreer alleen-lezen agenda's"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "Er zijn nu geen alleen-lezen agenda's om te migreren"
+  },
+  "eventdialog.conferenceRemove": {
+    "message": "Verwijder conferentie"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "Geen"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "Ongedaan maken"
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "A"
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "Zet $age$ op $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "$age$ op $date$ gezet",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
   }
 }

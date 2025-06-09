@@ -8,14 +8,14 @@
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdata-provider.label": {
-    "message": "Calendar Google",
+    "message": "Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdata.privacy.default.label": {
     "message": "Implicit de la Google"
   },
   "gdata.privacy.default.accesskey": {
-    "message": "d"
+    "message": "D"
   },
   "gdata.migration.title": {
     "message": "Migrare calendare disponibile numai pentru citire"
@@ -27,7 +27,7 @@
     "message": "Actualizare"
   },
   "gdata.migration.upgrade.accesskey": {
-    "message": "u"
+    "message": "U"
   },
   "gdata.migration.showagain.label": {
     "message": "Verifică întotdeauna"

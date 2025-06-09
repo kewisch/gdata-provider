@@ -74,7 +74,7 @@
     "message": "Tato verze poskytovatele je zastaralá, aktualizujte jej prosím na nejnovější verzi."
   },
   "reminderOutOfRange": {
-    "message": "Google Calendar umožňuje připomenutí maximálně 4 týdny před začátkem události."
+    "message": "Kalendář Google umožňuje připomenutí nejdéle 4 týdny před začátkem události."
   },
   "syncProgressEvent": {
     "message": "Synchronizace $num_events_synced$ událostí z $total_events_to_sync$ v kalendáři $calendar_name$",
