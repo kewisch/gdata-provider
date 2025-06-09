@@ -36,10 +36,10 @@
     "message": "Domyślne przypomnienie"
   },
   "gdata.wizard.session.description": {
-    "message": "Wybierz istniejącą sesję lub wprowadź adres e-mail, aby utworzyć nową. Potrzebna jest tylko jedna sesja dla każdego konta."
+    "message": "Wybierz istniejącą sesję lub wprowadź swój adres e-mail, aby utworzyć nową sesję. Potrzebujesz tylko jednej sesji na konto."
   },
   "gdata.wizard.calendars.description": {
-    "message": "Wybierz kalendarze i listy zadań do subskrypcji."
+    "message": "Wybierz kalendarze i listy zadań, które chcesz subskrybować."
   },
   "gdata.wizard.nextstep.description": {
     "message": "Przejdź do następnego kroku, aby skonfigurować kalendarze."
@@ -71,7 +71,7 @@
     }
   },
   "providerOutdated": {
-    "message": "Nieaktualna wersja dodatku. Uaktualnij do najnowszej wersji."
+    "message": "Ta wersja dostawcy wygasła. Uaktualnij do najnowszej wersji."
   },
   "reminderOutOfRange": {
     "message": "Kalendarz Google pozwala na przypomnienia najwcześniej na cztery tygodnie przed rozpoczęciem wydarzenia."
