@@ -74,7 +74,7 @@
     "message": "Cette version du fournisseur a expiré, veuillez la mettre à jour vers la version la plus récente."
   },
   "reminderOutOfRange": {
-    "message": "Google Agenda permet de définir des rappels au maximum 4 semaines avant le début de l’évènement."
+    "message": "Google Calendar permet de définir des rappels au maximum 4 semaines avant le début de l’évènement."
   },
   "syncProgressEvent": {
     "message": "Synchronisation de l’évènement $num_events_synced$ sur $total_events_to_sync$ de $calendar_name$",
@@ -168,10 +168,10 @@
     "message": "Plus d'informations sur la conférence"
   },
   "eventdialog.codeType.meetingCode": {
-    "message": "Référence de la réunion"
+    "message": "Code de la réunion"
   },
   "eventdialog.codeType.passcode": {
-    "message": "Code de connexion"
+    "message": "Code secret"
   },
   "onboarding.welcome.p3.prelink": {
     "message": " Avant de passer cette page, vérifiez"
