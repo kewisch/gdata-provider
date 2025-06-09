@@ -28,7 +28,7 @@
     "@eslint/js": "^9.27.0",
     "@stylistic/eslint-plugin": "^4.4.1",
     "babel-eslint": "^10.1.0",
-    "conventional-changelog": "^7.0.2",
+    "conventional-changelog": "^7.1.0",
     "conventional-changelog-angular": "^8.0.0",
     "conventional-changelog-cli": "^5.0.0",
     "eslint": "^9.28.0",
