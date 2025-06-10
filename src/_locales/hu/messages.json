@@ -189,7 +189,7 @@
     "message": "6000huf"
   },
   "eventdialog.codeType.passcode": {
-    "message": "Hozzáférési kód"
+    "message": "Biztonsági kód"
   },
   "eventdialog.codeType.meetingCode": {
     "message": "Megbeszéléskód"
