@@ -12,25 +12,25 @@
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdata.privacy.default.label": {
-    "message": "Predeterminado de Google"
+    "message": "Predeterminado por Google"
   },
   "gdata.privacy.default.accesskey": {
     "message": "D"
   },
   "gdata.migration.notification": {
-    "message": "Algunos calendarios se pueden migrar al proveedor para Google Calendar"
+    "message": "Algunos calendarios pueden migrarse al proveedor para Google Calendar"
   },
   "gdata.migration.title": {
-    "message": "Migrar calendarios de sólo lectura"
+    "message": "Migrar calendarios de solo lectura"
   },
   "gdata.migration.description": {
-    "message": "El proveedor para Google Calendar ha detectado que tienes calendarios ya existentes que sólo pueden acceder a Google Calendar en modo de sólo lectura. A continuación se pueden seleccionar y pasarlos al modo de funcionalidad completa."
+    "message": "El proveedor para Calendario Google ha detectado que tienes calendarios existentes que solo pueden acceder a Calendario Google en modo solo lectura. A continuación puede seleccionarlos para pasarlos al modo de funcionalidad completa."
   },
   "gdata.migration.upgrade.label": {
-    "message": "Migrar"
+    "message": "Actualizar"
   },
   "gdata.migration.dont-upgrade.label": {
-    "message": "No migrar"
+    "message": "No actualizar"
   },
   "gdata.migration.upgrade.accesskey": {
     "message": "U"
@@ -48,7 +48,7 @@
     "message": "Recordatorio por omisión"
   },
   "gdata.wizard.session.description": {
-    "message": "Elige una sesión ya existente o escribe tu dirección de correo electrónico para crear una nueva. Sólo se necesita una sesión por cuenta."
+    "message": "Elige una sesión ya existente o escribe tu dirección de correo electrónico para crear una nueva. Solo se necesita una sesión por cuenta."
   },
   "gdata.wizard.calendars.description": {
     "message": "Selecciona los calendarios y listas de tareas a las que te gustaría suscribirte."
@@ -82,7 +82,7 @@
     }
   },
   "quotaExceeded": {
-    "message": "La cuota de $session_id$ se ha excedido, vuelve a intentarlo más tarde.",
+    "message": "La cuota para $session_id$ se ha excedido, vuelve a intentarlo más tarde.",
     "description": "This is shown when the request quota has been exceeded.",
     "placeholders": {
       "session_id": {
@@ -165,7 +165,7 @@
     "message": "Forzar el uso de texto plano en las descripciones de eventos"
   },
   "settings.migrateCalendars": {
-    "message": "Migrar calendarios de sólo lectura"
+    "message": "Migrar calendarios de solo lectura"
   },
   "settings.migrateCalendars.disabled": {
     "message": "No hay ningún calendario de solo lectura que migrar"
@@ -174,7 +174,7 @@
     "message": "Conferencia:"
   },
   "eventdialog.conferenceRemove": {
-    "message": "Quitar conferencia"
+    "message": "Eliminar conferencia"
   },
   "eventdialog.conferenceNone": {
     "message": "Ninguno"
@@ -195,7 +195,7 @@
     "message": "Más información sobre la conferencia"
   },
   "eventdialog.codeType.meetingCode": {
-    "message": "Código del encuentro"
+    "message": "Código de la reunión"
   },
   "eventdialog.codeType.accessCode": {
     "message": "Código de acceso"
