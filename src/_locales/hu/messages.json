@@ -165,7 +165,7 @@
     "message": "Hozzáférési kód"
   },
   "eventdialog.codeType.passcode": {
-    "message": "Hozzáférési kód"
+    "message": "Biztonsági kód"
   },
   "eventdialog.codeType.password": {
     "message": "Jelszó"
@@ -178,5 +178,67 @@
   },
   "eventdialog.focusEvent": {
     "message": "Fókusz idő"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "Mégse"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "Jelenleg nincsenek csak olvasható naptárak, amelyeket migrálni lehetne"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "Nincs"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "Visszavonás"
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "$age$ éves lett ekkor: $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "gdata.migration.notification": {
+    "message": "Néhány naptárát át lehet migrálni a Google Calendar szolgáltatójába"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Ne frissítse"
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "C"
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Születésnapok)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
+  "settings.migrateCalendars": {
+    "message": "Csak olvasható naptárak migrálása"
+  },
+  "eventdialog.conferenceRemove": {
+    "message": "Konferencia eltávolítása"
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "$age$ éves lesz ekkor: $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
   }
 }
