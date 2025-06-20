@@ -24,13 +24,13 @@
     "message": "Migrar calendarios de solo lectura"
   },
   "gdata.migration.description": {
-    "message": "El proveedor para Calendario Google ha detectado que tienes calendarios existentes que solo pueden acceder a Calendario Google en modo solo lectura. A continuación puede seleccionarlos para pasarlos al modo de funcionalidad completa."
+    "message": "El proveedor para Google Calendar ha detectado que tienes calendarios ya existentes que solo pueden acceder a Google Calendar en modo de sólo lectura. A continuación se pueden seleccionar y pasarlos al modo de funcionalidad completa."
   },
   "gdata.migration.upgrade.label": {
-    "message": "Actualizar"
+    "message": "Migrar"
   },
   "gdata.migration.dont-upgrade.label": {
-    "message": "No actualizar"
+    "message": "No migrar"
   },
   "gdata.migration.upgrade.accesskey": {
     "message": "U"
