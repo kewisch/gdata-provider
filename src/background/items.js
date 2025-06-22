@@ -1086,7 +1086,7 @@ export class ItemSaver {
     this.parentItems = Object.create(null);
 
     // Save the conference icon cache
-    let conferenceSolutions = await this.calendar.getCalendarPref("conferenceSolutions", {});
+    let conferenceSolutions = await this.calendar.getCalendarPref("conferenceSolutions") ?? {};
 
     await Promise.all(Object.entries(this.#confSolutionCache).map(async ([key, solution]) => {
       let savedSolution = conferenceSolutions[key];

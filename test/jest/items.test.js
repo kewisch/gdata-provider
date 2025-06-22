@@ -1184,7 +1184,7 @@ describe("ItemSaver", () => {
       prefs[name] = value;
     });
     calendar.getCalendarPref = jest.fn(async (name, defaultValue) => {
-      return prefs[name] || defaultValue;
+      return name in prefs ? prefs[name] : defaultValue;
     });
   });
   afterEach(() => {
@@ -1543,6 +1543,33 @@ describe("ItemSaver", () => {
           "key": { "type": "hangoutsMeet" },
           "name": "Hangouts"
         },
+        "zoom": {
+          "iconCache": BLUE_PIXEL_CACHE,
+          "iconUri": BLUE_PIXEL,
+          "key": { "type": "zoom" },
+          "name": "Zoom",
+        }
+      });
+    });
+    test("Conference providers null", async () => {
+      await calendar.setCalendarPref("conferenceSolutions",);
+
+      let item = copy(gcalItems.valarm_no_default_override);
+
+      item.conferenceData.conferenceSolution.key.type = "zoom";
+      item.conferenceData.conferenceSolution.name = "Zoom";
+      item.conferenceData.conferenceSolution.iconUri = BLUE_PIXEL;
+
+      const fetchSpy = jest.spyOn(global, "fetch");
+
+      await saver.parseEventStream({
+        items: [item]
+      });
+      await saver.complete();
+
+      let solutions = await calendar.getCalendarPref("conferenceSolutions");
+
+      expect(solutions).toEqual({
         "zoom": {
           "iconCache": BLUE_PIXEL_CACHE,
           "iconUri": BLUE_PIXEL,
