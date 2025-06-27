@@ -1445,6 +1445,7 @@ function getWXAPI(extension, name, sync = false) {
       unloaded: false,
       callOnClose: () => {},
       logActivity: () => {},
+      isProxyContextParent: true,
     };
     let impl = api.getAPI(context)[name];
 
