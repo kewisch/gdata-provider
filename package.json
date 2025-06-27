@@ -25,13 +25,13 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "@eslint/js": "^9.29.0",
-    "@stylistic/eslint-plugin": "^4.4.1",
+    "@eslint/js": "^9.30.0",
+    "@stylistic/eslint-plugin": "^5.0.0",
     "babel-eslint": "^10.1.0",
     "conventional-changelog": "^7.1.0",
     "conventional-changelog-angular": "^8.0.0",
     "conventional-changelog-cli": "^5.0.0",
-    "eslint": "^9.29.0",
+    "eslint": "^9.30.0",
     "globals": "^16.2.0"
   }
 }

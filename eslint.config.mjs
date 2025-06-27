@@ -138,7 +138,7 @@ export default [
       "@stylistic/keyword-spacing": "error",
 
       // Disallow space between function identifier and application.
-      "@stylistic/func-call-spacing": "error",
+      "@stylistic/function-call-spacing": "error",
 
       // Disallow use of comma operator.
       "no-sequences": "error",
