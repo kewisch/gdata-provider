@@ -142,5 +142,8 @@
   },
   "eventdialog.codeType.passcode": {
     "message": "Prieigos kodas"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Nekonvertuoti"
   }
 }
