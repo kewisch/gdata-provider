@@ -138,7 +138,7 @@ export default [
       "@stylistic/keyword-spacing": "error",
 
       // Disallow space between function identifier and application.
-      "@stylistic/func-call-spacing": "error",
+      "@stylistic/function-call-spacing": "error",
 
       // Disallow use of comma operator.
       "no-sequences": "error",
@@ -302,7 +302,7 @@ export default [
       "func-names": [2, "never"],
 
       // Enforce placing object properties on separate lines
-      "@stylistic/object-property-newline": ["error", { allowMultiplePropertiesPerLine: true }],
+      "@stylistic/object-property-newline": ["error", { allowAllPropertiesOnSameLine: true }],
 
       // Do Not Require Object Literal Shorthand Syntax
       // (Override the parent eslintrc setting for this.)
