@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
+   - Portions Copyright (C) Philipp Kewisch -->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Provider for Google Calendar</title>
+</head>
+<body>
+   <div class="beta">beta</div>
+    <div class="content">
+        <div class="section header">
+          <h1>Provider for Google Calendar</h1>
+          <p>
+            Thank you for being a beta tester for the Provider for Google Calendar!
+          </p>
+        </div>
+        <div class="section">
+          <h2>What's New in 139.9.4</h2>
+          <p>
+            <h3>Features</h3>
+            <ul>
+              <li>Don't set PUBLIC visibility on events received through invitations</li>
+            </ul>
+            <h3>Fixes</h3>
+            <ul>
+              <li>Fix a console error where conferenceSolutions was not defined</li>
+              <li>Correctly serialize snoozes on recurring events</li>
+              <li>Work around organizer participation status not being set correctly</li>
+              <li>Don't remember older snoozes on recurring events to avoid property size limitations</li>
+              <li>Better allow accepting events with Windows timezone names</li>
+            </ul>
+          </p>
+          <p>
+            If there are issues, the most likely would be around snoozing recurring events or not
+            being able to set your participation status as an event organizer. I'm hoping though the
+            experience is smoother than before, as the patches fix a few edge cases that have been
+            reported.
+          </p>
+          <p>
+            I haven't received any feedback on the edit conferencing feature from 139.9.3. No news
+            is good news? Please use the release discussion if you have feedback in either
+            direction.
+          </p>
+        </div>
+        <div class="section">
+          <h2>Providing Feedback</h2>
+          <p>
+            Here is how you can best provide feedback:
+            <ul>
+              <li>Join the discussion in the <a href="https://github.com/kewisch/gdata-provider/discussions/categories/beta" target="_blank">beta discussion category</a></li>
+              <li>If you are sure there is a bug, <a href="https://github.com/kewisch/gdata-provider/issues" target="_blank">file an issue</a>
+              <li>If you know how to fix it, <a href="https://github.com/kewisch/gdata-provider/pulls" target="_blank">send a pull request</a> to the <code>main</code> branch</li>
+            </ul>
+          </p>
+        </div>
+        <div class="section footer">
+          <p>
+            I've added a bunch of new features over the past few beta releases. Is this something
+            you are grateful of? Here is one way to show me.
+          </p>
+          <p class="donatebutton">
+            <a class="button" href="https://paypal.me/kewisch/15eur" target="_blank">Send me a token of appreciation <span class="icon-box">❤️</span></a>
+          </p>
+        </div>
+    </div>
+</body>
+</html>
