@@ -1,7 +1,7 @@
 import gcalItems from "./fixtures/gcalItems.json";
 import jcalItems from "./fixtures/jcalItems.json";
 
-import { findRelevantInstance, transformDateXprop, transformDateXpropICAL, jsonToItem, jsonToDate, itemToJson, patchItem, ItemSaver } from "../../src/background/items";
+import { findRelevantInstance, transformDateXprop, transformDateXpropICAL, jsonToItem, jsonToDate, dateToJson, itemToJson, patchItem, ItemSaver } from "../../src/background/items";
 import calGoogleCalendar from "../../src/background/calendar";
 import ICAL from "../../src/background/libs/ical.js";
 import TimezoneService from "../../src/background/timezone.js";
@@ -440,8 +440,8 @@ describe("jsonToItem", () => {
   });
 });
 
-describe("jsonToDate", () => {
-  let cases = [
+describe("jsonToDate and dateToJson", () => {
+  let commonCases = [
     [
       null, null
     ],
@@ -457,16 +457,36 @@ describe("jsonToDate", () => {
       { dateTime: "2024-01-01T01:02:03.456+01:00", timeZone: "Europe/Berlin" },
       ["dtstart", { tzid: "Europe/Berlin" }, "date-time", "2024-01-01T01:02:03"]
     ],
+  ];
+
+  let jsonToDateCases = [
     [
       { dateTime: "2024-01-01T17:02:03.456+01:00", timeZone: "America/Los_Angeles" },
       ["dtstart", { tzid: "America/Los_Angeles" }, "date-time", "2024-01-01T08:02:03"]
     ]
   ];
 
+  let dateToJsonCases = [
+    [
+      { dateTime: "2024-01-01T01:02:03.456+01:00", timeZone: "Europe/Berlin" },
+      ["dtstart", { tzid: "W. Europe Standard Time" }, "date-time", "2024-01-01T01:02:03"]
+    ]
+  ];
 
-  test.each(cases)("convert %s", (gcalDate, jcalDate) => {
+  test.each(commonCases.concat(jsonToDateCases))("jsonToDate %s", (gcalDate, jcalProp) => {
     let berlin = TimezoneService.get("Europe/Berlin");
-    expect(jsonToDate("dtstart", gcalDate, berlin)).toEqual(jcalDate);
+    expect(jsonToDate("dtstart", gcalDate, berlin)).toEqual(jcalProp);
+  });
+
+  test.each(commonCases.concat(dateToJsonCases))("dateToJson %s", (gcalDate, jcalProp) => {
+    let prop = jcalProp ? new ICAL.Property(jcalProp) : null;
+    let dateObj = gcalDate ? Object.assign({}, gcalDate) : null;
+
+    if (dateObj?.dateTime) {
+      dateObj.dateTime = dateObj.dateTime.replace(/\.[0-9]{3}/, "").replace(/\+\d{2}:\d{2}/, "");
+    }
+
+    expect(dateToJson(prop)).toEqual(dateObj);
   });
 
   test("invalid zone", () => {

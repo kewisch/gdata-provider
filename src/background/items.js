@@ -685,7 +685,7 @@ export function jsonToDate(propName, dateObj, defaultTimezone, requestedZone = n
   }
 }
 
-function dateToJson(property) {
+export function dateToJson(property) {
   if (!property) {
     return null;
   }
@@ -694,8 +694,16 @@ function dateToJson(property) {
   if (property.type == "date") {
     dateobj.date = property.getFirstValue().toString();
   } else {
-    dateobj.dateTime = property.getFirstValue().toString();
-    dateobj.timeZone = property.getFirstParameter("tzid");
+    let dateTime = property.getFirstValue();
+    dateobj.dateTime = dateTime.toString();
+
+    let zone = TimezoneService.get(property.getFirstParameter("tzid"));
+    if (zone) {
+      dateobj.timeZone = zone.tzid;
+    } else {
+      let utcTime = dateTime.convertToZone(TimezoneService.get("UTC"));
+      dateobj.dateTime = utcTime.toString();
+    }
   }
 
   return dateobj;
