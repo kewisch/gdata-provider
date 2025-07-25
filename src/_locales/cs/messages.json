@@ -178,5 +178,51 @@
   },
   "eventdialog.focusEvent": {
     "message": "Čas na soustředění"
+  },
+  "gdata.migration.notification": {
+    "message": "Některé z Vašich kalendářů mohou být migrovány do Poskytovatele Google kalendáře"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Neaktualizovat"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "Zrušit"
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Narozeniny)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
+  "settings.migrateCalendars": {
+    "message": "Migrovat kalendáře jen pro čtení"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "Nejsou k migraci žádné kalendáře jen pro čtení"
+  },
+  "eventdialog.conferenceRemove": {
+    "message": "Odstranit Konferenci"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "Žádná"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "Zpět"
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "$date$ bude mít $age$ let",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
   }
 }
