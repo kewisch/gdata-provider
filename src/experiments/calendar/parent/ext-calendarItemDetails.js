@@ -127,7 +127,7 @@ this.calendarItemDetails = class extends ExtensionAPI {
 
     let areas = [];
     if (this.extension.manifest.calendar_item_details) {
-      areas = this.extension.manifest.calendar_item_details?.allowed_areas || ["secondary"]
+      areas = this.extension.manifest.calendar_item_details.allowed_areas || ["secondary"]
       if (!Array.isArray(areas)) {
         areas = [areas];
       }
