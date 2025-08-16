@@ -650,7 +650,7 @@ this.calendar_provider = class extends ExtensionAPI {
           win.gAddonAdvance = new EventEmitter();
         }
 
-        let origCheckRequired = win.checkRequired;
+        const origCheckRequired = win.checkRequired;
         win.checkRequired = () => {
           origCheckRequired();
           const addonPanel = win.document.getElementById("panel-addon-calendar-settings");
@@ -660,6 +660,7 @@ this.calendar_provider = class extends ExtensionAPI {
 
           const dialog = win.document.getElementById("calendar-creation-dialog");
           if (addonPanel.dataset.addonNoForward == "true") {
+            dialog.setAttribute("buttondisabledaccept", "true");
           } else {
             dialog.removeAttribute("buttondisabledaccept");
           }
