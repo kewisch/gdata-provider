@@ -483,11 +483,17 @@ class ExtCalendar extends cal.provider.BaseClass {
   async replayChangesOn(aListener) {
     this.offlineStorage.startBatch();
     try {
-      await this.extension.emit("calendar.provider.onSync", this);
-      aListener.onResult({ status: Cr.NS_OK }, null);
-    } catch (e) {
-      console.error(e);
-      aListener.onResult({ status: e.result || Cr.NS_ERROR_FAILURE }, e.message || e);
+      let status = Cr.NS_OK
+      let detail = null;
+      try {
+        await this.extension.emit("calendar.provider.onSync", this);
+      } catch (e) {
+        status = e.result || Cr.NS_ERROR_FAILURE;
+        detail = e.message || e;
+        console.error(e);
+      }
+
+      aListener.onResult({ status }, detail);
     } finally {
       this.offlineStorage.endBatch();
     }
