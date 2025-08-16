@@ -130,7 +130,7 @@
   "gdata.wizard.calendars.description": {
     "message": "நீங்கள் குழுசேர விரும்பும் காலெண்டர்கள் மற்றும் பணி பட்டியல்களைத் தேர்ந்தெடுக்கவும்."
   },
-  "gdata-provider.label": {
+  "gdataProviderLabel": {
     "message": "கூகிள் காலண்டர்"
   },
   "gdata.reminder.default": {
