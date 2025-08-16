@@ -92,16 +92,23 @@ this.calendar_calendars = class extends ExtensionAPI {
             }
 
             calendar.name = createProperties.name;
-            if (typeof createProperties.color != "undefined") {
+
+            if (createProperties.color != null) {
               calendar.setProperty("color", createProperties.color);
             }
-            if (typeof createProperties.visible != "undefined") {
+            if (createProperties.readOnly != null) {
+              calendar.setProperty("readOnly", createProperties.readOnly);
+            }
+            if (createProperties.enabled != null) {
+              calendar.setProperty("disabled", !createProperties.enabled);
+            }
+            if (createProperties.visible != null) {
               calendar.setProperty("calendar-main-in-composite", createProperties.visible);
             }
-            if (typeof createProperties.showReminders != "undefined") {
+            if (createProperties.showReminders != null) {
               calendar.setProperty("suppressAlarms", !createProperties.showReminders);
             }
-            if (typeof createProperties.capabilities != "undefined") {
+            if (createProperties.capabilities != null) {
               if (!isOwnCalendar(calendar, context.extension)) {
                 throw new ExtensionError("Cannot set capabilities on foreign calendar types");
               }
