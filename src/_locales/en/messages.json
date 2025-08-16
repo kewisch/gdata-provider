@@ -7,9 +7,19 @@
     "message": "Allows bidirectional access to Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
-  "gdata-provider.label": {
+  "gdataProviderLabel": {
     "message": "Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (Legacy)",
+    "description": "This string is used to indicate that an old, outdated approach is being used",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
   },
   "gdata.privacy.default.label": {
     "message": "Google Default"
@@ -49,6 +59,12 @@
   },
   "gdata.wizard.session.description": {
     "message": "Please pick an existing session or enter your email address to create a new session. You only need one session per account."
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "The Provider for Google Calendar now uses a newer method with better reliability and features. Please go back and use the non-legacy option to proceed. If you are having trouble with that method, please tell the developer about the issue before continuing. You can use the legacy approach temporarily, but it will be removed after the transition."
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Report an issue now"
   },
   "gdata.wizard.calendars.description": {
     "message": "Please select the calendars and task lists you would like to subscribe to."
@@ -240,5 +256,20 @@
         "example": "The date the person is turning that age"
       }
     }
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "Upgrade"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "The Provider for Google Calendar now uses a newer method with better reliability and features. Please upgrade your calendar, as this will be the only option in the future. If you have issues, you can unsubscribe and re-subscribe using the legacy option for the time being. The upgrade will take a moment if you have a large calendar."
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "The Provider for Google Calendar now uses a new method with better reliability and features. You are subscribed to this calendar twice, once with the legacy method and once with the new method. This is the legacy subscription. You can unsubscribe from it and keep the new one."
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "Upgrade now"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "Unsubscribe"
   }
 }

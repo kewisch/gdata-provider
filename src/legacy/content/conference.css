@@ -1,0 +1,69 @@
+#gdata-conference-row[mode="existing"] > th {
+  vertical-align: top;
+}
+#gdata-conference-row[mode="existing"][readonly] > th {
+  padding-top: 0.50rem;
+}
+#gdata-conference-row[mode="existing"] > th > label {
+  padding-top: 0.75rem;
+}
+#gdata-conference-row:not([mode]),
+#gdata-conference-row[mode="delete"] #gdata-conf-new,
+#gdata-conference-row[mode="delete"] #gdata-conf-info,
+#gdata-conference-row[mode="delete"] #gdata-conf-entrypoints,
+#gdata-conference-row[mode="existing"] #gdata-conf-new,
+#gdata-conference-row[mode="existing"] #gdata-conf-deleted,
+#gdata-conference-row[mode="new"] #gdata-conf-info,
+#gdata-conference-row[mode="new"] #gdata-conf-entrypoints,
+#gdata-conference-row[mode="new"] #gdata-conf-deleted,
+#gdata-conference-row[readonly] #gdata-conf-remove {
+  display: none;
+}
+
+#gdata-conf-logo {
+  align-self: center;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+}
+
+#gdata-conf-remove {
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline-start: 10px;
+  min-width: 0;
+}
+#gdata-conf-info {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+#gdata-conf-entrypoints {
+  padding-inline-start: 0;
+  margin-block-end: 0;
+}
+#gdata-conf-entrypoints li {
+  list-style-type: none;
+  margin-block-end: 10px;
+}
+#gdata-conf-entrypoints li:last-child {
+  margin-block-end: 0;
+}
+#gdata-conf-entrypoints li button:empty,
+#gdata-conf-entrypoints li .text-link:empty,
+#gdata-conf-entrypoints li .label:empty {
+  display: none;
+}
+#gdata-conf-entrypoints li button,
+#gdata-conf-entrypoints li .text-link {
+  margin: 0;
+}
+#gdata-conf-entrypoints li .pinvalue,
+#gdata-conf-entrypoints li .label,
+#gdata-conf-entrypoints li .text-link {
+  user-select: text;
+}

@@ -50,6 +50,15 @@ this.gdata = class extends ExtensionAPI {
       let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=3");
       gdataUI.setExtensionVersion(version);
       gdataUI.register();
+
+      // LEGACY
+      // Load the old calendar provider as well until we have transitioned
+      let { calGoogleCalendar } = gdataUI.loadGdataModule("resource://gdata-provider/legacy/modules/old/gdataCalendar.sys.mjs");
+      if (cal.manager.wrappedJSObject.hasCalendarProvider("gdata")) {
+        cal.manager.wrappedJSObject.unregisterCalendarProvider("gdata", true);
+      }
+      cal.manager.wrappedJSObject.registerCalendarProvider("gdata", calGoogleCalendar);
+      // LEGACY END
     }, 0);
   }
 
@@ -57,6 +66,10 @@ this.gdata = class extends ExtensionAPI {
     if (isAppShutdown) {
       return;
     }
+
+    // LEGACY
+    cal.manager.wrappedJSObject.unregisterCalendarProvider("gdata", true);
+    // LEGACY END
 
     let gdataUI = ChromeUtils.importESModule("resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=3");
     gdataUI.unregister();

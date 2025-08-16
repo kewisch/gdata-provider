@@ -1,0 +1,42 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#gdata-legacy-conference-row > th {
+  vertical-align: top;
+}
+#gdata-legacy-conf-info {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+#gdata-legacy-conf-logo {
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
+#gdata-legacy-conf-entrypoints {
+  padding-inline-start: 0;
+  margin-block-end: 0;
+}
+#gdata-legacy-conf-entrypoints li {
+  list-style-type: none;
+  margin-block-end: 10px;
+}
+#gdata-legacy-conf-entrypoints li:last-child {
+  margin-block-end: 0;
+}
+#gdata-legacy-conf-entrypoints li button:empty,
+#gdata-legacy-conf-entrypoints li .text-link:empty,
+#gdata-legacy-conf-entrypoints li .label:empty {
+  display: none;
+}
+#gdata-legacy-conf-entrypoints li button,
+#gdata-legacy-conf-entrypoints li .text-link {
+  margin: 0;
+}
+#gdata-legacy-conf-entrypoints li .pinvalue,
+#gdata-legacy-conf-entrypoints li .label,
+#gdata-legacy-conf-entrypoints li .text-link {
+  user-select: text;
+}

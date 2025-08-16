@@ -70,6 +70,31 @@ export function register() {
     ],
     false
   );
+
+
+  // LEGACY
+  registerWindowListener("old/gdata-calendar-creation", extensionVersion, [
+    "chrome://calendar/content/calendar-creation.xhtml",
+  ]);
+  registerWindowListener("old/gdata-calendar-properties", extensionVersion, [
+    "chrome://calendar/content/calendar-properties-dialog.xhtml",
+  ]);
+  registerWindowListener("old/gdata-event-dialog-reminder", extensionVersion, [
+    "chrome://calendar/content/calendar-event-dialog-reminder.xhtml",
+  ]);
+  registerWindowListener("old/gdata-summary-dialog", extensionVersion, [
+    "chrome://calendar/content/calendar-summary-dialog.xhtml",
+  ]);
+  registerWindowListener(
+    "old/gdata-event-dialog",
+    extensionVersion,
+    [
+      "chrome://calendar/content/calendar-event-dialog.xhtml",
+      "chrome://messenger/content/messenger.xhtml",
+    ],
+    false
+  );
+  // LEGACY END
 }
 
 export function unregister() {

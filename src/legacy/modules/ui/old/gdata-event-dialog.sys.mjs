@@ -8,17 +8,17 @@ export function gdataInitUI(window, document, version) {
   );
 
   const { monkeyPatch, getMessenger } = ChromeUtils.importESModule(
-    `resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs?version=${version}`
+    `resource://gdata-provider/legacy/modules/old/gdataUtils.sys.mjs?version=${version}`
   );
+
   const messenger = getMessenger();
 
   const ITEM_IFRAME_URL = "chrome://calendar/content/calendar-item-iframe.xhtml";
-  const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
 
   // For event dialogs, record the window so it is closed when the extension is unloaded
   if (
     window.location.href == "chrome://calendar/content/calendar-event-dialog.xhtml" &&
-    window.arguments[0].calendarEvent.calendar.type == GDATA_CALENDAR_TYPE
+    window.arguments[0].calendarEvent.calendar.type == "gdata"
   ) {
     recordWindow(window);
   }
@@ -30,12 +30,12 @@ export function gdataInitUI(window, document, version) {
     optionsPrivacyItem.accesskey = messenger.i18n.getMessage("gdata.privacy.default.accesskey");
     optionsPrivacyItem.type = "radio";
     optionsPrivacyItem.setAttribute("privacy", "DEFAULT");
-    optionsPrivacyItem.setAttribute("provider", GDATA_CALENDAR_TYPE);
+    optionsPrivacyItem.setAttribute("provider", "gdata");
     optionsPrivacyItem.setAttribute("oncommand", "editPrivacy(this)");
 
     const toolbarPrivacyItem = optionsPrivacyItem.cloneNode();
-    optionsPrivacyItem.id = "gdata-options-privacy-default-menuitem";
-    toolbarPrivacyItem.id = "gdata-toolbar-privacy-default-menuitem";
+    optionsPrivacyItem.id = "gdata-legacy-options-privacy-default-menuitem";
+    toolbarPrivacyItem.id = "gdata-legacy-toolbar-privacy-default-menuitem";
 
     let privacyOptionsPopup = document.getElementById("options-privacy-menupopup");
     if (privacyOptionsPopup && !document.getElementById(optionsPrivacyItem.id)) {
@@ -48,9 +48,9 @@ export function gdataInitUI(window, document, version) {
     }
 
     const gdataStatusPrivacyHbox = document.createXULElement("hbox");
-    gdataStatusPrivacyHbox.id = "gdata-status-privacy-default-box";
+    gdataStatusPrivacyHbox.id = "gdata-legacy-status-privacy-default-box";
     gdataStatusPrivacyHbox.setAttribute("privacy", "DEFAULT");
-    gdataStatusPrivacyHbox.setAttribute("provider", GDATA_CALENDAR_TYPE);
+    gdataStatusPrivacyHbox.setAttribute("provider", "gdata");
 
     const statusPrivacy = document.getElementById("status-privacy");
     if (statusPrivacy && !document.getElementById(gdataStatusPrivacyHbox.id)) {
@@ -71,7 +71,7 @@ export function gdataInitUI(window, document, version) {
 
     let frame = document.getElementById(frameId);
     let frameScript = ChromeUtils.importESModule(
-      `resource://gdata-provider/legacy/modules/ui/gdata-lightning-item-iframe.sys.mjs?version=${version}`
+      `resource://gdata-provider/legacy/modules/ui/old/gdata-lightning-item-iframe.sys.mjs?version=${version}`
     );
 
     if (

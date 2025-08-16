@@ -1,0 +1,18 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#header.contentTabAddress {
+  min-width: 0;
+  padding: 2px;
+  margin: 0;
+  border-block-end: 1px solid ThreeDShadow;
+  height: 100px;
+  flex-wrap: wrap;
+
+}
+
+#dialog-message {
+  padding: 0.2em 0.8em;
+  width: 100%;
+}

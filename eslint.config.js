@@ -409,6 +409,7 @@ export default [
       "src/options/**/*.js",
       "src/background/**/*.js",
       "src/onboarding/**/*.js",
+      "src/legacy/content/**/*.js",
     ],
     languageOptions: {
       globals: {
@@ -417,18 +418,23 @@ export default [
     }
   },
   {
-    files: ["src/experiments/**/*.js", "src/legacy/**/*.mjs"],
+    files: ["src/experiments/**/*.js", "src/legacy/**/*.mjs", "src/legacy/**/*.js"],
     languageOptions: {
       globals: {
         Cr: true,
         Ci: true,
         Cu: true,
         Cc: true,
+        Components: true,
         ChromeUtils: true,
         Services: true,
         console: true,
         fetch: true,
-        ImageDecoder: true
+        atob: true,
+        URL: true,
+        URLSearchParams: true,
+        ImageDecoder: true,
+        TextDecoder: true
       }
     }
   },
