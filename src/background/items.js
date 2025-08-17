@@ -563,9 +563,9 @@ function patchEvent(item, oldItem, isImport, isCreate) {
   if (!oldOrganizerId && organizerId) {
     // This can be an import, add the organizer
     entry.organizer = convertAttendee(organizer, organizer, true, isCreate);
-  } else if (oldOrganizerId && oldOrganizerId != organizerId) {
+  } else if (oldOrganizerId && oldOrganizerId.toLowerCase() != organizerId?.toLowerCase()) {
     // Google requires a move() operation to do this, which is not yet implemented
-    throw new Error(`[calGoogleCalendar(${entry.summary})] Changing organizer requires a move, which is not implemented`);
+    throw new Error(`[calGoogleCalendar(${entry.summary})] Changing organizer requires a move, which is not implemented (changing from ${oldOrganizerId} to ${organizerId})`);
   }
 
   // Attendees
