@@ -6,6 +6,7 @@
 /* global Services */
 
 var { ExtensionCommon: { ExtensionAPI } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
+var { ExtensionUtils: { ExtensionError } } = ChromeUtils.importESModule("resource://gre/modules/ExtensionUtils.sys.mjs");
 var { setTimeout } = ChromeUtils.importESModule("resource://gre/modules/Timer.sys.mjs");
 
 var { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
@@ -83,7 +84,7 @@ this.gdata = class extends ExtensionAPI {
     this.chromeHandle = null;
   }
 
-  getAPI(_context) {
+  getAPI(context) {
     return {
       gdata: {
         async getLegacyPrefs() {
@@ -154,6 +155,58 @@ this.gdata = class extends ExtensionAPI {
             }
           }
         },
+
+        async upgradeCalendar(calendarId) {
+          let calendar = cal.manager.getCalendarById(calendarId);
+          if (calendar.type != "gdata") {
+            throw new ExtensionError(`Could not upgrade calendar type ${calendar.type}`)
+          }
+
+          const new_calendar_type = `ext-${context.extension.id}`;
+          let calendars = cal.manager.getCalendars();
+          let alreadyHasCalendar = calendars.some(checkCal => {
+            return checkCal.type == new_calendar_type && checkCal.uri.spec == calendar.uri.spec;
+          });
+
+          if (!alreadyHasCalendar) {
+            let newCalendar = cal.manager.createCalendar(new_calendar_type, calendar.uri);
+            newCalendar.id = cal.getUUID();
+            newCalendar.readOnly = calendar.readOnly;
+
+             const propsToCopy = [
+              "color",
+              "disabled",
+              "forceEmailScheduling",
+              "auto-enabled",
+              "cache.enabled",
+              "refreshInterval",
+              "suppressAlarms",
+              "calendar-main-in-composite",
+              "calendar-main-default",
+              "readOnly",
+              "imip.identity.key",
+              "username",
+            ];
+            for (const prop of propsToCopy) {
+              newCalendar.setProperty(prop, calendar.getProperty(prop));
+            }
+
+            const legacyLabel = context.extension.localizeMessage("gdataProviderLabelLegacy", [""], {
+              cloneScope: context.cloneScope
+            });
+
+            if (calendar.name.endsWith(legacyLabel)) {
+              newCalendar.name = calendar.name.substring(0, calendar.name.length - legacyLabel.length);
+            } else if (calendar.name.startsWith(legacyLabel)) {
+              newCalendar.name = calendar.name.substring(legacyLabel.length);
+            } else {
+              newCalendar.name = calendar.name;
+            }
+
+            cal.manager.registerCalendar(newCalendar);
+          }
+          cal.manager.removeCalendar(calendar, Ci.calICalendarManager.REMOVE_NO_DELETE);
+        }
       },
     };
   }

@@ -178,5 +178,8 @@
   },
   "eventdialog.focusEvent": {
     "message": "Fokus tid"
+  },
+  "onboarding.donate.amount": {
+    "message": "115dkk"
   }
 }

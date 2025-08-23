@@ -169,5 +169,8 @@
   },
   "eventdialog.focusEvent": {
     "message": "专注时间"
+  },
+  "onboarding.donate.amount": {
+    "message": "118cny"
   }
 }

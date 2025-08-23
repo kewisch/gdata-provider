@@ -178,5 +178,8 @@
   },
   "eventdialog.focusEvent": {
     "message": "Зайнятий/та"
+  },
+  "onboarding.donate.amount": {
+    "message": "15eur"
   }
 }

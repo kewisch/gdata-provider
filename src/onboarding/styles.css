@@ -66,7 +66,7 @@ h2 {
   position: relative;
 }
 .section.header:before {
-  background-image: url("../icon.png");
+  background-image: url("../images/icon.png");
   background-repeat: no-repeat;
   background-position: top left;
   background-size: 100%;
@@ -94,6 +94,15 @@ h2 {
 
 .section.image-left ul {
   padding-inline-start: calc(50% + 2em);
+}
+
+.section ul > li > label > input[type="checkbox"] {
+  margin-inline-end: 5px;
+  height: 16px;
+  width: 16px;
+}
+.section ul > li:has(label > input[type="checkbox"]) {
+  list-style-type: none;
 }
 
 .clear {
@@ -191,6 +200,12 @@ h2 {
   box-shadow: inset 5px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
+.section .end {
+  display: flex;
+  justify-content: flex-end;
+  margin-inline-end: 5px;
+}
+
 
 .prefernces {
   list-style-type: none;
@@ -219,4 +234,15 @@ h2 {
   transform: translate(calc((1 - cos(45deg))*100%), -100%) rotate(45deg);
   transform-origin: 0% 100%;
   background-color: #c50a07;
+}
+
+.limited-list {
+  max-height: 42ex;
+  overflow-y: auto;
+  margin: 5px;
+  border-radius: 5px;
+}
+
+.limited-list:has(:nth-child(14)) {
+  border: 1px solid #c4c4c4;
 }

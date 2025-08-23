@@ -224,5 +224,8 @@
         "example": "The date the person is turning that age"
       }
     }
+  },
+  "onboarding.donate.amount": {
+    "message": "375czk"
   }
 }

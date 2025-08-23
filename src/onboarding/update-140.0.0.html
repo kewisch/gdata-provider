@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
+   - Portions Copyright (C) Philipp Kewisch -->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Provider for Google Calendar</title>
+    <script defer src="onboarding.js"></script>
+</head>
+<body>
+    <div class="content">
+        <div class="section header">
+          <h1>Provider for Google Calendar</h1>
+          <p class="warning">
+            Hi beta users! This is the page that release channel users will see when they upgrade to
+            the new version. It contains a migration section where calendars can be upgraded to the
+            new format. Please give it a whirl and
+            <a href="https://github.com/kewisch/gdata-provider/discussions/categories/beta" target="_blank">let me know how it goes</a>.
+            <br><br>
+            You will not see the section if you don't have legacy calendars in your list. If you
+            want to try it out nevertheless you can keep this tab open, subscribe to a legacy
+            calendar and then reload this page. Alternatively test the upgrade in the calendar
+            properties of a legacy calendar.
+            <br><br>
+            Further please make sure the legacy calendars still work as expected when subscribing to
+            them.
+          </p>
+          <p>
+            Welcome to version 140.0.0 of the Provider for Google Calendar. A while back I asked for
+            beta testers, and now the changes we tested together are making their way into the
+            release version.
+          </p>
+          <p>
+            This update introduces the new approach while still keeping the old one available. Both
+            are bundled into this release so you can try the new features with confidence, and if
+            something does not work as expected you can easily switch back.
+        </div>
+        <div class="section" id="upgradeSection">
+          <h2>⚠️ Upgrade your calendars</h2>
+          <p>
+            To use the new features, you will need to update your calendars. For now this step is
+            optional, but I strongly recommend upgrading now so that any issues can be identified
+            and fixed early. The old approach will be removed in a future release.
+          </p>
+          <p>
+            If you want to go back, unsubscribe from the calendar and re-subscribe using the legacy option.
+          </p>
+          <div>
+            <ul id="calendar-upgrade-list" class="limited-list">
+            </ul>
+            <div class="end">
+              <button class="button" id="calendar-upgrade-button">Upgrade Now</button>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <h2>What's new?</h2>
+          <p>
+            Here is a selection of features and fixes in the new approach. The code has been rebuilt
+            from the ground up using a new set of calendar APIs, which I plan to submit to
+            Thunderbird core so that all add-on developers can benefit from them.
+            <ul>
+              <li>Attachments are now linked on events (read-only)</li>
+              <li>You can add or remove video conference links directly from your events</li>
+              <li>
+                Events you are invited to that are marked as public will instead be created as
+                private in your calendar, to protect your privacy.
+              </li>
+              <li>Birthday events are now supported, just subscribe to the birthday calendar to see them.</li>
+              <li>
+                A whole class of issues related to modifying events you are invited to is resolved,
+                as the Provider will just update the properties you change, not attempt to replace
+                the whole event.
+              </li>
+              <li>Dark mode looks better across dialogs, options, and setup screens.</li>
+              <li>Making many quick changes, like deleting multiple events, will no longer cause rate limiting errors.</li>
+              <li>Event invitations and attendees are handled more reliably.</li>
+              <li>Invitations that use Windows timezone names are now supported more consistently.</li>
+            </ul>
+          </p>
+        </div>
+        <div class="section footer">
+          <p>
+            A big thank you to everyone who supported me on the way to this release. I've put in
+            quite a bit of effort to get us where we are, and I couldn't have done it without you.
+          <p>
+            You can <a href="https://github.com/kewisch/gdata-provider/discussions/categories/support" target="_blank">get support</a>
+            or <a href="https://github.com/kewisch/gdata-provider/issues" target="_blank">file an issue</a> in case
+            something is not going as expected. Are you looking forward to the changes and new features? Your gratitude means a lot to me.
+          </p>
+          <p class="donatebutton">
+            <a class="button" href="https://paypal.me/kewisch/15eur" target="_blank">Send me a token of appreciation <span class="icon-box">❤️</span></a>
+          </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -271,5 +271,9 @@
   },
   "propertiesdialog.unsubscribeButton": {
     "message": "Unsubscribe"
+  },
+  "onboarding.donate.amount": {
+    "message": "16usd",
+    "description": "The rough equivalent of 15 Euros in your language's native currency, rounded up to a round number. This needs to be in the format that works for a the paypal.me link, it will be expanded to e.g. \"https://paypal.me/kewisch/15eur\""
   }
 }

@@ -178,5 +178,8 @@
   },
   "eventdialog.focusEvent": {
     "message": "Temps d'enfocament"
+  },
+  "onboarding.donate.amount": {
+    "message": "15eur"
   }
 }

@@ -36,6 +36,14 @@
             ]
           }
         ]
+      },
+      {
+        "name": "upgradeCalendar",
+        "async": true,
+        "type": "function",
+        "parameters": [
+          { "type": "string", "name": "calendarId" }
+        ]
       }
     ]
   }

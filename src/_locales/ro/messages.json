@@ -178,5 +178,8 @@
   },
   "eventdialog.focusEvent": {
     "message": "Momentul cheie"
+  },
+  "onboarding.donate.amount": {
+    "message": "15eur"
   }
 }

@@ -240,5 +240,8 @@
   },
   "eventdialog.conferenceNone": {
     "message": "Nessuno"
+  },
+  "onboarding.donate.amount": {
+    "message": "15eur"
   }
 }
