@@ -188,7 +188,7 @@ async function onAuthenticate() {
     name.textContent = tasklist.title;
     name.className = "name";
 
-    if (existingSet.has(tasklist.id)) {
+    if (existingSet.has(tasklist.id + "#")) {
       check.checked = true;
       check.disabled = true;
     }
