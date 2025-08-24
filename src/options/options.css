@@ -23,6 +23,18 @@ body {
   color: light-dark(#18181b, #f4f4f5);
 }
 
+body > h2, body > p {
+  grid-column: span 2;
+}
+
+h2 + p {
+  margin: 0;
+}
+
+body > h2 {
+  margin-bottom: 0;
+}
+
 .preference {
   display: contents;
 }

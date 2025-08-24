@@ -17,6 +17,11 @@ for (let node of document.querySelectorAll("[data-l10n-id]")) {
   let prefs = await messenger.storage.local.get({
     "settings.sendEventNotifications": false,
     "settings.forcePlainText": false,
+
+    // LEGACY
+    "settings.enableEmailInvitations": false,
+    "settings.enableAttendees": false
+    // LEGACY END
   });
 
   for (let [id, value] of Object.entries(prefs)) {

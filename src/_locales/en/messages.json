@@ -174,11 +174,23 @@
       }
     }
   },
+  "settings.legacySection": {
+    "message": "Legacy Settings"
+  },
+  "settings.legacySectionDescription": {
+    "message": "These settings only apply to legacy calendars. Email invitations and attendees are always enabled for new calendars, as synchronizing them is much more reliable."
+  },
   "settings.sendEventNotifications": {
     "message": "Send email notifications to event guests"
   },
   "settings.forcePlainText": {
     "message": "Force use of plain text in event descriptions"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Enable email scheduling"
+  },
+  "settings.enableAttendees": {
+    "message": "Synchronize event attendees"
   },
   "settings.migrateCalendars": {
     "message": "Migrate read-only calendars"
