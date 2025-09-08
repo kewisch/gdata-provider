@@ -117,8 +117,8 @@ h2 {
 }
 
 .section p.warning {
-  border: 1px solid #eed936;
-  background: #fff7b8;
+  border: 1px solid light-dark(#eed936, #fff7b8);
+  background-color: light-dark(#fff7b8, #eed936);
   color: #666;
   border-radius: 3px;
   padding-inline-start: 90px;
