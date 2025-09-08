@@ -1483,8 +1483,32 @@ class SyncPrefs {
   }
 
   #onChanged(changes, area) {
+    let global = Cu.getGlobalForObject(this);
+
     for (let [key, change] of Object.entries(changes)) {
-      this.prefs[key] = change.newValue;
+      // HACK sometimes we get called through the wx hack above. The right way would be to call the
+      // API through the addon_child, but I don't have the patience to figure this out now.
+      if (change && typeof change == "object") {
+        if (Cu.getClassName(change, true) === "StructuredCloneHolder") {
+          this.prefs[key] = change.deserialize(global, true);
+        } else if ("newValue" in change) {
+          if (
+            change.newValue &&
+            typeof change.newValue == "object" &&
+            Cu.getClassName(change.newValue, true) === "StructuredCloneHolder"
+          ) {
+            change.newValue = change.newValue.deserialize(global, true);
+          } else {
+            change.newValue = Cu.cloneInto(change.newValue, global);
+          }
+
+          this.prefs[key] = change.newValue;
+        } else {
+          this.prefs[key] = Cu.cloneInto(change, global);
+        }
+      } else {
+         this.prefs[key] = change;
+      }
     }
   }
 
