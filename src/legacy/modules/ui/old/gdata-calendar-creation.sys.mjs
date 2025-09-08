@@ -281,7 +281,7 @@ export function gdataInitUI(window, document, version) {
           let calendar = calMgr.createCalendar("gdata", Services.io.newURI(uri));
           calendar.id = cal.getUUID();
           calendar.setProperty("color", cal.view.hashColor(tasklist.title));
-          calendar.name = tasklist.title;
+          calendar.name = messenger.i18n.getMessage("gdataProviderLabelLegacy", [tasklist.title]);
           if (existing.has("tasks=" + tasklist.id)) {
             calendar.readOnly = true;
           }
