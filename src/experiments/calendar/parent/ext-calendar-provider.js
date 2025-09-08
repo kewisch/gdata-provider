@@ -314,7 +314,7 @@ class ExtCalendar extends cal.provider.BaseClass {
       return item;
     } catch (e) {
       let code;
-      if (e.message.startsWith("NetworkError")) {
+      if (e.message?.startsWith("NetworkError")) {
         code = Cr.NS_ERROR_NET_INTERRUPT;
       } else if (e instanceof ItemError) {
         code = e.xpcomReason;
@@ -322,7 +322,7 @@ class ExtCalendar extends cal.provider.BaseClass {
         code = e.result || Cr.NS_ERROR_FAILURE;
       }
 
-      throw new Components.Exception(e.message, code);
+      throw new Components.Exception(e.message || e, code);
     }
   }
 
@@ -390,7 +390,7 @@ class ExtCalendar extends cal.provider.BaseClass {
       return item;
     } catch (e) {
       let code;
-      if (e.message.startsWith("NetworkError")) {
+      if (e.message?.startsWith("NetworkError")) {
         code = Cr.NS_ERROR_NET_INTERRUPT;
       } else if (e instanceof ItemError) {
         if (e.reason == ItemError.CONFLICT) {
@@ -406,7 +406,7 @@ class ExtCalendar extends cal.provider.BaseClass {
       } else {
         code = e.result || Cr.NS_ERROR_FAILURE;
       }
-      throw new Components.Exception(e.message, code);
+      throw new Components.Exception(e.message || e, code);
     }
   }
 
@@ -439,7 +439,7 @@ class ExtCalendar extends cal.provider.BaseClass {
       this.observers.notify("onDeleteItem", [aItem]);
     } catch (e) {
       let code;
-      if (e.message.startsWith("NetworkError")) {
+      if (e.message?.startsWith("NetworkError")) {
         code = Cr.NS_ERROR_NET_INTERRUPT;
       } else if (e instanceof ItemError) {
         if (e.reason == ItemError.CONFLICT) {
@@ -456,7 +456,7 @@ class ExtCalendar extends cal.provider.BaseClass {
         code = e.result || Cr.NS_ERROR_FAILURE;
       }
 
-      throw new Components.Exception(e.message, code);
+      throw new Components.Exception(e.message || e, code);
     }
     return aItem;
   }
