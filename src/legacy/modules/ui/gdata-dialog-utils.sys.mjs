@@ -115,13 +115,17 @@ async function initNewConference(document, messenger, item, calendar) {
 
   let prefKey = `calendars.${calendar.id}.conferenceSolutions`;
   let prefs = await messenger.storage.local.get(prefKey);
-  let conferenceSolutions = prefs[prefKey];
+  let conferenceSolutions = prefs[prefKey] ?? {};
   let confNew = document.getElementById("gdata-conf-new-select-menupopup");
 
   document.getElementById("gdata-conference-row").setAttribute("mode", "new");
   document.getElementById("gdata-conf-new-none").setAttribute("label", i18n("conferenceNone"));
 
   for (let solution of Object.values(conferenceSolutions)) {
+    if (solution.key.type == "eventHangout") {
+      // Legacy key, we can't create events with this key any more
+      continue;
+    }
     let option = document.createXULElement("menuitem");
     option.value = solution.key.type;
     option.label = solution.name;
@@ -166,7 +170,7 @@ async function initExistingConfdata(document, messenger, item, calendar, confdat
 
   let prefKey = `calendars.${calendar.id}.conferenceSolutions`;
   let prefs = await messenger.storage.local.get(prefKey);
-  let conferenceSolutions = prefs[prefKey];
+  let conferenceSolutions = prefs[prefKey] ?? {};
   let cachedSolution = conferenceSolutions[confdata.conferenceSolution.key.type];
 
   let image;
