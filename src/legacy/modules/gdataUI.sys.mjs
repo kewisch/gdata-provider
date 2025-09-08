@@ -79,21 +79,6 @@ export function register() {
   registerWindowListener("old/gdata-calendar-properties", extensionVersion, [
     "chrome://calendar/content/calendar-properties-dialog.xhtml",
   ]);
-  registerWindowListener("old/gdata-event-dialog-reminder", extensionVersion, [
-    "chrome://calendar/content/calendar-event-dialog-reminder.xhtml",
-  ]);
-  registerWindowListener("old/gdata-summary-dialog", extensionVersion, [
-    "chrome://calendar/content/calendar-summary-dialog.xhtml",
-  ]);
-  registerWindowListener(
-    "old/gdata-event-dialog",
-    extensionVersion,
-    [
-      "chrome://calendar/content/calendar-event-dialog.xhtml",
-      "chrome://messenger/content/messenger.xhtml",
-    ],
-    false
-  );
   // LEGACY END
 }
 

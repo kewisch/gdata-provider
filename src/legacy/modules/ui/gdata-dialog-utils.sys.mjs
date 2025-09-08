@@ -11,9 +11,10 @@ ChromeUtils.defineESModuleGetters(lazy, {
 
 const CODE_TYPES = ["meetingCode", "accessCode", "passcode", "password", "pin"];
 const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
+const GDATA_LEGACY_CALENDAR_TYPE = "gdata";
 
 export const CONFERENCE_ROW_FRAGMENT = `
-  <html:tr provider="${GDATA_CALENDAR_TYPE}" id="gdata-conference-row">
+  <html:tr id="gdata-conference-row">
     <html:th>
       <label id="gdata-conf-label" value="Conference:" control="gdata-conf-info-cell"/>
     </html:th>
@@ -82,12 +83,12 @@ export function initConferenceRow(document, messenger, item, calendar) {
   document.getElementById("gdata-conf-entrypoints").replaceChildren();
 
   let workingCalendar = calendar || item.calendar;
-  if (workingCalendar.type != GDATA_CALENDAR_TYPE) {
+  if (workingCalendar.type != GDATA_CALENDAR_TYPE && workingCalendar.type != GDATA_LEGACY_CALENDAR_TYPE) {
     return noconference();
   }
 
   let eventType = item.getProperty("X-GOOGLE-EVENT-TYPE");
-  if (eventType == "outOfOffice" || eventType == "focusTime") {
+  if (item.isTodo() || eventType == "outOfOffice" || eventType == "focusTime") {
     return noconference();
   }
 
@@ -100,7 +101,7 @@ export function initConferenceRow(document, messenger, item, calendar) {
 
   if (confdata) {
     return initExistingConfdata(document, messenger, item, workingCalendar, confdata);
-  } else if (document.documentElement.id != "calendar-summary-dialog") { // eslint-disable-line no-negated-condition
+  } else if (workingCalendar.type != GDATA_LEGACY_CALENDAR_TYPE && document.documentElement.id != "calendar-summary-dialog") {
     return initNewConference(document, messenger, item, workingCalendar);
   } else {
     return noconference();
@@ -152,6 +153,10 @@ async function initExistingConfdata(document, messenger, item, calendar, confdat
     document.getElementById("gdata-conference-row").setAttribute("readonly", "true");
   } else {
     document.getElementById("gdata-conf-label").value = i18n("conferenceLabel");
+  }
+
+  if (calendar.type == GDATA_LEGACY_CALENDAR_TYPE) {
+    document.getElementById("gdata-conference-row").setAttribute("readonly", "true");
   }
 
   document.getElementById("gdata-conf-deleted-none").textContent = i18n("conferenceNone");

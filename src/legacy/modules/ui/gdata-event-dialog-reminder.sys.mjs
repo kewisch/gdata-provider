@@ -9,10 +9,11 @@ export function gdataInitUI(window, document, version) {
   );
   const messenger = getMessenger();
   const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
+  const GDATA_LEGACY_CALENDAR_TYPE = "gdata";
 
   let item = window.arguments[0].item;
   let calendar = window.arguments[0].calendar;
-  if (calendar.type != GDATA_CALENDAR_TYPE) {
+  if (calendar.type != GDATA_CALENDAR_TYPE && calendar.type != GDATA_LEGACY_CALENDAR_TYPE) {
     return;
   }
 

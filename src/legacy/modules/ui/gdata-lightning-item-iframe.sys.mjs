@@ -4,7 +4,7 @@
 
 export function gdataInitUI(window, document, version) {
   const { cal } = ChromeUtils.importESModule("resource:///modules/calendar/calUtils.sys.mjs");
-  const { monkeyPatch, getMessenger } = ChromeUtils.importESModule(
+  const { monkeyPatch, getMessenger, JSONToAlarm } = ChromeUtils.importESModule(
     `resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs?version=${version}`
   );
   const { CONFERENCE_ROW_FRAGMENT, initConferenceRow } = ChromeUtils.importESModule(
@@ -12,8 +12,33 @@ export function gdataInitUI(window, document, version) {
   );
   const messenger = getMessenger();
   const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
+  const GDATA_LEGACY_CALENDAR_TYPE = "gdata";
 
   const { getCurrentCalendar } = window;
+
+  let allDefaultReminders = {};
+
+  async function getDefaultReminders(calendar) {
+    if (calendar.type != GDATA_CALENDAR_TYPE && calendar.type != GDATA_LEGACY_CALENDAR_TYPE) {
+      return [];
+    }
+    let unwrappedCal = calendar.getProperty("cache.uncachedCalendar").wrappedJSObject;
+    let defaultReminders = unwrappedCal.defaultReminders;
+
+    if (!defaultReminders) {
+      let prefName = `calendars.${calendar.id}.defaultReminders`;
+      let prefs = await messenger.storage.local.get({ [prefName]: [] });
+      try {
+        defaultReminders = JSON.parse(prefs[prefName]) || [];
+      } catch (e) {
+        defaultReminders = [];
+      }
+
+      defaultReminders = defaultReminders.map(reminder => JSONToAlarm(reminder, true));
+    }
+
+    return defaultReminders;
+  }
 
   (function() {
     /* initXUL */
@@ -36,14 +61,38 @@ export function gdataInitUI(window, document, version) {
       .getElementById("event-grid")
       .insertBefore(confFragment, document.getElementById("event-grid-location-row").nextSibling);
 
+    // LEGACY
+    defaultReminderItem = document.createXULElement("menuitem");
+    defaultReminderItem.id = "gdata-legacy-reminder-default-menuitem";
+    defaultReminderItem.label = messenger.i18n.getMessage("gdata.reminder.default");
+    defaultReminderItem.value = "default";
+    defaultReminderItem.setAttribute("provider", GDATA_LEGACY_CALENDAR_TYPE);
+
+    separator.parentNode.insertBefore(defaultReminderItem, separator);
+    // LEGACY END
+
     // Fix an annoying bug, this should be upstreamed
     document.getElementById("url-link").style.maxWidth = "42em";
   })();
 
+  monkeyPatch(window, "loadDialog", function(protofunc, ...args) {
+    // Get us all the default reminder settings. Monkeypatched code needs this to be synchronous
+    let calendars = cal.manager.getCalendars();
+    Promise.all(
+      calendars.map(async calendar => [calendar.id, await getDefaultReminders(calendar)])
+    ).then(reminders => {
+      allDefaultReminders = Object.fromEntries(reminders);
+      protofunc.apply(this, args);
+    });
+  });
+
   monkeyPatch(window, "updateCalendar", function(protofunc, ...args) {
     let rv = protofunc.apply(this, args);
     let calendar = getCurrentCalendar();
-    let isGoogleCalendar = calendar.type == GDATA_CALENDAR_TYPE;
+
+
+    let isLegacy = calendar.type == GDATA_LEGACY_CALENDAR_TYPE; // LEGACY
+    let isGoogleCalendar = calendar.type == GDATA_CALENDAR_TYPE || isLegacy;
     let isTask = window.calendarItem.isTodo();
     let isEvent = window.calendarItem.isEvent();
     let isGoogleTask = isGoogleCalendar && isTask;
@@ -57,8 +106,14 @@ export function gdataInitUI(window, document, version) {
 
     // Hide/show all elements with provider=GDATA_CALENDAR_TYPE
     for (let elem of document.getElementsByAttribute("provider", GDATA_CALENDAR_TYPE)) {
-      elem.style.display = isGoogleCalendar ? "" : "none";
+      elem.style.display = isGoogleCalendar && !isLegacy ? "" : "none";
     }
+
+    // LEGACY
+    for (let elem of document.getElementsByAttribute("provider", GDATA_LEGACY_CALENDAR_TYPE)) {
+      elem.style.display = isLegacy ? "" : "none";
+    }
+    // LEGACY END
 
     if (isEvent) {
       // Show a notification to indicate OOO and focus time events
@@ -105,18 +160,24 @@ export function gdataInitUI(window, document, version) {
 
       // Set up default reminder items
       let reminderList = document.getElementById("item-alarm");
-      let hasDefaultReminders = isGoogleEvent && calendar.getProperty("settings.defaultReminders");
+      let hasDefaultReminders = isGoogleEvent && allDefaultReminders[calendar.id].length > 0;
       if (isGoogleCalendar && !hasDefaultReminders && reminderList.value == "default") {
         reminderList.value = "none";
       }
 
       let defaultReminderItem = document.getElementById("gdata-reminder-default-menuitem");
-      defaultReminderItem.style.display = hasDefaultReminders ? "" : "none";
+      defaultReminderItem.style.display = !isLegacy && hasDefaultReminders ? "" : "none";
+
+      // LEGACY
+      defaultReminderItem = document.getElementById("gdata-legacy-reminder-default-menuitem");
+      defaultReminderItem.style.display = isLegacy && hasDefaultReminders ? "" : "none";
+      // END LEGACY
     } else if (isTask) {
       // Hide elements not valid for tasks
       let hideForTaskIds = [
         "FormatToolbox",
         "event-grid-location-row",
+        "event-grid-category-row",
 
         "event-grid-startdate-row",
         "timezone-endtime",
@@ -170,36 +231,10 @@ export function gdataInitUI(window, document, version) {
         window.updateDateTime();
       }
 
-      // Remove categories for Google Tasks
-      let categoriesLabel = document.getElementById("item-categories-label");
-      let itemCategories = document.getElementById("item-categories");
-
-      if (isGoogleTask) {
-        itemCategories.setAttribute("hidden", "true");
-        categoriesLabel.setAttribute("hidden", "true");
-      } else {
-        itemCategories.removeAttribute("hidden");
-        categoriesLabel.removeAttribute("hidden");
-      }
-
       // Update conference row (to hide it)
       initConferenceRow(document, messenger, window.calendarItem, calendar);
     }
 
-    return rv;
-  });
-
-  monkeyPatch(window, "updateCategoryMenulist", function(protofunc, ...args) {
-    let rv;
-    let calendar = window.getCurrentCalendar();
-    if (calendar.type == GDATA_CALENDAR_TYPE && window.calendarItem.isTodo()) {
-      let unwrappedCal = calendar.getProperty("cache.uncachedCalendar").wrappedJSObject;
-      unwrappedCal.mProperties["capabilities.categories.maxCount"] = 0;
-      rv = protofunc.apply(this, args);
-      delete unwrappedCal.mProperties["capabilities.categories.maxCount"];
-    } else {
-      rv = protofunc.apply(this, args);
-    }
     return rv;
   });
 
@@ -220,11 +255,10 @@ export function gdataInitUI(window, document, version) {
   monkeyPatch(window, "saveReminder", function(protofunc, item, ...args) {
     let calendar = window.getCurrentCalendar();
     let reminderList = document.getElementById("item-alarm");
-    if (calendar.type == GDATA_CALENDAR_TYPE && reminderList.value == "default") {
+    let isGoogleCalendar = calendar.type == GDATA_LEGACY_CALENDAR_TYPE || calendar.type == GDATA_CALENDAR_TYPE;
+    if (isGoogleCalendar && reminderList.value == "default") {
       item.clearAlarms();
-      let unwrappedCal = item.calendar.getProperty("cache.uncachedCalendar").wrappedJSObject;
-      let defaultReminders = unwrappedCal.defaultReminders || [];
-
+      let defaultReminders = allDefaultReminders[item.calendar.id];
       defaultReminders.forEach(item.addAlarm, item);
       if (!defaultReminders.length) {
         item.setProperty("X-DEFAULT-ALARM", "TRUE");
@@ -238,15 +272,13 @@ export function gdataInitUI(window, document, version) {
 
   monkeyPatch(window, "loadReminders", function(protofunc, reminders, ...args) {
     let reminderList = document.getElementById("item-alarm");
+    let calendar = window.getCurrentCalendar();
+    let isGoogleCalendar = calendar.type == GDATA_LEGACY_CALENDAR_TYPE || calendar.type == GDATA_CALENDAR_TYPE;
 
     // Set up the default reminders item
     let defaultItem = document.getElementById("gdata-reminder-default-menuitem");
-    let calendar = window.getCurrentCalendar().getProperty("cache.uncachedCalendar");
-    let unwrappedCal = calendar && calendar.wrappedJSObject;
-    let defaultReminders = unwrappedCal.defaultReminders
-      ? unwrappedCal.defaultReminders.concat([])
-      : [];
-    defaultItem.reminders = defaultReminders;
+    defaultItem.reminders = allDefaultReminders[calendar.id] || [];
+
 
     let rv = null;
     let usesDefault;
@@ -256,7 +288,7 @@ export function gdataInitUI(window, document, version) {
       usesDefault = window.calendarItem.getProperty("X-DEFAULT-ALARM") == "TRUE";
     }
 
-    if (calendar.type == GDATA_CALENDAR_TYPE && (window.mode == "new" || usesDefault)) {
+    if (isGoogleCalendar && (window.mode == "new" || usesDefault)) {
       // If all reminders are default reminders, then select the menuitem.
       reminderList.value = "default";
 
@@ -296,7 +328,7 @@ export function gdataInitUI(window, document, version) {
 
   monkeyPatch(window, "isItemChanged", function(protofunc, ...args) {
     let calendar = window.getCurrentCalendar();
-    if (calendar.type == GDATA_CALENDAR_TYPE) {
+    if (calendar.type == GDATA_CALENDAR_TYPE || calendar.type == GDATA_LEGACY_CALENDAR_TYPE) {
       let newItem = window.saveItem();
       let oldItem = window.calendarItem;
       return (

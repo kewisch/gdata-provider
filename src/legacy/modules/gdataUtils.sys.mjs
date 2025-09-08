@@ -6,7 +6,35 @@ var lazy = {};
 
 ChromeUtils.defineESModuleGetters(lazy, {
   ExtensionParent: "resource://gre/modules/ExtensionParent.sys.mjs",
+  CalAlarm: "resource:///modules/CalAlarm.sys.mjs",
+  cal: "resource:///modules/calendar/calUtils.sys.mjs",
 });
+
+/**
+ * Create an alarm from the JSON reminder entry
+ *
+ * @param aEntry            The JSON reminder entry.
+ * @param aDefault          (optional) If true, this is a default alarm.
+ * @return                  The translated calIAlarm.
+ */
+export function JSONToAlarm(aEntry, aDefault) {
+  const alarmActionMap = {
+    email: "EMAIL",
+    popup: "DISPLAY",
+  };
+  let alarm = new lazy.CalAlarm();
+  let alarmOffset = lazy.cal.createDuration();
+  alarm.action = alarmActionMap[aEntry.method] || "DISPLAY";
+  alarm.related = Ci.calIAlarm.ALARM_RELATED_START;
+  alarmOffset.inSeconds = -aEntry.minutes * 60;
+  alarmOffset.normalize();
+  alarm.offset = alarmOffset;
+
+  if (aDefault) {
+    alarm.setProperty("X-DEFAULT-ALARM", "TRUE");
+  }
+  return alarm;
+}
 
 function getWXAPI(extension, name, sync = false) {
   function implementation(api) {

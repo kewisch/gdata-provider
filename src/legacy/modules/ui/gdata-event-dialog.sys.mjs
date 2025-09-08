@@ -14,28 +14,29 @@ export function gdataInitUI(window, document, version) {
 
   const ITEM_IFRAME_URL = "chrome://calendar/content/calendar-item-iframe.xhtml";
   const GDATA_CALENDAR_TYPE = "ext-{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}";
+  const GDATA_LEGACY_CALENDAR_TYPE = "gdata";
 
   // For event dialogs, record the window so it is closed when the extension is unloaded
   if (
     window.location.href == "chrome://calendar/content/calendar-event-dialog.xhtml" &&
-    window.arguments[0].calendarEvent.calendar.type == GDATA_CALENDAR_TYPE
+    (window.arguments[0].calendarEvent.calendar.type == GDATA_CALENDAR_TYPE ||
+     window.arguments[0].calendarEvent.calendar.type == GDATA_LEGACY_CALENDAR_TYPE)
   ) {
     recordWindow(window);
   }
 
-  (function() {
-    /* initXUL */
+  function initXUL(prefix, calendarType) {
     const optionsPrivacyItem = document.createXULElement("menuitem");
     optionsPrivacyItem.label = messenger.i18n.getMessage("gdata.privacy.default.label");
     optionsPrivacyItem.accesskey = messenger.i18n.getMessage("gdata.privacy.default.accesskey");
     optionsPrivacyItem.type = "radio";
     optionsPrivacyItem.setAttribute("privacy", "DEFAULT");
-    optionsPrivacyItem.setAttribute("provider", GDATA_CALENDAR_TYPE);
+    optionsPrivacyItem.setAttribute("provider", calendarType);
     optionsPrivacyItem.setAttribute("oncommand", "editPrivacy(this)");
 
     const toolbarPrivacyItem = optionsPrivacyItem.cloneNode();
-    optionsPrivacyItem.id = "gdata-options-privacy-default-menuitem";
-    toolbarPrivacyItem.id = "gdata-toolbar-privacy-default-menuitem";
+    optionsPrivacyItem.id = prefix + "-options-privacy-default-menuitem";
+    toolbarPrivacyItem.id = prefix + "-toolbar-privacy-default-menuitem";
 
     let privacyOptionsPopup = document.getElementById("options-privacy-menupopup");
     if (privacyOptionsPopup && !document.getElementById(optionsPrivacyItem.id)) {
@@ -48,9 +49,9 @@ export function gdataInitUI(window, document, version) {
     }
 
     const gdataStatusPrivacyHbox = document.createXULElement("hbox");
-    gdataStatusPrivacyHbox.id = "gdata-status-privacy-default-box";
+    gdataStatusPrivacyHbox.id = prefix + "-status-privacy-default-box";
     gdataStatusPrivacyHbox.setAttribute("privacy", "DEFAULT");
-    gdataStatusPrivacyHbox.setAttribute("provider", GDATA_CALENDAR_TYPE);
+    gdataStatusPrivacyHbox.setAttribute("provider", calendarType);
 
     const statusPrivacy = document.getElementById("status-privacy");
     if (statusPrivacy && !document.getElementById(gdataStatusPrivacyHbox.id)) {
@@ -59,7 +60,11 @@ export function gdataInitUI(window, document, version) {
         document.getElementById("status-privacy-public-box")
       );
     }
-  })();
+  }
+
+  // LEGACY
+  initXUL("gdata-legacy", GDATA_LEGACY_CALENDAR_TYPE);
+  initXUL("gdata", GDATA_CALENDAR_TYPE);
 
   function loadPanel(passedFrameId) {
     let frameId;
