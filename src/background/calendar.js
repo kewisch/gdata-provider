@@ -213,7 +213,7 @@ export default class calGoogleCalendar {
     /* istanbul ignore else - unreachable */
     if (item.type == "event") {
       params.conferenceDataVersion = 1;
-      uri = this.createEventsURI("events", options.invitation && "import");
+      uri = this.createEventsURI("events", options.invitation || options.import ? "import" : null);
       let prefs = await messenger.storage.local.get({ "settings.sendEventNotifications": false });
       if (prefs["settings.sendEventNotifications"]) {
         params.sendUpdates = "all";

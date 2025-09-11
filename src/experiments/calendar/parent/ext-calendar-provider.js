@@ -283,8 +283,17 @@ class ExtCalendar extends cal.provider.BaseClass {
       const options = {};
       if (stackContains("calItipUtils")) {
         options.invitation = true;
+      } else if (stackContains("CalendarFileImporter")) {
+        options.import = true;
       } else if (stackContains("playbackOfflineItems")) {
         options.offline = true;
+      }
+
+      if (!aItem.calendar) {
+        if (!aItem.isMutable) {
+          aItem = aItem.clone();
+        }
+        aItem.calendar = this.superCalendar;
       }
 
       const items = await this.extension.emit("calendar.provider.onItemCreated", this, aItem, options);
