@@ -15,6 +15,10 @@ class TimezoneService {
     this.#zoneCache.set("floating", ICAL.Timezone.localTimezone);
   }
 
+  get localTimezone() {
+    return ICAL.Timezone.localTimezone;
+  }
+
   get(tzid) {
     if (!tzid) {
       return null;

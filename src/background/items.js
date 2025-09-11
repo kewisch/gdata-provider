@@ -700,6 +700,10 @@ export function dateToJson(property) {
     let zone = TimezoneService.get(property.getFirstParameter("tzid"));
     if (zone) {
       dateobj.timeZone = zone.tzid;
+    } else if (zone == TimezoneService.localTimezone) {
+      let currentZone = TimezoneService.get(messenger.calendar.timezones.currentZone);
+      dateobj.dateTime = dateTime.convertToZone(currentZone).toString();
+      dateobj.timeZone = currentZone.tzid;
     } else {
       let utcTime = dateTime.convertToZone(TimezoneService.get("UTC"));
       dateobj.dateTime = utcTime.toString();
