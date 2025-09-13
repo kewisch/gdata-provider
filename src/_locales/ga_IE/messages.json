@@ -243,5 +243,47 @@
   },
   "onboarding.donate.amount": {
     "message": "16usd"
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (Oidhreacht)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "Úsáideann Soláthraí Google Calendar modh níos nuaí anois le hiontaofacht agus gnéithe níos fearr. Téigh ar ais agus bain úsáid as an rogha neamh-oidhreachta chun dul ar aghaidh. Má tá deacracht agat leis an modh sin, cuir an cheist in iúl don fhorbróir sula leanann tú ar aghaidh. Is féidir leat an cur chuige oidhreachta a úsáid go sealadach, ach bainfear é tar éis an aistrithe."
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Tuairiscigh fadhb anois"
+  },
+  "settings.legacySection": {
+    "message": "Socruithe Seanré"
+  },
+  "settings.legacySectionDescription": {
+    "message": "Ní bhaineann na socruithe seo ach le seanfhéilirí. Bíonn cuireadh ríomhphoist agus freastalaithe cumasaithe i gcónaí le haghaidh féilirí nua, toisc go bhfuil sé i bhfad níos iontaofa iad a shioncrónú."
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Cumasaigh sceidealú ríomhphoist"
+  },
+  "settings.enableAttendees": {
+    "message": "Sioncrónaigh freastalaithe imeachta"
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "Uasghrádú"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "Úsáideann Soláthraí Google Calendar modh níos nuaí anois le hiontaofacht agus gnéithe níos fearr. Uasghrádaigh do fhéilire le do thoil, mar seo an t-aon rogha a bheidh ann amach anseo. Má bhíonn fadhbanna agat, is féidir leat díliostáil agus athliostáil ag baint úsáide as an seanrogha go ceann tamaill. Tógfaidh an t-uasghrádú tamall má tá féilire mór agat."
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "Úsáideann Soláthraí Google Calendar modh nua anois le hiontaofacht agus gnéithe níos fearr. Tá tú síntiúsaithe leis an bhféilire seo faoi dhó, uair amháin leis an seanmhodh agus uair amháin leis an modh nua. Seo é an seanmhodh. Is féidir leat díliostáil uaidh agus an ceann nua a choinneáil."
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "Uasghrádaigh anois"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "Díliostáil"
   }
 }
