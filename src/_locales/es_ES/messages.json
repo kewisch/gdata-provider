@@ -51,7 +51,7 @@
     "message": "Elige una sesión ya existente o escribe tu dirección de correo electrónico para crear una nueva. Solo se necesita una sesión por cuenta."
   },
   "gdata.wizard.calendars.description": {
-    "message": "Selecciona los calendarios y listas de tareas a las que te gustaría suscribirte."
+    "message": "Elige los calendarios y listas de tareas a los que te gustaría suscribirte."
   },
   "gdata.wizard.calendars.birthdays": {
     "message": "$calendar_name$ (Cumpleaños)",
@@ -82,7 +82,7 @@
     }
   },
   "quotaExceeded": {
-    "message": "La cuota para $session_id$ se ha excedido, vuelve a intentarlo más tarde.",
+    "message": "Se ha excedido el tope de peticiones para $session_id$, vuelve a intentarlo más tarde.",
     "description": "This is shown when the request quota has been exceeded.",
     "placeholders": {
       "session_id": {
@@ -98,7 +98,7 @@
     "message": "Google Calendar sólo permite recordatorios hasta 4 semanas antes de que comience el evento."
   },
   "syncProgressEvent": {
-    "message": "Sincronizando $calendar_name$ evento $num_events_synced$ de $total_events_to_sync$",
+    "message": "Sincronizando el evento $num_events_synced$ de $total_events_to_sync$ en $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -115,7 +115,7 @@
     }
   },
   "syncProgressTask": {
-    "message": "Sincronizando $calendar_name$ tarea $num_tasks_synced$ de $total_tasks_to_sync$",
+    "message": "Sincronizando la tarea $num_tasks_synced$ de $total_tasks_to_sync$ en $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -132,7 +132,7 @@
     }
   },
   "syncStatus": {
-    "message": "Sincronizando calendario $calendar_name$",
+    "message": "Sincronizando el calendario $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -141,7 +141,7 @@
     }
   },
   "requestWindowDescription": {
-    "message": "El proveedor para Google Calendar necesita acceder a tu cuenta $session_id$ para descargar eventos y tareas. Las credenciales y datos del calendario se transfieren directamente entre tu equipo y Google, sin que intervenga ningún tercero.",
+    "message": "El proveedor para Google Calendar necesita acceder a tu cuenta $session_id$ para descargar eventos y tareas. Las credenciales y datos del calendario se trasfieren directamente entre tu dispositivo y Google, sin ningún intermediario.",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -243,5 +243,47 @@
   },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Activar correos programados"
+  },
+  "settings.enableAttendees": {
+    "message": "Sincronizar asistentes al evento"
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (Obsoleto)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "El proveedor para Google Calendar ahora tiene un método más nuevo que funciona mejor. Retrocede y utiliza la otra opción más nueva para continuar. Si tienes problemas con ese otro método coméntaselo al desarrollador. Puedes seguir con el método antiguo por el momento, pero dejará de funcionar tras la transición."
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Informar de un problema"
+  },
+  "settings.legacySection": {
+    "message": "Ajustes más antiguos"
+  },
+  "settings.legacySectionDescription": {
+    "message": "Estas opciones sólo afectan a los calendarios con el formato antiguo. Las invitaciones por correo y las indicaciones de quién va a asistir siempre están activadas en los calendarios con el sistema nuevo, ya que sincronizarlos es mucho más fiable."
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "Migrar"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "El proveedor para Google Calendar ahora utiliza un nuevo método más fiable. Te recomendamos que actualices el calendario, ya que esta será la única opción que quede en un futuro próximo. Si tienes algún problema todavía podrás seguir desuscribiéndote y volver a suscribirte con el modo antiguo. Si el calendario tiene muchos datos puede que actualizarlo tarde un poco más."
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "El proveedor para Google Calendar ahora utiliza un nuevo método más fiable. Estás suscrito a este calendario dos veces, una con el método obsoleto y otra con el nuevo método. Esta es la suscripción obsoleta. Puedes desuscribirse y quedarte con la nueva."
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "Migrar ahora"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "Desuscribirse"
   }
 }
