@@ -141,7 +141,7 @@
     "message": "Elenco attività"
   },
   "settings.enableEmailInvitations": {
-    "message": "Attiva la pianificazione delle email"
+    "message": "Abilita schedulazione email"
   },
   "settings.sendEventNotifications": {
     "message": "Invia notifiche via email ai partecipanti all'evento"

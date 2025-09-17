@@ -39,7 +39,7 @@
     "message": "Elige una sesión ya existente o escribe tu dirección de correo electrónico para crear una nueva. Solo se necesita una sesión por cuenta."
   },
   "gdata.wizard.calendars.description": {
-    "message": "Selecciona los calendarios y listas de tareas a las que te gustaría suscribirte."
+    "message": "Elige los calendarios y listas de tareas a los que te gustaría suscribirte."
   },
   "gdata.wizard.nextstep.description": {
     "message": "Avanza al siguiente paso para configurar tus calendarios."
@@ -55,7 +55,7 @@
     }
   },
   "quotaExceeded": {
-    "message": "La cuota para $session_id$ se ha excedido, vuelve a intentarlo más tarde.",
+    "message": "Se ha excedido el tope de peticiones para $session_id$, vuelve a intentarlo más tarde.",
     "description": "This is shown when the request quota has been exceeded.",
     "placeholders": {
       "session_id": {
@@ -71,7 +71,7 @@
     "message": "Google Calendar sólo permite recordatorios hasta 4 semanas antes de que comience el evento."
   },
   "syncProgressEvent": {
-    "message": "Sincronizando $calendar_name$ evento $num_events_synced$ de $total_events_to_sync$",
+    "message": "Sincronizando el evento $num_events_synced$ de $total_events_to_sync$ en $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -88,7 +88,7 @@
     }
   },
   "syncProgressTask": {
-    "message": "Sincronizando $calendar_name$ tarea $num_tasks_synced$ de $total_tasks_to_sync$",
+    "message": "Sincronizando la tarea $num_tasks_synced$ de $total_tasks_to_sync$ en $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -105,7 +105,7 @@
     }
   },
   "syncStatus": {
-    "message": "Sincronizando calendario $calendar_name$",
+    "message": "Sincronizando el calendario $calendar_name$",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -114,7 +114,7 @@
     }
   },
   "requestWindowDescription": {
-    "message": "El proveedor para Google Calendar necesita acceder a tu cuenta $session_id$ para descargar eventos y tareas. Las credenciales y datos del calendario se transfieren directamente entre tu equipo y Google, sin que intervenga ningún tercero.",
+    "message": "El proveedor para Google Calendar necesita acceder a tu cuenta $session_id$ para descargar eventos y tareas. Las credenciales y datos del calendario se trasfieren directamente entre tu dispositivo y Google, sin ningún intermediario.",
     "placeholders": {
       "session_id": {
         "content": "$1",
@@ -213,7 +213,7 @@
     "message": "Listas de tareas"
   },
   "settings.enableEmailInvitations": {
-    "message": "Activar programación de correos"
+    "message": "Activar correos programados"
   },
   "eventdialog.conferenceLabel": {
     "message": "Conferencia:"
