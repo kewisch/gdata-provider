@@ -141,7 +141,7 @@
     "message": "sectie over planningsvoorkeuren"
   },
   "settings.enableAttendees": {
-    "message": "Synchroniseer deelnemers van het evenement"
+    "message": "Synchroniseer deelnemers aan evenementen"
   },
   "settings.forcePlainText": {
     "message": "Dwing het gebruik van platte tekst af in gebeurtenisbeschrijvingen"
@@ -168,7 +168,7 @@
     "message": "Wachtwoord"
   },
   "eventdialog.codeType.passcode": {
-    "message": "Toegangscode"
+    "message": "Paswoord code"
   },
   "eventdialog.codeType.meetingCode": {
     "message": "Vergadercode"
@@ -204,7 +204,7 @@
     "message": "Deze instellingen laten u gebruik maken van het inplannen van E-mail via Google Calender, maar er zijn meldingen over het zenden van buitensporige E-mail notificaties. Test eerst met een kleine vergadering a.u.b."
   },
   "settings.enableEmailInvitations": {
-    "message": "Zet E-mail inplannen aan"
+    "message": "E-mailplanning inschakelen"
   },
   "onboarding.selectcalendars.title": {
     "message": "Selecteer je agenda's"
@@ -216,7 +216,7 @@
     "message": "Aan de slag"
   },
   "onboarding.getstarted.imgalt": {
-    "message": "De zijbalk in het kalenderoverzicht van Thunderbird met de nieuwe agendaknop onderaan"
+    "message": "De zijbalk in Thunderbirds agenda overzicht met de nieuwe agendaknop onderaan"
   },
   "onboarding.scheduling.title": {
     "message": "Planningsproblemen"
@@ -225,7 +225,7 @@
     "message": "Op het netwerk?"
   },
   "onboarding.allset.title": {
-    "message": "Je bent klaar om aan de slag te gaan!"
+    "message": "Je bent er helemaal klaar voor!"
   },
   "onboarding.scheduling.p3.postlink": {
     "message": "voor deze add-on."
@@ -255,16 +255,16 @@
     "message": "15eur"
   },
   "onboarding.getstarted.p1": {
-    "message": "Weet je niet waar te beginnen? Je moet je eerst abonneren op je agenda's. Ga naar de Agenda tab in Thunderbird en klik op \"Nieuwe Agenda\" onderaan de zijbalk."
+    "message": "Weet je niet zeker waar je moet beginnen? Abonneer je eerst op je agenda's. Ga naar het agendatabblad in Thunderbird en klik op \"Nieuwe agenda\" onderin de zijbalk."
   },
   "onboarding.providertype.imgalt": {
-    "message": "Nieuw agendadialoogvenster, dat de optie toont om Google Agenda te selecteren"
+    "message": "Nieuw kalenderscherm dat de optie toont om Google kalender te selecteren"
   },
   "onboarding.providertype.p1": {
     "message": "Je ziet drie opties: Op mijn computer, Op het netwerk en Provider voor Google Agenda. Ook al zit Google Agenda technisch gezien op het netwerk, selecteer toch de provider-specifieke optie."
   },
   "onboarding.selectcalendars.p2": {
-    "message": "Op het volgende scherm selecteer je de Agenda's en takenlijst die je wilt abonneren. Reeds geabonneerde Agenda's zullen verschijnen als reeds toegevoegd. Om uit te schrijven van een Agenda, gebruik de rechtermuisknop in de Thunderbird Agenda lijst i.p.v. de nieuwe Agenda dialoog."
+    "message": "Op het volgende scherm selecteer je de agenda's en takenlijsten waar je je op wilt abonneren. Agenda's waarop je je eerder abonneerde zullen zichtbaar zijn als eerder toegevoegd. Om je uit te schrijven, gebruik je het contextmenu in Thunderbirds agendalijst in plaats van het nieuwe agenda dialoogvenster."
   },
   "onboarding.scheduling.p1": {
     "message": "Transacties tussen Thunderbird en Google kunnen moeilijk lopen. Thunderbird geeft niet altijd duidelijk weer of een event een aanvaarde uitnodiging is, of een nieuw event. Hier zijn een paar zaken om na te kijken:"
@@ -276,10 +276,10 @@
     "message": "Als email invoegen in je Agenda aanstaat, en er gaat iets mis, dan kan Thunderbird een nieuw event aanmaken i.p.v een bestaand event te aanvaarden. Voor grote meetings, zoals een bedrijfswijde event, kan het erop lijken dat je iedereen opnieuw in een duplicaat event uitnodigt."
   },
   "onboarding.providertype.p2": {
-    "message": "Op het volgende scherm tik je je E-mail adres in. Zelfs als je abonneert op iemand anders zijn Agenda, gebruik je eigen E-mail. Als je reeds geabonneerd bent op zijn Agenda op de Google Agenda website, zal deze in je account verschijnen."
+    "message": "Op het volgende scherm selecteer je je e-mailadres. Gebruik je eigen e-mail, zelfs als je je abonneert op andermans agenda. Indien je je eerder abonneerde op hun agenda via de Google Calendar website, verschijnt deze in je account."
   },
   "onboarding.selectcalendars.p1": {
-    "message": "Hierna moet je inloggen. De login-dialoog zal het juiste E-mailadres bevatten, dus wees zeker dat je de juiste account gebruikt. Als je later wordt gevraagd om opnieuw in te loggen, gebruik het juiste account om terug in te loggen."
+    "message": "Vervolgens wordt je gevraagd in te loggen. Het login dialoogvenster specificeert het te gebruiken e-mailadres. Zorg dus dat je op het juiste account inlogt. Wanneer je later gevraagd wordt opnieuw in te loggen, zorg dan dat je het aangegeven account gebruikt."
   },
   "onboarding.allset.imgalt": {
     "message": "De nieuwe takenlijst, met allen de relevante velden voor het dialoogvenster"
