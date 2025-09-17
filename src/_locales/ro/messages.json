@@ -144,7 +144,7 @@
     "message": "Aceste setări vă vor permite să utilizați programarea transmiterii e-mail-urilor prin Google Calendar, dar au existat rapoarte despre trimiterea de e-mailuri de notificare străine. Vă rugăm să testați mai întâi cu un grup mic de persoane."
   },
   "settings.enableEmailInvitations": {
-    "message": "Activați programarea transmiterii e-mailului"
+    "message": "Se pot face invitații pe email"
   },
   "eventdialog.conferenceLabel": {
     "message": "Conferință:"

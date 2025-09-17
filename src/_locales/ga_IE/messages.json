@@ -141,10 +141,10 @@
     "message": "Lista zadań"
   },
   "settings.enableEmailInvitations": {
-    "message": "Włącz planowanie wiadomości e-mail"
+    "message": "Cumasaigh sceidealú ríomhphoist"
   },
   "settings.enableAttendees": {
-    "message": "Synchronizowanie uczestników wydarzeń"
+    "message": "Sioncrónaigh freastalaithe imeachta"
   },
   "eventdialog.joinVia.more": {
     "message": "Więcej informacji o konferencji"
