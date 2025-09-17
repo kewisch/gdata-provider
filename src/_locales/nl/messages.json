@@ -165,7 +165,7 @@
     "message": "Toegangscode"
   },
   "eventdialog.codeType.passcode": {
-    "message": "Toegangscode"
+    "message": "Paswoord code"
   },
   "eventdialog.codeType.password": {
     "message": "Wachtwoord"
@@ -243,5 +243,47 @@
   },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$NAME$ (Legacy)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "De Provider voor Google Agenda gebruikt nu een nieuwe methode met betere betrouwbaarheid en kenmerken. Ga terug en gebruik de oude methode om verder te gaan. Als je problemen hebt met deze oude methode, geef het door aan de ontwikkelaar voordat je verdergaat. Je kan nog tijdelijk de oude methode gebruiken, maar deze zal na de overstap verdwijnen."
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Meld nu een probleem"
+  },
+  "settings.legacySection": {
+    "message": "Oude instellingen"
+  },
+  "settings.legacySectionDescription": {
+    "message": "Deze instellingen gelden enkel voor de oude agenda's. E-mail uitnodigingen en deelnemers zijn altijd aangevinkt, omdat het veel betrouwbaarder is om ze te synchroniseren."
+  },
+  "settings.enableEmailInvitations": {
+    "message": "E-mailplanning inschakelen"
+  },
+  "settings.enableAttendees": {
+    "message": "Synchroniseer deelnemers aan evenementen"
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "Upgraden"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "De provider voor Google Agenda maakt nu gebruik van een nieuwere methode met betere betrouwbaarheid en functies. Upgrade uw agenda, want dit is de enige optie in de toekomst. Als u problemen ondervindt, kunt u zich uitschrijven en zich opnieuw abonneren met behulp van de oude optie voorlopig. De upgrade duurt even als je een grote agenda hebt."
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "De provider voor Google Agenda maakt nu gebruik van een nieuwe methode met een betere betrouwbaarheid en functies. U bent twee keer geabonneerd op deze agenda, een keer met de verouderde methode en een keer met de nieuwe methode. Dit is de oude methode. U kunt zich hiervoor afmelden en de nieuwe behouden."
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "Nu upgraden"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "Uitschrijven"
   }
 }
