@@ -181,5 +181,14 @@
   },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "Anulează"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Nu fă upgrade"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Se pot face invitații pe email"
   }
 }

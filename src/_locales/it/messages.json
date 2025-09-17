@@ -243,5 +243,47 @@
   },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (Legacy)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Segnala un problema"
+  },
+  "settings.legacySection": {
+    "message": "Impostazioni legacy"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Abilita schedulazione email"
+  },
+  "settings.enableAttendees": {
+    "message": "Sincronizza i partecipanti all'evento"
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "Aggiorna"
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "Aggiorna ora"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "Disiscriviti"
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "Il provider per Google Calendar ora utilizza un metodo più recente con maggiore affidabilità e funzionalità. Torna indietro e utilizza l'opzione non legacy per procedere. Se riscontri problemi con questo metodo, informa lo sviluppatore del problema prima di continuare. Puoi utilizzare temporaneamente l'approccio legacy, ma verrà rimosso dopo la transizione."
+  },
+  "settings.legacySectionDescription": {
+    "message": "Queste impostazioni si applicano solo ai calendari legacy. Gli inviti e i partecipanti via e-mail sono sempre abilitati per i nuovi calendari, poiché la loro sincronizzazione è molto più affidabile."
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "Il provider per Google Calendar ora utilizza un metodo più recente con maggiore affidabilità e funzionalità. Aggiorna il tuo calendario, poiché questa sarà l'unica opzione in futuro. In caso di problemi, puoi annullare l'iscrizione e iscriverti nuovamente utilizzando l'opzione legacy per il momento. L'aggiornamento richiederà un momento se hai un calendario di grandi dimensioni."
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "Il provider per Google Calendar ora utilizza un nuovo metodo con maggiore affidabilità e funzionalità. Sei iscritto a questo calendario due volte, una con il metodo precedente e una con il nuovo metodo. Questo è l'abbonamento precedente. Puoi annullare l'iscrizione e mantenere quella nuova."
   }
 }
