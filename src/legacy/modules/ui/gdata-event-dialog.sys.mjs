@@ -25,18 +25,20 @@ export function gdataInitUI(window, document, version) {
     recordWindow(window);
   }
 
-  function initXUL(prefix, calendarType) {
+  (function() {
     const optionsPrivacyItem = document.createXULElement("menuitem");
     optionsPrivacyItem.label = messenger.i18n.getMessage("gdata.privacy.default.label");
     optionsPrivacyItem.accesskey = messenger.i18n.getMessage("gdata.privacy.default.accesskey");
     optionsPrivacyItem.type = "radio";
+    optionsPrivacyItem.setAttribute("name", "event-privacy-group");
+    optionsPrivacyItem.setAttribute("type", "radio");
     optionsPrivacyItem.setAttribute("privacy", "DEFAULT");
-    optionsPrivacyItem.setAttribute("provider", calendarType);
+    optionsPrivacyItem.setAttribute("provider", GDATA_LEGACY_CALENDAR_TYPE);
     optionsPrivacyItem.setAttribute("oncommand", "editPrivacy(this)");
 
     const toolbarPrivacyItem = optionsPrivacyItem.cloneNode();
-    optionsPrivacyItem.id = prefix + "-options-privacy-default-menuitem";
-    toolbarPrivacyItem.id = prefix + "-toolbar-privacy-default-menuitem";
+    optionsPrivacyItem.id = "gdata-options-privacy-default-menuitem";
+    toolbarPrivacyItem.id = "gdata-toolbar-privacy-default-menuitem";
 
     let privacyOptionsPopup = document.getElementById("options-privacy-menupopup");
     if (privacyOptionsPopup && !document.getElementById(optionsPrivacyItem.id)) {
@@ -49,9 +51,9 @@ export function gdataInitUI(window, document, version) {
     }
 
     const gdataStatusPrivacyHbox = document.createXULElement("hbox");
-    gdataStatusPrivacyHbox.id = prefix + "-status-privacy-default-box";
+    gdataStatusPrivacyHbox.id = "gdata-status-privacy-default-box";
     gdataStatusPrivacyHbox.setAttribute("privacy", "DEFAULT");
-    gdataStatusPrivacyHbox.setAttribute("provider", calendarType);
+    gdataStatusPrivacyHbox.setAttribute("provider", GDATA_LEGACY_CALENDAR_TYPE);
 
     const statusPrivacy = document.getElementById("status-privacy");
     if (statusPrivacy && !document.getElementById(gdataStatusPrivacyHbox.id)) {
@@ -60,11 +62,7 @@ export function gdataInitUI(window, document, version) {
         document.getElementById("status-privacy-public-box")
       );
     }
-  }
-
-  // LEGACY
-  initXUL("gdata-legacy", GDATA_LEGACY_CALENDAR_TYPE);
-  initXUL("gdata", GDATA_CALENDAR_TYPE);
+  })();
 
   function loadPanel(passedFrameId) {
     let frameId;
@@ -78,6 +76,14 @@ export function gdataInitUI(window, document, version) {
     let frameScript = ChromeUtils.importESModule(
       `resource://gdata-provider/legacy/modules/ui/gdata-lightning-item-iframe.sys.mjs?version=${version}`
     );
+
+    // LEGACY
+    let calendarEvent = frame.contentWindow.arguments[0].calendarEvent;
+    let calendarType = calendarEvent?.calendar?.type || GDATA_CALENDAR_TYPE;
+    document.getElementById("gdata-options-privacy-default-menuitem")?.setAttribute("provider", calendarType);
+    document.getElementById("gdata-toolbar-privacy-default-menuitem")?.setAttribute("provider", calendarType);
+    document.getElementById("gdata-status-privacy-default-box")?.setAttribute("provider", calendarType);
+    // LEGACY END
 
     if (
       frame.contentDocument.location == ITEM_IFRAME_URL &&
