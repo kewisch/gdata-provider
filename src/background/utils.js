@@ -4,6 +4,7 @@
  * Portions Copyright (C) Philipp Kewisch */
 
 import ICAL from "./libs/ical.js";
+import TimezoneService from "./timezone.js";
 
 // eslint-disable-next-line no-control-regex
 const EMAIL_REGEX = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
@@ -123,5 +124,27 @@ export async function isTesting() {
     return true;
   } catch (e) {
     return false;
+  }
+}
+
+export function toRFC3339(dateTime) {
+  let offset;
+  if (!dateTime.zone || dateTime.zone == ICAL.Timezone.localTimezone) {
+    // floating time not supported
+    let zone = TimezoneService.get(messenger.calendar.timezones.currentZone);
+    offset = zone.utcOffset(dateTime);
+  } else {
+    offset = dateTime.zone.utcOffset(dateTime);
+  }
+
+  let hour = Math.floor(offset / 3600);
+  let min = Math.floor((Math.abs(offset) % 3600) / 60);
+
+  if (dateTime.isDate || dateTime.zone == ICAL.Timezone.utcTimezone) {
+    return dateTime.toString();
+  } else {
+    return dateTime.toString() + (hour >= 0 ? "+" : "-") +
+      Math.abs(hour).toString().padStart(2, "0") + ":" +
+      min.toString().padStart(2, "0");
   }
 }

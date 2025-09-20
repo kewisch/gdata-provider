@@ -1176,7 +1176,21 @@ describe("patchItem", () => {
       changes = patchItem(item, oldItem);
       expect(changes).toEqual({ [prop]: changed });
     });
+
+    test("due date with time", () => {
+        let due = task.getFirstProperty("due");
+        due.resetType("date-time");
+
+        let date = ICAL.Time.fromDateTimeString("2025-05-09T01:02:03");
+        date.zone = TimezoneService.get("America/Los_Angeles");
+        due.setValue(date);
+        due.setParameter("tzid", "America/Los_Angeles");
+
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({ due: "2025-05-09T01:02:03-07:00" });
+    });
   });
+
 
   test("invalid", () => {
     expect(() => {

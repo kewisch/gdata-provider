@@ -7,9 +7,13 @@ import {
   categoriesStringToArray,
   categoriesArrayToString,
   isTesting,
+  toRFC3339,
 } from "../../src/background/utils";
 
+import createMessenger from "./helpers/webext-api.js";
+
 import ICAL from "../../src/background/libs/ical.js";
+import TimezoneService from "../../src/background/timezone.js";
 
 test("isEmail", () => {
   expect(isEmail("test@example.com")).toBe(true);
@@ -83,4 +87,46 @@ test("categoriesArrayToString", () => {
 
 test("isTesting", async () => {
   expect(await isTesting()).toBe(true);
+});
+
+describe("toRFC3339", () => {
+  beforeEach(() => {
+    global.messenger = createMessenger();
+  });
+
+  test("original timezone when UTC", () => {
+    let date = ICAL.Time.fromDateTimeString("2025-09-20T12:00:00Z");
+    expect(toRFC3339(date)).toBe("2025-09-20T12:00:00Z");
+  });
+  test("use current zone when missing", () => {
+    // Current zone is Berlin
+    let date = ICAL.Time.fromDateTimeString("2025-09-20T12:00:00");
+    expect(date.zone).toBe(ICAL.Timezone.localTimezone);
+    expect(toRFC3339(date)).toBe("2025-09-20T12:00:00+02:00");
+
+    date.zone = null;
+    expect(toRFC3339(date)).toBe("2025-09-20T12:00:00+02:00");
+  });
+  test("use assigned zone", () => {
+    TimezoneService.init();
+
+    let date = ICAL.Time.fromDateTimeString("2025-09-20T12:00:00");
+    date.zone = TimezoneService.get("America/Los_Angeles");
+    expect(toRFC3339(date)).toBe("2025-09-20T12:00:00-07:00");
+  });
+  test("odd hour offset", () => {
+    TimezoneService.init();
+
+    let date = ICAL.Time.fromDateTimeString("2025-09-20T12:00:00");
+    date.zone = TimezoneService.get("Asia/Kathmandu");
+    expect(toRFC3339(date)).toBe("2025-09-20T12:00:00+05:45");
+  });
+  test("dates without offset", () => {
+    TimezoneService.init();
+    let date = ICAL.Time.fromDateString("2025-09-20");
+    date.zone = TimezoneService.get("America/Los_Angeles");
+    expect(date.isDate).toBe(true);
+
+    expect(toRFC3339(date)).toBe("2025-09-20");
+  });
 });

@@ -9,6 +9,7 @@ import {
   reverseObject,
   addVCalendar,
   stripFractional,
+  toRFC3339
 } from "./utils.js";
 
 import ICAL from "./libs/ical.js";
@@ -421,8 +422,8 @@ function patchTask(item, oldItem, isImport, isCreate) {
   });
   setIfFirstProperty(entry, "notes", "description");
 
-  setIfFirstProperty(entry, "due", "due", dueDate => dueDate.toString());
-  setIfFirstProperty(entry, "completed", "completed", completedDate => completedDate.toString());
+  setIfFirstProperty(entry, "due", "due", toRFC3339);
+  setIfFirstProperty(entry, "completed", "completed", toRFC3339);
 
   return entry;
 }

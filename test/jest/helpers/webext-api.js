@@ -165,7 +165,7 @@ export default function createMessenger() {
       timezones: {
         _currentZone: null,
         get currentZone() {
-          return this._currentZone || timezones[Object.keys(timezones)[0]];
+          return this._currentZone || Object.keys(timezones)[0];
         },
         get timezoneIds() {
           return Object.keys(timezones);
