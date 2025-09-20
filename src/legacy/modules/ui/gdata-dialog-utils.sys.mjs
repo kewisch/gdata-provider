@@ -76,7 +76,7 @@ function showOrHideItemURL(url) {
 
 export function initConferenceRow(document, messenger, item, calendar) {
   function noconference() {
-    document.getElementById("gdata-conference-row").style.display = "none";
+    document.getElementById("gdata-conference-row").removeAttribute("mode");
     return null;
   }
 
