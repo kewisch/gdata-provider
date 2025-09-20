@@ -11,8 +11,8 @@
     "gecko": {
       "id": "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}",
       "strict_min_version": "128.0",
-      "strict_max_version": "144.*",
-      "update_url": "https://bit.ly/gdata-provider-beta-updates-json"
+      "strict_max_version": "145.*",
+      "update_url": "https://link.kewis.ch/gdata-provider/beta-update.json"
     }
   },
   "icons": {
