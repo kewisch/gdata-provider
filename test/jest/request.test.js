@@ -115,7 +115,7 @@ test("status code 204", async () => {
   });
   fetch.mockResponseOnce(null, {
     status: 204,
-    headers: { "Content-Length": 0 },
+    headers: { "Content-Length": 0, "Content-Type": "application/json" },
   });
   let res = await request.commit(session);
   expect(res).toEqual({ status: "No Content" });
