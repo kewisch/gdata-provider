@@ -35,7 +35,7 @@ jobs:
       - name: "Beta: Add update_url to manifest"
         if: ${{ github.event.release.prerelease }}
         run: |
-          jq '.browser_specific_settings.gecko.update_url = "https://kewisch.github.io/gdata-provider/update.json"' \
+          jq '.browser_specific_settings.gecko.update_url = "https://link.kewis.ch/gdata-provider/beta-update.json"' \
             src/manifest.json > src/manifest.json~
           diff -u src/manifest.json src/manifest.json~ || true
           mv src/manifest.json~ src/manifest.json
