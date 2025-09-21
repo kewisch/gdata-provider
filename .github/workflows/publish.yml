@@ -17,14 +17,14 @@ jobs:
     environment: ${{ github.event.release.prerelease && 'beta' || 'release' }}
     steps:
       - name: "All: Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v5
+      - name: "Setup node"
+        uses: actions/setup-node@v5
         with:
-          node-version: '24'
-          cache: 'npm'
+          node-version: "latest"
 
       - name: "All: npm ci"
         run: npm ci
@@ -42,7 +42,7 @@ jobs:
 
 
       - name: "All: Adjust OAuth keys"
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           KEYS: ${{ secrets.OAUTH_KEYS }}
           FILENAME: ${{ github.event.release.prerelease && 'src/background/session.js' || 'src/legacy/modules/gdataSession.sys.mjs' }}
@@ -74,7 +74,7 @@ jobs:
 
       - name: "Beta: Checkout gh_pages"
         if: ${{ github.event.release.prerelease }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: gh_pages
           path: gh_pages
@@ -82,7 +82,7 @@ jobs:
 
       - name: "Beta: Add new release to updates.json"
         if: ${{ github.event.release.prerelease }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
         with:
