@@ -9,12 +9,18 @@ These are the sources for the [Provider for Google Calendar](https://addons.thun
 Development
 -----------
 
-The Provider for Google Calendar uses an xpcshell test originally from the Thunderbird test harness.
+The Provider for Google Calendar is written as a WebExtension, which means most code is very familiar to (vanilla)
+website development with a few additional APIs to call.
 
-To run the tests locally you can use this command. Note that the tests use the dist xpi, so you'll need to build first.
+Additionally, it uses an experiment API to provider calendaring functionality which hopefully will
+become part of Thunderbird. Ideally yo do not have to touch anything in the `src/experiments/` or `src/legacy/`
+directory. If you do need to touch `src/experiments/calendar`, then please send a pull request to
+https://github.com/thunderbird/webext-experiments in addition.
+
+Test are written with jest and use a custom mock for the WebExtensions API.
 
 ```bash
-$ npm test
+$ npm run test
 ```
 
 You should also run the linters. This will run eslint and check your commit messages. Please format
@@ -30,27 +36,26 @@ You can then run the build step to package the xpi in `dist/gdata-provider.xpi`
 $ npm run build 
 ```
 
-Note that the tests will fail if something is up with the Thunderbird test harness, so best
-[check treeherder](https://treeherder.mozilla.org/#/jobs?repo=comm-central) first.
-
-This may also affect your pull request checks, as the test are also running via Github Actions CI
-
 Translation
 -----------
 
-This project uses Weblate for its translations, you can contribute by visiting https://hosted.weblate.org/engage/provider-for-google-calendar/
+This project uses Weblate for its translations, you can contribute by visiting
+https://hosted.weblate.org/engage/provider-for-google-calendar/
 
-Weblate is a continuous localization platform used by over 2,500 libre software projects. Learn more about Weblate at https://weblate.org/
+Weblate is a continuous localization platform used by over 2,500 libre software projects. Learn more about Weblate at
+https://weblate.org/
 
 Report Issues
 -------------
-First of all, make sure you are using the version of the Provider for Google Calendar that matches
-your Thunderbird. If there is no such version available, please take the next lower release number.
+First of all, make sure you are the latest version of the Provider for Google Calendar.
 
 For debugging, please enable calendar.debug.log and calendar.debug.log.verbose in the advanced
 config editor (`Options > Advanced > General > Config Editor`) and check the logs in the error console
 (`Tools > Error Console`) for what is happening when your error occurs.
 
-Please check the [FAQ](https://github.com/kewisch/gdata-provider/wiki/FAQ) to see if your question may already be answered. If you have a support question, please visit [the support forum](https://groups.google.com/forum/#!forum/provider-for-google-calendar).
+Please check the [FAQ](https://github.com/kewisch/gdata-provider/wiki/FAQ) to see if your question may already be
+answered. If you have a support question, please visit
+[the support forum](https://groups.google.com/forum/#!forum/provider-for-google-calendar).
 
-If you would like to file a development issue, please use the Github issue tracker.
+If you are unsure if it is a bug, please use the [discussions](https://github.com/kewisch/gdata-provider/discussions)
+first, otherwise you can [file an issue](https://github.com/kewisch/gdata-provider/issues).
