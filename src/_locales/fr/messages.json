@@ -12,7 +12,7 @@
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdata.privacy.default.label": {
-    "message": "Défaut Google"
+    "message": "Google par défaut"
   },
   "gdata.privacy.default.accesskey": {
     "message": "D"
@@ -21,7 +21,7 @@
     "message": "Migrer les agendas en lecture seule"
   },
   "gdata.migration.description": {
-    "message": "Le fournisseur pour Google Agenda a détecté que vous aviez des agendas existants qui ne sont capables d’accéder à Google Agenda qu’en lecture seule. Si vous voulez mettre à jour ces agendas, veuillez les sélectionner ci-dessous."
+    "message": "Le Fournisseur pour Google Agenda a détecté des agendas en lecture seule. Pour les mettre à jour, veuillez les sélectionner ci-dessous."
   },
   "gdata.migration.upgrade.label": {
     "message": "Mettre à jour"
@@ -156,7 +156,7 @@
     "message": "Rejoindre par visioconférence"
   },
   "settings.enableEmailInvitations": {
-    "message": "Activer la programmation d'envoi de courriels"
+    "message": "Activer la planification des courriers électroniques"
   },
   "settings.sendEventNotifications": {
     "message": "Envoyer un courriel de notification aux invités de l'évènement"
@@ -228,7 +228,7 @@
     "message": "Si vous avez des questions, veuillez nous contacter via la"
   },
   "settings.enableAttendees": {
-    "message": "Synchroniser les participants à l'événement"
+    "message": "Synchroniser les participants"
   },
   "eventdialog.conferenceLabel": {
     "message": "Conférence :"
@@ -310,5 +310,8 @@
   },
   "onboarding.weblate.p1": {
     "message": "Le Fournisseur pour Google Agenda utilise Weblate pour ses traductions, vous pouvez facilement y traduire des phrases dans votre langue. Vous parlez une langue qui n'est pas l'anglais et vous voulez aider ?"
+  },
+  "onboarding.weblate.p2.prelink": {
+    "message": "Ce paragraphe contient un lien. Vous pouvez utiliser les chaînes prelink, linktext et postlink pour compléter la phrase. Veillez à ajouter les espaces nécessaires."
   }
 }
