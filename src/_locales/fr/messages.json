@@ -12,7 +12,7 @@
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdata.privacy.default.label": {
-    "message": "Défaut Google"
+    "message": "Google par défaut"
   },
   "gdata.privacy.default.accesskey": {
     "message": "D"
@@ -21,7 +21,7 @@
     "message": "Migrer les agendas en lecture seule"
   },
   "gdata.migration.description": {
-    "message": "Le fournisseur pour Google Agenda a détecté que vous aviez des agendas existants qui ne sont capables d’accéder à Google Agenda qu’en lecture seule. Si vous voulez mettre à jour ces agendas, veuillez les sélectionner ci-dessous."
+    "message": "Le Fournisseur pour Google Agenda a détecté des agendas en lecture seule. Pour les mettre à jour, veuillez les sélectionner ci-dessous."
   },
   "gdata.migration.upgrade.label": {
     "message": "Mettre à jour"
@@ -180,7 +180,7 @@
     "message": "Temps de concentration"
   },
   "gdata.migration.notification": {
-    "message": "Certains de vos calendriers peuvent être migrés vers le fournisseur pour Google Calendar"
+    "message": "Certains de vos agendas peuvent être migrés vers le Fournisseur pour Google Agenda"
   },
   "gdata.migration.dont-upgrade.label": {
     "message": "Ne pas mettre à jour"
@@ -192,7 +192,7 @@
     "message": "A"
   },
   "gdata.wizard.calendars.birthdays": {
-    "message": "$calendar_name$ (Anniversaires)",
+    "message": "$calendar_name$ (anniversaires)",
     "placeholders": {
       "calendar_name": {
         "content": "$1",
@@ -243,5 +243,47 @@
   },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (obsolète)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "Le Fournisseur pour Google Agenda bénéficie désormais d'une conception plus fiable et offrant de meilleures fonctionnalités. Utilisez plutôt la version actuelle pour continuer. Si vous rencontrez des difficultés avec cette version, informez-en le développeur avant de continuer. Vous pouvez utiliser temporairement la précédente version, mais celle-ci sera bientôt supprimée."
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Signaler un problème"
+  },
+  "settings.legacySection": {
+    "message": "Anciens paramètres"
+  },
+  "settings.legacySectionDescription": {
+    "message": "Ces paramètres ne s'appliquent qu'aux anciens agendas. Les invitations par courrier électronique et les participants restent toujours activés dans les nouveaux agendas, car leur synchronisation est beaucoup plus fiable."
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Activer la planification des courriers électroniques"
+  },
+  "settings.enableAttendees": {
+    "message": "Synchroniser les participants"
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "Mise à jour"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "Le Fournisseur pour Google Agenda bénéficie désormais d'une conception plus fiable et offrant de meilleures fonctionnalités. Veuillez mettre à jour votre agenda, seule option possible à l'avenir. En cas de problème, vous pouvez utiliser la version précédente. La mise à jour peut prendre un certain temps si votre calendrier est volumineux."
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "Le Fournisseur pour Google Agenda bénéficie désormais d'une conception plus fiable et offrant de meilleures fonctionnalités. Votre agenda est enregistré deux fois, l'une au format précédent, l'autre au nouveau format. Il s'agit du format précédent. Vous pouvez vous désabonner de l'ancien et conserver le nouveau."
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "Mettre à jour"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "Se désabonner"
   }
 }
