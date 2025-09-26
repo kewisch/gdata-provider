@@ -264,7 +264,7 @@
     "message": "Je ziet drie opties: Op mijn computer, Op het netwerk en Provider voor Google Agenda. Ook al zit Google Agenda technisch gezien op het netwerk, selecteer toch de provider-specifieke optie."
   },
   "onboarding.selectcalendars.p2": {
-    "message": "Op het volgende scherm selecteer je de agenda's en takenlijsten waar je je op wilt abonneren. Agenda's waarop je je eerder abonneerde zullen zichtbaar zijn als eerder toegevoegd. Om je uit te schrijven, gebruik je het contextmenu in Thunderbirds agendalijst in plaats van het nieuwe agenda dialoogvenster."
+    "message": "Op het volgende scherm selecteer je de agenda's en takenlijsten waar je je op wilt abonneren. Eerder geabonneerde agenda's worden weergegeven als reeds toegevoegd. Om je uit te schrijven, gebruik je het contextmenu in Thunderbirds agendalijst in plaats van het nieuwe agenda dialoogvenster."
   },
   "onboarding.scheduling.p1": {
     "message": "Transacties tussen Thunderbird en Google kunnen moeilijk lopen. Thunderbird geeft niet altijd duidelijk weer of een event een aanvaarde uitnodiging is, of een nieuw event. Hier zijn een paar zaken om na te kijken:"
@@ -276,7 +276,7 @@
     "message": "Als email invoegen in je Agenda aanstaat, en er gaat iets mis, dan kan Thunderbird een nieuw event aanmaken i.p.v een bestaand event te aanvaarden. Voor grote meetings, zoals een bedrijfswijde event, kan het erop lijken dat je iedereen opnieuw in een duplicaat event uitnodigt."
   },
   "onboarding.providertype.p2": {
-    "message": "Op het volgende scherm selecteer je je e-mailadres. Gebruik je eigen e-mail, zelfs als je je abonneert op andermans agenda. Indien je je eerder abonneerde op hun agenda via de Google Calendar website, verschijnt deze in je account."
+    "message": "Voer op het volgende scherm uw e-mailadres in. Gebruik je eigen e-mail, zelfs als je je abonneert op een andermans agenda. Als je je al hebt geabonneerd op hun agenda op de Google Calendar website, wordt deze weergegeven in je account."
   },
   "onboarding.selectcalendars.p1": {
     "message": "Vervolgens wordt je gevraagd in te loggen. Het login dialoogvenster specificeert het te gebruiken e-mailadres. Zorg dus dat je op het juiste account inlogt. Wanneer je later gevraagd wordt opnieuw in te loggen, zorg dan dat je het aangegeven account gebruikt."
