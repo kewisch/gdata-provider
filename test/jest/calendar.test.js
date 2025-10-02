@@ -1220,10 +1220,10 @@ describe("onSync", () => {
     await calendar.onSync();
 
     expect(await calendar.getCalendarPref("eventSyncToken")).toBe("nextSyncToken");
-    expect(urls).toContain("https://www.googleapis.com/calendar/v3/calendars/id7%40calendar.google.com/events?maxResults=1000&eventTypes=default&eventTypes=focusTime&eventTypes=outOfOffice&showDeleted=false");
+    expect(urls).toContain("https://www.googleapis.com/calendar/v3/calendars/id7%40calendar.google.com/events?maxResults=1000&eventTypes=default&eventTypes=focusTime&eventTypes=outOfOffice&eventTypes=fromGmail&showDeleted=false");
 
     await calendar.onSync();
-    expect(urls).toContain("https://www.googleapis.com/calendar/v3/calendars/id7%40calendar.google.com/events?maxResults=1000&eventTypes=default&eventTypes=focusTime&eventTypes=outOfOffice&showDeleted=true&syncToken=nextSyncToken");
+    expect(urls).toContain("https://www.googleapis.com/calendar/v3/calendars/id7%40calendar.google.com/events?maxResults=1000&eventTypes=default&eventTypes=focusTime&eventTypes=outOfOffice&eventTypes=fromGmail&showDeleted=true&syncToken=nextSyncToken");
   });
 
   test("birthday sync", async () => {
