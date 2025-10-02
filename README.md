@@ -12,12 +12,12 @@ Development
 The Provider for Google Calendar is written as a WebExtension, which means most code is very familiar to (vanilla)
 website development with a few additional APIs to call.
 
-Additionally, it uses an experiment API to provider calendaring functionality which hopefully will
-become part of Thunderbird. Ideally yo do not have to touch anything in the `src/experiments/` or `src/legacy/`
-directory. If you do need to touch `src/experiments/calendar`, then please send a pull request to
+Additionally, it uses an experiment API to provide calendaring functionality which hopefully will
+become part of Thunderbird. Ideally you do not have to touch anything in the `src/experiments/` or `src/legacy/`
+directories. If you do need to touch `src/experiments/calendar`, then please send a pull request to
 https://github.com/thunderbird/webext-experiments in addition.
 
-Test are written with jest and use a custom mock for the WebExtensions API.
+Tests are written with jest and use a custom mock for the WebExtensions API.
 
 ```bash
 $ npm run test
@@ -47,7 +47,7 @@ https://weblate.org/
 
 Report Issues
 -------------
-First of all, make sure you are the latest version of the Provider for Google Calendar.
+First of all, make sure you are using the latest version of the Provider for Google Calendar.
 
 For debugging, please enable calendar.debug.log and calendar.debug.log.verbose in the advanced
 config editor (`Options > Advanced > General > Config Editor`) and check the logs in the error console
