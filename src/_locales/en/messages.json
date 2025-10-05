@@ -243,6 +243,9 @@
   "eventdialog.focusEvent": {
     "message": "Focus Time"
   },
+  "eventdialog.gmailEvent": {
+    "message": "This event was automatically created from Gmail. Not all information is editable."
+  },
   "eventdialog.birthdayAgeFuture": {
     "message": "Turning $age$ on $date$",
     "placeholders": {

@@ -827,7 +827,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
     eventsRequest.type = eventsRequest.GET;
     eventsRequest.uri = this.createEventsURI("events");
     eventsRequest.addQueryParameter("maxResults", maxResults);
-    eventsRequest.addQueryParameter("eventTypes", ["default", "focusTime", "outOfOffice"]);
+    eventsRequest.addQueryParameter("eventTypes", ["default", "focusTime", "outOfOffice", "fromGmail"]);
     let syncToken = this.getProperty("syncToken.events");
     if (syncToken) {
       eventsRequest.addQueryParameter("showDeleted", "true");
