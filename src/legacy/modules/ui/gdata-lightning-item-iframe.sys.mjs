@@ -101,6 +101,8 @@ export function gdataInitUI(window, document, version) {
       isGoogleCalendar && window.calendarItem.getProperty("X-GOOGLE-EVENT-TYPE") == "outOfOffice";
     let isFocusEvent =
       isGoogleCalendar && window.calendarItem.getProperty("X-GOOGLE-EVENT-TYPE") == "focusTime";
+    let isGmailEvent =
+      isGoogleCalendar && window.calendarItem.getProperty("X-GOOGLE-EVENT-TYPE") == "fromGmail";
 
     window.sendMessage({ command: "gdataIsTask", isGoogleTask: isGoogleTask });
 
@@ -117,10 +119,18 @@ export function gdataInitUI(window, document, version) {
 
     if (isEvent) {
       // Show a notification to indicate OOO and focus time events
-      if (isOooEvent || isFocusEvent) {
+      if (isOooEvent || isFocusEvent || isGmailEvent) {
+        let label;
+        if (isOooEvent) {
+          label = "oooEvent";
+        } else if (isFocusEvent) {
+          label = "focusEvent";
+        } else {
+          label = "gmailEvent";
+        }
         window.gEventNotification.appendNotification("gdata-info-event-type", {
           label: messenger.i18n.getMessage(
-            "eventdialog." + (isOooEvent ? "oooEvent" : "focusEvent")
+            "eventdialog." + label
           ),
           priority: window.gEventNotification.PRIORITY_INFO_LOW,
         });
@@ -138,7 +148,7 @@ export function gdataInitUI(window, document, version) {
           node.hidden = isOooEvent;
         }
       }
-      document.getElementById("event-grid-tab-box-row").style.visibility = isOooEvent
+      document.getElementById("event-grid-tab-box-row").style.visibility = isOooEvent || isGmailEvent
         ? "hidden"
         : "";
 
@@ -152,6 +162,18 @@ export function gdataInitUI(window, document, version) {
         let node = document.getElementById(id);
         if (node) {
           node.hidden = isFocusEvent;
+        }
+      }
+
+      // Disable or hide elements not editable in Gmail events
+      let disableForGmailIds = [
+        "item-title",
+        "item-location",
+      ];
+      for (let id of disableForGmailIds) {
+        let node = document.getElementById(id);
+        if (node) {
+          node.disabled = isGmailEvent;
         }
       }
 
