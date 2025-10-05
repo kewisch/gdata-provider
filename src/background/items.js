@@ -779,7 +779,8 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
   }
 
   pushPropIf(jsonToDate("dtstart", entry.start, defaultTimezone));
-  if (!entry.endTimeUnspecified) {
+  // gmail events have an end time even if it's marked as unspecified, and trying to PATCH it fails
+  if (!entry.endTimeUnspecified || entry.eventType === "fromGmail") {
     veventprops.push(jsonToDate("dtend", entry.end, defaultTimezone));
   }
 
