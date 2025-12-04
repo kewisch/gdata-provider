@@ -285,5 +285,8 @@
   },
   "propertiesdialog.unsubscribeButton": {
     "message": "Díliostáil"
+  },
+  "eventdialog.gmailEvent": {
+    "message": "Cruthaíodh an ócáid seo go huathoibríoch ó Gmail. Ní féidir gach eolas a chur in eagar."
   }
 }

@@ -181,5 +181,14 @@
   },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "settings.enableAttendees": {
+    "message": "Синхронізувати учасників події"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Не оновляти"
+  },
+  "settings.legacySectionDescription": {
+    "message": "Ці налаштування застосовуються тільки до старих календарів. Запрошення електронною поштою та учасники завжди ввімкнені для нових календарів, оскільки їх синхронізація є набагато надійнішою."
   }
 }

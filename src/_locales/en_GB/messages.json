@@ -243,5 +243,20 @@
   },
   "onboarding.donate.amount": {
     "message": "13gbp"
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (Legacy)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "The Provider for Google Calendar now uses a newer method with better reliability and features. Please go back and use the non-legacy option to proceed. If you are having trouble with that method, please tell the developer about the issue before continuing. You can use the legacy approach temporarily, but it will be removed after the transition."
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Report an issue now"
   }
 }
