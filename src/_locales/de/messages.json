@@ -333,5 +333,50 @@
   },
   "onboarding.weblate.p1": {
     "message": "Der Provider für Google Kalender nutzt Weblate für Übersetzungen, sodass du ganz einfach Texte in deine Sprache übersetzen kannst. Sprichst du eine andere Sprache und möchtest mithelfen?"
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (Altes Verfahren)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "Der Provider für Google Kalender verwendet jetzt eine neuere Methode mit besserer Zuverlässigkeit und mehr Funktionen. Bitte gehe zurück und nutze die Option ohne Altverfahren, um fortzufahren. Sollte es mit dieser Methode Schwierigkeiten geben, informiere den Entwickler über das Problem, bevor du weitermachst. Das alte Verfahren kann vorübergehend verwendet werden, aber es wird nach der Übergangsphase entfernt."
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Melde jetzt ein Problem"
+  },
+  "settings.legacySection": {
+    "message": "Veraltete Einstellungen"
+  },
+  "settings.legacySectionDescription": {
+    "message": "Diese Einstellungen gelten nur für Kalender mit dem Altverfahren. E-Mail Einladungen und Teilnehmer sind bei neuen Kalendern immer aktiviert, da ihre Synchronisierung deutlich zuverlässiger ist."
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Email Einladungen aktivieren"
+  },
+  "settings.enableAttendees": {
+    "message": "Terminteilnehmer synchronisieren"
+  },
+  "eventdialog.gmailEvent": {
+    "message": "Dieser Termin wurde automatisch aus Gmail erstellt. Einige Angaben lassen sich nicht bearbeiten."
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "Aktualisieren"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "Der Provider für Google Kalender verwendet jetzt eine neuere Methode mit besserer Zuverlässigkeit und mehr Funktionen. Bitte aktualisiere den Kalender, da dies künftig die einzige Option sein wird. Sollte es Probleme geben, kann der Kalender entfernt und mit dem Altverfahren erneut abonnieren werden. Die Aktualisierung kann bei einem großen Kalender einige Momente dauern."
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "Der Provider für Google Kalender verwendet jetzt eine neue Methode mit besserer Zuverlässigkeit und mehr Funktionen. Es bestehen zwei Abonnements, einmal mit dem Altverfahren und einmal mit der neuen Methode. Dieses Kalenderabonnement verwendet das Altverfahren und kann entfernt werden."
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "Jetzt neues Verfahren verwenden"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "Abbestellen"
   }
 }
