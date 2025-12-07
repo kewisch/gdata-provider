@@ -137,6 +137,12 @@
   "settings.sendEventNotifications": {
     "message": "Enviar notificações por mail aos convidados do evento"
   },
+  "settings.enableAttendees": {
+    "message": "Sincronizar participantes do evento"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Ativar agendamento de email"
+  },
   "settings.forcePlainText": {
     "message": "Forçar uso de texto sem formatação nas descrições de eventos"
   },

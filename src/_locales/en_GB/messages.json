@@ -164,6 +164,12 @@
   "settings.sendEventNotifications": {
     "message": "Send email notifications to event guests"
   },
+  "settings.enableAttendees": {
+    "message": "Synchronise event attendees"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Enable email scheduling"
+  },
   "settings.forcePlainText": {
     "message": "Force use of plain text in event descriptions"
   },

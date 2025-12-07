@@ -140,6 +140,12 @@
   "settings.sendEventNotifications": {
     "message": "Send e-mail notifikationer til deltagere"
   },
+  "settings.enableAttendees": {
+    "message": "Synkroniser deltagerlisten"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Aktiver e-mail-planlægning"
+  },
   "settings.forcePlainText": {
     "message": "Tving brug af uformateret tekst i begivenhedsbeskrivelser"
   },

@@ -140,6 +140,12 @@
   "settings.sendEventNotifications": {
     "message": "Trimiteți notificări prin e-mail invitaților la eveniment"
   },
+  "settings.enableAttendees": {
+    "message": "Sincronizați participanții la eveniment"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Se pot face invitații pe email"
+  },
   "settings.forcePlainText": {
     "message": "Forțați utilizarea textului simplu în descrierile evenimentelor"
   },
@@ -277,8 +283,5 @@
   },
   "gdata.migration.dont-upgrade.label": {
     "message": "Nu fă upgrade"
-  },
-  "settings.enableEmailInvitations": {
-    "message": "Se pot face invitații pe email"
   }
 }

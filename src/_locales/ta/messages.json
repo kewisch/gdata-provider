@@ -121,6 +121,12 @@
   "eventdialog.focusEvent": {
     "message": "கவனம் நேரம்"
   },
+  "settings.enableAttendees": {
+    "message": "நிகழ்வு பங்கேற்பாளர்களை ஒத்திசைக்கவும்"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "மின்னஞ்சல் திட்டமிடலை இயக்கவும்"
+  },
   "settings.forcePlainText": {
     "message": "நிகழ்வு விளக்கங்களில் எளிய உரையை கட்டாயப்படுத்துங்கள்"
   },

@@ -140,6 +140,12 @@
   "settings.sendEventNotifications": {
     "message": "Lähetä sähköposti-ilmoituksia tapahtuman vieraille"
   },
+  "settings.enableAttendees": {
+    "message": "Synkronoi tapahtuman osallistujat"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Ota sähköpostin aikataulutus käyttöön"
+  },
   "settings.forcePlainText": {
     "message": "Pakota käyttämään tavallista tekstiä tapahtumakuvauksissa"
   },

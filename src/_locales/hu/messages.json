@@ -140,6 +140,12 @@
   "settings.sendEventNotifications": {
     "message": "E-mail értesítések küldése az esemény vendégeinek"
   },
+  "settings.enableAttendees": {
+    "message": "Az események résztvevőinek szinkronizálása"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Email meghívók engedélyezése"
+  },
   "settings.forcePlainText": {
     "message": "Sima szöveg (plain text) erőltetése az eseményleírásokban"
   },

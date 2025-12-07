@@ -140,6 +140,12 @@
   "settings.sendEventNotifications": {
     "message": "Надіслати гостям електронного листа про подію"
   },
+  "settings.enableAttendees": {
+    "message": "Синхронізувати учасників події"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Увімкнути планування електронною поштою"
+  },
   "settings.forcePlainText": {
     "message": "Примусово використовувати звичайний текст в описах подій"
   },
@@ -271,9 +277,6 @@
   },
   "onboarding.donate.amount": {
     "message": "15eur"
-  },
-  "settings.enableAttendees": {
-    "message": "Синхронізувати учасників події"
   },
   "gdata.migration.dont-upgrade.label": {
     "message": "Не оновляти"

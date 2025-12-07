@@ -140,6 +140,12 @@
   "settings.sendEventNotifications": {
     "message": "向活动受邀对象发送电子邮件通知"
   },
+  "settings.enableAttendees": {
+    "message": "同步活动参与人员"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "启用邮件日程安排"
+  },
   "settings.forcePlainText": {
     "message": "在活动描述中强制使用纯文本"
   },

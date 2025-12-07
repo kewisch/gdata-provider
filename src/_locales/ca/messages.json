@@ -140,6 +140,12 @@
   "settings.sendEventNotifications": {
     "message": "Envia notificacions per email als convidats"
   },
+  "settings.enableEmailInvitations": {
+    "message": "Permetre la planificació d'email"
+  },
+  "settings.enableAttendees": {
+    "message": "Sincronitza els assistents a l'esdeveniment"
+  },
   "settings.forcePlainText": {
     "message": "Força l'ús de text pla a les descripcions d'esdeveniments"
   },

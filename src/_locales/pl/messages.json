@@ -140,6 +140,12 @@
   "settings.sendEventNotifications": {
     "message": "Wyślij powiadomienia email do gości wydarzenia"
   },
+  "settings.enableAttendees": {
+    "message": "Synchronizuj uczestników wydarzenia"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Włącz planowanie wiadomości e-mail"
+  },
   "settings.forcePlainText": {
     "message": "Wymuś użycie zwykłego tekstu w opisach wydarzeń"
   },
