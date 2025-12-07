@@ -37,7 +37,7 @@
   },
   "scripts": {
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
-    "build": "rm -f dist/gdata-provider.xpi; (cd src && zip -9r ../dist/gdata-provider.xpi `git ls-files | grep -v 'package\\(-lock\\)\\?.json' | grep -v eslintrc`)",
+    "build": "rm -f dist/gdata-provider.xpi; (cd src && zip -9r ../dist/gdata-provider.xpi `git ls-files | grep -v 'package\\(-lock\\)\\?.json' | grep -v eslintrc | grep -v onboarding/archive `)",
     "clean": "rm -f dist/gdata-provider.xpi",
     "lint": "commitlint -f origin/main && eslint"
   },
