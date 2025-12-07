@@ -241,8 +241,98 @@
   "eventdialog.conferenceNone": {
     "message": "Nessuno"
   },
+  "onboarding.getstarted.p1": {
+    "message": "Non sai da dove cominciare ? Come prima azione é necessario sottoscriversi al proprio calendario, Vai al pannello calendario in Thunderbird e premi \"Nuovo Calendario\" nella parte inferiore della barra laterale."
+  },
+  "onboarding.welcome.p2": {
+    "message": "Ora sei parte, assieme a me, di questa avventura. Il tuo supporto significa molto per me e non riesco ad immaginare un futuro senza questo add-on."
+  },
+  "onboarding.getstarted.title": {
+    "message": "Guida introduttiva"
+  },
+  "onboarding.providertype.title": {
+    "message": "Nella rete?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Finestra di dialogo \"nuovo calendario\" che mostra l'opzione per selezionare il Google Calendar"
+  },
+  "onboarding.providertype.p1": {
+    "message": "Vedrai tre opzioni: \"nel mio computer\", \"in rete\" e \"provider per Google Calendar\". Sebbene Google Calendar sia tecnicamente \"in rete\" seleziona le opzioni specifiche per la tua scelta."
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Seleziona i tuoi calendari"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Una lista di calendari con checkbox a lato"
+  },
+  "onboarding.allset.title": {
+    "message": "Tutto fatto!"
+  },
+  "onboarding.allset.imgalt": {
+    "message": "La finestra di dialogo \"nuova attività\" che mostra solo i campi rilevanti"
+  },
+  "onboarding.weblate.title": {
+    "message": "Questo contenuto nella tua lingua?"
+  },
+  "onboarding.weblate.p1": {
+    "message": "Provider per Google Calendar usa Weblate per le traduzioni, dove puoi facilmente tradurre le stringhe nella tua lingua. Parli una lingua diversa dall'inglese e hai voglia di aiutare?"
+  },
+  "onboarding.weblate.p2": {
+    "message": "$link_start$Aiuta a tradurre$link_end$ da oggi! Riesci a portare la tua lingua al 100%?",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.p1": {
+    "message": "Se hai domande contattaci attraverso la pagina dell'add-on $link_start$su GitHub$link_end$. Nella stessa pagina puoi anche aiutare con le versioni future dell'add-on.",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.allset.p1": {
+    "message": "Ecco fatto. La sincronizzazione iniziale potrebbe richiedere del tempo, soprattutto se hai molti eventi. Thunderbird potrebbe sembrare bloccato durante questo processo a causa del modo in cui gestisce gli eventi. Lascialo andare per circa mezz'ora prima di supporre che ci sia un problema. Nella maggior parte dei casi, tuttavia, la sincronizzazione si completerà entro un minuto."
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Screenshot di weblate mentre si traduce una stringa da Inglese a Tedesco"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Successivamente ti verrà chiesto di effettuare l'accesso. La finestra di dialogo di accesso specificherà l'indirizzo email da utilizzare, quindi assicurati di accedere all'account corretto. Se ti verrà chiesto di effettuare nuovamente l'accesso in un secondo momento, assicurati di utilizzare l'account indicato."
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "La barra laterale nella \"vista calendario\" di Thunderbird con il bottone \"nuovo calendario\" in basso"
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "Nella schermata seguente, seleziona i calendari e gli elenchi di attività a cui vuoi iscriverti. I calendari a cui hai già effettuato l'iscrizione appariranno come già aggiunti. Per annullare l'iscrizione, usa il menu contestuale nell'elenco dei calendari di Thunderbird anziché la finestra di dialogo del nuovo calendario."
+  },
+  "onboarding.welcome.p1": {
+    "message": "\"Provider for Google Calendar\" ha segnato l'inizio della mia avventura nell'open source. Nel 2006 non c'era un modo semplice per connettere Thunderbird a Google Calendar. Spinto da curiosità e dal desiderio di aiutare ho esplorato le API di Google e trovato un modo per colmare il divario, abilitando innumerevoli utenti ad accedere a Google Calendar. Quell'esperienza non solo mi ha dato uno scopo ma ha anche aperto le porte ad una carriera professionale dove l'open source è diventato parte integrante della mia vita."
+  },
+  "onboarding.providertype.p2": {
+    "message": "Nella schermata successiva, inserisci il tuo indirizzo email. Anche se ti stai iscrivendo al calendario di qualcun altro, usa il tuo indirizzo email. Se ti sei già iscritto al suo calendario sul sito web di Google Calendar, apparirà nel tuo account."
+  },
+  "onboarding.allset.p2": {
+    "message": "E adesso? È il momento di programmare alcuni eventi! Un vantaggio dell'utilizzo del Provider per Google Calendar anziché della connessione CalDAV integrata è la personalizzazione aggiuntiva disponibile nella finestra di dialogo dell'evento. Puoi impostare allarmi predefiniti o modificare le impostazioni di privacy predefinite. Inoltre, puoi gestire Google Tasks direttamente in Thunderbird."
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Inviami un segno di apprezzamento"
+  },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "onboarding.footer.p2": {
+    "message": "Grazie per aver letto fino in fondo! Se sei arrivato fin qui, spero che ti sia emozionato quanto me per questo componente aggiuntivo. Vai avanti e provalo prima ma, se sei già convinto, apprezzerei il tuo supporto."
   },
   "gdataProviderLabelLegacy": {
     "message": "$name$ (Legacy)",

@@ -170,6 +170,81 @@
   "eventdialog.focusEvent": {
     "message": "专注时间"
   },
+  "onboarding.welcome.p2": {
+    "message": "这个项目的发展有你的一份贡献。你的支持对我来说至关重要，我无法想象没有这个附加组件的未来。"
+  },
+  "onboarding.getstarted.title": {
+    "message": "开始使用"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "底部有新建日历按钮的 Thunderbird 日历视图侧边栏"
+  },
+  "onboarding.welcome.p1": {
+    "message": "Google 日历提供程序是我开始涉足开源领域的标志性项目。早在 2006 年，那时还没有简单的方法将 Thunderbird 与 Google 日历连接起来。在好奇心和帮助他人的愿望的驱使之下，我仔细研究了 Google 的 API，并找到了弥合这一差距的方法，无数 Thunderbird 用户得以籍此来访问 Google 日历。这段经历不仅让我有了目标感，还为我打开了职业生涯的大门，让开源成为了我日常生活中不可或缺的一部分。"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "不知道从哪里开始？你需要先订阅日历。然后转到 Thunderbird 中的日历标签页，接着单击侧边栏底部的“新建日历”。"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "选择你的日历"
+  },
+  "onboarding.providertype.p1": {
+    "message": "您将看到三个选项：保存在我的电脑上、保存在网络上和 Google 日历提供程序。虽然从技术上讲 Google 日历是被保存在网络上的，但还是请选择特定于提供商的选项。"
+  },
+  "onboarding.providertype.p2": {
+    "message": "请在下一屏中输入你的电子邮件地址。即使你订阅的是其他人的日历，也请使用你自己的电子邮件。如果你已经在 Google 日历网站上订阅了他人的日历，那么它将会出现在你的帐户之中。"
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "请在下面的屏幕上，选择您要订阅的日历和任务列表。之前订阅的日历将会被显示为已添加。如要取消订阅，请使用 Thunderbird 日历列表中的上下文菜单，而不是新建日历对话框。"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "接下来，会提示你登录。登录对话框将指定要使用的电子邮件地址，因此请确你您登录的是正确的帐户。如果你被要求稍后再次登录，请确保使用所显示的帐户。"
+  },
+  "onboarding.allset.imgalt": {
+    "message": "新建任务对话框，仅显示与此对话框相关的字段"
+  },
+  "onboarding.allset.p1": {
+    "message": "就是这样。初次同步可能会需要一些时间，尤其是在您有许多活动时。由于处理活动的方式，Thunderbird 程序有可能会在此过程中冻结。在问题出现之前，最多会允许它运行半小时。但是在大多数情况下，同步将会于一分钟内完成。"
+  },
+  "onboarding.allset.p2": {
+    "message": "下一步是什么？是时候安排一些活动了。使用 Google 日历提供程序而非内置的 CalDAV 连接的一个优点是，活动对话框提供了额外的自定义。你可以设置默认闹钟并调整默认隐私设置。此外，您还可以直接在 Thunderbird 中管理 Google 任务。"
+  },
+  "onboarding.weblate.p1": {
+    "message": "Google 日历提供程序通过 Weblate 获取已翻译文本，你可以轻松地将文本字串翻译为你所使用的语言。如果你会说非英语语言，可以请你帮助翻译吗？"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "截取自 weblate 网站的屏幕截图，显示的是将文本字串从英语翻译为德语的样例"
+  },
+  "onboarding.footer.p2": {
+    "message": "感谢你一直阅读到最后！如果你已经读到这里，我希望你和我一样对这个附加组件感到兴奋。请先试用一下，但如果你已经决定捐助，我会非常感谢你的支持。"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "新建日历对话框，显示 Google 日历选项"
+  },
+  "onboarding.providertype.title": {
+    "message": "是保存在网络上的吗？"
+  },
+  "onboarding.allset.title": {
+    "message": "一切已就绪！"
+  },
+  "onboarding.weblate.title": {
+    "message": "该内容是以你的语言显示的吗？"
+  },
+  "onboarding.weblate.p2": {
+    "message": "$link_start$请帮助翻译$link_end$ 就是现在！你能推动你所用语言的翻译进度达成 100% 吗？",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.donate.text": {
+    "message": "送出感谢"
+  },
   "onboarding.donate.amount": {
     "message": "118cny"
   }

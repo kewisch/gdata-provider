@@ -241,8 +241,98 @@
       }
     }
   },
+  "onboarding.welcome.p2": {
+    "message": "Vous partagez désormais mon expérience. Votre aide m'est précieuse car je ne peux imaginer un avenir sans cette extension."
+  },
+  "onboarding.getstarted.title": {
+    "message": "Guide de démarrage"
+  },
+  "onboarding.providertype.title": {
+    "message": "Sur le réseau ?"
+  },
+  "onboarding.welcome.p1": {
+    "message": "Le Fournisseur pour Google Agenda a marqué le début de mon aventure au sein de l'open-source. En 2006, il n'y avait pas de méthode aisée pour connecter Thunderbird à Google Agenda. Poussé par la curiosité et l'envie d'aider, j'ai étudié les APIs de Google et trouvé un moyen de combler ce manque, permettant ainsi à d’innombrables utilisateurs de Thunderbird d'accéder facilement à Google Agenda. Cette expérience m' a non seulement donné un but mais aussi ouvert les portes d'une carrière professionnelle dans le domaine de l'open-source qui fait désormais partie intégrante de mon quotidien."
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Vous ne savez pas par où commencer ? La première chose à faire est de vous abonner à vos agendas. Accédez à l’onglet Agenda dans Thunderbird et cliquez sur « Nouvel agenda » en bas de la barre latérale."
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "Barre latérale de la vue Agenda de Thunderbird avec en bas le bouton Nouvel agenda"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Sélectionnez vos agendas"
+  },
+  "onboarding.footer.p1": {
+    "message": "Si vous avez des questions, veuillez nous contacter via la $link_start$page Github$link_end$ du module. C'est également ici que vous pouvez aider à améliorer les futures versions du module.",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Capture d'écran de Weblate, traduisant une chaîne de l'Anglais vers l'Allemand"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Dialogue de nouvel agenda, proposant de sélectionner Google Agenda"
+  },
+  "onboarding.providertype.p2": {
+    "message": "Sur le prochain écran, saisissez votre adresse e-mail. Même si vous vous abonnez à l'agenda de quelqu'un d'autre, utilisez votre propre e-mail. Si vous vous êtes déjà abonné·e à leur calendrier sur le site Web Google Agenda, il apparaîtra au sein de votre compte."
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Une liste d'agendas avec des cases à cocher sur le côté"
+  },
+  "onboarding.providertype.p1": {
+    "message": "Vous verrez trois options : Sur mon ordinateur, Sur le réseau, et Google Agenda. Même si Google Agenda est techniquement sur le réseau, sélectionner l'option dédiée à Google Agenda."
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "Sur l'écran suivant, sélectionnez les agendas et listes de tâches auxquels vous désirez vous abonner. Les agendas auxquels vous êtes déjà abonné apparaitront comme déjà ajoutés. Pour vous désabonner, utilisez le menu contextuel dans la liste d'agendas de Thunderbird et non le dialogue d'ajout de nouvel agenda."
+  },
+  "onboarding.allset.title": {
+    "message": "Vous voilà prêt !"
+  },
+  "onboarding.allset.imgalt": {
+    "message": "Fenêtre d'ajout de tâche, affichant uniquement les champs applicables"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "En suivant, il vous sera demandé de vous connecter. Le dialogue de connexion va spécifier l'adresse e-mail à utiliser, faite attention de vous connecter au compte correspondant. S'il vous est demandé plus tard de vous connecter à nouveau, vérifiez que vous utilisez le compte indiqué."
+  },
+  "onboarding.allset.p1": {
+    "message": "C'est fait. La synchronisation initiale peut prendre quelque temps, surtout si vous avez beaucoup d'événements. Thunderbird risque de paraitre sans réponse durant cette procédure du fait de sa méthode de gestion des événements. Laissez faire et attendez au moins une demi-heure avant de supposer qu'il y a un problème. Dans la majorité des cas, la synchronisation est complétée en moins d'une minute."
+  },
+  "onboarding.allset.p2": {
+    "message": "Et maintenant ? Il est temps de planifier des événements. La paramétrisation supplémentaire disponible dans la fenêtre d'événement est un avantage du Fournisseur pour Google Agenda par rapport à la connexion CalDAV intégrée. Vous pouvez y paramétrer les valeurs par défaut pour les alarmes et la confidentialité. De plus, vous pouvez gérer les Tâches Google directement dans Thunderbird."
+  },
+  "onboarding.weblate.p2": {
+    "message": "$link_start$Aider avec les traductions$link_end$ dès maintenant ! Pouvez-vous compléter votre langue à 100% ?",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.p2": {
+    "message": "Merci d'avoir lu jusqu'au bout ! Si vous vous êtes rendu jusqu'ici, j'espère que vous être aussi enthousiaste que moi à propos de ce module. Allez-y et essayez-le d'abord, mais si vous êtes déjà convaincu, j'apprécierais votre support."
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Envoyez-moi un témoignage d'appréciation"
+  },
+  "onboarding.weblate.title": {
+    "message": "Ce contenu dans votre langue ?"
+  },
+  "onboarding.weblate.p1": {
+    "message": "Le Fournisseur pour Google Agenda utilise Weblate pour ses traductions, vous pouvez facilement y traduire des phrases dans votre langue. Vous parlez une langue qui n'est pas l'anglais et vous voulez aider ?"
   },
   "gdataProviderLabelLegacy": {
     "message": "$name$ (obsolète)",

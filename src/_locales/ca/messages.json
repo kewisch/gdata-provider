@@ -179,7 +179,97 @@
   "eventdialog.focusEvent": {
     "message": "Temps d'enfocament"
   },
+  "onboarding.providertype.title": {
+    "message": "A la xarxa?"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Seleccioneu els vostres calendaris"
+  },
+  "onboarding.allset.title": {
+    "message": "Ja està tot a punt!"
+  },
+  "onboarding.weblate.p2": {
+    "message": " $link_start$Ajuda amb les traduccions$link_end$ avui! Pots aconseguir el teu idioma al 100%?",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.p1": {
+    "message": "Si teniu cap pregunta, poseu-vos en contacte amb els dels complements $link_start$Pàgina del GitHub$link_end$. Aquí també podeu ajudar a millorar futures versions del complement.",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.p2": {
+    "message": "Gràcies per llegir-nos fins al final! Si has arribat fins aquí, espero que estiguis tan entusiasmat amb aquest complement com jo. Aneu endavant i proveu-ho primer, però si ja esteu venuts us agrairia el vostre suport."
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Envieu-me una mostra d'agraïment"
+  },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "La barra lateral a la vista del calendari del Thunderbird amb el botó de calendari nou a la part inferior"
+  },
+  "onboarding.weblate.title": {
+    "message": "Aquest contingut en el vostre idioma?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Diàleg de calendari nou, que mostra l'opció de seleccionar Google Calendar"
+  },
+  "onboarding.providertype.p2": {
+    "message": "A la pantalla següent, introduïu la vostra adreça de correu electrònic. Fins i tot si estàs subscrit al calendari d'una altra persona, fes servir el teu propi correu electrònic. Si ja us heu subscrit al seu calendari al lloc web de Google Calendar, apareixerà al vostre compte."
+  },
+  "onboarding.welcome.p1": {
+    "message": "El proveïdor de Google Calendar va marcar l'inici del meu viatge cap al codi obert. L'any 2006, no hi havia una manera fàcil de connectar Thunderbird amb Google Calendar. Impulsat per la curiositat i el desig d'ajudar, vaig explorar les API de Google i vaig trobar una manera de superar aquesta bretxa, permetent a innombrables usuaris de Thunderbird accedir a Google Calendar. Aquesta experiència no només em va donar un sentit de propòsit, sinó que també em va obrir les portes a una carrera professional on el codi obert s'ha convertit en una part integral de la meva vida diària."
+  },
+  "onboarding.welcome.p2": {
+    "message": "Ara formeu part d'aquest viatge amb mi. El vostre suport significa molt per a mi i no puc imaginar un futur sense aquest complement."
+  },
+  "onboarding.getstarted.title": {
+    "message": "Per començar"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "A continuació, se us demanarà que inicieu sessió. El diàleg d'inici de sessió especificarà l'adreça de correu electrònic que voleu utilitzar, així que assegureu-vos que esteu iniciant la sessió al compte correcte. Si se us demana que torneu a iniciar sessió més endavant, assegureu-vos d'utilitzar el compte indicat."
+  },
+  "onboarding.allset.p1": {
+    "message": "Això és tot. La sincronització inicial pot trigar una mica, sobretot si teniu molts esdeveniments. Thunderbird pot semblar congelat durant aquest procés a causa de com gestiona els esdeveniments. Deixeu-ho funcionar fins a mitja hora abans de suposar que hi ha un problema. En la majoria dels casos, però, la sincronització es completa en un minut."
+  },
+  "onboarding.getstarted.p1": {
+    "message": "No sabeu per on començar? Primer us heu de subscriure als vostres calendaris. Aneu a la pestanya del calendari del Thunderbird i feu clic a \"Calendari nou\" a la part inferior de la barra lateral."
+  },
+  "onboarding.providertype.p1": {
+    "message": "Veureu tres opcions: Al meu ordinador, A la xarxa i Proveïdor de Google Calendar. Tot i que Google Calendar està tècnicament a la xarxa, seleccioneu l'opció específica del proveïdor."
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Una llista de calendaris amb caselles de selecció al costat"
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "A la pantalla següent, seleccioneu els calendaris i les llistes de tasques als quals us voleu subscriure. Els calendaris subscrits anteriorment apareixeran com a ja afegits. Per cancel·lar la subscripció, utilitzeu el menú contextual de la llista de calendaris del Thunderbird en lloc del diàleg de calendari nou."
+  },
+  "onboarding.allset.imgalt": {
+    "message": "El diàleg de la tasca nova, que mostra només els camps rellevants per al diàleg"
+  },
+  "onboarding.allset.p2": {
+    "message": "Quin és el següent pas? És hora de programar alguns esdeveniments. Un dels avantatges d'utilitzar el proveïdor per a Google Calendar en comptes de la connexió CalDAV integrada és la personalització addicional disponible al diàleg d'esdeveniments. Podeu configurar alarmes predeterminades i ajustar la configuració de privadesa predeterminada. A més, podeu gestionar les tasques de Google directament a Thunderbird."
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Captura de pantalla del weblate, traduint una cadena de l'anglès a l'alemany"
+  },
+  "onboarding.weblate.p1": {
+    "message": "El proveïdor de Google Calendar utilitza Weblate per a les traduccions, on podeu traduir fàcilment les cadenes al vostre idioma. Parles un idioma que no és l'anglès i vols ajudar?"
   }
 }

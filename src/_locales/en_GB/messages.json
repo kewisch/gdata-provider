@@ -11,6 +11,15 @@
     "message": "Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (Legacy)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
   "gdata.privacy.default.label": {
     "message": "Google Default"
   },
@@ -38,8 +47,23 @@
   "gdata.wizard.session.description": {
     "message": "Please pick an existing session or enter your email address to create a new session. You only need one session per account."
   },
+  "gdata.wizard.session.legacy": {
+    "message": "The Provider for Google Calendar now uses a newer method with better reliability and features. Please go back and use the non-legacy option to proceed. If you are having trouble with that method, please tell the developer about the issue before continuing. You can use the legacy approach temporarily, but it will be removed after the transition."
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Report an issue now"
+  },
   "gdata.wizard.calendars.description": {
     "message": "Please select the calendars and task lists you would like to subscribe to."
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Birthdays)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
   },
   "gdata.wizard.nextstep.description": {
     "message": "Please advance to the next step to set up your calendars."
@@ -179,15 +203,6 @@
   "eventdialog.focusEvent": {
     "message": "Focus Time"
   },
-  "gdata.wizard.calendars.birthdays": {
-    "message": "$calendar_name$ (Birthdays)",
-    "placeholders": {
-      "calendar_name": {
-        "content": "$1",
-        "example": "The original calendar name will be inserted here"
-      }
-    }
-  },
   "gdata.migration.notification": {
     "message": "Some of your calendars can be migrated to the Provider for Google Calendar"
   },
@@ -241,22 +256,97 @@
       }
     }
   },
-  "onboarding.donate.amount": {
-    "message": "13gbp"
+  "onboarding.weblate.imgalt": {
+    "message": "Screenshot of weblate, translating a string from English to German"
   },
-  "gdataProviderLabelLegacy": {
-    "message": "$name$ (Legacy)",
+  "onboarding.weblate.p1": {
+    "message": "The Provider for Google Calendar uses Weblate for translations, where you can easily translate strings into your language. Do you speak a language other than English and want to help?"
+  },
+  "onboarding.getstarted.title": {
+    "message": "Getting started"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "The sidebar in Thunderbird's calendar view with the new calendar button at the bottom"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Not sure where to start? You need to subscribe to your calendars first. Go to the calendar tab in Thunderbird and click \"New Calendar\" at the bottom of the sidebar."
+  },
+  "onboarding.providertype.title": {
+    "message": "On the network?"
+  },
+  "onboarding.providertype.p1": {
+    "message": "You will see three options: On my computer, On the network, and Provider for Google Calendar. Although Google Calendar is technically on the network, select the provider-specific option."
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Select your calendars"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "A list of calendars with checkboxes to the side"
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "On the following screen, select the calendars and task lists you want to subscribe to. Previously subscribed calendars will appear as already added. To unsubscribe, use the context menu in Thunderbird's calendar list instead of the new calendar dialogue."
+  },
+  "onboarding.footer.p1": {
+    "message": "If you have any questions, please reach out via the add-on's $link_start$GitHub page$link_end$. This is also where you can help improve future versions of the add-on.",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
     "placeholders": {
-      "name": {
-        "content": "$1",
-        "example": "My Calendar (Legacy)"
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
       }
     }
   },
-  "gdata.wizard.session.legacy": {
-    "message": "The Provider for Google Calendar now uses a newer method with better reliability and features. Please go back and use the non-legacy option to proceed. If you are having trouble with that method, please tell the developer about the issue before continuing. You can use the legacy approach temporarily, but it will be removed after the transition."
+  "onboarding.donate.amount": {
+    "message": "13gbp"
   },
-  "gdata.wizard.session.reportIssue": {
-    "message": "Report an issue now"
+  "onboarding.weblate.title": {
+    "message": "This content in your language?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "New calendar dialog showing the option to select Google Calendar"
+  },
+  "onboarding.allset.title": {
+    "message": "Sorted! You're good to go."
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Next, you will be prompted to log in. The login dialog will specify the email address to use, so make sure you are signing into the correct account. If you are asked to log in again later, ensure you use the indicated account."
+  },
+  "onboarding.weblate.p2": {
+    "message": "$link_start$Help with translations$link_end$ today! Can you get your language to 100%?",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.welcome.p1": {
+    "message": "The Provider for Google Calendar marked the beginning of my journey into open source. Back in 2006, there was no easy way to connect Thunderbird with Google Calendar. Driven by curiosity and a desire to help, I explored Google's APIs and found a way to bridge that gap, enabling countless Thunderbird users to access Google Calendar. That experience not only gave me a sense of purpose but also opened doors to a professional career where open source has become an integral part of my daily life."
+  },
+  "onboarding.welcome.p2": {
+    "message": "You are now a part of this journey with me. Your support means a lot to me, and I can't imagine a future without this add-on."
+  },
+  "onboarding.providertype.p2": {
+    "message": "On the next screen, enter your email address. Even if you are subscribing to someone else's calendar, use your own email. If you have already subscribed to their calendar on the Google Calendar website, it will appear within your account."
+  },
+  "onboarding.allset.imgalt": {
+    "message": "The new task dialogue, showing only the fields relevant to the dialogue"
+  },
+  "onboarding.allset.p1": {
+    "message": "That's it. The initial synchronisation may take some time, especially if you have many events. Thunderbird might appear frozen during this process due to how it handles events. Let it run for up to half an hour before assuming there is an issue. In most cases, however, synchronisation completes within a minute."
+  },
+  "onboarding.allset.p2": {
+    "message": "What's next? Time to schedule some events. One advantage of using the Provider for Google Calendar instead of the built-in CalDAV connection is the additional customisation available in the event dialogue. You can set default alarms and adjust default privacy settings. Additionally, you can manage Google Tasks directly in Thunderbird."
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Send me a token of appreciation"
+  },
+  "onboarding.footer.p2": {
+    "message": "Thanks for reading all the way to the end! If you've made it this far, I hope you're as enthusiastic about this add-on as I am. Give it a try first, but if you're already convinced, I'd appreciate your support."
   }
 }

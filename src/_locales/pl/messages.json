@@ -241,6 +241,96 @@
       }
     }
   },
+  "onboarding.welcome.p1": {
+    "message": "Dostawca dla Kalendarza Google był początkiem mojej podróży do open source. W 2006 roku nie było łatwego sposobu na połączenie Thunderbirda z Kalendarzem Google. Kierując się ciekawością i chęcią pomocy, zbadałem interfejsy API Google i znalazłem sposób na wypełnienie tej luki, umożliwiając niezliczonym użytkownikom Thunderbirda dostęp do Kalendarza Google. To doświadczenie nie tylko dało mi poczucie celu, ale także otworzyło drzwi do kariery zawodowej, w której open source stał się integralną częścią mojego codziennego życia."
+  },
+  "onboarding.allset.imgalt": {
+    "message": "Nowe okno dialogowe zadania, wyświetlające tylko pola istotne dla okna dialogowego"
+  },
+  "onboarding.providertype.p2": {
+    "message": "Na następnym ekranie wprowadź swój adres e-mail. Nawet jeśli subskrybujesz kalendarz innej osoby, użyj własnego adresu e-mail. Jeśli zasubskrybowałeś już kalendarz tej osoby w witrynie Kalendarza Google, pojawi się on na Twoim koncie."
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Następnie zostaniesz poproszony o zalogowanie się. Okno dialogowe logowania określi adres e-mail, którego należy użyć, więc upewnij się, że logujesz się na właściwe konto. Jeśli zostaniesz poproszony o ponowne zalogowanie się w późniejszym czasie, upewnij się, że używasz wskazanego konta."
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "Na następnym ekranie wybierz kalendarze i listy zadań, które chcesz subskrybować. Wcześniej subskrybowane kalendarze będą wyświetlane jako już dodane. Aby anulować subskrypcję, użyj menu kontekstowego na liście kalendarzy Thunderbirda zamiast okna dialogowego nowego kalendarza."
+  },
+  "onboarding.allset.p1": {
+    "message": "To wszystko. Początkowa synchronizacja może zająć trochę czasu, zwłaszcza jeśli masz wiele zdarzeń. Thunderbird może wydawać się zawieszony podczas tego procesu ze względu na sposób obsługi zdarzeń. Pozwól mu działać do pół godziny, zanim założysz, że wystąpił problem. W większości przypadków synchronizacja kończy się jednak w ciągu minuty."
+  },
+  "onboarding.welcome.p2": {
+    "message": "Jesteś teraz częścią tej podróży razem ze mną. Wasze wsparcie wiele dla mnie znaczy i nie wyobrażam sobie przyszłości bez tego dodatku."
+  },
+  "onboarding.getstarted.title": {
+    "message": "Rozpoczęcie pracy"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "Pasek boczny w widoku kalendarza Thunderbirda z nowym przyciskiem kalendarza na dole"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Nie wiesz od czego zacząć? Najpierw musisz zasubskrybować swoje kalendarze. Przejdź do karty kalendarza w Thunderbirdzie i kliknij „Nowy kalendarz” u dołu paska bocznego."
+  },
+  "onboarding.providertype.title": {
+    "message": "W sieci?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Nowe okno dialogowe kalendarza, pokazujące opcje wyboru Kalendarza Google"
+  },
+  "onboarding.providertype.p1": {
+    "message": "Zobaczysz trzy opcje: Kalendarz lokalny, Kalendarz zdalny i Kalendarz Google. Chociaż Kalendarz Google jest technicznie dostępny w sieci, wybierz opcję specyficzną dla dostawcy."
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Wskaż swoje kalendarze"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Lista kalendarzy z polami wyboru z boku"
+  },
+  "onboarding.allset.title": {
+    "message": "Wszystko gotowe!"
+  },
+  "onboarding.allset.p2": {
+    "message": "Co dalej? Czas zaplanować kilka wydarzeń. Jedną z zalet korzystania z dostawcy Kalendarza Google zamiast wbudowanego połączenia CalDAV jest dodatkowe dostosowanie dostępne w oknie dialogowym wydarzenia. Możesz ustawić domyślne alarmy i dostosować domyślne ustawienia prywatności. Dodatkowo, możesz zarządzać zadaniami Google bezpośrednio w Thunderbirdzie."
+  },
+  "onboarding.weblate.title": {
+    "message": "Czy ta zawartość jest w twoim języku?"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Zrzut ekranu z weblate, tłumaczący ciąg znaków z angielskiego na niemiecki"
+  },
+  "onboarding.weblate.p1": {
+    "message": "Dostawca dla Kalendarza Google używa Weblate do tłumaczeń, gdzie można łatwo przetłumaczyć ciągi na swój język. Mówisz w języku innym niż angielski i chcesz pomóc?"
+  },
+  "onboarding.weblate.p2": {
+    "message": " $link_start$Pomóż nam w tłumaczeniach$link_end$ już dziś! Czy masz 100% znajomości swojego języka?",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.p1": {
+    "message": "Jeśli masz jakieś pytania, skontaktuj się z nami poprzez stronę dodatku na $link_start$GitHub$link_end$. Jest to również miejsce, w którym możesz pomóc ulepszyć przyszłe wersje dodatku.",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.p2": {
+    "message": "Dziękuję za przeczytanie do końca! Jeśli dotarłeś tak daleko, mam nadzieję, że jesteś tak samo podekscytowany tym dodatkiem jak ja. Śmiało, wypróbuj go najpierw, ale jeśli już się zdecydujesz, będę wdzięczny za wsparcie."
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Wyślij mi dowód wdzięczności"
+  },
   "onboarding.donate.amount": {
     "message": "15eur"
   }

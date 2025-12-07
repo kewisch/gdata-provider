@@ -32,6 +32,30 @@ function populateL10n() {
   for (let node of document.querySelectorAll(".donatebutton .button")) {
     node.href = node.href.replace("AMOUNT", messenger.i18n.getMessage("onboarding.donate.amount"));
   }
+
+  let parser = new DOMParser();
+
+  for (let node of document.querySelectorAll("[data-l10n-link-id]")) {
+    let message = messenger.i18n.getMessage(node.getAttribute("data-l10n-link-id"), ["<a id=\"link\">", "</a>"]);
+    let target = node.getAttribute("data-l10n-link-target");
+
+    let parsed = parser.parseFromString(message, "text/html").body;
+    for (let parsedchild of parsed.childNodes) {
+      if (parsedchild.nodeType == Node.TEXT_NODE) {
+        node.appendChild(document.importNode(parsedchild));
+      } else if (
+        parsedchild.localName == "a" &&
+        parsedchild.childNodes.length == 1 &&
+        parsedchild.firstChild.nodeType == Node.TEXT_NODE
+      ) {
+        let hrefNode = node.appendChild(document.importNode(parsedchild, true));
+        hrefNode.href = target;
+        if (target.startsWith("http")) {
+          hrefNode.target = "_blank";
+        }
+      }
+    }
+  }
 }
 
 async function populatePrefs() {

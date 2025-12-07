@@ -179,8 +179,98 @@
   "eventdialog.focusEvent": {
     "message": "Momentul cheie"
   },
+  "onboarding.getstarted.title": {
+    "message": "Introducere"
+  },
+  "onboarding.welcome.p1": {
+    "message": "Extensia Provider pentru Google Calendar a marcat începutul călătoriei mele spre open source. În 2006, nu exista o modalitate ușoară de a conecta Thunderbird la Google Calendar. Impulsionat de curiozitate și dorința de a ajuta, am explorat API-urile Google și am găsit o modalitate de a realiza acest lucru, permițând nenumăraților utilizatori Thunderbird să acceseze Google Calendar. Această experiență nu numai că mi-a dat sentimentul că am un scop, dar mi-a deschis și ușile către o carieră profesională în care open source a devenit o parte integrantă a vieții mele de zi cu zi."
+  },
+  "onboarding.welcome.p2": {
+    "message": "Acum faci parte din această călătorie alături de mine. Sprijinul tău înseamnă foarte mult pentru mine și nu-mi pot imagina un viitor fără această extensie."
+  },
+  "onboarding.providertype.title": {
+    "message": "În rețea?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Noua fereastră de dialog pentru calendar, care prezintă opțiunea de a selecta Google Calendar"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Selectați calendarele dvs"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "O listă de calendare cu casete de selectare laterale"
+  },
+  "onboarding.allset.title": {
+    "message": "Totul este pregătit!"
+  },
+  "onboarding.weblate.title": {
+    "message": "Doriți acest conținut în limba dumneavoastră?"
+  },
+  "onboarding.weblate.p2": {
+    "message": "$link_start$Ajutați cu traducerea$link_end$ astăzi! Puteți să aduceți localizarea la 100%?",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.p1": {
+    "message": "Dacă aveți întrebări, vă rugăm să ne contactați prin intermediul $link_start$paginii GitHub$link_end$ a add-on-ului. Tot aici puteți contribui la îmbunătățirea versiunilor viitoare ale add-on-ului.",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Trimiteți-mi un semn de apreciere"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Apoi, vi se va solicita să vă reconectați. Dialogul de conectare va specifica adresa de e-mail care trebuie utilizată, deci asigurați-vă că vă conectați la contul corect. Dacă la o dată ulterioară vi se solicită să vă reautentificați, asigurați-vă că utilizați contul indicat."
+  },
+  "onboarding.allset.imgalt": {
+    "message": "Fereastră de dialog pentru sarcină nouă, ce afișează doar câmpurile relevante pentru dialog"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "Meniul lateral al ferestrei calendar din Thunderbird cu noul buton pentru calendar în partea de jos"
+  },
+  "onboarding.providertype.p2": {
+    "message": "Pe ecranul următor, introduceți adresa dvs. de e-mail. Chiar dacă vă abonați la calendarul altcuiva, utilizați propriul e-mail. Dacă v-ați abonat deja la calendarul lor pe site-ul Google Calendar, acesta va apărea în contul dvs."
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Nu sunteți sigur de unde să începeți? Mai întâi trebuie să vă abonați la calendarul dvs. Mergeți la pagina calendar din Thunderbird și faceți clic pe „Calendar nou” în partea de jos a barei laterale."
+  },
+  "onboarding.providertype.p1": {
+    "message": "Veți vedea trei opțiuni: Pe computerul meu, În rețea și Provider pentru Google Calendar. Deși Google Calendar se află tehnic în rețea, selectați opțiunea specifică pentru Provider."
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "În următorul ecran, selectați calendarele și listele de sarcini la care doriți să vă abonați. Calendarele la care v-ați abonat anterior vor apărea ca fiind deja adăugate. Pentru a vă dezabona, utilizați meniul din lista de calendare a Thunderbird, în locul ferestrei de dialog pentru calendar nou."
+  },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "onboarding.footer.p2": {
+    "message": "Vă mulțumim că ați citit până la sfârșit! Dacă ați ajuns până aici, sper că sunteți la fel de încântați de acest add-on ca și mine. Dați-i drumul și încercați-l întâi, dar dacă deja folosiți altul, aș aprecia sprijinul dvs."
+  },
+  "onboarding.allset.p1": {
+    "message": "Asta este tot. Sincronizarea inițială poate dura ceva timp, mai ales dacă aveți multe evenimente. Thunderbird poate părea blocat în timpul acestui proces din cauza modului în care gestionează evenimentele. Lăsați-l să ruleze timp de până la o jumătate de oră înainte de a presupune că există o problemă. Cu toate acestea, în majoritatea cazurilor, sincronizarea se finalizează în decurs de un minut."
+  },
+  "onboarding.allset.p2": {
+    "message": "Ce urmează? Este timpul să programați câteva evenimente. Un avantaj al utilizării Provider pentru Google Calendar în locul conexiunii CalDAV încorporate, este personalizarea suplimentară disponibilă în dialogul evenimentului. Puteți seta alarme implicite și puteți ajusta setările implicite de confidențialitate. În plus, puteți gestiona Google Tasks direct în Thunderbird."
+  },
+  "onboarding.weblate.p1": {
+    "message": "Provider pentru Google Calendar utilizează Weblate pentru traduceri, unde puteți traduce cu ușurință șirurile de caractere în limba dvs. Vorbiți o altă limbă decât engleza și doriți să ajutați?"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Captură de ecran a traducătorului Weblate, traducând un șir de caractere din engleză în germană"
   },
   "gdata.migration.cancel.label": {
     "message": "Anulează"

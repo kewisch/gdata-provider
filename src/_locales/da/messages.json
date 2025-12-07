@@ -179,6 +179,36 @@
   "eventdialog.focusEvent": {
     "message": "Fokus tid"
   },
+  "onboarding.welcome.p2": {
+    "message": "Du er nu en del af denne rejse med mig. Din støtte betyder meget for mig, og jeg kan ikke forestille mig en fremtid uden denne tilføjelse."
+  },
+  "onboarding.welcome.p1": {
+    "message": "Provider to Google Calendar markerede begyndelsen på min rejse ind i open source verdenen. Tilbage i 2006 var der ingen nem måde at forbinde Thunderbird med Google Calendar. Drevet af nysgerrighed og et ønske om at hjælpe, udforskede jeg Googles API'er og fandt en måde at bygge bro over dette hul på, hvilket gjorde det muligt for utallige Thunderbird-brugere at få adgang til Google Calendar. Den oplevelse gav mig ikke kun en følelse af formål, men åbnede også døre til en professionel karriere, hvor open source er blevet en integreret del af mit daglige liv."
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Ved ikke, hvor du skal starte? Du skal først abonnere på din kalendere. Gå til kalender-fanen i Thunderbird, og klik på \"Ny Kalender\" i bunden af sidevinduet."
+  },
+  "onboarding.getstarted.title": {
+    "message": "Kom i gang"
+  },
+  "onboarding.providertype.title": {
+    "message": "På netværket ?"
+  },
+  "onboarding.weblate.title": {
+    "message": "Dette indhold på dit sprog?"
+  },
+  "onboarding.footer.p1": {
+    "message": "Har du spørgsmål, henvende dig til udvidelsens $link_start$GitHub-side$link_end$. Her kan du også hjælpe, med at forbedre fremtidige versioner af udvidelsen.",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
   "onboarding.donate.amount": {
     "message": "115dkk"
   }

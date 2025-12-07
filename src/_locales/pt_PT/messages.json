@@ -176,7 +176,97 @@
   "eventdialog.focusEvent": {
     "message": "Tempo de Foco"
   },
+  "onboarding.welcome.p2": {
+    "message": "Faz agora parte desta viagem juntamente comigo. O seu apoio significa muito para mim, e eu não consigo imaginar um futuro sem esta extensão."
+  },
+  "onboarding.getstarted.title": {
+    "message": "Primeiros passos"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Não sabe por onde começar? Primeiro, tem de subscrever os seus calendários. Vá até a guia do calendário no Thunderbird e clique em \"Novo Calendário\" na parte inferior da barra lateral."
+  },
+  "onboarding.providertype.title": {
+    "message": "Na rede?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Diálogo de novo calendário, mostrando a opção de selecionar Google Calendar"
+  },
+  "onboarding.providertype.p1": {
+    "message": "Irá ver três opções: No meu computador, Na rede e Fornecedor do Google Calendar. Embora o Google Calendar esteja tecnicamente na rede, selecione a opção específica do fornecedor."
+  },
+  "onboarding.providertype.p2": {
+    "message": "No ecrã seguinte, introduza o seu endereço de email. Mesmo que esteja a subscrever o calendário de outra pessoa, utilize o seu próprio email. Se já tiver inscrito no calendário deles no site do Google Calendar, ele irá aparecer na sua conta."
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Selecione os seus calendários"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Uma lista de calendários com caixas de seleção ao lado"
+  },
+  "onboarding.allset.title": {
+    "message": "Está tudo pronto!"
+  },
+  "onboarding.weblate.title": {
+    "message": "Este conteúdo no seu idioma?"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Imagem de ecrã do weblate, a traduzir a string de Inglês para Alemão"
+  },
+  "onboarding.footer.p1": {
+    "message": "Se tem alguma questão, por favor contacte através da página $link_start$GitHub da extensão$link_end$. É também aqui onde pode ajudar a melhorar as futuras versões desta extensão.",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Envie-me um token de apreciação"
+  },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Em seguida, ser-lhe-á pedido para iniciar sessão. A caixa de diálogo de entrada especificará o endereço de email a ser usado, portanto, certifique-se de que está a entrar na conta correta. Se lhe for pedido para iniciar sessão novamente mais tarde, certifique-se de que utiliza a conta indicada."
+  },
+  "onboarding.allset.p1": {
+    "message": "Está feito. A sincronização inicial pode levar algum tempo, especialmente se tiver muitos eventos. O Thunderbird pode parecer bloqueado durante este processo devido à forma como lida com os eventos. Deixe funcionar por até meia hora antes de assumir que há um problema. Na maioria dos casos, no entanto, a sincronização é concluída num minuto."
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "A barra lateral na vista de calendário do Thunderbird com o novo botão de calendário na parte inferior"
+  },
+  "onboarding.weblate.p2": {
+    "message": "$link_start$Ajude nas traduções$link_end$ hoje! Consegue ter o seu idioma a 100%?",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "No ecrã seguinte, selecione os calendários e as listas de tarefas que pretende subscrever. Os calendários subscritos anteriormente aparecerão como já adicionados. Para cancelar a inscrição, use o menu de contexto na lista de calendários do Thunderbird em vez da nova caixa de diálogo de calendário."
+  },
+  "onboarding.allset.imgalt": {
+    "message": "A caixa de diálogo de nova tarefa, mostrando apenas os campos relevantes para a caixa de diálogo"
+  },
+  "onboarding.allset.p2": {
+    "message": "O que se segue? Hora de agendar alguns eventos. Uma vantagem de usar o Fornecedor do Google Calendar em vez da conexão CalDAV integrada é a personalização adicional disponível na caixa de diálogo do evento. Ppode definir alarmes padrão e ajustar as configurações de privacidade padrão. Além disso, pode gerir o Google Tasks diretamente no Thunderbird."
+  },
+  "onboarding.weblate.p1": {
+    "message": "O Fornecedor do Google Calendar usa o Weblate para traduções, onde você pode traduzir facilmente strings para o seu idioma. Fala uma língua diferente do inglês e quer ajudar?"
+  },
+  "onboarding.footer.p2": {
+    "message": "Obrigado por ler até o fim! Se chegou até aqui, espero que esteja tão animado com esta extensão quanto eu. Vá em frente e experimente primeiro, mas se já estiver convencido, eu agradeceria o seu apoio."
+  },
+  "onboarding.welcome.p1": {
+    "message": "O Fornecedor do Google Calendar marcou o início da minha jornada para o código-aberto. Em 2006, não havia uma maneira fácil de conectar o Thunderbird ao Google Calendar. Movido pela curiosidade e pelo desejo de ajudar, explorei as APIs do Google e encontrei uma maneira de preencher essa lacuna, permitindo que inúmeros utilizadores do Thunderbird acessassem o Google Calendar. Essa experiência não só me deu um sentimento de propósito, mas também abriu portas para uma carreira profissional onde o código aberto se tornou parte integrante da minha vida diária."
   }
 }

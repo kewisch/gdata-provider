@@ -241,6 +241,96 @@
       }
     }
   },
+  "onboarding.getstarted.title": {
+    "message": "Primeros pasos"
+  },
+  "onboarding.providertype.p2": {
+    "message": "En la siguiente pantalla escribe tu dirección de correo electrónico. Utiliza tu propia dirección de correo electrónico aunque la suscripción sea al calendario de otra persona. Si ya te has suscrito a su calendario en el sitio web de Google Calendar aparecerá en tu cuenta."
+  },
+  "onboarding.welcome.p2": {
+    "message": "Los usuarios del complemento forman parte de este viaje, por lo que tu apoyo es fundamental de cara al futuro."
+  },
+  "onboarding.welcome.p1": {
+    "message": "El proveedor para Google Calendar fue mi primer proyecto de código abierto. En 2006 no había ninguna forma sencilla de conectar Thunderbird con Google Calendar. Tenía curiosidad y ganas de mejorar las cosas, por lo que aprendí cómo funcionaban las APIs de Google y encontré una forma de abordarlo, permitiendo a innumerables usuarios de Thunderbird acceder a Google Calendar. Esta experiencia no solo me llena, sino que también me abre las puertas a una carrera profesional en la que el código abierto se ha convertido en una parte integral de mi vida diaria."
+  },
+  "onboarding.providertype.p1": {
+    "message": "Verás tres opciones: «En mi equipo», «En la red» y «Google Calendar». Aunque Google Calendar esté técnicamente en la red, selecciona la tercera opción para utilizar este proveedor."
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Elige entre tus calendarios"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Una lista de calendarios con casillas de verificación"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "La barra lateral en vista de calendario de Thunderbird con el nuevo botón de calendario en la parte inferior"
+  },
+  "onboarding.providertype.title": {
+    "message": "¿En la red?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Diálogo de nuevo calendario, mostrando la opción de elegir Google Calendar"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "¿No sabes cómo empezar? Primero hay que crear una suscripción a un calendario. Dirígete a la pestaña de calendarios en Thunderbird y haz clic en «Nuevo calendario» en la parte baja de la barra lateral."
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "En la siguiente pantalla se eligen los calendarios y listas de tareas a los que suscribirse. Los calendarios a los que uno se haya suscrito con anterioridad ya aparecerán como tal. Para cancelar una suscripción hay que utilizar el menú contextual en la lista de calendarios de Thunderbird, en vez del diálogo para nuevos calendarios."
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "En este siguiente paso se pedirá que inicies sesión. La interfaz tiene un campo en el que escribir tu correo electrónico, asegúrate de iniciar sesión en la cuenta correcta. Si en un futuro se vuelve a pedir iniciar sesión asegúrate de utilizar esta misma cuenta."
+  },
+  "onboarding.allset.title": {
+    "message": "¡Ya está todo listo!"
+  },
+  "onboarding.allset.p1": {
+    "message": "Listo, la primera sincronización puede tardar un poco, sobre todo si hay muchos eventos, por lo que puede que Thunderbird se bloquee y no responda durante el proceso. Lo mejor es dejarlo trabajar al menos durante media hora antes de intentar cerrarlo. En la mayoría de los casos la sincronización concluye en un minuto."
+  },
+  "onboarding.allset.imgalt": {
+    "message": "El nuevo cuadro de diálogo de tareas, mostrando sólo los campos relevantes al cuadro de diálogo"
+  },
+  "onboarding.allset.p2": {
+    "message": "¿Y ahora qué? Es hora de programar algunos eventos. Una ventaja de usar el proveedor de Google Calendar en vez de la conexión CalDAV integrada es la personalización extra en el cuadro de diálogo de eventos. Uno puede definir alarmas predeterminadas y ajustar sus ajustes de privacidad. Además se pueden gestionar las tareas de Google directamente desde Thunderbird."
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Captura de pantalla de Weblate traduciendo un texto del inglés al alemán"
+  },
+  "onboarding.weblate.title": {
+    "message": "¿Este contenido está en tu idioma?"
+  },
+  "onboarding.weblate.p2": {
+    "message": "Puedes $link_start$colaborar con la traducción$link_end$ para que llegue al 100%.",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.weblate.p1": {
+    "message": "El proveedor para Google Calendar se traduce a través de Weblate, donde se puede colaborar de forma sencilla para mejorar la traducción. ¿Hablas otro idioma además del inglés y quieres ayudar?"
+  },
+  "onboarding.footer.p1": {
+    "message": "Si tienes alguna duda o pregunta lo mejor es contactar a través de nuestra $link_start$página de GitHub$link_end$. Aquí es donde se desarrollan las versiones futuras del complemento.",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Enviar una pequeña donación"
+  },
+  "onboarding.footer.p2": {
+    "message": "Gracias por leerme hasta el final, espero que te guste tanto como a mí. Pruébalo primero, pero si ya lo has usado antes o quieres apoyar el proyecto te pedimos que hagas una donación."
+  },
   "onboarding.donate.amount": {
     "message": "15eur"
   },

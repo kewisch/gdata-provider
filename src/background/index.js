@@ -77,7 +77,7 @@ export async function initListeners() {
 
   messenger.runtime.onInstalled.addListener(({ reason }) => {
     if (reason == "install") {
-      browser.tabs.create({ url: "/onboarding/beta-welcome.html" });
+      browser.tabs.create({ url: "/onboarding/welcome.html" });
     } else if (reason == "update") {
       browser.tabs.create({ url: "/onboarding/update-140.0.0.html" });
     }

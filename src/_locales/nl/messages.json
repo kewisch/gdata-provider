@@ -241,8 +241,98 @@
       }
     }
   },
+  "onboarding.welcome.p2": {
+    "message": "Je maakt nu deel uit van deze reis met mij. Jouw steun betekent heel veel voor mij en ik kan me geen toekomst zonder deze add-on inbeelden."
+  },
+  "onboarding.welcome.p1": {
+    "message": "Met de Provider for Google Calendar startte mijn reis in het Open Source domein. In 2006 was er geen gemakkelijke manier om Thunderbird te verbinden met Google Calendar. Gedreven door nieuwsgierigheid en een verlangen om te helpen, onderzocht ik de API's van Google en vond een manier om die kloof te overbruggen, waardoor talloze Thunderbird-gebruikers toegang kregen tot Google Calendar. Die ervaring gaf me niet alleen een gevoel van zingeving, maar opende ook deuren naar een professionele carrière waarin open source een integraal onderdeel is geworden van mijn dagelijkse leven."
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Selecteer je agenda's"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Een lijst van agenda's met selectievakjes ernaast"
+  },
+  "onboarding.getstarted.title": {
+    "message": "Aan de slag"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "De zijbalk in het kalenderoverzicht van Thunderbird met de nieuwe agendaknop onderaan"
+  },
+  "onboarding.providertype.title": {
+    "message": "Op het netwerk?"
+  },
+  "onboarding.allset.title": {
+    "message": "Je bent klaar om aan de slag te gaan!"
+  },
+  "onboarding.weblate.title": {
+    "message": "Deze content in jouw taal?"
+  },
+  "onboarding.footer.p1": {
+    "message": "Stel je vragen gerust via de add-on $link_start$GitHub pagina$link_end$. Dit is de plek waar je kan helpen om de volgende versie van de add-on te verbeteren.",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.weblate.p2": {
+    "message": "$link_start$Help mee met de vertalingen$link_end$ vandaag! Kan je jouw taal naar 100% vervolledigen?",
+    "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Stuur me een blijk van waardering"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Screenshot van weblate, vertalen van een string van het Engels naar het Duits"
+  },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Weet je niet waar te beginnen? Je moet je eerst abonneren op je agenda's. Ga naar de Agenda tab in Thunderbird en klik op \"Nieuwe Agenda\" onderaan de zijbalk."
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Nieuw agendadialoogvenster, dat de optie toont om Google Agenda te selecteren"
+  },
+  "onboarding.providertype.p1": {
+    "message": "Je ziet drie opties: Op mijn computer, Op het netwerk en Provider voor Google Agenda. Ook al zit Google Agenda technisch gezien op het netwerk, selecteer toch de provider-specifieke optie."
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "Op het volgende scherm selecteer je de Agenda's en takenlijst die je wilt abonneren. Reeds geabonneerde Agenda's zullen verschijnen als reeds toegevoegd. Om uit te schrijven van een Agenda, gebruik de rechtermuisknop in de Thunderbird Agenda lijst i.p.v. de nieuwe Agenda dialoog."
+  },
+  "onboarding.providertype.p2": {
+    "message": "Op het volgende scherm tik je je E-mail adres in. Zelfs als je abonneert op iemand anders zijn Agenda, gebruik je eigen E-mail. Als je reeds geabonneerd bent op zijn Agenda op de Google Agenda website, zal deze in je account verschijnen."
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Hierna moet je inloggen. De login-dialoog zal het juiste E-mailadres bevatten, dus wees zeker dat je de juiste account gebruikt. Als je later wordt gevraagd om opnieuw in te loggen, gebruik het juiste account om terug in te loggen."
+  },
+  "onboarding.allset.imgalt": {
+    "message": "De nieuwe takenlijst, met allen de relevante velden voor het dialoogvenster"
+  },
+  "onboarding.allset.p1": {
+    "message": "Klaar. De initiële synchronisatie kan een tijdje duren, zeker als je veel events hebt. Het kan lijken alsof Thunderbird bevroren is, door de manier waarop het events afhandelt. Die kan gemakkelijk een half uur duren. In de meeste gevallen duurt de synchronisatie niet langer dan een minuut."
+  },
+  "onboarding.allset.p2": {
+    "message": "Wat is het volgende? Events en taken aanmaken. Een voordeel van het gebruik van de Provider voor Google Agenda's zijn de extra opties in het event dialoogvenster. Je kan standaard alarmen aanpassen en de standaard privacy instellingen aanpassen. Ook Google Takenlijst kan je direct in Thunderbird bewerken."
+  },
+  "onboarding.weblate.p1": {
+    "message": "Provider voor Google Agenda gebruikt Weblate voor vertalingen, waar je gemakkelijk teksten kan vertalen naar jouw taal. Spreek je een andere taal en wil je helpen?"
+  },
+  "onboarding.footer.p2": {
+    "message": "Bedankt om helemaal tot hier te lezen. Als je hier bent geraakt, hoop ik dat je even enthousiast bent over deze add-on als ik. Test hem eerst even uit, maar je hem al gebruikt, zou ik je hulp erg waarderen."
   },
   "gdataProviderLabelLegacy": {
     "message": "$NAME$ (Legacy)",
