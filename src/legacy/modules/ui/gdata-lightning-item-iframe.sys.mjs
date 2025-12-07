@@ -362,6 +362,30 @@ export function gdataInitUI(window, document, version) {
     }
   });
 
+  monkeyPatch(window, "updateAttachment", function(protofunc, ...args) {
+    let res = protofunc.apply(this, args);
+
+    const fmtmap = {
+      "application/vnd.google-apps.document": "docs.webp",
+      "application/vnd.google-apps.spreadsheet": "sheets.webp",
+      "application/vnd.google-apps.presentation": "slides.webp",
+    };
+
+    let documentLink = document.getElementById("attachment-link");
+    for (let item of document.querySelectorAll("#attachment-link > richlistitem")) {
+      let label = item.querySelector("label");
+      label.value = item.getAttribute("label");
+
+      let fmttype = item.attachment?.getParameter("FMTTYPE");
+
+      if (fmttype in fmtmap) {
+        let img = item.querySelector("img");
+        img.removeAttribute("srcset");
+        img.setAttribute("src", "resource://gdata-provider/images/appicons/" + fmtmap[fmttype]);
+      }
+    }
+  });
+
   monkeyPatch(window, "saveDialog", function(protofunc, item, ...args) {
     let res = protofunc.call(this, item, ...args);
 

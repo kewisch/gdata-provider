@@ -67,3 +67,23 @@
 #gdata-conf-entrypoints li .text-link {
   user-select: text;
 }
+
+
+/* Some hacks to make the summary dialog more consistent */
+#attachment-link > richlistitem > label {
+  align-self: center;
+}
+.item-organizer-row > th {
+  vertical-align: middle;
+}
+#calendar-item-summary #gdata-conf-logo {
+  height: 16px;
+  width: 16px;
+}
+#calendar-item-summary #gdata-conference-row[mode="existing"][readonly] > th {
+  padding-top: 0.1rem;
+}
+
+.attendee-label > .attendee-name {
+  align-self: center;
+}

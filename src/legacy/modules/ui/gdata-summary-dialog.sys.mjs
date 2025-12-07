@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 export function gdataInitUI(window, document, version) {
-  const { getMessenger } = ChromeUtils.importESModule(
+  const { getMessenger, monkeyPatch } = ChromeUtils.importESModule(
     `resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs?version=${version}`
   );
   const { CONFERENCE_ROW_FRAGMENT, initConferenceRow } = ChromeUtils.importESModule(
@@ -54,4 +54,36 @@ export function gdataInitUI(window, document, version) {
 
     document.getElementById("gdata-birthday-info-cell").textContent = birthdayInfo;
   }
+
+  monkeyPatch(document.getElementById("calendar-item-summary"), "updateAttachments", function(protofunc, attachments, ...args) {
+    let res = protofunc.call(this, attachments, ...args);
+
+    let attachmap = Object.fromEntries(attachments.map(attach => ([attach.uri.spec, attach])));
+
+    const fmtmap = {
+      "application/vnd.google-apps.document": "docs.webp",
+      "application/vnd.google-apps.spreadsheet": "sheets.webp",
+      "application/vnd.google-apps.presentation": "slides.webp",
+    };
+
+    for (let attachment of document.querySelectorAll(".attachment-template")) {
+      let fmttype = attachment.querySelector("img").srcset.match(/contentType=([^&?]*)/)?.[1];
+      if (fmttype in fmtmap) {
+        let img = attachment.querySelector("img");
+        img.removeAttribute("srcset");
+        img.setAttribute("src", "resource://gdata-provider/images/appicons/" + fmtmap[fmttype]);
+        img.setAttribute("height", "16");
+        img.setAttribute("width", "16");
+
+        let label = attachment.querySelector("label");
+        let urispec = label.getAttribute("value");
+        if (urispec in attachmap) {
+          label.setAttribute("value", attachmap[urispec].getParameter("FILENAME"));
+          attachment.setAttribute("tooltiptext", urispec);
+        }
+      }
+    }
+
+    return res;
+  });
 }
