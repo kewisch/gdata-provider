@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "Provider per Calendario Google",
+    "message": "Provider per Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "extensionDescription": {
-    "message": "Permette l'accesso bidirezionale a Calendario Google",
+    "message": "Permette l'accesso in lettura e scrittura a Google Calendar",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdataProviderLabel": {
@@ -12,16 +12,16 @@
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdata.privacy.default.label": {
-    "message": "Predefinito Google"
+    "message": "Predefinito di Google"
   },
   "gdata.privacy.default.accesskey": {
     "message": "P"
   },
   "gdata.migration.title": {
-    "message": "Migra i calendari \"sola lettura\""
+    "message": "Sposta i calendari in sola lettura"
   },
   "gdata.migration.description": {
-    "message": "Provider for Google calendar ha rilevato che ci sono calendari esistenti in grado di accedere a Calendario Google solamente in lettura. Se si vuole aggiornare qualcuno di questo calendari, selezionarli sotto."
+    "message": "Provider for Google Calendar ha rilevato che ci sono calendari esistenti in grado di accedere a Google Calendar in sola in lettura. Se vuoi aggiornare qualcuno di questo calendari, selezionali qui in basso."
   },
   "gdata.migration.upgrade.label": {
     "message": "Aggiorna"
@@ -39,10 +39,10 @@
     "message": "Scegliere una sessione esistente o inserire il proprio indirizzo email per crearne una nuova. È sufficiente una sola sessione per account."
   },
   "gdata.wizard.calendars.description": {
-    "message": "Selezionare i calendari e le liste di attività da sottoscrivere."
+    "message": "Seleziona i calendari e le liste di task da sottoscrivere."
   },
   "gdata.wizard.nextstep.description": {
-    "message": "Proseguire al passo successivo per configurare i calendari."
+    "message": "Vai al passo successivo per configurare i calendari."
   },
   "calendarsHeader": {
     "message": "Calendari"
@@ -61,7 +61,7 @@
     }
   },
   "quotaExceeded": {
-    "message": "La quota per $session_id$ è stata superata, riprovare più tardi.",
+    "message": "Lo spazio disco per $session_id$ è stato superato, riprovare più tardi.",
     "description": "This is shown when the request quota has been exceeded.",
     "placeholders": {
       "session_id": {
@@ -71,7 +71,7 @@
     }
   },
   "providerOutdated": {
-    "message": "Questa versione del provider è scaduta, aggiornare all'ultima versione."
+    "message": "Questa versione del provider è troppo vecchia, aggiornare all'ultima versione."
   },
   "reminderOutOfRange": {
     "message": "Google Calendar consente promemoria solo fino a 4 settimane prima dell'inizio dell'evento."
@@ -141,13 +141,13 @@
     "message": "Invia notifiche via email ai partecipanti all'evento"
   },
   "settings.forcePlainText": {
-    "message": "Forza l'uso del testo normale nelle descrizioni degli eventi"
+    "message": "Forza l'uso del testo semplice nelle descrizioni degli eventi"
   },
   "eventdialog.conferenceLabel": {
-    "message": "Conferenza:"
+    "message": "Videoconferenza:"
   },
   "eventdialog.joinVia.video": {
-    "message": "Collegati in video-conferenza"
+    "message": "Collegati in videoconferenza"
   },
   "eventdialog.joinVia.phone": {
     "message": "Telefono"
@@ -156,7 +156,7 @@
     "message": "SIP"
   },
   "eventdialog.joinVia.more": {
-    "message": "Altre informazioni sulla conferenza"
+    "message": "Altre informazioni sulla videoconferenza"
   },
   "eventdialog.codeType.meetingCode": {
     "message": "Codice della riunione"
@@ -183,10 +183,10 @@
     "message": "Non aggiornare"
   },
   "gdata.migration.cancel.label": {
-    "message": "Cancella"
+    "message": "Annulla"
   },
   "eventdialog.conferenceRemove": {
-    "message": "Rimuovi Conferenza"
+    "message": "Rimuovi Videoconferenza"
   },
   "eventdialog.birthdayAgePast": {
     "message": "Ha compiuto $age$ anni il $date$",
@@ -202,7 +202,7 @@
     }
   },
   "gdata.migration.notification": {
-    "message": "Alcuni dei tuoi calendari possono essere migrati a \"Provider per Calendario Google\""
+    "message": "Alcuni dei tuoi calendari possono essere spostati su \"Provider per Google Calendar \""
   },
   "settings.migrateCalendars.disabled": {
     "message": "Non ci sono calendari in sola lettura da migrare"
@@ -217,7 +217,7 @@
     }
   },
   "settings.migrateCalendars": {
-    "message": "Migra i calendari \"sola lettura\""
+    "message": "Migra i calendari in \"sola lettura\""
   },
   "eventdialog.conferenceUndo": {
     "message": "Annulla"
@@ -242,10 +242,10 @@
     "message": "Nessuno"
   },
   "onboarding.getstarted.p1": {
-    "message": "Non sai da dove cominciare ? Come prima azione é necessario sottoscriversi al proprio calendario, Vai al pannello calendario in Thunderbird e premi \"Nuovo Calendario\" nella parte inferiore della barra laterale."
+    "message": "Non sai da dove cominciare ? Come prima azione é necessario sottoscrivere il proprio calendario, vai al pannello calendario in Thunderbird e premi \"Nuovo Calendario\" nella parte inferiore della barra laterale."
   },
   "onboarding.welcome.p2": {
-    "message": "Ora sei parte, assieme a me, di questa avventura. Il tuo supporto significa molto per me e non riesco ad immaginare un futuro senza questo add-on."
+    "message": "Ora sei parte di questa avventura insieme a me. Il tuo supporto significa molto per me e non riesco ad immaginare un futuro senza questo add-on."
   },
   "onboarding.getstarted.title": {
     "message": "Guida introduttiva"
@@ -326,13 +326,13 @@
     "message": "E adesso? È il momento di programmare alcuni eventi! Un vantaggio dell'utilizzo del Provider per Google Calendar anziché della connessione CalDAV integrata è la personalizzazione aggiuntiva disponibile nella finestra di dialogo dell'evento. Puoi impostare allarmi predefiniti o modificare le impostazioni di privacy predefinite. Inoltre, puoi gestire Google Tasks direttamente in Thunderbird."
   },
   "onboarding.footer.donate.text": {
-    "message": "Inviami un segno di apprezzamento"
+    "message": "Mostrami il tuo apprezzamento"
   },
   "onboarding.donate.amount": {
     "message": "15eur"
   },
   "onboarding.footer.p2": {
-    "message": "Grazie per aver letto fino in fondo! Se sei arrivato fin qui, spero che ti sia emozionato quanto me per questo componente aggiuntivo. Vai avanti e provalo prima ma, se sei già convinto, apprezzerei il tuo supporto."
+    "message": "Grazie per aver letto fino in fondo! Se sei arrivato fin qui, spero che questo componente aggiuntivo ti sia piaciuto quanto è piaciuto a me. Vai avanti e provalo prima ma, se sei già convinto, apprezzerei il tuo supporto."
   },
   "gdataProviderLabelLegacy": {
     "message": "$name$ (Legacy)",
@@ -350,7 +350,7 @@
     "message": "Impostazioni legacy"
   },
   "settings.enableEmailInvitations": {
-    "message": "Abilita schedulazione email"
+    "message": "Abilita l'invio programmato delle email"
   },
   "settings.enableAttendees": {
     "message": "Sincronizza i partecipanti all'evento"
@@ -375,5 +375,8 @@
   },
   "propertiesdialog.upgradeDescription.duplicate": {
     "message": "Il provider per Google Calendar ora utilizza un nuovo metodo con maggiore affidabilità e funzionalità. Sei iscritto a questo calendario due volte, una con il metodo precedente e una con il nuovo metodo. Questo è l'abbonamento precedente. Puoi annullare l'iscrizione e mantenere quella nuova."
+  },
+  "eventdialog.gmailEvent": {
+    "message": "Questo evento è stato creato da Gmail. Non puoi modificare tutti i dettagli."
   }
 }

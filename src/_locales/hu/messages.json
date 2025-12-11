@@ -293,7 +293,7 @@
     }
   },
   "onboarding.footer.p1": {
-    "message": "Ha bármilyen kérdésed van, vedd fel a kapcsolatot a kiegészítő $link_start$GitHub-oldal$link_end$. Ott tudsz hozzájárulni a jövőbeni verziók fejlesztéséhez.",
+    "message": "Ha bármilyen kérdése van, vegye fel a kapcsolatot a kiegészítő $link_start$GitHub-oldal$link_end$. Ott tud hozzájárulni a jövőbeni verziók fejlesztéséhez.",
     "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
     "placeholders": {
       "link_start": {
@@ -339,5 +339,44 @@
   },
   "onboarding.welcome.p1": {
     "message": "A Provider for Google Calendar jelentette az én utamat az open source világába. 2006-ban még nem létezett egyszerű módja annak, hogy a Thunderbirdet összekössük a Google Naptárral. A kíváncsiság és a segíteni akarás hajtott, így beleástam magam a Google API-kba, és megtaláltam a módját, hogyan lehet áthidalni ezt a szakadékot – lehetővé téve, hogy rengeteg Thunderbird-felhasználó elérje a Google Naptárt. Ez a tapasztalat nemcsak célt adott, hanem megnyitotta számomra a professzionális karrier kapuját is, ahol az open source mára a mindennapjaim szerves részévé vált."
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (Régi)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "A Google Naptár Szolgáltatója most újabb módszert használ jobb megbízhatósággal és funkciókkal. Menjen vissza, és használja az új lehetőséget, hogy folytassa. Ha baj van ezzel a módszerrel, jelezze a fejlesztőnek a problémát, mielőtt folytatná. Ideiglenesen használhatja a régi megközelítést, de az az átmenet után eltávolításra kerül."
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Probléma jelentése most"
+  },
+  "settings.legacySection": {
+    "message": "Régi beállítások"
+  },
+  "settings.legacySectionDescription": {
+    "message": "Ezek a beállítások csak a régi naptárakra vonatkoznak. Az e-mail meghívások és a résztvevők mindig engedélyezve vannak az új naptárak számára, mivel ezek szinkronizálása sokkal megbízhatóbb."
+  },
+  "eventdialog.gmailEvent": {
+    "message": "Ezt az eseményt automatikusan a Gmailből hozták létre. Nem minden információ szerkeszthető."
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "Frissítés"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "A Google Naptár Szolgáltatója most újabb módszert használ jobb megbízhatósággal és funkciókkal. Frissítse a naptárát, mivel ez lesz az egyetlen lehetőség a jövőben. Ha baj van ezzel a módszerrel, egyelőre leiratkozhat és újra feliratkozhat a régi lehetősséggel. A frissítés némi időt vesz igénybe, ha nagyobb naptára van."
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "A Google Naptár Szolgáltatója most új módszert használ jobb megbízhatósággal és funkciókkal. Erre a naptárra kétszer iratkozott fel, egyszer az régi módszerrel, és egyszer az új módszerrel. Ez a régi feliratkozás. Leiratkozhat róla, és megtarthatja az újat."
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "Frissítés most"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "Leiratkozás"
   }
 }

@@ -195,7 +195,7 @@
     "message": "Ja està tot a punt!"
   },
   "onboarding.weblate.p2": {
-    "message": " $link_start$Ajuda amb les traduccions$link_end$ avui! Pots aconseguir el teu idioma al 100%?",
+    "message": "$link_start$Ajuda amb les traduccions$link_end$ avui! Pots aconseguir el teu idioma al 100%?",
     "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
     "placeholders": {
       "link_start": {

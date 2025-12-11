@@ -175,5 +175,8 @@
   },
   "eventdialog.oooEvent": {
     "message": "Mimo kanceláriu"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Povolit e mailové pozvánky"
   }
 }

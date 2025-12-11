@@ -308,7 +308,7 @@
     "message": "Dostawca dla Kalendarza Google używa Weblate do tłumaczeń, gdzie można łatwo przetłumaczyć ciągi na swój język. Mówisz w języku innym niż angielski i chcesz pomóc?"
   },
   "onboarding.weblate.p2": {
-    "message": " $link_start$Pomóż nam w tłumaczeniach$link_end$ już dziś! Czy masz 100% znajomości swojego języka?",
+    "message": "$link_start$Pomóż nam w tłumaczeniach$link_end$ już dziś! Czy masz 100% znajomości swojego języka?",
     "description": "This text contains a link. The placeholders are basically the HTML <a> tags, use them to wrap the text that should be linked",
     "placeholders": {
       "link_start": {
