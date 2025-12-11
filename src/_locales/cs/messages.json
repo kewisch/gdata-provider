@@ -317,5 +317,8 @@
   },
   "onboarding.weblate.p1": {
     "message": "Poskytovatel Google kalendáře používá Weblate, kde můžete snadno překládat texty do sého jazyka. Ovládáte jiný jazyk než angličtinu a chcete pomoci?"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "Synchronizace účastníků události"
   }
 }

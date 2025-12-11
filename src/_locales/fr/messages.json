@@ -174,7 +174,7 @@
     "message": "PIN"
   },
   "eventdialog.oooEvent": {
-    "message": "Absent du Bureau"
+    "message": "Absent de l'entreprise"
   },
   "eventdialog.focusEvent": {
     "message": "Temps de concentration"
@@ -207,7 +207,7 @@
     "message": "Il n'y a actuellement aucun calendrier en lecture seule à migrer"
   },
   "eventdialog.conferenceRemove": {
-    "message": "Supprimer conférence"
+    "message": "Supprimer la conférence"
   },
   "eventdialog.conferenceNone": {
     "message": "Aucun"
@@ -275,7 +275,7 @@
     }
   },
   "onboarding.donate.amount": {
-    "message": "15eur"
+    "message": "15 €"
   },
   "onboarding.weblate.imgalt": {
     "message": "Capture d'écran de Weblate, traduisant une chaîne de l'Anglais vers l'Allemand"
@@ -375,5 +375,8 @@
   },
   "propertiesdialog.unsubscribeButton": {
     "message": "Se désabonner"
+  },
+  "eventdialog.gmailEvent": {
+    "message": "Cet évènement a automatiquement été créé à par Gmail. Certaines informations ne sont pas modifiables."
   }
 }

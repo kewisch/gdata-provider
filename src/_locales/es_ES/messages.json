@@ -375,5 +375,8 @@
   },
   "propertiesdialog.unsubscribeButton": {
     "message": "Desuscribirse"
+  },
+  "eventdialog.gmailEvent": {
+    "message": "Este evento se ha creado automáticamente en Gmail, por lo que no se puede editar del todo."
   }
 }
