@@ -42,7 +42,7 @@
     "lint": "commitlint -f origin/main && eslint"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.2.0",
+    "@commitlint/cli": "^20.3.0",
     "@commitlint/config-conventional": "^20.2.0",
     "@stylistic/eslint-plugin": "^5.6.1",
     "@testing-library/dom": "^10.4.1",
