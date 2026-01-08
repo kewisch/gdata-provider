@@ -8,10 +8,26 @@ ChromeUtils.defineESModuleGetters(lazy, {
   cal: "resource:///modules/calendar/calUtils.sys.mjs" /* global cal */
 });
 
+
+ChromeUtils.defineLazyGetter(lazy, "log", () => {
+  return console.createInstance({ // eslint-disable-line no-console
+    prefix: "[gdata-provider]",
+    maxLogLevel: "Warn",
+    maxLogLevelPref: "calendar.loglevel",
+  });
+});
+
+export function LOGerror(aStr) {
+  lazy.log.error(aStr);
+}
+
+export function LOG(aStr) {
+  lazy.log.debug(aStr);
+}
+
+
 export function LOGverbose(aStr) {
-  if (Services.prefs.getBoolPref("calendar.debug.log.verbose", false)) {
-    lazy.cal.LOG(aStr);
-  }
+  lazy.log.debug(aStr);
 }
 
 export function stringException(e) {
@@ -165,7 +181,7 @@ export function LOGinterval(aInterval) {
     type = aInterval.freeBusyType + " (UNKNOWN)";
   }
 
-  lazy.cal.LOG(
+  LOG(
     "[calGoogleCalendar] Interval from " +
       aInterval.interval.start +
       " to " +

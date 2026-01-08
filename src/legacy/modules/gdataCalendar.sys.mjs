@@ -20,6 +20,8 @@ ChromeUtils.defineESModuleGetters(lazy, {
 
 defineGdataModuleGetters(lazy, {
   stringException: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
+  LOG: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
+  LOGerror: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
   getGoogleSessionManager: "resource://gdata-provider/legacy/modules/gdataSession.sys.mjs",
   calGoogleRequest: "resource://gdata-provider/legacy/modules/gdataRequest.sys.mjs",
   API_BASE: "resource://gdata-provider/legacy/modules/gdataRequest.sys.mjs",
@@ -102,7 +104,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
       // avoid exceeding quota.
       let interval = this.getProperty("refreshInterval");
       if (interval < MIN_REFRESH_INTERVAL && interval != 0) {
-        cal.LOG(
+        lazy.LOG(
           "[calGoogleCalendar] Sorry, auto-refresh intervals under " +
             MIN_REFRESH_INTERVAL +
             " minutes would cause the quota to be reached too fast."
@@ -186,7 +188,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
       let googleUser = lazy.messenger.gdataSyncPrefs.get(`settings.calPrefs.${fullUser}.googleUser`);
       if (googleUser && googleUser != fullUser) {
         let newUri = "googleapi://" + googleUser + "/" + path;
-        cal.LOG("[calGoogleCalendar] Migrating url format from " + aUri.spec + " to " + newUri);
+        lazy.LOG("[calGoogleCalendar] Migrating url format from " + aUri.spec + " to " + newUri);
         this.setProperty("uri", newUri);
         this.mUri = Services.io.newURI(newUri);
       }
@@ -194,7 +196,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
       // Unit tests will use a local uri, if the magic parameter is passed.
       let port = parameters.get("testport");
       if (port) {
-        cal.LOG("[calGoogleCalendar] Redirecting request to test port " + port);
+        lazy.LOG("[calGoogleCalendar] Redirecting request to test port " + port);
         lazy.API_BASE.EVENTS = "http://localhost:" + port + "/calendar/v3/";
         lazy.API_BASE.TASKS = "http://localhost:" + port + "/tasks/v1/";
       }
@@ -223,7 +225,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
           newUri += "&tasks=%40default";
         }
 
-        cal.LOG("[calGoogleCalendar] Migrating url format from " + aUri.spec + " to " + newUri);
+        lazy.LOG("[calGoogleCalendar] Migrating url format from " + aUri.spec + " to " + newUri);
         this.setProperty("uri", newUri);
         this.mUri = Services.io.newURI(newUri);
       }
@@ -267,7 +269,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
       let lastWeek = cal.dtz.now();
       lastWeek.day -= 7;
       if (updatedMin.compare(lastWeek) <= 0) {
-        cal.LOG(
+        lazy.LOG(
           "[calGoogleCalendar] Last updated time for " + aWhich + " is very old, doing full sync"
         );
         this.resetLog();
@@ -292,7 +294,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
     if (shouldRequest) {
       this.mThrottle[type] = now;
     } else {
-      cal.LOG("[calGoogleCalendar] Skipping " + type + " request to reduce requests");
+      lazy.LOG("[calGoogleCalendar] Skipping " + type + " request to reduce requests");
     }
 
     return shouldRequest;
@@ -368,7 +370,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
     switch (aName) {
       case "refreshInterval":
         if (aValue < MIN_REFRESH_INTERVAL && aValue != 0) {
-          cal.LOG(
+          lazy.LOG(
             "[calGoogleCalendar] Sorry, auto-refresh intervals under " +
               MIN_REFRESH_INTERVAL +
               " minutes would cause the quota " +
@@ -418,10 +420,10 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
       request.calendar = this;
       if (aItem.isEvent()) {
         if (isImport) {
-          cal.LOG("[calGoogleCalendar] Adding invitation event " + aItem.title);
+          lazy.LOG("[calGoogleCalendar] Adding invitation event " + aItem.title);
           request.uri = this.createEventsURI("events", "import");
         } else {
-          cal.LOG("[calGoogleCalendar] Adding regular event " + aItem.title);
+          lazy.LOG("[calGoogleCalendar] Adding regular event " + aItem.title);
           request.uri = this.createEventsURI("events");
         }
 
@@ -431,7 +433,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
           request.addQueryParameter("sendUpdates", "none");
         }
       } else if (aItem.isTodo()) {
-        cal.LOG("[calGoogleCalendar] Adding task " + aItem.title);
+        lazy.LOG("[calGoogleCalendar] Adding task " + aItem.title);
         request.uri = this.createTasksURI("tasks");
         // Tasks sent with an id will cause a bad request
         delete itemData.id;
@@ -462,7 +464,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
         await this.mOfflineStorage.deleteItem(aItem);
       }
 
-      cal.LOG("[calGoogleCalendar] Adding " + item.title + " succeeded");
+      lazy.LOG("[calGoogleCalendar] Adding " + item.title + " succeeded");
       this.observers.notify("onAddItem", [item]);
       if (cachedAdoptItemCallback) {
         await cachedAdoptItemCallback(this.superCalendar, Cr.NS_OK, cIOL.ADD, item.id, item);
@@ -470,7 +472,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
       return item;
     } catch (e) {
       let code = e.result || Cr.NS_ERROR_FAILURE;
-      cal.ERROR(
+      lazy.LOGerror(
         "[calGoogleCalendar] Adding Item " + aItem.title + " failed:" + code + ": " + e.message
       );
       if (cachedAdoptItemCallback) {
@@ -484,7 +486,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
     // Need to save this early to avoid async effects overwriting it.
     let cachedModifyItemCallback = this._cachedModifyItemCallback;
 
-    cal.LOG(
+    lazy.LOG(
       "[calGoogleCalendar] Modifying item " +
         aNewItem.title +
         " (" +
@@ -534,7 +536,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
       if (meta && meta.etag) {
         request.addRequestHeader("If-Match", meta.etag);
       } else {
-        cal.ERROR("[calGoogleCalendar] Missing ETag for " + refItem.hashId);
+        lazy.LOGerror("[calGoogleCalendar] Missing ETag for " + refItem.hashId);
       }
 
       let data;
@@ -576,7 +578,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
         item = modifiedItem;
       }
 
-      cal.LOG("[calGoogleCalendar] Modifying " + aNewItem.title + " succeeded");
+      lazy.LOG("[calGoogleCalendar] Modifying " + aNewItem.title + " succeeded");
       this.observers.notify("onModifyItem", [item, aOldItem]);
       if (cachedModifyItemCallback) {
         await cachedModifyItemCallback(this.superCalendar, Cr.NS_OK, cIOL.MODIFY, item.id, item);
@@ -585,7 +587,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
     } catch (e) {
       let code = e.result || Cr.NS_ERROR_FAILURE;
       if (code != Ci.calIErrors.OPERATION_CANCELLED) {
-        cal.ERROR(
+        lazy.LOGerror(
           "[calGoogleCalendar] Modifying item " +
             aNewItem.title +
             " failed:" +
@@ -608,7 +610,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
   }
 
   async deleteItem(aItem) {
-    cal.LOG("[calGoogleCalendar] Deleting item " + aItem.title + "(" + aItem.id + ")");
+    lazy.LOG("[calGoogleCalendar] Deleting item " + aItem.title + "(" + aItem.id + ")");
 
     let request = new lazy.calGoogleRequest();
     try {
@@ -636,7 +638,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
       if (meta && meta.etag) {
         request.addRequestHeader("If-Match", meta.etag);
       } else {
-        cal.ERROR("[calGoogleCalendar] Missing ETag for " + aItem.hashId);
+        lazy.LOGerror("[calGoogleCalendar] Missing ETag for " + aItem.hashId);
       }
 
       try {
@@ -654,12 +656,12 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
 
       lazy.deleteItemMetadata(this.offlineStorage, aItem);
 
-      cal.LOG("[calGoogleCalendar] Deleting " + aItem.title + " succeeded");
+      lazy.LOG("[calGoogleCalendar] Deleting " + aItem.title + " succeeded");
       this.observers.notify("onDeleteItem", [aItem]);
     } catch (e) {
       let code = e.result || Cr.NS_ERROR_FAILURE;
       if (code != Ci.calIErrors.OPERATION_CANCELLED) {
-        cal.ERROR(
+        lazy.LOGerror(
           "[calGoogleCalendar] Deleting item " + aItem.title + " failed:" + code + ": " + e.message
         );
       }
@@ -688,7 +690,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
     }
 
     let needsReset = false;
-    cal.LOG(
+    lazy.LOG(
       "[calGoogleCalendar] Migrating cache from " +
         cacheVersion +
         " to " +
@@ -743,7 +745,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
 
   resetSync() {
     return new Promise((resolve, reject) => {
-      cal.LOG("[calGoogleCalendar] Resetting last updated counter for " + this.name);
+      lazy.LOG("[calGoogleCalendar] Resetting last updated counter for " + this.name);
       this.setProperty("syncToken.events", "");
       this.setProperty("lastUpdated.tasks", "");
       this.mThrottle = Object.create(null);
@@ -770,7 +772,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
     let maxIdleTime = lazy.messenger.gdataSyncPrefs.get("settings.idleTime", 300) * 1000;
 
     if (maxIdleTime != 0 && idleTime > maxIdleTime) {
-      cal.LOG("[calGoogleCalendar] Skipping refresh since user is idle");
+      lazy.LOG("[calGoogleCalendar] Skipping refresh since user is idle");
 
       // calCachedCalendar.synchronize cannot handle callback being run synchronously
       return new Promise(resolve => lazy.setTimeout(resolve, 1000)).then(() =>
@@ -846,7 +848,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
           // On last request...
           return saver.complete().then(() => {
             if (aData.nextSyncToken) {
-              cal.LOG(
+              lazy.LOG(
                 "[calGoogleCalendar] New sync token for " +
                   this.name +
                   "(events) is now: " +
@@ -889,7 +891,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
         aData => {
           // On last request...
           return saver.complete().then(() => {
-            cal.LOG(
+            lazy.LOG(
               "[calGoogleCalendar] Last sync date for " +
                 this.name +
                 "(tasks) is now: " +
@@ -910,7 +912,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
         this.mOfflineStorage.endBatch();
         let code = e.result || Cr.NS_ERROR_FAILURE;
         if (code == lazy.calGoogleRequest.RESOURCE_GONE) {
-          cal.LOG(
+          lazy.LOG(
             "[calGoogleCalendar] Server did not accept " +
               "incremental update, resetting calendar and " +
               "starting over."
@@ -920,12 +922,12 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
               this.replayChangesOn(aListener);
             },
             err => {
-              cal.ERROR("[calGoogleCalendar] Error resetting calendar:\n" + lazy.stringException(err));
+              lazy.LOGerror("[calGoogleCalendar] Error resetting calendar:\n" + lazy.stringException(err));
               aListener.onResult({ status: err.result }, err.message);
             }
           );
         } else {
-          cal.LOG("[calGoogleCalendar] Error syncing:\n" + code + ":" + lazy.stringException(e));
+          lazy.LOG("[calGoogleCalendar] Error syncing:\n" + code + ":" + lazy.stringException(e));
           aListener.onResult({ status: code }, e.message);
         }
       }

@@ -25,6 +25,8 @@ ChromeUtils.defineESModuleGetters(lazy, {
 });
 
 defineGdataModuleGetters(lazy, {
+  LOG: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
+  LOGerror: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
   LOGitem: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
   LOGverbose: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
   stringException: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
@@ -254,7 +256,7 @@ function fromRFC3339FixedZone(aStr, aTimezone) {
       // Warn here, since this shouldn't be happening. Then use the
       // original fromRFC3339, which goes through the timezone list and
       // finds the first matching zone.
-      lazy.cal.WARN(
+      lazy.LOG(
         "[calGoogleCalendar] " + aStr + " does not match timezone offset for " + aTimezone.tzid
       );
       dateTime = lazy.cal.dtz.fromRFC3339(aStr, aTimezone);
@@ -583,7 +585,7 @@ export function ItemToJSON(aItem, aOfflineStorage, aIsImport) {
   } else if (aItem.isTodo()) {
     return TaskToJSON(aItem, aOfflineStorage, aIsImport);
   } else {
-    lazy.cal.ERROR("[calGoogleCalendar] Invalid item type: " + aItem.icalString);
+    lazy.LOGerror("[calGoogleCalendar] Invalid item type: " + aItem.icalString);
     return null;
   }
 }
@@ -610,7 +612,7 @@ function setupRecurrence(aItem, aRecurrence, aTimezone) {
   try {
     rootComp = lazy.cal.icsService.parseICS(vevent, null);
   } catch (e) {
-    lazy.cal.ERROR("[calGoogleCalendar] Unable to parse recurrence item: " + vevent);
+    lazy.LOGerror("[calGoogleCalendar] Unable to parse recurrence item: " + vevent);
   }
 
   let hasRecurringRules = false;
@@ -626,7 +628,7 @@ function setupRecurrence(aItem, aRecurrence, aTimezone) {
           aItem.recurrenceInfo.appendRecurrenceItem(recItem);
           hasRecurringRules = true;
         } catch (e) {
-          lazy.cal.ERROR(
+          lazy.LOGerror(
             "[calGoogleCalendar] Error parsing " +
               prop.propertyName +
               " (" +
@@ -644,7 +646,7 @@ function setupRecurrence(aItem, aRecurrence, aTimezone) {
           aItem.recurrenceInfo.appendRecurrenceItem(recRule);
           hasRecurringRules = true;
         } catch (e) {
-          lazy.cal.ERROR("[calGoogleCalendar] Error parsing RRULE (" + prop.icalString + "):" + e);
+          lazy.LOGerror("[calGoogleCalendar] Error parsing RRULE (" + prop.icalString + "):" + e);
         }
         break;
       }
@@ -705,7 +707,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
   lazy.LOGverbose("[calGoogleCalendar] Parsing entry:\n" + JSON.stringify(aEntry, null, " ") + "\n");
 
   if (!aEntry || !("kind" in aEntry) || aEntry.kind != "calendar#event") {
-    lazy.cal.ERROR(
+    lazy.LOGerror(
       "[calGoogleCalendar] Attempt to decode invalid event: " +
         (aEntry && JSON.stringify(aEntry, null, " "))
     );
@@ -896,7 +898,7 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
       item.setProperty("LAST-MODIFIED", updated);
     }
   } catch (e) {
-    lazy.cal.ERROR(lazy.stringException(e));
+    lazy.LOGerror(lazy.stringException(e));
     throw e;
   }
   return item;
@@ -914,7 +916,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
   aDefaultReminders = aDefaultReminders || [];
   aMetadata = aMetadata || {};
   if (!aEntry || !("kind" in aEntry) || aEntry.kind != "tasks#task") {
-    lazy.cal.ERROR(
+    lazy.LOGerror(
       "[calGoogleCalendar] Attempt to decode invalid task: " +
         (aEntry && JSON.stringify(aEntry, null, " "))
     );
@@ -984,7 +986,7 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
       lazy.cal.dtz.fromRFC3339(aEntry.updated, calendarZone).getInTimezone(lazy.cal.dtz.UTC)
     );
   } catch (e) {
-    lazy.cal.ERROR("[calGoogleCalendar] Error parsing JSON tasks stream: " + lazy.stringException(e));
+    lazy.LOGerror("[calGoogleCalendar] Error parsing JSON tasks stream: " + lazy.stringException(e));
     throw e;
   }
 
@@ -1008,7 +1010,7 @@ export function JSONToItem(aEntry, aCalendar, aDefaultReminders, aReferenceItem,
   } else if (aEntry.kind == "calendar#event") {
     return JSONToEvent(...arguments);
   } else {
-    lazy.cal.ERROR("[calGoogleCalendar] Invalid item type: " + (aEntry ? aEntry.kind : "<no entry>"));
+    lazy.LOGerror("[calGoogleCalendar] Invalid item type: " + (aEntry ? aEntry.kind : "<no entry>"));
     return null;
   }
 }
@@ -1058,9 +1060,9 @@ ItemSaver.prototype = {
    */
   parseTaskStream: async function(aData) {
     if (!aData.items || !aData.items.length) {
-      lazy.cal.LOG("[calGoogleCalendar] No tasks have been changed on " + this.calendar.name);
+      lazy.LOG("[calGoogleCalendar] No tasks have been changed on " + this.calendar.name);
     } else {
-      lazy.cal.LOG("[calGoogleCalendar] Parsing " + aData.items.length + " received tasks");
+      lazy.LOG(`[calGoogleCalendar] Parsing ${aData.items.length} received tasks`);
 
       let total = aData.items.length;
       let committedUnits = 0;
@@ -1091,15 +1093,15 @@ ItemSaver.prototype = {
    */
   parseEventStream: async function(aData) {
     if (aData.timeZone) {
-      lazy.cal.LOG("[calGoogleCalendar] Timezone for " + this.calendar.name + " is " + aData.timeZone);
+      lazy.LOG(`[calGoogleCalendar] Timezone for ${this.calendar.name} is ${aData.timeZone}`);
       this.calendar.setProperty("settings.timeZone", aData.timeZone);
     }
 
     if (!aData.items || !aData.items.length) {
-      lazy.cal.LOG("[calGoogleCalendar] No events have been changed on " + this.calendar.name);
+      lazy.LOG("[calGoogleCalendar] No events have been changed on " + this.calendar.name);
       return;
     } else {
-      lazy.cal.LOG("[calGoogleCalendar] Parsing " + aData.items.length + " received events");
+      lazy.LOG(`[calGoogleCalendar] Parsing ${aData.items.length} received events`);
     }
 
     let exceptionItems = [];
@@ -1361,14 +1363,14 @@ ActivityShell.prototype = {
  * @return                  A promise resolved when the conflict has been resolved
  */
 export async function checkResolveConflict(aOperation, aCalendar, aItem) {
-  lazy.cal.LOG("[calGoogleCalendar] A conflict occurred for " + aItem.title);
+  lazy.LOG("[calGoogleCalendar] A conflict occurred for " + aItem.title);
 
   let method = aOperation.type == aOperation.DELETE ? "delete" : "modify";
   let overwrite = lazy.cal.provider.promptOverwrite(method, aItem);
   if (overwrite) {
     // The user has decided to overwrite the server version. Send again
     // overwriting the server version with If-Match: *
-    lazy.cal.LOG("[calGoogleCalendar] Resending " + method + " and ignoring ETag");
+    lazy.LOG(`[calGoogleCalendar] Resending ${method} and ignoring ETag`);
     aOperation.addRequestHeader("If-Match", "*");
     try {
       return await aCalendar.session.asyncItemRequest(aOperation);
@@ -1384,7 +1386,7 @@ export async function checkResolveConflict(aOperation, aCalendar, aItem) {
   } else {
     // The user has decided to throw away changes, use our existing
     // means to update the item locally.
-    lazy.cal.LOG("[calGoogleCalendar] Reload requested, cancelling change of " + aItem.title);
+    lazy.LOG("[calGoogleCalendar] Reload requested, cancelling change of " + aItem.title);
     aCalendar.superCalendar.refresh();
     throw Components.Exception(null, Ci.calIErrors.OPERATION_CANCELLED);
   }
@@ -1490,7 +1492,7 @@ class SyncPrefs {
 
   get(key, defaultValue = null) {
     if (!this.initComplete) {
-      lazy.cal.ERROR(
+      lazy.LOGerror(
         "[calGoogleCalendar] SyncPrefs called before initialization complete\n" + lazy.cal.STACK(10)
       );
     }
