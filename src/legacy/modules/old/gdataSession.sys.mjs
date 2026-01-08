@@ -19,6 +19,8 @@ ChromeUtils.defineESModuleGetters(lazy, {
 defineGdataModuleGetters(lazy, {
   calGoogleRequest: "resource://gdata-provider/legacy/modules/old/gdataRequest.sys.mjs",
   API_BASE: "resource://gdata-provider/legacy/modules/old/gdataRequest.sys.mjs",
+  LOG: "resource://gdata-provider/legacy/modules/old/gdataLogging.sys.mjs",
+  LOGerror: "resource://gdata-provider/legacy/modules/old/gdataLogging.sys.mjs",
   LOGinterval: "resource://gdata-provider/legacy/modules/old/gdataLogging.sys.mjs",
   getMessenger: "resource://gdata-provider/legacy/modules/old/gdataUtils.sys.mjs",
   OAuth2: "resource://gdata-provider/legacy/modules/old/OAuth2.sys.mjs",
@@ -87,9 +89,9 @@ var calGoogleSessionManager = {
   getSessionById: function(aSessionId, aCreate) {
     // Check if the session exists
     if (gdataSessionMap.has(aSessionId)) {
-      lazy.cal.LOG("[calGoogleSessionManager] Reusing session " + aSessionId);
+      lazy.LOG("[calGoogleSessionManager] Reusing session " + aSessionId);
     } else if (aCreate) {
-      lazy.cal.LOG("[calGoogleSessionManager] Creating session " + aSessionId);
+      lazy.LOG("[calGoogleSessionManager] Creating session " + aSessionId);
       gdataSessionMap.set(aSessionId, new calGoogleSession(aSessionId));
     }
 
@@ -137,7 +139,7 @@ calGoogleSession.prototype = {
       let quotaString = lazy.messenger.i18n.getMessage("quotaExceeded", this.id);
       Services.prompt.alert(lazy.cal.window.getCalendarWindow(), title, quotaString);
     } else {
-      lazy.cal.LOG(
+      lazy.LOG(
         "[calGoogleCalendar] Throttling quota notification, last was " +
           (now - this.mLastNotified) +
           " ms ago"
@@ -153,7 +155,7 @@ calGoogleSession.prototype = {
       let outdatedString = lazy.messenger.i18n.getMessage("providerOutdated");
       Services.prompt.alert(lazy.cal.window.getCalendarWindow(), title, outdatedString);
     } else {
-      lazy.cal.LOG(
+      lazy.LOG(
         "[calGoogleCalendar] Throttling outdated notification, last was " +
           (now - this.mLastNotified) +
           " ms ago"
@@ -284,7 +286,7 @@ calGoogleSession.prototype = {
    * Resets the access token, it will be re-retrieved on the next request.
    */
   invalidate: function() {
-    lazy.cal.LOG(
+    lazy.LOG(
       "[calGoogleSession] Invalidating session " +
         this.mId +
         ", will reauthenticate on next request"
@@ -303,16 +305,16 @@ calGoogleSession.prototype = {
 
     try {
       // Start logging in
-      lazy.cal.LOG("[calGoogleCalendar] Logging in session " + this.mId);
+      lazy.LOG("[calGoogleCalendar] Logging in session " + this.mId);
       let accessToken = this.accessToken;
 
       let authSuccess = function() {
-        lazy.cal.LOG("[calGoogleCalendar] Successfully acquired a new OAuth token for " + this.mId);
+        lazy.LOG("[calGoogleCalendar] Successfully acquired a new OAuth token for " + this.mId);
         deferred.resolve(this.accessToken);
       }.bind(this);
 
       let authFailed = function(aData) {
-        lazy.cal.LOG(
+        lazy.LOG(
           "[calGoogleCalendar] Failed to acquire a new" +
             " OAuth token for " +
             this.mId +
@@ -334,10 +336,10 @@ calGoogleSession.prototype = {
         if (error == "invalid_client" || error == "http_401") {
           this.notifyOutdated();
         } else if (error == "rate_limit_exceeded") {
-          lazy.cal.ERROR(`[calGoogleSession] Rate limit for ${this.mId} exceeded`);
+          lazy.LOGerror(`[calGoogleSession] Rate limit for ${this.mId} exceeded`);
           this.notifyQuotaExceeded();
         } else if (error == "unauthorized_client") {
-          lazy.cal.ERROR("[calGoogleSession] Token for " + this.mId + " is no longer authorized");
+          lazy.LOGerror("[calGoogleSession] Token for " + this.mId + " is no longer authorized");
           // We need to trigger a login without access token but want
           // to login result to the original promise handlers. First
           // reset the login promise so that we don't just receive
@@ -348,7 +350,7 @@ calGoogleSession.prototype = {
           this.mLoginPromise = this.login().then(deferred.resolve, deferred.reject);
           return;
         } else {
-          lazy.cal.ERROR("[calGoogleSession] Authentication failure: " + aData);
+          lazy.LOGerror("[calGoogleSession] Authentication failure: " + aData);
         }
         deferred.reject(new Components.Exception(error));
       }.bind(this);
@@ -389,7 +391,7 @@ calGoogleSession.prototype = {
       if (accessToken) {
         deferred.resolve(accessToken);
       } else {
-        lazy.cal.LOG("[calGoogleCalendar] No access token for " + this.mId + ", refreshing token");
+        lazy.LOG("[calGoogleCalendar] No access token for " + this.mId + ", refreshing token");
         // bug 901329: If the calendar window isn't loaded yet the
         // master password prompt will show just the buttons and
         // possibly hang. If we postpone until the window is loaded,
@@ -405,7 +407,7 @@ calGoogleSession.prototype = {
       }
     } catch (e) {
       // If something went wrong, reset the login state just in case
-      lazy.cal.LOG("[calGoogleCalendar] Error Logging In: " + e);
+      lazy.LOG("[calGoogleCalendar] Error Logging In: " + e);
       deferred.reject(e);
     }
     return deferred.promise.then(
@@ -430,7 +432,7 @@ calGoogleSession.prototype = {
   asyncItemRequest: function(aRequest) {
     let tokenExpiresIn = Math.floor((this.oauth.tokenExpires - new Date().getTime()) / 1000);
     if (tokenExpiresIn < 0 && !this.mLoginPromise) {
-      lazy.cal.LOG("[calGoogleSession] Token expired " + -tokenExpiresIn + " seconds ago, resetting");
+      lazy.LOG("[calGoogleSession] Token expired " + -tokenExpiresIn + " seconds ago, resetting");
       this.oauth.accessToken = null;
     }
 
@@ -438,18 +440,18 @@ calGoogleSession.prototype = {
       // Already have a token, we can request directly. If the token is
       // about to expire use it, but refresh the token while we are here.
       if (tokenExpiresIn < 30 && !this.mLoginPromise) {
-        lazy.cal.LOG(
+        lazy.LOG(
           "[calGoogleSession] Token will expire in " + tokenExpiresIn + " seconds, refreshing"
         );
         this.mLoginPromise = this.login();
         this.mLoginPromise.then(() => {
-          lazy.cal.LOG("[calGoogleSession] Premature token refresh completed");
+          lazy.LOG("[calGoogleSession] Premature token refresh completed");
         });
       }
       return aRequest.commit(this);
     } else if (this.mLoginPromise) {
       // We are logging in and have no token, queue the request
-      lazy.cal.LOG("[calGoogleSession] Adding item " + aRequest.uri + " to queue");
+      lazy.LOG("[calGoogleSession] Adding item " + aRequest.uri + " to queue");
       return this.mLoginPromise.then(
         () => {
           return aRequest.commit(this);
@@ -502,7 +504,7 @@ calGoogleSession.prototype = {
    */
   getFreeBusyIntervals: function(aCalId, aRangeStart, aRangeEnd, aBusyTypes, aListener) {
     let completeSync = aIntervals => {
-      lazy.cal.LOG(
+      lazy.LOG(
         "[calGoogleCalendar] Freebusy query for " +
           aCalId +
           "succeeded, returning " +
@@ -513,7 +515,7 @@ calGoogleSession.prototype = {
     };
 
     let failSync = (aStatus, aMessage) => {
-      lazy.cal.LOG(
+      lazy.LOG(
         "[calGoogleCalendar] Freebusy query for " +
           aCalId +
           " failed (" +
@@ -570,13 +572,13 @@ calGoogleSession.prototype = {
           let calData = aData.calendars[strippedCalId];
           let reason = calData.errors && calData.errors[0] && calData.errors[0].reason;
           if (reason) {
-            lazy.cal.LOG(
+            lazy.LOG(
               "[calGoogleCalendar] Could not request freebusy for " + strippedCalId + ": " + reason
             );
             failSync(Cr.NS_ERROR_FAILURE, reason);
           } else {
             let utcZone = lazy.cal.dtz.UTC;
-            lazy.cal.LOG(
+            lazy.LOG(
               "[calGoogleCalendar] Found " +
                 calData.busy.length +
                 " busy slots within range for " +
@@ -597,12 +599,12 @@ calGoogleSession.prototype = {
             completeSync(busyRanges);
           }
         } else {
-          lazy.cal.ERROR("[calGoogleCalendar] Invalid freebusy response: " + aData.toSource());
+          lazy.LOGerror("[calGoogleCalendar] Invalid freebusy response: " + aData.toSource());
           failSync(Cr.NS_ERROR_FAILURE, aData && aData.toSource());
         }
       },
       e => {
-        lazy.cal.ERROR("[calGoogleCalendar] Failed freebusy request: " + e);
+        lazy.LOGerror("[calGoogleCalendar] Failed freebusy request: " + e);
         return failSync(request.status, null);
       }
     );

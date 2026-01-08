@@ -4,19 +4,22 @@
 
 var lazy = {};
 
+var { defineGdataModuleGetters } = ChromeUtils.importESModule(
+  "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=2"
+);
+
 ChromeUtils.defineESModuleGetters(lazy, {
   cal: "resource:///modules/calendar/calUtils.sys.mjs" /* global cal */
 });
 
-ChromeUtils.defineLazyGetter(lazy, "messenger", () => {
-  let { loadGdataModule } = ChromeUtils.importESModule(
-    "resource://gdata-provider/legacy/modules/gdataUI.sys.mjs?bump=3"
-  );
-  let { getMessenger } = loadGdataModule(
-    "resource://gdata-provider/legacy/modules/old/gdataUtils.sys.mjs"
-  );
+defineGdataModuleGetters(lazy, {
+  getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
+  LOG: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
+  LOGerror: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
+});
 
-  return getMessenger();
+ChromeUtils.defineLazyGetter(lazy, "messenger", () => {
+  return lazy.getMessenger();
 });
 
 export var API_BASE = {
@@ -213,7 +216,7 @@ calGoogleRequest.prototype = {
         Ci.nsIContentPolicy.TYPE_OTHER
       );
 
-      lazy.cal.LOG("[calGoogleRequest] Requesting " + this.method + " " + channel.URI.spec);
+      lazy.LOG("[calGoogleRequest] Requesting " + this.method + " " + channel.URI.spec);
 
       this.prepareChannel(channel);
 
@@ -279,7 +282,7 @@ calGoogleRequest.prototype = {
       aChannel = aChannel.QueryInterface(Ci.nsIUploadChannel);
       aChannel.setUploadStream(stream, this.mUploadContent, -1);
 
-      lazy.cal.LOG(
+      lazy.LOG(
         "[calGoogleCalendar] Setting Upload Data (" +
           this.mUploadContent +
           "):\n" +
@@ -308,7 +311,7 @@ calGoogleRequest.prototype = {
     }
 
     if (this.mRequestHeaders.size) {
-      lazy.cal.LOG("[calGoogleCalendar] Sending request headers: " + this.mRequestHeaders.toSource());
+      lazy.LOG("[calGoogleCalendar] Sending request headers: " + this.mRequestHeaders.toSource());
     }
 
     for (let [key, val] of this.mRequestHeaders.entries()) {
@@ -320,7 +323,7 @@ calGoogleRequest.prototype = {
     if (token) {
       aChannel.setRequestHeader("Authorization", "Bearer " + token, false);
     } else {
-      lazy.cal.WARN("[calGoogleCalendar] Missing access token for " + aChannel.URI.spec);
+      lazy.LOG("[calGoogleCalendar] Missing access token for " + aChannel.URI.spec);
     }
   },
 
@@ -369,7 +372,7 @@ calGoogleRequest.prototype = {
         objData = { status: "No Content" };
       }
     } catch (e) {
-      lazy.cal.ERROR("[calGoogleCalendar] Could not parse API response as JSON: " + result);
+      lazy.LOGerror("[calGoogleCalendar] Could not parse API response as JSON: " + result);
       this.fail(Cr.NS_ERROR_FAILURE, result);
     }
 
@@ -384,14 +387,14 @@ calGoogleRequest.prototype = {
     // one event too much than one event too little.
     getCorrectedDate.mClockSkew = Math.floor((curDate.getTime() - serverDate.getTime()) / 1000);
     if (getCorrectedDate.mClockSkew != 0) {
-      lazy.cal.LOG("[calGoogleRequest] Clock skew is " + getCorrectedDate.mClockSkew + " seconds");
+      lazy.LOG("[calGoogleRequest] Clock skew is " + getCorrectedDate.mClockSkew + " seconds");
     }
 
     // Remember when this request happened
     this.requestDate = lazy.cal.createDateTime();
     this.requestDate.nativeTime = serverDate.getTime() * 1000;
 
-    lazy.cal.LOG(
+    lazy.LOG(
       "[calGoogleCalendar] Request " +
         this.method +
         " " +
@@ -424,7 +427,7 @@ calGoogleRequest.prototype = {
           objData.error.errors &&
           objData.error.errors[0] &&
           objData.error.errors[0].reason;
-        lazy.cal.LOG(
+        lazy.LOG(
           "[calGoogleCalendar] Login failed for " +
             this.mSession.id +
             " HTTP Status: " +
@@ -447,13 +450,13 @@ calGoogleRequest.prototype = {
             // once.
             this.mSession.invalidate();
             if (this.reauthenticate) {
-              lazy.cal.LOG(
+              lazy.LOG(
                 "[calGoogleRequest] The access token is not authorized, trying to refresh token."
               );
               this.reauthenticate = false;
               this.mSession.asyncItemRequest(this);
             } else {
-              lazy.cal.LOG(
+              lazy.LOG(
                 "[calGoogleRequest] Even refreshed token is not authorized, looks like the client is outdated"
               );
               this.mSession.notifyOutdated();
@@ -542,7 +545,7 @@ calGoogleRequest.prototype = {
           httpChannel.responseStatusText +
           " Body: " +
           result;
-        lazy.cal.LOG("[calGoogleCalendar] " + msg);
+        lazy.LOG("[calGoogleCalendar] " + msg);
 
         this.fail(Cr.NS_ERROR_NOT_AVAILABLE, msg);
         break;
