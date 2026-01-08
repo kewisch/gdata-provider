@@ -81,6 +81,12 @@
   "gdata.wizard.nextstep.description": {
     "message": "Please advance to the next step to set up your calendars."
   },
+  "gdata.wizard.action.authenticate": {
+    "message": "Authenticate"
+  },
+  "gdata.wizard.action.subscribe": {
+    "message": "Subscribe"
+  },
   "calendarsHeader": {
     "message": "Calendars"
   },

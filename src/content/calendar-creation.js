@@ -32,7 +32,11 @@ export async function main() {
 
   document.getElementById("gdata-session").addEventListener("change", checkedSession, true);
 
-  await messenger.calendar.provider.setAdvanceAction({ forward: "authenticate", back: null, label: "Authenticate" });
+  await messenger.calendar.provider.setAdvanceAction({
+    forward: "authenticate",
+    back: null,
+    label: messenger.i18n.getMessage("gdata.wizard.action.authenticate")
+  });
   messenger.calendar.provider.onAdvanceNewCalendar.addListener(advanceNewCalendar);
 }
 
@@ -63,14 +67,23 @@ function checkedSession() {
   if (sessionId == "_new") {
     inputNewSession();
   } else {
-    messenger.calendar.provider.setAdvanceAction({ canForward: true, forward: "authenticate", back: null, label: "Authenticate" });
+    messenger.calendar.provider.setAdvanceAction({
+      canForward: true,
+      forward: "authenticate",
+      back: null,
+      label: messenger.i18n.getMessage("gdata.wizard.action.authenticate")
+    });
   }
 }
 
 async function onInitial() {
   document.getElementById("gdata-calendars").setAttribute("hidden", "true");
   document.getElementById("gdata-session").removeAttribute("hidden");
-  await messenger.calendar.provider.setAdvanceAction({ forward: "authenticate", back: null, label: "Authenticate" });
+  await messenger.calendar.provider.setAdvanceAction({
+    forward: "authenticate",
+    back: null,
+    label: messenger.i18n.getMessage("gdata.wizard.action.authenticate")
+  });
   return false;
 }
 
@@ -109,8 +122,8 @@ async function onAuthenticate() {
   let primary = [];
   let selected = [];
 
-  calendarList.innerHTML = "";
-  tasklistList.innerHTML = "";
+  calendarList.replaceChildren();
+  tasklistList.replaceChildren();
 
   for (let calendar of calendars) {
     let listItem = calendarList.appendChild(document.createElement("li"));
@@ -198,7 +211,11 @@ async function onAuthenticate() {
     label.appendChild(name);
   }
 
-  await messenger.calendar.provider.setAdvanceAction({ forward: "subscribe", back: "initial", label: "Subscribe" });
+  await messenger.calendar.provider.setAdvanceAction({
+    forward: "subscribe",
+    back: "initial",
+    label: messenger.i18n.getMessage("gdata.wizard.action.subscribe")
+  });
   return false;
 }
 
