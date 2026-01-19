@@ -378,5 +378,11 @@
   },
   "eventdialog.gmailEvent": {
     "message": "Cet évènement a automatiquement été créé à par Gmail. Certaines informations ne sont pas modifiables."
+  },
+  "gdata.wizard.action.authenticate": {
+    "message": "S'identifier"
+  },
+  "gdata.wizard.action.subscribe": {
+    "message": "S'abonner"
   }
 }

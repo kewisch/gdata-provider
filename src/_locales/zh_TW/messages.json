@@ -8,7 +8,7 @@
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdataProviderLabel": {
-    "message": "Google Calendar",
+    "message": "Google 日曆",
     "description": "Please keep in mind that these strings had to be approved by the Google Brand Features Team. Be sure to make clear that this extension is *FOR* Google Calendar and not *BY* Google. Also, it was explicitly stated, that the phrase 'Google Calendar' should be localized just as it is on the localized versions of the Google Calendar UI."
   },
   "gdata.privacy.default.label": {
@@ -148,5 +148,35 @@
   },
   "settings.forcePlainText": {
     "message": "在事件描述強制使用純文字模式"
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "回報問題"
+  },
+  "gdata.migration.notification": {
+    "message": "你的部分行事曆可以移轉到Provider for Google Calendar"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "拒絕升級"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "取消"
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "C"
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (生日)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
+  "gdata.wizard.action.authenticate": {
+    "message": "認證"
+  },
+  "gdata.wizard.action.subscribe": {
+    "message": "訂閱"
   }
 }
