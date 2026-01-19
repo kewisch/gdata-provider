@@ -48,7 +48,7 @@
     "message": "Agenda's"
   },
   "taskListsHeader": {
-    "message": "Takenlijst"
+    "message": "Takenlijsten"
   },
   "busyTitle": {
     "message": "Bezet ($calendar_name$)",
@@ -165,7 +165,7 @@
     "message": "Toegangscode"
   },
   "eventdialog.codeType.passcode": {
-    "message": "Paswoord code"
+    "message": "Wachtwoord code"
   },
   "eventdialog.codeType.password": {
     "message": "Wachtwoord"
@@ -183,10 +183,10 @@
     "message": "Annuleer"
   },
   "gdata.migration.notification": {
-    "message": "Sommige van uw kalenders kunnen worden gemigreerd naar de Provider voor Google Kalender"
+    "message": "Sommige van uw agenda's kunnen worden gemigreerd naar de Provider voor Google Agenda"
   },
   "gdata.migration.dont-upgrade.label": {
-    "message": "Niet bijwerken"
+    "message": "Niet upgraden"
   },
   "gdata.wizard.calendars.birthdays": {
     "message": "$calendar_name$ (Verjaardagen)",
@@ -375,5 +375,14 @@
   },
   "propertiesdialog.unsubscribeButton": {
     "message": "Uitschrijven"
+  },
+  "gdata.wizard.action.subscribe": {
+    "message": "Abonneer"
+  },
+  "gdata.wizard.action.authenticate": {
+    "message": "Verifiëren"
+  },
+  "eventdialog.gmailEvent": {
+    "message": "Deze gebeurtenis was automatisch gemaakt uit Gmail. Niet alle informatie is te bewerken."
   }
 }

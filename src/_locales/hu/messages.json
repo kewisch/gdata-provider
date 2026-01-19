@@ -378,5 +378,11 @@
   },
   "propertiesdialog.unsubscribeButton": {
     "message": "Leiratkozás"
+  },
+  "gdata.wizard.action.authenticate": {
+    "message": "Hitelesítés"
+  },
+  "gdata.wizard.action.subscribe": {
+    "message": "Feliratkozás"
   }
 }

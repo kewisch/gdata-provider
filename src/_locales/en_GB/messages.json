@@ -354,5 +354,35 @@
   },
   "onboarding.footer.p2": {
     "message": "Thanks for reading all the way to the end! If you've made it this far, I hope you're as enthusiastic about this add-on as I am. Give it a try first, but if you're already convinced, I'd appreciate your support."
+  },
+  "settings.legacySection": {
+    "message": "Legacy Settings"
+  },
+  "settings.legacySectionDescription": {
+    "message": "These settings only apply to legacy calendars. Email invitations and attendees are always enabled for new calendars, as synchronising them is much more reliable."
+  },
+  "eventdialog.gmailEvent": {
+    "message": "This event was automatically created from Gmail. Not all information is editable."
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "Upgrade"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "The Provider for Google Calendar now uses a newer method with better reliability and features. Please upgrade your calendar, as this will be the only option in the future. If you have issues, you can unsubscribe and re-subscribe using the legacy option for the time being. The upgrade will take a moment if you have a large calendar."
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "The Provider for Google Calendar now uses a new method with better reliability and features. You are subscribed to this calendar twice, once with the legacy method and once with the new method. This is the legacy subscription. You can unsubscribe from it and keep the new one."
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "Upgrade now"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "Unsubscribe"
+  },
+  "gdata.wizard.action.authenticate": {
+    "message": "Authenticate"
+  },
+  "gdata.wizard.action.subscribe": {
+    "message": "Subscribe"
   }
 }
