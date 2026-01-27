@@ -34,7 +34,7 @@ test("main", async () => {
 
   expect(qs("#gdata-existing-sessions > label").textContent).toBe("sessionId@example.com");
   expect(qs("#gdata-existing-sessions > label > input").value).toBe("sessionId@example.com");
-  expect(messenger.calendar.provider._advanceAction).toEqual({ forward: "authenticate", back: null, label: "Authenticate" });
+  expect(messenger.calendar.provider._advanceAction).toEqual({ forward: "authenticate", back: null, label: "gdata.wizard.action.authenticate[]" });
 });
 
 
@@ -205,29 +205,29 @@ test("validate", async () => {
   await creationMain();
 
   await messenger.calendar.provider.onAdvanceNewCalendar.mockResponse("initial");
-  expect(messenger.calendar.provider._advanceAction).toEqual({ forward: "authenticate", back: null, label: "Authenticate" });
+  expect(messenger.calendar.provider._advanceAction).toEqual({ forward: "authenticate", back: null, label: "gdata.wizard.action.authenticate[]" });
 
   qs("#gdata-session-name").dispatchEvent(new InputEvent("input"));
-  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: false, forward: "authenticate", back: null, label: "Authenticate" });
+  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: false, forward: "authenticate", back: null, label: "gdata.wizard.action.authenticate[]" });
 
   messenger.calendar.provider._advanceAction = null;
   qs("#gdata-session-name").value = "valid@example.com";
   qs("#gdata-session-name").dispatchEvent(new InputEvent("input"));
-  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: true, forward: "authenticate", back: null, label: "Authenticate" });
+  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: true, forward: "authenticate", back: null, label: "gdata.wizard.action.authenticate[]" });
 
   messenger.calendar.provider._advanceAction = null;
   qs("#gdata-session-name").value = "invalid";
   qs("#gdata-session-name").dispatchEvent(new InputEvent("input"));
-  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: false, forward: "authenticate", back: null, label: "Authenticate" });
+  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: false, forward: "authenticate", back: null, label: "gdata.wizard.action.authenticate[]" });
 
   messenger.calendar.provider._advanceAction = null;
   qs("#gdata-existing-sessions input").checked = true;
   qs("#gdata-session").dispatchEvent(new Event("change"));
-  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: true, forward: "authenticate", back: null, label: "Authenticate" });
+  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: true, forward: "authenticate", back: null, label: "gdata.wizard.action.authenticate[]" });
 
   qs("#gdata-new-session input").checked = true;
   qs("#gdata-session").dispatchEvent(new Event("change"));
-  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: false, forward: "authenticate", back: null, label: "Authenticate" });
+  expect(messenger.calendar.provider._advanceAction).toEqual({ canForward: false, forward: "authenticate", back: null, label: "gdata.wizard.action.authenticate[]" });
 
   let result = await messenger.calendar.provider.onAdvanceNewCalendar.mockResponse("authenticate");
   expect(result).toBe(false);
@@ -249,11 +249,11 @@ test("advanceNewCalendar", async () => {
   let result = await messenger.calendar.provider.onAdvanceNewCalendar.mockResponse("initial");
   expect(qs("#gdata-calendars").hidden).toBe(true);
   expect(qs("#gdata-session").hidden).toBe(false);
-  expect(messenger.calendar.provider._advanceAction).toEqual({ forward: "authenticate", back: null, label: "Authenticate" });
+  expect(messenger.calendar.provider._advanceAction).toEqual({ forward: "authenticate", back: null, label: "gdata.wizard.action.authenticate[]" });
   expect(result).toBe(false);
 
   result = await messenger.calendar.provider.onAdvanceNewCalendar.mockResponse("authenticate");
-  expect(messenger.calendar.provider._advanceAction).toEqual({ forward: "subscribe", back: "initial", label: "Subscribe" });
+  expect(messenger.calendar.provider._advanceAction).toEqual({ forward: "subscribe", back: "initial", label: "gdata.wizard.action.subscribe[]" });
   expect(result).toBe(false);
 
   result = await messenger.calendar.provider.onAdvanceNewCalendar.mockResponse("subscribe");

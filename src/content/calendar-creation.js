@@ -59,7 +59,12 @@ function clickNewSession() {
 function inputNewSession() {
   let sessionName = document.getElementById("gdata-session-name");
   let valid = sessionName.checkValidity();
-  messenger.calendar.provider.setAdvanceAction({ canForward: valid, forward: "authenticate", back: null, label: "Authenticate" });
+  messenger.calendar.provider.setAdvanceAction({
+    canForward: valid,
+    forward: "authenticate",
+    back: null,
+    label: messenger.i18n.getMessage("gdata.wizard.action.authenticate")
+  });
 }
 
 function checkedSession() {
