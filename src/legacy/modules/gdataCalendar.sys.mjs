@@ -13,10 +13,12 @@ var lazy = {};
 /* global stringException, getGoogleSessionManager, calGoogleRequest, API_BASE,
  * getCorrectedDate, ItemToJSON, JSONToItem, ItemSaver, checkResolveConflict, getGoogleId,
  * getItemMetadata, saveItemMetadata, deleteItemMetadata, migrateItemMetadata, JSONToAlarm,
- * getMessenger */
+ * getMessenger, CalReadableStreamFactory */
 ChromeUtils.defineESModuleGetters(lazy, {
   setTimeout: "resource://gre/modules/Timer.sys.mjs",
+  CalReadableStreamFactory: "resource:///modules/CalReadableStreamFactory.sys.mjs",
 });
+
 
 defineGdataModuleGetters(lazy, {
   stringException: "resource://gdata-provider/legacy/modules/gdataLogging.sys.mjs",
@@ -674,7 +676,11 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
   }
 
   getItems(aFilter, aCount, aRangeStart, aRangeEnd) {
-    return this.mOfflineStorage.getItems(...arguments);
+    if (this.mOfflineStorage) {
+      return this.mOfflineStorage.getItems(...arguments);
+    } else {
+      return CalReadableStreamFactory.createEmptyReadableStream();
+    }
   }
 
   refresh() {
