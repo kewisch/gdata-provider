@@ -10,6 +10,8 @@ var { ExtensionSupport } = ChromeUtils.importESModule("resource:///modules/Exten
 
 var { CalItipEmailTransport } = ChromeUtils.importESModule("resource:///modules/CalItipEmailTransport.sys.mjs");
 
+var { CalReadableStreamFactory } = ChromeUtils.importESModule("resource:///modules/CalReadableStreamFactory.sys.mjs");
+
 // TODO move me
 // Have the server take care of scheduling. This can be de-duplicated in
 // CalItipEmailTransport.sys.mjs
@@ -475,7 +477,11 @@ class ExtCalendar extends cal.provider.BaseClass {
   }
 
   getItems(_aFilter, _aCount, _aRangeStart, _aRangeEnd) {
-    return this.offlineStorage.getItems(...arguments);
+    if (!this.mOfflineStorage) {
+      return CalReadableStreamFactory.createEmptyReadableStream();
+    }
+
+    return this.mOfflineStorage.getItems(...arguments);
   }
 
   refresh() {
