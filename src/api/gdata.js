@@ -22,6 +22,19 @@ const GDATA_LEGACY_PREFS = {
 
 this.gdata = class extends ExtensionAPI {
   onStartup() {
+    // HACK fix https://bugzilla.mozilla.org/show_bug.cgi?id=2020215
+    var { calCachedCalendar } = ChromeUtils.importESModule("resource:///modules/CalCachedCalendar.sys.mjs");
+    Object.defineProperty(calCachedCalendar.prototype, "supportsChangeLog", {
+      get: function() {
+        try {
+          this.mUncachedCalendar.QueryInterface(Ci.calIChangeLog);
+          return true;
+        } catch {
+          return false;
+        }
+      }
+    });
+
     Services.io
       .getProtocolHandler("resource")
       .QueryInterface(Ci.nsIResProtocolHandler)
