@@ -143,7 +143,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
   }
   set id(val) {
     let setter = this.__proto__.__proto__.__lookupSetter__("id");
-    val = setter.call(this, val);
+    setter.call(this, val);
 
     if (this.id && this.uri) {
       this.ensureSession();

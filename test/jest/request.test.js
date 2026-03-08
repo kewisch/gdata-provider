@@ -66,7 +66,7 @@ test("commit basics", async () => {
   });
 
   fetch.mockResponseOnce(JSON.stringify({}), { headers: { "Content-Type": "application/json" } });
-  res = await request.commit(session);
+  await request.commit(session);
   expect(fetch.mock.calls[fetch.mock.calls.length - 1][1].body).toBe('{"foo":"bar"}');
   expect(fetch).toHaveBeenCalledWith(
     "https://localhost/test?foo=bar&arr=one&arr=two",

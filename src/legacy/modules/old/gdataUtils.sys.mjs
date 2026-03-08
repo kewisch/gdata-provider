@@ -193,7 +193,6 @@ export function dateToJSON(aDate) {
  * @return                      The converted calIDateTime.
  */
 export function JSONToDate(aEntry, aTimezone) {
-  let dateTime = null;
   if (!aEntry) {
     return null;
   }
@@ -201,7 +200,7 @@ export function JSONToDate(aEntry, aTimezone) {
   // The entry is provided in the default zone and the timezone is
   // specified separately.
   let entryDate = aEntry.dateTime || aEntry.date;
-  dateTime = fromRFC3339FixedZone(entryDate, aTimezone);
+  let dateTime = fromRFC3339FixedZone(entryDate, aTimezone);
 
   if (!dateTime) {
     return null;
@@ -913,7 +912,6 @@ function JSONToEvent(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMeta
  * @return                  The calITodo with the item data.
  */
 function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetadata) {
-  aDefaultReminders = aDefaultReminders || [];
   aMetadata = aMetadata || {};
   if (!aEntry || !("kind" in aEntry) || aEntry.kind != "tasks#task") {
     lazy.LOGerror(
@@ -1003,8 +1001,6 @@ function JSONToTask(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetad
  * @return                  The specialized calIItemBase with the item data.
  */
 export function JSONToItem(aEntry, aCalendar, aDefaultReminders, aReferenceItem, aMetadata) {
-  aDefaultReminders = aDefaultReminders || [];
-  aMetadata = aMetadata || {};
   if (aEntry.kind == "tasks#task") {
     return JSONToTask(...arguments);
   } else if (aEntry.kind == "calendar#event") {
