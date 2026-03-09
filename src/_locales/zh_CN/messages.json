@@ -253,5 +253,126 @@
   },
   "onboarding.donate.amount": {
     "message": "120cny"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "不要升级"
+  },
+  "gdata.migration.notification": {
+    "message": "您的部分日历可迁移至 Google 日历提供程序"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "取消"
+  },
+  "gdata.wizard.action.subscribe": {
+    "message": "订阅"
+  },
+  "gdata.wizard.action.authenticate": {
+    "message": "验证"
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "Google 日历提供程序现已采用更可靠且功能更强大的新版方案。请返回并使用非旧有选项以继续操作。若使用该方案时遇到问题，请在采取下一步操作前告知开发者具体情况。您可暂时使用旧有方案，但过渡期结束后该方案将被移除。"
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "立即报告问题"
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (Legacy)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "C"
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Birthdays)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
+  "settings.legacySection": {
+    "message": "旧有设置"
+  },
+  "settings.legacySectionDescription": {
+    "message": "这些设置仅适用于旧有日历。对于新建日历，邮件邀请和参与人员项始终处于启用状态，因为其同步过程已更为可靠。"
+  },
+  "settings.migrateCalendars": {
+    "message": "迁移只读日历"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "目前没有可迁移的只读日历"
+  },
+  "eventdialog.conferenceRemove": {
+    "message": "移除会议"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "无"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "撤销"
+  },
+  "eventdialog.gmailEvent": {
+    "message": "此活动由Gmail自动创建。并非所有信息均可编辑。"
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "于 $date$ 迎来 $age$ 生日",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "于 $date$ 迎来 $age$ 生日",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "升级"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "Google 日历提供程序现已采用更可靠且功能更强大的新版方案。请升级您的日历，因为这是未来仅有的选项。若遇到问题，您可暂时退订并通过旧有选项重新订阅。若您的日历包含较多数据，升级过程可能需要一些时间。"
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "Google 日历提供程序现已采用全新方案，具备更高的可靠性和更丰富的功能。您已订阅该日历两次：一次采用旧有方法，一次采用新版方案。此处显示的是旧有订阅，您可以选择退订并保留新订阅。"
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "立即升级"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "退订"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "带复选框的日历列表"
+  },
+  "onboarding.footer.p1": {
+    "message": "如果您有任何疑问，请通过附加组件的 $link_start$GitHub 页面$link_end$ 联系我们。您也可以在此处协助改进附加组件的未来版本。",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
   }
 }
