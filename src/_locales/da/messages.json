@@ -217,5 +217,8 @@
   },
   "onboarding.donate.amount": {
     "message": "115dkk"
+  },
+  "onboarding.allset.p2": {
+    "message": "Hvad er det næste? Tid til at planlægge nogle begivenheder. En fordel ved at bruge Provider til Google Kalender i stedet for den indbyggede CalDAV-forbindelse er de ekstra tilpasningsmuligheder, der er tilgængelige i begivenhedsdialogen. Du kan indstille standardalarmer og justere standardindstillinger for beskyttelse af personlige oplysninger. Derudover kan du administrere Google Tasks direkte i Thunderbird."
   }
 }
