@@ -685,8 +685,8 @@ describe("itemToJson", () => {
   test("tasks", async () => {
     let data = itemToJson(jcalItems.simple_task, calendar, false);
     expect(data).toEqual({
-      due: "2006-06-10",
-      completed: "2006-06-11",
+      due: "2006-06-10T00:00:00Z",
+      completed: "2006-06-11T00:00:00Z",
       id: "lqohjsbhqoztdkusnpruvooacn",
       status: "needsAction",
       title: "New Task",
@@ -1168,8 +1168,8 @@ describe("patchItem", () => {
     test.each([
       ["summary", "title", "changed", "changed"],
       ["description", "notes", "changed", "changed"],
-      ["due", "due", "2008-01-01", "2008-01-01"],
-      ["completed", "completed", "2008-01-01", "2008-01-01"],
+      ["due", "due", "2008-01-01", "2008-01-01T00:00:00Z"],
+      ["completed", "completed", "2008-01-01", "2008-01-01T00:00:00Z"],
       ["status", "status", "COMPLETED", "completed"],
     ])("prop %s", (jprop, prop, jchanged, changed) => {
       task.updatePropertyWithValue(jprop, jchanged);
