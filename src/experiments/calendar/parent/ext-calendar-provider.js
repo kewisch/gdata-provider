@@ -781,7 +781,9 @@ this.calendar_provider = class extends ExtensionAPI {
                   return { error: props.error };
                 }
                 if (props?.type) {
-                  item = propsToItem(props);
+                  // When a single occurrence was modified, the extension may only return that
+                  // exception. Apply it to the parent item the occurrence came from.
+                  item = propsToItem(props, item.recurrenceId ? item.parentItem : null);
                 }
                 return { item, metadata: props?.metadata };
               };

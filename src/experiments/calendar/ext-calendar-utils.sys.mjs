@@ -77,7 +77,7 @@ export function convertCalendar(extension, calendar) {
   return props;
 }
 
-function parseJcalData(jcalComp) {
+function parseJcalData(jcalComp, fallbackParent = null) {
   function generateItem(jcalSubComp) {
     let item;
     if (jcalSubComp.name == "vevent") {
@@ -121,6 +121,12 @@ function parseJcalData(jcalComp) {
       parent = generateItem(subComp);
     }
 
+    if (!parent && fallbackParent && exceptions.length) {
+      // Only exceptions were supplied, which happens when a single occurrence was modified. They
+      // belong to the parent item the occurrence came from.
+      parent = fallbackParent.clone();
+    }
+
     if (!parent) {
       throw new ExtensionError("TODO need to retrieve a parent item from storage");
     }
@@ -141,7 +147,7 @@ function parseJcalData(jcalComp) {
   throw new ExtensionError("Don't know how to handle component type " + jcalComp.name);
 }
 
-export function propsToItem(props) {
+export function propsToItem(props, fallbackParent = null) {
   let jcalComp;
 
   if (props.format == "ical") {
@@ -150,14 +156,14 @@ export function propsToItem(props) {
     } catch (e) {
       throw new ExtensionError("Could not parse iCalendar", { cause: e });
     }
-    return parseJcalData(jcalComp);
+    return parseJcalData(jcalComp, fallbackParent);
   } else if (props.format == "jcal") {
     try {
       jcalComp = new ICAL.Component(props.item);
     } catch (e) {
       throw new ExtensionError("Could not parse jCal", { cause: e });
     }
-    return parseJcalData(jcalComp);
+    return parseJcalData(jcalComp, fallbackParent);
   }
 
   throw new ExtensionError("Invalid item format: " + props.format);
