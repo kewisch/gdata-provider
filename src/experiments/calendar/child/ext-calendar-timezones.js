@@ -17,7 +17,8 @@ this.calendar_timezones = class extends ExtensionAPI {
             return cal.timezoneService.timezoneIds;
           },
           get currentZone() {
-            cal.timezoneService.wrappedJSObject._updateDefaultTimezone();
+            // Newer Thunderbird updates the default timezone itself and no longer has this method
+            cal.timezoneService.wrappedJSObject._updateDefaultTimezone?.();
             return cal.timezoneService.defaultTimezone?.tzid;
           },
           getDefinition(tzid, returnFormat) {

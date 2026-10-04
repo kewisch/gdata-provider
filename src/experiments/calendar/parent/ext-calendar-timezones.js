@@ -15,14 +15,15 @@ this.calendar_timezones = class extends ExtensionAPI {
             context,
             name: "calendar.timezones.onUpdated",
             register: fire => {
-              cal.timezoneService.wrappedJSObject._updateDefaultTimezone();
+              // Newer Thunderbird updates the default timezone itself and no longer has this method
+              cal.timezoneService.wrappedJSObject._updateDefaultTimezone?.();
               let lastValue = cal.timezoneService.defaultTimezone?.tzid;
 
               const observer = {
                 QueryInterface: ChromeUtils.generateQI(["nsIObserver"]),
                 observe(_subject, _topic, _data) {
                   // Make sure the default timezone is updated before firing
-                  cal.timezoneService.wrappedJSObject._updateDefaultTimezone();
+                  cal.timezoneService.wrappedJSObject._updateDefaultTimezone?.();
                   const currentValue = cal.timezoneService.defaultTimezone?.tzid;
                   if (currentValue != lastValue) {
                     lastValue = currentValue;
