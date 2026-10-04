@@ -125,11 +125,11 @@ this.gdata = class extends ExtensionAPI {
           Services.prefs.deleteBranch("calendar.google.");
         },
 
-        getOAuthToken(sessionId) {
+        async getOAuthToken(sessionId) {
           const pass = { value: null };
           try {
             const origin = "oauth:" + sessionId;
-            cal.auth.passwordManagerGet(sessionId, pass, origin, GDATA_PWMGR_ID);
+            await cal.auth.passwordManagerGet(sessionId, pass, origin, GDATA_PWMGR_ID);
           } catch (e) {
             // User might have cancelled the master password prompt, that's ok
             if (e.result != Cr.NS_ERROR_ABORT) {
@@ -139,13 +139,13 @@ this.gdata = class extends ExtensionAPI {
           return pass.value;
         },
 
-        setOAuthToken(sessionId, value) {
+        async setOAuthToken(sessionId, value) {
           try {
             const origin = "oauth:" + sessionId;
             if (value) {
-              cal.auth.passwordManagerSave(sessionId, value, origin, GDATA_PWMGR_ID);
+              await cal.auth.passwordManagerSave(sessionId, value, origin, GDATA_PWMGR_ID);
             } else {
-              cal.auth.passwordManagerRemove(sessionId, origin, GDATA_PWMGR_ID);
+              await cal.auth.passwordManagerRemove(sessionId, origin, GDATA_PWMGR_ID);
             }
           } catch (e) {
             // User might have cancelled the master password prompt, or password saving
