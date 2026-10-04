@@ -214,45 +214,45 @@ calGoogleSession.prototype = {
     this.oauth.requestWindowTitle = authTitle;
     this.oauth.requestWindowDescription = authDescr;
 
-    // Overwrite the refreshToken attribute, since we want to save it in
-    // the password manager
+    // Overwrite the refresh token methods, since we want to save it in
+    // the password manager.
     let pwMgrId = "Google Calendar OAuth Token";
-    Object.defineProperty(this.oauth, "refreshToken", {
-      get: function() {
-        if (!this.mRefreshToken) {
-          let pass = { value: null };
-          try {
-            let origin = "oauth:" + sessionId;
-            lazy.cal.auth.passwordManagerGet(sessionId, pass, origin, pwMgrId);
-          } catch (e) {
-            // User might have cancelled the master password prompt, that's ok
-            if (e.result != Cr.NS_ERROR_ABORT) {
-              throw e;
-            }
-          }
-          this.mRefreshToken = pass.value;
-        }
-        return this.mRefreshToken;
-      },
-      set: function(val) {
+    let refreshTokenLoaded = false;
+    this.oauth.getRefreshToken = async function() {
+      if (!refreshTokenLoaded) {
+        let pass = { value: null };
         try {
           let origin = "oauth:" + sessionId;
-          if (val) {
-            lazy.cal.auth.passwordManagerSave(sessionId, val, origin, pwMgrId);
-          } else {
-            lazy.cal.auth.passwordManagerRemove(sessionId, origin, pwMgrId);
-          }
+          await lazy.cal.auth.passwordManagerGet(sessionId, pass, origin, pwMgrId);
         } catch (e) {
-          // User might have cancelled the master password prompt, or password saving
-          // could be disabled. That is ok, throw for everything else.
-          if (e.result != Cr.NS_ERROR_ABORT && e.result != Cr.NS_ERROR_NOT_AVAILABLE) {
+          // User might have cancelled the master password prompt, that's ok.
+          if (e.result != Cr.NS_ERROR_ABORT) {
             throw e;
           }
         }
-        this.mRefreshToken = val;
-      },
-      enumerable: true,
-    });
+        this.refreshToken = pass.value;
+        refreshTokenLoaded = true;
+      }
+      return this.refreshToken;
+    };
+    this.oauth.setRefreshToken = async function(val) {
+      try {
+        let origin = "oauth:" + sessionId;
+        if (val) {
+          await lazy.cal.auth.passwordManagerSave(sessionId, val, origin, pwMgrId);
+        } else {
+          await lazy.cal.auth.passwordManagerRemove(sessionId, origin, pwMgrId);
+        }
+      } catch (e) {
+        // User might have cancelled the master password prompt, or password saving
+        // could be disabled. That is ok, throw for everything else.
+        if (e.result != Cr.NS_ERROR_ABORT && e.result != Cr.NS_ERROR_NOT_AVAILABLE) {
+          throw e;
+        }
+      }
+      this.refreshToken = val;
+      refreshTokenLoaded = true;
+    };
 
     // If the user has disabled cookies, we need to add an exception for Google so authentication
     // works. If the user has explicitly blocked google.com then we won't overwrite the rule though.
