@@ -78,7 +78,10 @@ export function gdataInitUI(window, document, version) {
     );
 
     // LEGACY
-    let calendarEvent = frame.contentWindow.arguments[0].calendarEvent;
+    // For dialog windows the iframe only receives its arguments once it has loaded, which
+    // happens after we get here. The arguments of the dialog window itself are identical.
+    let panelArgs = frame.contentWindow.arguments ?? window.arguments;
+    let calendarEvent = panelArgs?.[0]?.calendarEvent;
     let calendarType = calendarEvent?.calendar?.type || GDATA_CALENDAR_TYPE;
     document.getElementById("gdata-options-privacy-default-menuitem")?.setAttribute("provider", calendarType);
     document.getElementById("gdata-toolbar-privacy-default-menuitem")?.setAttribute("provider", calendarType);
