@@ -24,6 +24,25 @@ const GDATA_LEGACY_PREFS = {
 
 const GDATA_PWMGR_ID = "Google Calendar OAuth Token";
 
+// The Rust login storage in Thunderbird normalizes the origin "oauth:<id>" to "oauth:". Entries in
+// it can only be found, updated or removed with the normalized origin, while the older storage
+// keeps the full origin.
+function getOAuthOrigins(sessionId) {
+  return ["oauth:" + sessionId, "oauth:"];
+}
+
+// Finds the origin that currently holds the token for this session, and the token itself.
+async function findOAuthToken(sessionId) {
+  const origins = getOAuthOrigins(sessionId);
+  for (const origin of origins) {
+    const pass = { value: null };
+    if (await cal.auth.passwordManagerGet(sessionId, pass, origin, GDATA_PWMGR_ID)) {
+      return { origin, password: pass.value };
+    }
+  }
+  return { origin: origins[0], password: null };
+}
+
 this.gdata = class extends ExtensionAPI {
   onStartup() {
     Services.io
@@ -126,26 +145,27 @@ this.gdata = class extends ExtensionAPI {
         },
 
         async getOAuthToken(sessionId) {
-          const pass = { value: null };
+          let found = { password: null };
           try {
-            const origin = "oauth:" + sessionId;
-            await cal.auth.passwordManagerGet(sessionId, pass, origin, GDATA_PWMGR_ID);
+            found = await findOAuthToken(sessionId);
           } catch (e) {
             // User might have cancelled the master password prompt, that's ok
             if (e.result != Cr.NS_ERROR_ABORT) {
               throw e;
             }
           }
-          return pass.value;
+          return found.password;
         },
 
         async setOAuthToken(sessionId, value) {
           try {
-            const origin = "oauth:" + sessionId;
             if (value) {
+              const { origin } = await findOAuthToken(sessionId);
               await cal.auth.passwordManagerSave(sessionId, value, origin, GDATA_PWMGR_ID);
             } else {
-              await cal.auth.passwordManagerRemove(sessionId, origin, GDATA_PWMGR_ID);
+              for (const origin of getOAuthOrigins(sessionId)) {
+                await cal.auth.passwordManagerRemove(sessionId, origin, GDATA_PWMGR_ID);
+              }
             }
           } catch (e) {
             // User might have cancelled the master password prompt, or password saving

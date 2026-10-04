@@ -218,30 +218,46 @@ calGoogleSession.prototype = {
     // the password manager.
     let pwMgrId = "Google Calendar OAuth Token";
     let refreshTokenLoaded = false;
+
+    // The Rust login storage in Thunderbird normalizes the origin "oauth:<id>" to "oauth:". Entries
+    // in it can only be found, updated or removed with the normalized origin, while the older
+    // storage keeps the full origin. Use the origin that currently holds the entry.
+    let origins = ["oauth:" + sessionId, "oauth:"];
+    let findOrigin = async function() {
+      for (let origin of origins) {
+        let pass = { value: null };
+        if (await lazy.cal.auth.passwordManagerGet(sessionId, pass, origin, pwMgrId)) {
+          return { origin, password: pass.value };
+        }
+      }
+      return { origin: origins[0], password: null };
+    };
+
     this.oauth.getRefreshToken = async function() {
       if (!refreshTokenLoaded) {
-        let pass = { value: null };
+        let found = { password: null };
         try {
-          let origin = "oauth:" + sessionId;
-          await lazy.cal.auth.passwordManagerGet(sessionId, pass, origin, pwMgrId);
+          found = await findOrigin();
         } catch (e) {
           // User might have cancelled the master password prompt, that's ok.
           if (e.result != Cr.NS_ERROR_ABORT) {
             throw e;
           }
         }
-        this.refreshToken = pass.value;
+        this.refreshToken = found.password;
         refreshTokenLoaded = true;
       }
       return this.refreshToken;
     };
     this.oauth.setRefreshToken = async function(val) {
       try {
-        let origin = "oauth:" + sessionId;
         if (val) {
+          let { origin } = await findOrigin();
           await lazy.cal.auth.passwordManagerSave(sessionId, val, origin, pwMgrId);
         } else {
-          await lazy.cal.auth.passwordManagerRemove(sessionId, origin, pwMgrId);
+          for (let origin of origins) {
+            await lazy.cal.auth.passwordManagerRemove(sessionId, origin, pwMgrId);
+          }
         }
       } catch (e) {
         // User might have cancelled the master password prompt, or password saving
