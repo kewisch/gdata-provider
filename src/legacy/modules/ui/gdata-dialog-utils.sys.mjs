@@ -59,8 +59,8 @@ function showOrHideItemURL(url) {
   }
   // Only show if its either an internal protocol handler, or its external
   // and there is an external app for the scheme
-  handler = lazy.cal.wrapInstance(handler, Ci.nsIExternalProtocolHandler);
-  return !handler || handler.externalAppExistsForScheme(uri.scheme);
+  // cal.wrapInstance was removed from Thunderbird (bug 2005770), so check the interface directly.
+  return !(handler instanceof Ci.nsIExternalProtocolHandler) || handler.externalAppExistsForScheme(uri.scheme);
 }
 
 export function initConferenceRow(document, messenger, item, calendar) {
