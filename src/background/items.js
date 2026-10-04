@@ -540,6 +540,15 @@ function patchEvent(item, oldItem, isImport, isCreate) {
     }
   }
 
+  if (!item.instance && (event.getFirstProperty("rrule") || event.getFirstProperty("rdate"))) {
+    // Recurring events need an explicit time zone, a UTC time with just a Z is rejected by Google
+    for (let prop of ["start", "end"]) {
+      if (entry[prop]?.dateTime && !entry[prop].timeZone) {
+        entry[prop].timeZone = "UTC";
+      }
+    }
+  }
+
   setIfFirstProperty(entry, "sequence");
   setIfFirstProperty(entry, "transparency", "transp", transparency => transparency?.toLowerCase());
 

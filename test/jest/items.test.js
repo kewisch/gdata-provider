@@ -1153,6 +1153,57 @@ describe("patchItem", () => {
           expect.arrayContaining([prop.toUpperCase() + ":20070609T102334Z"])
         );
       });
+
+      describe("start and end in UTC", () => {
+        beforeEach(() => {
+          event.updatePropertyWithValue("dtstart", ICAL.Time.fromDateTimeString("2006-06-10T09:00:00Z"));
+          event.updatePropertyWithValue("dtend", ICAL.Time.fromDateTimeString("2006-06-10T10:00:00Z"));
+        });
+
+        test("recurring event gets an explicit time zone", () => {
+          changes = patchItem(item, oldItem);
+          expect(changes.start).toEqual({ dateTime: "2006-06-10T09:00:00Z", timeZone: "UTC" });
+          expect(changes.end).toEqual({ dateTime: "2006-06-10T10:00:00Z", timeZone: "UTC" });
+        });
+
+        test("event with just an rdate gets an explicit time zone", () => {
+          event.removeAllProperties("rrule");
+          event.removeAllProperties("exdate");
+          event.removeAllProperties("rdate");
+          let rdate = new ICAL.Property("rdate");
+          rdate.setValue(ICAL.Time.fromDateTimeString("2006-06-12T09:00:00Z"));
+          event.addProperty(rdate);
+
+          changes = patchItem(item, oldItem);
+          expect(changes.start.timeZone).toBe("UTC");
+          expect(changes.end.timeZone).toBe("UTC");
+        });
+
+        test("non-recurring event does not need one", () => {
+          for (let prop of ["rrule", "exdate", "rdate"]) {
+            event.removeAllProperties(prop);
+          }
+
+          changes = patchItem(item, oldItem);
+          expect(changes.start).toEqual({ dateTime: "2006-06-10T09:00:00Z" });
+          expect(changes.end).toEqual({ dateTime: "2006-06-10T10:00:00Z" });
+        });
+      });
+
+      test("start and end with a zone are left alone", () => {
+        event.removeAllProperties("dtstart");
+        event.removeAllProperties("dtend");
+        for (let [name, time] of [["dtstart", "2006-06-10T09:00:00"], ["dtend", "2006-06-10T10:00:00"]]) {
+          let prop = new ICAL.Property(name);
+          prop.setValue(ICAL.Time.fromDateTimeString(time));
+          prop.setParameter("tzid", "Europe/Berlin");
+          event.addProperty(prop);
+        }
+
+        changes = patchItem(item, oldItem);
+        expect(changes.start).toEqual({ dateTime: "2006-06-10T09:00:00", timeZone: "Europe/Berlin" });
+        expect(changes.end).toEqual({ dateTime: "2006-06-10T10:00:00", timeZone: "Europe/Berlin" });
+      });
     });
   });
 
