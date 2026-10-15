@@ -339,5 +339,50 @@
   },
   "onboarding.donate.amount": {
     "message": "15eur"
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (starsza)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "Dodatek obsługujący Kalendarz Google korzysta teraz z nowszej metody, która zapewnia większą niezawodność i szerszą funkcjonalność. Aby kontynuować, wybierz opcję inną niż starsza (tzw. „legacy”). Jeśli napotkasz problemy z tą nową metodą, zgłoś je twórcy dodatku przed dalszymi działaniami. Z dotychczasowego rozwiązania można korzystać tymczasowo, jednak zostanie ono usunięte po zakończeniu procesu przejścia na nowy system."
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Zgłoś problem już teraz"
+  },
+  "gdata.wizard.action.authenticate": {
+    "message": "Uwierzytelnij"
+  },
+  "gdata.wizard.action.subscribe": {
+    "message": "Subskrybuj"
+  },
+  "settings.legacySection": {
+    "message": "Starsze ustawienia"
+  },
+  "settings.legacySectionDescription": {
+    "message": "Te ustawienia dotyczą tylko starszych kalendarzy. W przypadku nowych kalendarzy obsługa zaproszeń e-mail i uczestników jest zawsze włączona, ponieważ ich synchronizacja jest znacznie bardziej niezawodna."
+  },
+  "eventdialog.gmailEvent": {
+    "message": "To wydarzenie zostało utworzone automatycznie na podstawie wiadomości z Gmaila. Nie wszystkie informacje można edytować."
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "Aktualizacja"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "Dodatek Dostawca dla Kalendarza Google korzysta teraz z nowej metody, zapewniającej większą niezawodność i dodatkowe funkcje. Zalecamy aktualizację kalendarza, ponieważ w przyszłości będzie to jedyne dostępne rozwiązanie. W razie problemów można tymczasowo zrezygnować z subskrypcji i dodać kalendarz ponownie, korzystając ze starszej metody. Jeśli kalendarz jest rozbudowany, proces aktualizacji może chwilę potrwać."
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "Dodatek Dostawca dla Kalendarza Google korzysta teraz z nowej metody, zapewniającej większą niezawodność i dodatkowe funkcje. Ten kalendarz jest zasubskrybowany dwukrotnie: raz przy użyciu starszej metody, a raz przy użyciu nowej. To jest subskrypcja korzystająca ze starszej metody; można z niej zrezygnować, zachowując subskrypcję opartą na nowej metodzie."
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "Aktualizuj teraz"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "Anuluj subskrypcję"
   }
 }

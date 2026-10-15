@@ -1,0 +1,381 @@
+{
+  "extensionName": {
+    "message": "ตัวให้บริการสำหรับ Google ปฏิทิน"
+  },
+  "extensionDescription": {
+    "message": "ช่วยให้เข้าถึงข้อมูลกับ Google ปฏิทิน ได้แบบสองทิศทาง"
+  },
+  "gdataProviderLabel": {
+    "message": "Google ปฏิทิน"
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (แบบเก่า)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "gdata.privacy.default.label": {
+    "message": "ค่าเริ่มต้นของ Google"
+  },
+  "gdata.privacy.default.accesskey": {
+    "message": "D"
+  },
+  "gdata.migration.notification": {
+    "message": "ปฏิทินบางรายการของคุณสามารถโอนย้ายไปยังตัวให้บริการสำหรับ Google ปฏิทินได้"
+  },
+  "gdata.migration.title": {
+    "message": "โอนย้ายปฏิทินแบบอ่านอย่างเดียว"
+  },
+  "gdata.migration.description": {
+    "message": "ตัวให้บริการสำหรับ Google ปฏิทิน ตรวจพบว่าคุณมีปฏิทินเดิมที่เข้าถึง Google ปฏิทิน ได้ในโหมดอ่านอย่างเดียวเท่านั้น หากคุณต้องการอัปเกรดปฏิทินเหล่านี้ โปรดเลือกรายการด้านล่าง"
+  },
+  "gdata.migration.upgrade.label": {
+    "message": "อัปเกรด"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "ไม่อัปเกรด"
+  },
+  "gdata.migration.upgrade.accesskey": {
+    "message": "U"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "ยกเลิก"
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "C"
+  },
+  "gdata.migration.showagain.label": {
+    "message": "ตรวจสอบเสมอ"
+  },
+  "gdata.reminder.default": {
+    "message": "การแจ้งเตือนเริ่มต้น"
+  },
+  "gdata.wizard.session.description": {
+    "message": "โปรดเลือกเซสชันที่มีอยู่ หรือกรอกที่อยู่อีเมลของคุณเพื่อสร้างเซสชันใหม่ คุณใช้เพียงหนึ่งเซสชันต่อหนึ่งบัญชีเท่านั้น"
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "ขณะนี้ตัวให้บริการสำหรับ Google ปฏิทิน ใช้วิธีเชื่อมต่อแบบใหม่ที่มีความเสถียรและฟีเจอร์ดียิ่งขึ้น โปรดย้อนกลับไปเลือกตัวเลือกแบบปกติ (ไม่ใช่แบบเก่า) เพื่อดำเนินการต่อ หากคุณพบปัญหาในการใช้งานวิธีใหม่ โปรดแจ้งผู้พัฒนาก่อนดำเนินการต่อ คุณยังสามารถใช้วิธีแบบเก่าได้ชั่วคราว แต่จะถูกยกเลิกหลังจากการเปลี่ยนผ่านเสร็จสิ้น"
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "รายงานปัญหาตอนนี้"
+  },
+  "gdata.wizard.calendars.description": {
+    "message": "โปรดเลือกปฏิทินและรายการงานที่คุณต้องการบอกรับข้อมูล"
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (วันเกิด)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
+  "gdata.wizard.nextstep.description": {
+    "message": "โปรดไปยังขั้นตอนถัดไปเพื่อตั้งค่าปฏิทินของคุณ"
+  },
+  "gdata.wizard.action.authenticate": {
+    "message": "ยืนยันตัวตน"
+  },
+  "gdata.wizard.action.subscribe": {
+    "message": "บอกรับข้อมูล"
+  },
+  "calendarsHeader": {
+    "message": "ปฏิทิน"
+  },
+  "taskListsHeader": {
+    "message": "รายการงาน"
+  },
+  "busyTitle": {
+    "message": "ไม่ว่าง ($calendar_name$)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+  "quotaExceeded": {
+    "message": "เกินโควตาคำขอสำหรับ $session_id$ แล้ว โปรดลองใหม่อีกครั้งในภายหลัง",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "providerOutdated": {
+    "message": "ตัวให้บริการเวอร์ชันนี้หมดอายุแล้ว โปรดอัปเดตเป็นเวอร์ชันล่าสุด"
+  },
+  "reminderOutOfRange": {
+    "message": "Google ปฏิทิน อนุญาตให้ตั้งการแจ้งเตือนล่วงหน้าได้สูงสุดไม่เกิน 4 สัปดาห์ก่อนเริ่มกิจกรรมเท่านั้น"
+  },
+  "syncProgressEvent": {
+    "message": "กำลังซิงโครไนซ์กิจกรรมของ $calendar_name$ รายการที่ $num_events_synced$ จาก $total_events_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_events_synced": {
+        "content": "$2",
+        "example": "The number of events already synced"
+      },
+      "total_events_to_sync": {
+        "content": "$3",
+        "example": "The total number of events"
+      }
+    }
+  },
+  "syncProgressTask": {
+    "message": "กำลังซิงโครไนซ์งานของ $calendar_name$ รายการที่ $num_tasks_synced$ จาก $total_tasks_to_sync$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      },
+      "num_tasks_synced": {
+        "content": "$2",
+        "example": "The number of tasks already synced"
+      },
+      "total_tasks_to_sync": {
+        "content": "$3",
+        "example": "The total number of tasks"
+      }
+    }
+  },
+  "syncStatus": {
+    "message": "กำลังซิงโครไนซ์ปฏิทิน $calendar_name$",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The name of the calendar, e.g. 'Home'"
+      }
+    }
+  },
+  "requestWindowDescription": {
+    "message": "ตัวให้บริการสำหรับ Google ปฏิทิน ต้องการเข้าถึงบัญชี $session_id$ ของคุณเพื่อดึงข้อมูลกิจกรรมและงาน ข้อมูลรับรองและข้อมูลปฏิทินจะถูกส่งระหว่างคอมพิวเตอร์ของคุณกับ Google เท่านั้น โดยไม่ผ่านเว็บไซต์ของบุคคลที่สาม",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "requestWindowTitle": {
+    "message": "ลงชื่อเข้าใช้บัญชี $session_id$ ของคุณ",
+    "placeholders": {
+      "session_id": {
+        "content": "$1",
+        "example": "The session id (what the user enters as an email in the new calendar dialog)"
+      }
+    }
+  },
+  "settings.legacySection": {
+    "message": "การตั้งค่าแบบเก่า"
+  },
+  "settings.legacySectionDescription": {
+    "message": "การตั้งค่าเหล่านี้ใช้กับปฏิทินแบบเก่าเท่านั้น สำหรับปฏิทินแบบใหม่ การเชิญทางอีเมลและรายชื่อผู้เข้าร่วมจะถูกเปิดใช้งานไว้เสมอ เนื่องจากการซิงโครไนซ์มีความเสถียรกว่ามาก"
+  },
+  "settings.sendEventNotifications": {
+    "message": "ส่งอีเมลแจ้งเตือนไปยังผู้เข้าร่วมกิจกรรม"
+  },
+  "settings.forcePlainText": {
+    "message": "บังคับใช้ข้อความธรรมดา (Plain Text) ในคำอธิบายกิจกรรม"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "เปิดใช้งานการจัดกำหนดการทางอีเมล"
+  },
+  "settings.enableAttendees": {
+    "message": "ซิงโครไนซ์รายชื่อผู้เข้าร่วมกิจกรรม"
+  },
+  "settings.migrateCalendars": {
+    "message": "โอนย้ายปฏิทินแบบอ่านอย่างเดียว"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "ขณะนี้ไม่มีปฏิทินแบบอ่านอย่างเดียวให้โอนย้าย"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "การประชุมออนไลน์:"
+  },
+  "eventdialog.conferenceRemove": {
+    "message": "ลบการประชุมออนไลน์"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "ไม่มี"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "เลิกทำ"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "เข้าร่วมผ่านการประชุมทางวิดีโอ"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "โทรศัพท์"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "ข้อมูลการประชุมเพิ่มเติม"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "รหัสการประชุม"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "รหัสการเข้าถึง"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "รหัสผ่าน (Passcode)"
+  },
+  "eventdialog.codeType.password": {
+    "message": "รหัสผ่าน (Password)"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "รหัส PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "ไม่อยู่ที่สำนักงาน"
+  },
+  "eventdialog.focusEvent": {
+    "message": "เวลาโฟกัส"
+  },
+  "eventdialog.gmailEvent": {
+    "message": "กิจกรรมนี้ถูกสร้างขึ้นโดยอัตโนมัติจาก Gmail ข้อมูลบางส่วนอาจไม่สามารถแก้ไขได้"
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "อายุครบ $age$ ปี ในวันที่ $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "อายุครบ $age$ ปี เมื่อวันที่ $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "อัปเกรด"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "ขณะนี้ตัวให้บริการสำหรับ Google ปฏิทิน ใช้วิธีเชื่อมต่อแบบใหม่ที่มีความเสถียรและฟีเจอร์ดียิ่งขึ้น โปรดอัปเกรดปฏิทินของคุณ เนื่องจากในอนาคตจะเหลือเพียงตัวเลือกนี้เท่านั้น หากคุณพบปัญหา คุณสามารถยกเลิกการบอกรับแล้วบอกรับใหม่ด้วยตัวเลือกแบบเก่าไปก่อนได้ การอัปเกรดอาจใช้เวลาสักครู่หากปฏิทินของคุณมีข้อมูลจำนวนมาก"
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "ขณะนี้ตัวให้บริการสำหรับ Google ปฏิทิน ใช้วิธีเชื่อมต่อแบบใหม่ที่มีความเสถียรและฟีเจอร์ดียิ่งขึ้น คุณได้บอกรับปฏิทินนี้ซ้ำสองรายการ คือรายการแบบเก่าและรายการแบบใหม่ รายการนี้คือการบอกรับแบบเก่า คุณสามารถยกเลิกการบอกรับรายการนี้และเก็บรายการแบบใหม่ไว้ได้"
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "อัปเกรดตอนนี้"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "ยกเลิกการบอกรับ"
+  },
+  "onboarding.welcome.p1": {
+    "message": "ตัวให้บริการสำหรับ Google ปฏิทิน คือจุดเริ่มต้นในการเดินทางสู่โลกโอเพนซอร์สของผม ย้อนกลับไปในปี 2006 ตอนนั้นยังไม่มีวิธีที่ง่ายในการเชื่อมต่อ Thunderbird เข้ากับ Google ปฏิทิน ด้วยความอยากรู้อยากเห็นและความตั้งใจที่จะช่วยเหลือผู้ใช้งาน ผมจึงได้ศึกษา API ของ Google และหาวิธีเชื่อมช่องว่างนั้นได้สำเร็จ ช่วยให้ผู้ใช้ Thunderbird จำนวนมากสามารถเข้าถึง Google ปฏิทิน ได้ ประสบการณ์ครั้งนั้นไม่เพียงแต่มอบเป้าหมายที่มีความหมายให้ผม แต่ยังเปิดประตูสู่เส้นทางอาชีพที่โอเพนซอร์สกลายเป็นส่วนสำคัญในชีวิตประจำวันของผมอีกด้วย"
+  },
+  "onboarding.welcome.p2": {
+    "message": "ตอนนี้คุณได้ร่วมเป็นส่วนหนึ่งของการเดินทางครั้งนี้ไปกับผมแล้ว การสนับสนุนของคุณมีความหมายกับผมมาก และผมคงจินตนาการถึงอนาคตที่ไม่มีส่วนเสริมตัวนี้ไม่ออกเลย"
+  },
+  "onboarding.getstarted.title": {
+    "message": "เริ่มต้นใช้งาน"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "แถบด้านข้างในมุมมองปฏิทินของ Thunderbird ที่มีปุ่มสร้างปฏิทินใหม่อยู่ด้านล่าง"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "ไม่แน่ใจว่าจะเริ่มต้นจากตรงไหนใช่ไหม? ก่อนอื่นคุณต้องบอกรับข้อมูลปฏิทินของคุณก่อน ไปที่แท็บปฏิทินใน Thunderbird แล้วคลิกปุ่ม \"ปฏิทินใหม่\" ที่ด้านล่างของแถบด้านข้าง"
+  },
+  "onboarding.providertype.title": {
+    "message": "อยู่บนเครือข่ายใช่ไหม?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "หน้าต่างสร้างปฏิทินใหม่ แสดงตัวเลือกสำหรับเลือก Google ปฏิทิน"
+  },
+  "onboarding.providertype.p1": {
+    "message": "คุณจะเห็น 3 ตัวเลือก ได้แก่ ในคอมพิวเตอร์ของฉัน, บนเครือข่าย และ ตัวให้บริการสำหรับ Google ปฏิทิน แม้ว่าในทางเทคนิคแล้ว Google ปฏิทิน จะอยู่บนเครือข่าย แต่ให้เลือกตัวเลือกเฉพาะของตัวให้บริการนี้"
+  },
+  "onboarding.providertype.p2": {
+    "message": "ในหน้าจอถัดไป ให้กรอกที่อยู่อีเมลของคุณ แม้ว่าคุณกำลังจะบอกรับปฏิทินของคนอื่น ก็ให้ใช้อีเมลของคุณเอง หากคุณได้เพิ่มปฏิทินของเขาบนเว็บไซต์ Google ปฏิทิน ไว้แล้ว ปฏิทินนั้นจะปรากฏอยู่ในบัญชีของคุณโดยอัตโนมัติ"
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "เลือกปฏิทินของคุณ"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "รายการปฏิทินพร้อมช่องทำเครื่องหมายด้านข้าง"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "ถัดไป ระบบจะขอให้คุณลงชื่อเข้าใช้ หน้าต่างเข้าสู่ระบบจะระบุที่อยู่อีเมลที่ต้องใช้ ดังนั้นโปรดตรวจสอบให้แน่ใจว่าคุณกำลังลงชื่อเข้าใช้ถูกบัญชี หากระบบขอให้ลงชื่อเข้าใช้อีกครั้งในภายหลัง โปรดใช้บัญชีตามที่ระบุไว้"
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "ในหน้าจอถัดมา ให้เลือกปฏิทินและรายการงานที่คุณต้องการบอกรับข้อมูล ปฏิทินที่เคยบอกรับไว้แล้วจะแสดงสถานะว่าถูกเพิ่มแล้ว หากต้องการยกเลิกการบอกรับ ให้คลิกขวาที่ชื่อปฏิทินในรายการปฏิทินของ Thunderbird แทนการใช้หน้าต่างสร้างปฏิทินใหม่"
+  },
+  "onboarding.allset.title": {
+    "message": "พร้อมใช้งานแล้ว!"
+  },
+  "onboarding.allset.imgalt": {
+    "message": "หน้าต่างสร้างงานใหม่ แสดงเฉพาะช่องข้อมูลที่เกี่ยวข้อง"
+  },
+  "onboarding.allset.p1": {
+    "message": "เรียบร้อยแล้ว! การซิงโครไนซ์ครั้งแรกอาจใช้เวลาสักครู่ โดยเฉพาะหากคุณมีกิจกรรมจำนวนมาก ในระหว่างขั้นตอนนี้ Thunderbird อาจดูเหมือนค้างชั่วคราวเนื่องจากวิธีที่โปรแกรมจัดการข้อมูลกิจกรรม โปรดปล่อยให้ระบบทำงานต่อไปสูงสุดประมาณครึ่งชั่วโมงก่อนจะสรุปว่าเกิดปัญหา อย่างไรก็ตาม ในกรณีส่วนใหญ่ การซิงโครไนซ์จะเสร็จสิ้นภายในไม่ถึงหนึ่งนาที"
+  },
+  "onboarding.allset.p2": {
+    "message": "ทำอะไรต่อดี? ได้เวลาลงตารางกิจกรรมกันแล้ว ข้อดีอย่างหนึ่งของการใช้ตัวให้บริการสำหรับ Google ปฏิทิน แทนการเชื่อมต่อ CalDAV ในตัวเครื่อง คือสามารถปรับแต่งรายละเอียดในหน้าต่างกิจกรรมได้มากกว่า คุณสามารถตั้งค่าการแจ้งเตือนเริ่มต้นและปรับการตั้งค่าความเป็นส่วนตัวเริ่มต้นได้ นอกจากนี้ยังสามารถจัดการ Google Tasks ได้โดยตรงใน Thunderbird อีกด้วย"
+  },
+  "onboarding.weblate.title": {
+    "message": "อยากอ่านเนื้อหานี้ในภาษาของคุณไหม?"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "ภาพหน้าจอของ Weblate แสดงการแปลข้อความจากภาษาอังกฤษเป็นภาษาเยอรมัน"
+  },
+  "onboarding.weblate.p1": {
+    "message": "ตัวให้บริการสำหรับ Google ปฏิทิน ใช้ระบบ Weblate สำหรับงานแปลภาษา ซึ่งช่วยให้คุณแปลข้อความต่างๆ เป็นภาษาของคุณได้อย่างง่ายดาย หากคุณใช้ภาษาอื่นที่ไม่ใช่ภาษาอังกฤษ มาร่วมช่วยกันแปลไหม?"
+  },
+  "onboarding.weblate.p2": {
+    "message": "$link_start$ร่วมช่วยแปลภาษา$link_end$ได้ตั้งแต่วันนี้! มาช่วยกันทำให้ภาษาของคุณแปลครบ 100% กันเถอะ",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.p1": {
+    "message": "หากคุณมีคำถามใดๆ โปรดติดต่อผ่านทาง$link_start$หน้า GitHub$link_end$ ของส่วนเสริมนี้ ซึ่งคุณสามารถร่วมช่วยพัฒนาส่วนเสริมเวอร์ชันอนาคตให้ดียิ่งขึ้นได้เช่นกัน",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.p2": {
+    "message": "ขอบคุณที่อ่านจนจบ! หากคุณอ่านมาถึงตรงนี้ ผมหวังว่าคุณจะตื่นเต้นกับส่วนเสริมนี้เหมือนกับผม ลองนำไปใช้งานดูก่อนได้เลย แต่ถ้าคุณถูกใจแล้ว ผมจะยินดีและขอบคุณมากหากคุณร่วมสนับสนุน"
+  },
+  "onboarding.footer.donate.text": {
+    "message": "ส่งสินน้ำใจเล็กๆ น้อยๆ เพื่อสนับสนุนผู้พัฒนา"
+  },
+  "onboarding.donate.amount": {
+    "message": "600thb"
+  }
+}

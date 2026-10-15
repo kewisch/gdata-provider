@@ -374,5 +374,11 @@
         "content": "$2"
       }
     }
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "短信验证码"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "会议码"
   }
 }

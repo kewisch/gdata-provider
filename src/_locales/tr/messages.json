@@ -136,5 +136,251 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "gdata.migration.notification": {
+    "message": "Takvimlerinizden bazıları Google Takvim Sağlayıcısına aktarılabilir"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "Yükseltme"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "Vazgeç"
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "V"
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "Google Takvim sağlayıcısı artık daha yüksek güvenilirlik ve daha fazla özellik sunan yeni bir yöntem kullanmaktadır. Lütfen geri dönün ve devam etmek için eski sürüm olmayan seçeneğini kullanın. Bu yöntemle ilgili sorun yaşıyorsanız, devam etmeden önce lütfen sorunu geliştiriciye bildirin. Geçici olarak eski yöntemi kullanabilirsiniz ama geçiş tamamlandıktan sonra bu yöntem kaldırılacaktır."
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Bir sorunu bildir"
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Doğum Günleri)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
+  "gdata.wizard.action.authenticate": {
+    "message": "İzin ver"
+  },
+  "gdata.wizard.action.subscribe": {
+    "message": "Abone ol"
+  },
+  "settings.legacySection": {
+    "message": "Eski Sürüm Ayarlar"
+  },
+  "settings.legacySectionDescription": {
+    "message": "Bu ayarlar yalnızca eski takvimler için geçerlidir. Yeni takvimlerde senkronizasyon çok daha güvenilir olduğundan e-posta davetiyeleri ve katılımcılar her zaman etkindir."
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (Eski Sürüm)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "settings.sendEventNotifications": {
+    "message": "Etkinlik katılımcılarına e-posta bildirimleri gönderin"
+  },
+  "settings.forcePlainText": {
+    "message": "Olay açıklamalarında düz metin kullanımını zorunlu kıl"
+  },
+  "settings.enableEmailInvitations": {
+    "message": "E-posta zamanlamasını etkinleştir"
+  },
+  "settings.enableAttendees": {
+    "message": "Etkinlik katılımcılarını senkronize et"
+  },
+  "settings.migrateCalendars": {
+    "message": "Salt okunur takvimleri taşı"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "Şu anda taşınacak salt okunur takvim bulunmamaktadır"
+  },
+  "eventdialog.conferenceLabel": {
+    "message": "Konferans:"
+  },
+  "eventdialog.conferenceRemove": {
+    "message": "Konferansı Kaldır"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "Hiçbiri"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "Geri al"
+  },
+  "eventdialog.joinVia.video": {
+    "message": "Video konferansı ile katıl"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "Telefon"
+  },
+  "eventdialog.joinVia.more": {
+    "message": "Konferans hakkında daha fazla bilgi"
+  },
+  "eventdialog.codeType.meetingCode": {
+    "message": "Toplantı Kodu"
+  },
+  "eventdialog.codeType.accessCode": {
+    "message": "Erişim Kodu"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "Şifre"
+  },
+  "eventdialog.codeType.password": {
+    "message": "Parola"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "eventdialog.oooEvent": {
+    "message": "Ofiste Değil"
+  },
+  "eventdialog.focusEvent": {
+    "message": "Odaklanma Zamanı"
+  },
+  "eventdialog.gmailEvent": {
+    "message": "Bu etkinlik Gmail'den otomatik olarak oluşturulmuştur. Tüm bilgiler düzenlenemez."
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "$date$ tarihinde $age$ yaşına basıyor",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "$date$ tarihinde $age$ yaşına bastı",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "Yükselt"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "Google Takvim sağlayıcısı artık daha yüksek güvenilirlik ve daha fazla özellik sunan yeni bir yöntem kullanıyor. Gelecekteki tek seçenek yeni yöntem olacağı için lütfen takviminizi güncelleyin. Herhangi bir sorun yaşarsanız şimdilik eski seçeneği kullanarak aboneliğinizi iptal edip yeniden abone olabilirsiniz. Takviminiz büyükse güncelleme işlemi biraz zaman alabilir."
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "Google Takvim Sağlayıcısı artık daha yüksek güvenilirlik ve daha fazla özellik sunan yeni bir yöntem kullanıyor. Bu takvime bir kez eski yöntemle bir kez de yeni yöntemle olmak üzere iki kez abone oldunuz. Bu, eski sürüm aboneliğinizdir. Bu abonelikten çıkabilir ve yeni aboneliğinizi koruyabilirsiniz."
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "Şimdi yükselt"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "Abonelikten çık"
+  },
+  "onboarding.welcome.p1": {
+    "message": "Google Takvim Eklentisi, açık kaynak dünyasına adım atmamın başlangıcı oldu. 2006 yılında, Thunderbird'ü Google Takvim'e bağlamanın kolay bir yolu yoktu. Merakım ve yardım etme isteğimle Google'ın API'lerini araştırdım ve bu boşluğu doldurmanın bir yolunu buldum, böylece sayısız Thunderbird kullanıcısının Google Takvim'e erişmesini sağladım. Bu deneyim bana sadece bir amaç bilinci kazandırmakla kalmadı, aynı zamanda açık kaynağın günlük hayatımın ayrılmaz bir parçası haline geldiği profesyonel bir kariyerin kapılarını da açtı."
+  },
+  "onboarding.welcome.p2": {
+    "message": "Artık siz de benimle birlikte bu yolculuğun bir parçasısınız. Desteğiniz benim için çok önemli ve bu eklenti olmadan bir gelecek hayal edemiyorum."
+  },
+  "onboarding.getstarted.title": {
+    "message": "Başla"
+  },
+  "onboarding.getstarted.imgalt": {
+    "message": "Thunderbird’ün takvim görünümündeki kenar çubuğu ve alt kısmında yeni takvim düğmesi bulunuyor"
+  },
+  "onboarding.getstarted.p1": {
+    "message": "Nereden başlayacağınızı bilmiyor musunuz? Öncelikle takvimlerinize abone olmanız gerekiyor. Thunderbird’teki “Takvim” sekmesine gidin ve kenar çubuğunun altındaki “Yeni Takvim” seçeneğine tıklayın."
+  },
+  "onboarding.providertype.title": {
+    "message": "Ağda mı?"
+  },
+  "onboarding.providertype.imgalt": {
+    "message": "Google Takvim'i seçme seçeneğini gösteren yeni takvim iletişim kutusu"
+  },
+  "onboarding.providertype.p1": {
+    "message": "Üç seçenek göreceksiniz: Bilgisayarımda, Ağda ve Google Takvim Sağlayıcısı. Google Takvim teknik olarak ağda yer alsa da, sağlayıcıya özgü seçeneği seçin."
+  },
+  "onboarding.providertype.p2": {
+    "message": "Bir sonraki ekranda e-posta adresinizi girin. Başka birinin takvimine abone olsanız bile kendi e-posta adresinizi kullanın. Google Takvim web sitesinde bu kişinin takvimine daha önce abone olduysanız, takvim hesabınızda görünecektir."
+  },
+  "onboarding.selectcalendars.title": {
+    "message": "Takvimlerinizi seçin"
+  },
+  "onboarding.selectcalendars.imgalt": {
+    "message": "Yanında onay kutuları bulunan takvimlerin listesi"
+  },
+  "onboarding.selectcalendars.p1": {
+    "message": "Ardından, oturum açmanız istenecektir. Oturum açma penceresinde kullanılacak e-posta adresi belirtilecektir, bu nedenle doğru hesaba giriş yaptığınızdan emin olun. Daha sonra tekrar oturum açmanız istenirse belirtilen hesabı kullandığınızdan emin olun."
+  },
+  "onboarding.selectcalendars.p2": {
+    "message": "Bir sonraki ekranda, abone olmak istediğiniz takvimleri ve görev listelerini seçin. Daha önce abone olduğunuz takvimler, zaten eklendi olarak görünecektir. Aboneliği iptal etmek için, yeni takvim iletişim kutusu yerine Thunderbird’ün takvim listesindeki bağlam menüsünü kullanın."
+  },
+  "onboarding.allset.title": {
+    "message": "Hazırsınız!"
+  },
+  "onboarding.allset.imgalt": {
+    "message": "Yalnızca ilgili alanları gösteren yeni görev iletişim kutusu"
+  },
+  "onboarding.allset.p1": {
+    "message": "Hepsi bu kadar. İlk senkronizasyon, özellikle çok sayıda etkinliğiniz varsa, biraz zaman alabilir. Thunderbird, etkinlikleri işleme şekli nedeniyle bu işlem sırasında donmuş gibi görünebilir. Bir sorun olduğunu düşünmeden önce, işlemin yarım saate kadar sürmesine izin verin. Ancak çoğu durumda senkronizasyon bir dakika içinde tamamlanır."
+  },
+  "onboarding.allset.p2": {
+    "message": "Sırada ne var? Artık bazı etkinlikler planlamanın zamanı geldi. Yerleşik CalDAV bağlantısı yerine Google Takvim Sağlayıcısını kullanmanın avantajlarından biri, etkinlik iletişim kutusunda sunulan ek özelleştirme seçenekleridir. Varsayılan uyarıları ayarlayabilir ve varsayılan gizlilik ayarlarını düzenleyebilirsiniz. Ayrıca, Google Görevler’i doğrudan Thunderbird’de yönetebilirsiniz."
+  },
+  "onboarding.weblate.title": {
+    "message": "Sizin dilinizde bu içerik mi?"
+  },
+  "onboarding.weblate.imgalt": {
+    "message": "Bir dizeyi İngilizceden Almancaya çevirirken Weblate'in ekran görüntüsü"
+  },
+  "onboarding.weblate.p1": {
+    "message": "Google Takvim sağlayıcısı, çeviriler için Weblate’i kullanmaktadır; burada metinleri kendi dilinize kolayca çevirebilirsiniz. İngilizce dışında bir dil konuşuyor ve yardımcı olmak mı istiyorsunuz?"
+  },
+  "onboarding.weblate.p2": {
+    "message": "$link_start$Bugün çevirilere katkıda bulunun!$link_end$ Kendi dilinizdeki çevirileri %100'e çıkarabilir misiniz?",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.p1": {
+    "message": "Herhangi bir sorunuz varsa, lütfen eklentinin $link_start$GitHub sayfası$link_end$ üzerinden bize ulaşın. Ayrıca, eklentinin gelecek sürümlerinin geliştirilmesine de buradan katkıda bulunabilirsiniz.",
+    "placeholders": {
+      "link_start": {
+        "content": "$1"
+      },
+      "link_end": {
+        "content": "$2"
+      }
+    }
+  },
+  "onboarding.footer.p2": {
+    "message": "Sonuna kadar okuduğunuz için teşekkürler! Buraya kadar geldiyseniz, umarım bu eklentiye benim kadar heyecan duyuyorsunuzdur. Önce bir deneyin, ama şimdiden ikna olduysanız desteğiniz için minnettar olurum."
+  },
+  "onboarding.footer.donate.text": {
+    "message": "Bana bir teşekkür hediyesi gönder"
+  },
+  "onboarding.donate.amount": {
+    "message": "15euro (~850 TL)"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
   }
 }

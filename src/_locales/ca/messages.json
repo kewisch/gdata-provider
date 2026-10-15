@@ -277,5 +277,112 @@
   },
   "onboarding.weblate.p1": {
     "message": "El proveïdor de Google Calendar utilitza Weblate per a les traduccions, on podeu traduir fàcilment les cadenes al vostre idioma. Parles un idioma que no és l'anglès i vols ajudar?"
+  },
+  "gdataProviderLabelLegacy": {
+    "message": "$name$ (Obsolet)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Calendar (Legacy)"
+      }
+    }
+  },
+  "gdata.migration.notification": {
+    "message": "Alguns dels vostres calendaris es poden migrar al Proveïdor per al Google Calendar"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "No migris"
+  },
+  "gdata.migration.cancel.label": {
+    "message": "Cancel·lar"
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "C"
+  },
+  "gdata.wizard.session.legacy": {
+    "message": "El Proveïdor per al Google Calendar ara utilitza un nou mètode més fiable i amb més funcions. Si us plau, torneu enrere i utilitzeu la opció actual per continuar. Si trobeu problemes amb aquesta versió, informeu-ne el proveïdor abans de continuar. Temporalment podeu utilitzar la versió obsoleta, però s'eliminarà després de la transició."
+  },
+  "gdata.wizard.session.reportIssue": {
+    "message": "Informeu d'un problema"
+  },
+  "gdata.wizard.calendars.birthdays": {
+    "message": "$calendar_name$ (Aniversaris)",
+    "placeholders": {
+      "calendar_name": {
+        "content": "$1",
+        "example": "The original calendar name will be inserted here"
+      }
+    }
+  },
+  "gdata.wizard.action.authenticate": {
+    "message": "Autenticar-se"
+  },
+  "gdata.wizard.action.subscribe": {
+    "message": "Subscriure's"
+  },
+  "settings.legacySection": {
+    "message": "Paràmetres obsolets"
+  },
+  "settings.legacySectionDescription": {
+    "message": "Aquests paràmetres només afectaran els calendaris obsolets. Les invitacions per correu electrònic i les indicacions d'assistents estan activades sempre per als nous calendaris, ja que sincronitzar-los és molt més fiable."
+  },
+  "settings.migrateCalendars": {
+    "message": "Migrar els calendaris de només lectura"
+  },
+  "settings.migrateCalendars.disabled": {
+    "message": "Actualment no hi ha cap calendari de només lectura per migrar"
+  },
+  "eventdialog.conferenceRemove": {
+    "message": "Eliminar conferència"
+  },
+  "eventdialog.conferenceNone": {
+    "message": "Cap"
+  },
+  "eventdialog.conferenceUndo": {
+    "message": "Desfer"
+  },
+  "eventdialog.gmailEvent": {
+    "message": "Aquest esdeveniment es va crear automàticament des de Gmail. Per això, alguna informació no és editable."
+  },
+  "eventdialog.birthdayAgeFuture": {
+    "message": "Farà $age$ el $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "eventdialog.birthdayAgePast": {
+    "message": "Va fer $age$ el $date$",
+    "placeholders": {
+      "age": {
+        "content": "$1",
+        "example": "The age of the person on the date"
+      },
+      "date": {
+        "content": "$2",
+        "example": "The date the person is turning that age"
+      }
+    }
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "Migrar"
+  },
+  "propertiesdialog.upgradeDescription": {
+    "message": "El Proveïdor per al Google Calendar ara utilitza un nou mètode més fiable i amb més funcions. Si us plau, migreu el calendaris, perquè al futur serà l'única opció. Si teniu problemes, de moment podeu eliminar la subscripció i tornar-vos-hi a subscriure utilitzant la opció obsoleta. La migració tardarà una mica si el calendari és molt gran."
+  },
+  "propertiesdialog.upgradeDescription.duplicate": {
+    "message": "El Proveïdor per al Google Calendar ara utilitza un nou mètode més fiable i amb més funcions. Esteu subscrits dues vegades a aquest calendari, una amb el mètode obsolet i una altra amb el nou sistema. Aquesta és la opció obsoleta. La podeu donar de baixa i mantenir el nou sistema."
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "Migrar ara"
+  },
+  "propertiesdialog.unsubscribeButton": {
+    "message": "Cancel·lar la subscripció"
   }
 }
