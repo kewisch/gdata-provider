@@ -24,10 +24,10 @@
     "message": "De provider voor Google Agenda heeft gedetecteerd dat u bestaande agenda’s hebt die Google Agenda alleen in alleen-lezen modus kan benaderen. Als u een of meer van deze agenda’s wilt bijwerken, selecteer deze dan hieronder."
   },
   "gdata.migration.upgrade.label": {
-    "message": "Bijwerken"
+    "message": "Upgraden"
   },
   "gdata.migration.upgrade.accesskey": {
-    "message": "B"
+    "message": "U"
   },
   "gdata.migration.showagain.label": {
     "message": "Altijd controleren"
@@ -323,10 +323,10 @@
     "message": "De nieuwe takenlijst, met allen de relevante velden voor het dialoogvenster"
   },
   "onboarding.allset.p1": {
-    "message": "Klaar. De initiële synchronisatie kan een tijdje duren, zeker als je veel events hebt. Het kan lijken alsof Thunderbird bevroren is, door de manier waarop het events afhandelt. Die kan gemakkelijk een half uur duren. In de meeste gevallen duurt de synchronisatie niet langer dan een minuut."
+    "message": "Klaar. De initiële synchronisatie kan een tijdje duren, zeker als je veel events hebt. Het kan lijken alsof Thunderbird bevroren is, door de manier waarop het gebeurtenissen afhandelt. Die kan gemakkelijk een half uur duren. In de meeste gevallen duurt de synchronisatie niet langer dan een minuut."
   },
   "onboarding.allset.p2": {
-    "message": "Wat is het volgende? Events en taken aanmaken. Een voordeel van het gebruik van de Provider voor Google Agenda's zijn de extra opties in het event dialoogvenster. Je kan standaard alarmen aanpassen en de standaard privacy instellingen aanpassen. Ook Google Takenlijst kan je direct in Thunderbird bewerken."
+    "message": "Wat is het volgende? Gebeurtenissen en taken aanmaken. Een voordeel van het gebruik van de Provider voor Google Agenda's zijn de extra opties in het event dialoogvenster. Je kan standaard alarmen aanpassen en de standaard privacy instellingen aanpassen. Ook Google Takenlijst kan je direct in Thunderbird bewerken."
   },
   "onboarding.weblate.p1": {
     "message": "Provider voor Google Agenda gebruikt Weblate voor vertalingen, waar je gemakkelijk teksten kan vertalen naar jouw taal. Spreek je een andere taal en wil je helpen?"
@@ -335,7 +335,7 @@
     "message": "Bedankt om helemaal tot hier te lezen. Als je hier bent geraakt, hoop ik dat je even enthousiast bent over deze add-on als ik. Test hem eerst even uit, maar je hem al gebruikt, zou ik je hulp erg waarderen."
   },
   "gdataProviderLabelLegacy": {
-    "message": "$NAME$ (Legacy)",
+    "message": "$name$ (Legacy)",
     "placeholders": {
       "name": {
         "content": "$1",
@@ -359,7 +359,7 @@
     "message": "E-mailplanning inschakelen"
   },
   "settings.enableAttendees": {
-    "message": "Synchroniseer deelnemers aan evenementen"
+    "message": "Synchroniseer deelnemers aan gebeurtenissen"
   },
   "propertiesdialog.upgradeTitle": {
     "message": "Upgraden"
@@ -377,12 +377,12 @@
     "message": "Uitschrijven"
   },
   "gdata.wizard.action.subscribe": {
-    "message": "Abonneer"
+    "message": "Abonneren"
   },
   "gdata.wizard.action.authenticate": {
     "message": "Verifiëren"
   },
   "eventdialog.gmailEvent": {
-    "message": "Deze gebeurtenis was automatisch gemaakt uit Gmail. Niet alle informatie is te bewerken."
+    "message": "Deze gebeurtenis is automatisch gemaakt vanuit Gmail. Niet alle informatie is bewerkbaar."
   }
 }

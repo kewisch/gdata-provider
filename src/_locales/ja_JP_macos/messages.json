@@ -136,5 +136,35 @@
         "example": "The session id (what the user enters as an email in the new calendar dialog)"
       }
     }
+  },
+  "gdata.migration.cancel.label": {
+    "message": "キャンセル"
+  },
+  "gdata.migration.cancel.accesskey": {
+    "message": "C"
+  },
+  "gdata.migration.dont-upgrade.label": {
+    "message": "アプグレドじゃないで"
+  },
+  "eventdialog.joinVia.phone": {
+    "message": "スマホ"
+  },
+  "eventdialog.joinVia.sip": {
+    "message": "SIP"
+  },
+  "eventdialog.codeType.passcode": {
+    "message": "パスコード"
+  },
+  "eventdialog.codeType.password": {
+    "message": "パスワード"
+  },
+  "eventdialog.codeType.pin": {
+    "message": "PIN"
+  },
+  "propertiesdialog.upgradeTitle": {
+    "message": "アプグレド"
+  },
+  "propertiesdialog.upgradeButton": {
+    "message": "今すくアプグレド"
   }
 }
