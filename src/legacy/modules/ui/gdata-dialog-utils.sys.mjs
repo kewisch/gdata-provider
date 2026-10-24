@@ -70,7 +70,6 @@ function showOrHideItemURL(url) {
   }
   // Only show if its either an internal protocol handler, or its external
   // and there is an external app for the scheme
-  // cal.wrapInstance was removed from Thunderbird (bug 2005770), so check the interface directly.
   return !(handler instanceof Ci.nsIExternalProtocolHandler) || handler.externalAppExistsForScheme(uri.scheme);
 }
 
