@@ -141,9 +141,15 @@ this.gdata = class extends ExtensionAPI {
       subject.httpRealm == "Google Calendar OAuth Token"
     ) {
       let version = this.extension.temporarilyInstalled ? new Date().getTime() : this.extension.version;
-      let { getGoogleSessionManager } = ChromeUtils.importESModule(
+      let { getGoogleSessionManager, PWMGR_ORIGIN } = ChromeUtils.importESModule(
         `resource://gdata-provider/legacy/modules/gdataSession.sys.mjs?version=${version}`
       );
+
+      // Copies under the origins of older versions are removed when the token is moved to the
+      // current origin, that should not sign out the session.
+      if (subject.origin != PWMGR_ORIGIN) {
+        return;
+      }
 
       let session = getGoogleSessionManager().getSessionById(subject.username, false);
       if (session) {
