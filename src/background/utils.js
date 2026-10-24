@@ -128,6 +128,11 @@ export async function isTesting() {
 }
 
 export function toRFC3339(dateTime) {
+  if (dateTime.isDate) {
+    // A date has no offset, but the tasks api wants a timestamp. It only uses the date part of it.
+    return dateTime.toString() + "T00:00:00Z";
+  }
+
   let offset;
   if (!dateTime.zone || dateTime.zone == ICAL.Timezone.localTimezone) {
     // floating time not supported
@@ -140,7 +145,7 @@ export function toRFC3339(dateTime) {
   let hour = Math.floor(offset / 3600);
   let min = Math.floor((Math.abs(offset) % 3600) / 60);
 
-  if (dateTime.isDate || dateTime.zone == ICAL.Timezone.utcTimezone) {
+  if (dateTime.zone == ICAL.Timezone.utcTimezone) {
     return dateTime.toString();
   } else {
     return dateTime.toString() + (hour >= 0 ? "+" : "-") +

@@ -121,12 +121,24 @@ describe("toRFC3339", () => {
     date.zone = TimezoneService.get("Asia/Kathmandu");
     expect(toRFC3339(date)).toBe("2025-09-20T12:00:00+05:45");
   });
-  test("dates without offset", () => {
+  test("dates as midnight UTC", () => {
     TimezoneService.init();
     let date = ICAL.Time.fromDateString("2025-09-20");
     date.zone = TimezoneService.get("America/Los_Angeles");
     expect(date.isDate).toBe(true);
 
-    expect(toRFC3339(date)).toBe("2025-09-20");
+    // The tasks api needs a timestamp, a plain date is rejected
+    expect(toRFC3339(date)).toBe("2025-09-20T00:00:00Z");
+  });
+  test("floating dates do not need the current zone", () => {
+    Object.defineProperty(messenger.calendar.timezones, "currentZone", {
+      get() {
+        throw new Error("The current zone is not needed for dates");
+      }
+    });
+
+    let date = ICAL.Time.fromDateString("2025-09-20");
+    expect(date.isDate).toBe(true);
+    expect(toRFC3339(date)).toBe("2025-09-20T00:00:00Z");
   });
 });

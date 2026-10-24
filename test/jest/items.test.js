@@ -685,8 +685,8 @@ describe("itemToJson", () => {
   test("tasks", async () => {
     let data = itemToJson(jcalItems.simple_task, calendar, false);
     expect(data).toEqual({
-      due: "2006-06-10",
-      completed: "2006-06-11",
+      due: "2006-06-10T00:00:00Z",
+      completed: "2006-06-11T00:00:00Z",
       id: "lqohjsbhqoztdkusnpruvooacn",
       status: "needsAction",
       title: "New Task",
@@ -921,6 +921,24 @@ describe("patchItem", () => {
             }
           }
         });
+      });
+    });
+
+    describe("all-day event", () => {
+      beforeEach(() => {
+        oldItem = copy(jcalItems.valarm_no_default_override);
+        item = copy(oldItem);
+        event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
+      });
+
+      test.each([
+        ["dtstart", "start", "2006-06-11"],
+        ["dtend", "end", "2006-06-12"],
+      ])("date prop %s", (jprop, prop, changed) => {
+        event.updatePropertyWithValue(jprop, ICAL.Time.fromDateString(changed));
+        changes = patchItem(item, oldItem);
+        // All-day events must stay dates, not become midnight UTC like task due dates
+        expect(changes).toEqual({ [prop]: { date: changed } });
       });
     });
 
@@ -1219,8 +1237,8 @@ describe("patchItem", () => {
     test.each([
       ["summary", "title", "changed", "changed"],
       ["description", "notes", "changed", "changed"],
-      ["due", "due", "2008-01-01", "2008-01-01"],
-      ["completed", "completed", "2008-01-01", "2008-01-01"],
+      ["due", "due", "2008-01-01", "2008-01-01T00:00:00Z"],
+      ["completed", "completed", "2008-01-01", "2008-01-01T00:00:00Z"],
       ["status", "status", "COMPLETED", "completed"],
     ])("prop %s", (jprop, prop, jchanged, changed) => {
       task.updatePropertyWithValue(jprop, jchanged);
