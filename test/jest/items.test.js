@@ -924,6 +924,24 @@ describe("patchItem", () => {
       });
     });
 
+    describe("all-day event", () => {
+      beforeEach(() => {
+        oldItem = copy(jcalItems.valarm_no_default_override);
+        item = copy(oldItem);
+        event = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
+      });
+
+      test.each([
+        ["dtstart", "start", "2006-06-11"],
+        ["dtend", "end", "2006-06-12"],
+      ])("date prop %s", (jprop, prop, changed) => {
+        event.updatePropertyWithValue(jprop, ICAL.Time.fromDateString(changed));
+        changes = patchItem(item, oldItem);
+        // All-day events must stay dates, not become midnight UTC like task due dates
+        expect(changes).toEqual({ [prop]: { date: changed } });
+      });
+    });
+
     test("organizer partstat change", () => {
       item = copy(jcalItems.organizer_partstat);
       oldItem = copy(item);
