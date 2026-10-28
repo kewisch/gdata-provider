@@ -152,7 +152,9 @@ this.calendar_items = class extends ExtensionAPI {
           async getCurrent(options) {
             try {
               // TODO This seems risky, could be null depending on remoteness
-              const item = context.browsingContext.embedderElement.ownerGlobal.calendarItem;
+              // Node.ownerGlobal was replaced by Node.documentGlobal in Thunderbird 152
+              const embedder = context.browsingContext.embedderElement;
+              const item = (embedder.documentGlobal ?? embedder.ownerGlobal).calendarItem;
               return convertItem(item, options, context.extension);
             } catch (e) {
               console.error(e);

@@ -52,24 +52,40 @@ OAuth2.prototype = {
   refreshToken: null,
   tokenExpires: 0,
 
-  connect(aSuccess, aFailure, aWithUI, aRefresh) {
+  async getRefreshToken() {
+    return this.refreshToken;
+  },
+
+  async setRefreshToken(aRefreshToken) {
+    this.refreshToken = aRefreshToken;
+  },
+
+  async connect(aSuccess, aFailure, aWithUI, aRefresh) {
     this.connectSuccessCallback = aSuccess;
     this.connectFailureCallback = aFailure;
 
-    if (this.accessToken && !this.tokenExpired && !aRefresh) {
-      aSuccess();
-    } else if (this.refreshToken) {
-      this.requestAccessToken(this.refreshToken, true);
-    } else {
-      if (!aWithUI) {
-        aFailure('{ "error": "auth_noui" }');
-        return;
+    try {
+      if (this.accessToken && !this.tokenExpired && !aRefresh) {
+        aSuccess();
+      } else {
+        let refreshToken = await this.getRefreshToken();
+        if (refreshToken) {
+          this.requestAccessToken(refreshToken, true);
+        } else {
+          if (!aWithUI) {
+            aFailure('{ "error": "auth_noui" }');
+            return;
+          }
+          if (gConnecting[this.authorizationEndpoint]) {
+            aFailure("Window already open");
+            return;
+          }
+          this.requestAuthorization();
+        }
       }
-      if (gConnecting[this.authorizationEndpoint]) {
-        aFailure("Window already open");
-        return;
-      }
-      this.requestAuthorization();
+    } catch (err) {
+      this.log.info(`Connection failed: ${err}`);
+      aFailure(err);
     }
   },
 
@@ -251,7 +267,7 @@ OAuth2.prototype = {
    * @param {string} aCode - The token issued to the client.
    * @param {boolean} aRefresh - Whether it's a refresh of a token or not.
    */
-  requestAccessToken(aCode, aRefresh) {
+  async requestAccessToken(aCode, aRefresh) {
     // @see RFC 6749 section 4.1.3. Access Token Request
     // @see RFC 6749 section 6. Refreshing an Access Token
 
@@ -275,54 +291,53 @@ OAuth2.prototype = {
       data.append("redirect_uri", this.redirectionEndpoint);
     }
 
-    fetch(this.tokenEndpoint, {
-      method: "POST",
-      cache: "no-cache",
-      body: data,
-    })
-      .then(response => response.json())
-      .then(result => {
-        let resultStr = JSON.stringify(result, null, 2);
-        if ("error" in result) {
-          // RFC 6749 section 5.2. Error Response
-          let err = result.error;
-          if ("error_description" in result) {
-            err += "; " + result.error_description;
-          }
-          if ("error_uri" in result) {
-            err += "; " + result.error_uri;
-          }
-          this.log.warn(`Error response from the authorization server: ${err}`);
-          this.log.info(`Error response details: ${resultStr}`);
-
-          // Typically in production this would be {"error": "invalid_grant"}.
-          // That is, the token expired or was revoked (user changed password?).
-          // Reset the tokens we have and call success so that the auth flow
-          // will be re-triggered.
-          this.accessToken = null;
-          this.refreshToken = null;
-          this.connectSuccessCallback();
-          return;
-        }
-
-        // RFC 6749 section 5.1. Successful Response
-        this.log.info(`Successful response from the authorization server: ${resultStr}`);
-
-        this.accessToken = result.access_token;
-        if ("refresh_token" in result) {
-          this.refreshToken = result.refresh_token;
-        }
-        if ("expires_in" in result) {
-          this.tokenExpires = new Date().getTime() + result.expires_in * 1000;
-        } else {
-          this.tokenExpires = Number.MAX_VALUE;
-        }
-
-        this.connectSuccessCallback();
-      })
-      .catch(err => {
-        this.log.info(`Connection to authorization server failed: ${err}`);
-        this.connectFailureCallback(err);
+    try {
+      let response = await fetch(this.tokenEndpoint, {
+        method: "POST",
+        cache: "no-cache",
+        body: data,
       });
+      let result = await response.json();
+      let resultStr = JSON.stringify(result, null, 2);
+      if ("error" in result) {
+        // RFC 6749 section 5.2. Error Response
+        let err = result.error;
+        if ("error_description" in result) {
+          err += "; " + result.error_description;
+        }
+        if ("error_uri" in result) {
+          err += "; " + result.error_uri;
+        }
+        this.log.warn(`Error response from the authorization server: ${err}`);
+        this.log.info(`Error response details: ${resultStr}`);
+
+        // Typically in production this would be {"error": "invalid_grant"}.
+        // That is, the token expired or was revoked (user changed password?).
+        // Reset the tokens we have and call success so that the auth flow
+        // will be re-triggered.
+        this.accessToken = null;
+        await this.setRefreshToken(null);
+        this.connectSuccessCallback();
+        return;
+      }
+
+      // RFC 6749 section 5.1. Successful Response
+      this.log.info(`Successful response from the authorization server: ${resultStr}`);
+
+      this.accessToken = result.access_token;
+      if ("refresh_token" in result) {
+        await this.setRefreshToken(result.refresh_token);
+      }
+      if ("expires_in" in result) {
+        this.tokenExpires = new Date().getTime() + result.expires_in * 1000;
+      } else {
+        this.tokenExpires = Number.MAX_VALUE;
+      }
+
+      this.connectSuccessCallback();
+    } catch (err) {
+      this.log.info(`Connection to authorization server failed: ${err}`);
+      this.connectFailureCallback(err);
+    }
   },
 };

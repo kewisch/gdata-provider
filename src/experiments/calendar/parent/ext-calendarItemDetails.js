@@ -31,7 +31,8 @@ this.calendarItemDetails = class extends ExtensionAPI {
     }
 
     panelFrame.contentWindow.addEventListener("load", (event) => {
-      const document = event.target.ownerGlobal.document;
+      // Node.ownerGlobal was replaced by Node.documentGlobal in Thunderbird 152
+      const document = (event.target.documentGlobal ?? event.target.ownerGlobal).document;
 
       let areas = [];
       if (this.extension.manifest.calendar_item_details) {

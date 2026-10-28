@@ -26,6 +26,50 @@ defineGdataModuleGetters(lazy, {
   OAuth2: "resource://gdata-provider/legacy/modules/old/OAuth2.sys.mjs",
 });
 
+// The OAuth refresh token is saved under this origin, with the session id as the username. Older
+// versions used "oauth:" + sessionId, which the Rust login storage turns into "oauth:", so the
+// token could no longer be found by that origin. This origin stays the same in both login storages
+// and in the password helpers of Thunderbird 128, which shorten an origin like
+// "gdata-provider://oauth" to "gdata-provider:".
+// Keep the token functions in sync with src/experiments/gdata/parent/ext-gdata.js
+const PWMGR_ID = "Google Calendar OAuth Token";
+const PWMGR_ORIGIN = "gdata-provider:";
+
+// All logins holding the token of this session, newest first. This includes the ones older
+// versions saved under "oauth:" + sessionId, or "oauth:" in the Rust login storage.
+async function findOAuthLogins(sessionId) {
+  let found = new Map();
+  for (let origin of [PWMGR_ORIGIN, "oauth:" + sessionId, "oauth:"]) {
+    let logins = await Services.logins.searchLoginsAsync({ origin, httpRealm: PWMGR_ID });
+    for (let login of logins) {
+      if (login.username == sessionId) {
+        login.QueryInterface(Ci.nsILoginMetaInfo);
+        found.set(login.guid, login);
+      }
+    }
+  }
+  return [...found.values()].sort((a, b) => b.timePasswordChanged - a.timePasswordChanged);
+}
+
+async function removeOAuthLogins(sessionId, logins) {
+  for (let login of logins) {
+    await lazy.cal.auth.passwordManagerRemove(sessionId, login.origin, PWMGR_ID);
+  }
+}
+
+// Saves the token under the current origin. Copies under the old origins are only removed once the
+// token can be read back, passwordManagerSave does not report most errors.
+async function saveOAuthToken(sessionId, token) {
+  await lazy.cal.auth.passwordManagerSave(sessionId, token, PWMGR_ORIGIN, PWMGR_ID);
+
+  let pass = { value: null };
+  let saved = await lazy.cal.auth.passwordManagerGet(sessionId, pass, PWMGR_ORIGIN, PWMGR_ID);
+  if (saved && pass.value == token) {
+    let logins = await findOAuthLogins(sessionId);
+    await removeOAuthLogins(sessionId, logins.filter(login => login.origin != PWMGR_ORIGIN));
+  }
+}
+
 ChromeUtils.defineLazyGetter(lazy, "messenger", () => {
   return lazy.getMessenger();
 });
@@ -214,45 +258,55 @@ calGoogleSession.prototype = {
     this.oauth.requestWindowTitle = authTitle;
     this.oauth.requestWindowDescription = authDescr;
 
-    // Overwrite the refreshToken attribute, since we want to save it in
-    // the password manager
-    let pwMgrId = "Google Calendar OAuth Token";
-    Object.defineProperty(this.oauth, "refreshToken", {
-      get: function() {
-        if (!this.mRefreshToken) {
-          let pass = { value: null };
+    // Overwrite the refresh token methods, since we want to save it in
+    // the password manager.
+    let refreshTokenLoaded = false;
+
+    this.oauth.getRefreshToken = async function() {
+      if (!refreshTokenLoaded) {
+        let logins = [];
+        try {
+          logins = await findOAuthLogins(sessionId);
+        } catch (e) {
+          // User might have cancelled the master password prompt, that's ok. For other errors
+          // we can't read the token, so the user needs to log in again.
+          if (e.result != Cr.NS_ERROR_ABORT) {
+            lazy.LOGerror("[calGoogleSession] Could not read the OAuth token: " + e);
+          }
+        }
+        this.refreshToken = logins.length ? logins[0].password : null;
+        if (logins.some(login => login.origin != PWMGR_ORIGIN)) {
+          // Saved by an older version, move it to the current origin. If that fails, for
+          // example because password saving is disabled, the token stays where it is.
           try {
-            let origin = "oauth:" + sessionId;
-            lazy.cal.auth.passwordManagerGet(sessionId, pass, origin, pwMgrId);
+            await saveOAuthToken(sessionId, this.refreshToken);
           } catch (e) {
-            // User might have cancelled the master password prompt, that's ok
-            if (e.result != Cr.NS_ERROR_ABORT) {
-              throw e;
+            if (e.result != Cr.NS_ERROR_ABORT && e.result != Cr.NS_ERROR_NOT_AVAILABLE) {
+              lazy.LOGerror("[calGoogleSession] Could not move the OAuth token: " + e);
             }
           }
-          this.mRefreshToken = pass.value;
         }
-        return this.mRefreshToken;
-      },
-      set: function(val) {
-        try {
-          let origin = "oauth:" + sessionId;
-          if (val) {
-            lazy.cal.auth.passwordManagerSave(sessionId, val, origin, pwMgrId);
-          } else {
-            lazy.cal.auth.passwordManagerRemove(sessionId, origin, pwMgrId);
-          }
-        } catch (e) {
-          // User might have cancelled the master password prompt, or password saving
-          // could be disabled. That is ok, throw for everything else.
-          if (e.result != Cr.NS_ERROR_ABORT && e.result != Cr.NS_ERROR_NOT_AVAILABLE) {
-            throw e;
-          }
+        refreshTokenLoaded = true;
+      }
+      return this.refreshToken;
+    };
+    this.oauth.setRefreshToken = async function(val) {
+      try {
+        if (val) {
+          await saveOAuthToken(sessionId, val);
+        } else {
+          await removeOAuthLogins(sessionId, await findOAuthLogins(sessionId));
         }
-        this.mRefreshToken = val;
-      },
-      enumerable: true,
-    });
+      } catch (e) {
+        // User might have cancelled the master password prompt, or password saving
+        // could be disabled. That is ok, throw for everything else.
+        if (e.result != Cr.NS_ERROR_ABORT && e.result != Cr.NS_ERROR_NOT_AVAILABLE) {
+          throw e;
+        }
+      }
+      this.refreshToken = val;
+      refreshTokenLoaded = true;
+    };
 
     // If the user has disabled cookies, we need to add an exception for Google so authentication
     // works. If the user has explicitly blocked google.com then we won't overwrite the rule though.

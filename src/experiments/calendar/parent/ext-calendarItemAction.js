@@ -115,7 +115,8 @@ this.calendarItemAction = class extends ToolbarButtonAPI {
 
   handleEvent(event) {
     super.handleEvent(event);
-    const window = event.target.ownerGlobal;
+    // Node.ownerGlobal was replaced by Node.documentGlobal in Thunderbird 152
+    const window = event.target.documentGlobal ?? event.target.ownerGlobal;
 
     switch (event.type) {
       case "popupshowing": {

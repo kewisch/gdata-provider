@@ -24,6 +24,49 @@ const GDATA_LEGACY_PREFS = {
 
 const GDATA_PWMGR_ID = "Google Calendar OAuth Token";
 
+// The token is saved under this origin, with the session id as the username. Older versions used
+// "oauth:" + sessionId, which the Rust login storage turns into "oauth:", so the token could no
+// longer be found by that origin. This origin stays the same in both login storages and in the
+// password helpers of Thunderbird 128, which shorten an origin like "gdata-provider://oauth" to
+// "gdata-provider:".
+// Keep the token functions in sync with src/legacy/modules/old/gdataSession.sys.mjs
+const GDATA_PWMGR_ORIGIN = "gdata-provider:";
+
+// All logins holding the token of this session, newest first. This includes the ones older
+// versions saved under "oauth:" + sessionId, or "oauth:" in the Rust login storage.
+async function findOAuthLogins(sessionId) {
+  const found = new Map();
+  for (const origin of [GDATA_PWMGR_ORIGIN, "oauth:" + sessionId, "oauth:"]) {
+    const logins = await Services.logins.searchLoginsAsync({ origin, httpRealm: GDATA_PWMGR_ID });
+    for (const login of logins) {
+      if (login.username == sessionId) {
+        login.QueryInterface(Ci.nsILoginMetaInfo);
+        found.set(login.guid, login);
+      }
+    }
+  }
+  return [...found.values()].sort((a, b) => b.timePasswordChanged - a.timePasswordChanged);
+}
+
+async function removeOAuthLogins(sessionId, logins) {
+  for (const login of logins) {
+    await cal.auth.passwordManagerRemove(sessionId, login.origin, GDATA_PWMGR_ID);
+  }
+}
+
+// Saves the token under the current origin. Copies under the old origins are only removed once the
+// token can be read back, passwordManagerSave does not report most errors.
+async function saveOAuthToken(sessionId, token) {
+  await cal.auth.passwordManagerSave(sessionId, token, GDATA_PWMGR_ORIGIN, GDATA_PWMGR_ID);
+
+  const pass = { value: null };
+  const saved = await cal.auth.passwordManagerGet(sessionId, pass, GDATA_PWMGR_ORIGIN, GDATA_PWMGR_ID);
+  if (saved && pass.value == token) {
+    const logins = await findOAuthLogins(sessionId);
+    await removeOAuthLogins(sessionId, logins.filter(login => login.origin != GDATA_PWMGR_ORIGIN));
+  }
+}
+
 this.gdata = class extends ExtensionAPI {
   onStartup() {
     Services.io
@@ -125,27 +168,42 @@ this.gdata = class extends ExtensionAPI {
           Services.prefs.deleteBranch("calendar.google.");
         },
 
-        getOAuthToken(sessionId) {
-          const pass = { value: null };
+        async getOAuthToken(sessionId) {
+          let logins = [];
           try {
-            const origin = "oauth:" + sessionId;
-            cal.auth.passwordManagerGet(sessionId, pass, origin, GDATA_PWMGR_ID);
+            logins = await findOAuthLogins(sessionId);
           } catch (e) {
-            // User might have cancelled the master password prompt, that's ok
+            // User might have cancelled the master password prompt, that's ok. For other errors
+            // we can't read the token, so the user needs to log in again.
             if (e.result != Cr.NS_ERROR_ABORT) {
-              throw e;
+              console.error("Could not read the OAuth token", e);
             }
           }
-          return pass.value;
+          if (!logins.length) {
+            return null;
+          }
+
+          const token = logins[0].password;
+          if (logins.some(login => login.origin != GDATA_PWMGR_ORIGIN)) {
+            // Saved by an older version, move it to the current origin. If that fails, for example
+            // because password saving is disabled, the token stays where it is.
+            try {
+              await saveOAuthToken(sessionId, token);
+            } catch (e) {
+              if (e.result != Cr.NS_ERROR_ABORT && e.result != Cr.NS_ERROR_NOT_AVAILABLE) {
+                console.error("Could not move the OAuth token", e);
+              }
+            }
+          }
+          return token;
         },
 
-        setOAuthToken(sessionId, value) {
+        async setOAuthToken(sessionId, value) {
           try {
-            const origin = "oauth:" + sessionId;
             if (value) {
-              cal.auth.passwordManagerSave(sessionId, value, origin, GDATA_PWMGR_ID);
+              await saveOAuthToken(sessionId, value);
             } else {
-              cal.auth.passwordManagerRemove(sessionId, origin, GDATA_PWMGR_ID);
+              await removeOAuthLogins(sessionId, await findOAuthLogins(sessionId));
             }
           } catch (e) {
             // User might have cancelled the master password prompt, or password saving
