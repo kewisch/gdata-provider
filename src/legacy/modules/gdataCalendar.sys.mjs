@@ -13,7 +13,7 @@ var lazy = {};
 /* global stringException, getGoogleSessionManager, calGoogleRequest, API_BASE,
  * getCorrectedDate, ItemToJSON, JSONToItem, ItemSaver, checkResolveConflict, getGoogleId,
  * getItemMetadata, saveItemMetadata, deleteItemMetadata, migrateItemMetadata, JSONToAlarm,
- * getMessenger, taskEntryMatches */
+ * getMessenger, taskEntryMatches, taskUpdatedMatches */
 ChromeUtils.defineESModuleGetters(lazy, {
   setTimeout: "resource://gre/modules/Timer.sys.mjs",
 });
@@ -39,6 +39,7 @@ defineGdataModuleGetters(lazy, {
   JSONToAlarm: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
   getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
   taskEntryMatches: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
+  taskUpdatedMatches: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
 });
 
 ChromeUtils.defineLazyGetter(lazy, "messenger", () => lazy.getMessenger());
@@ -46,10 +47,6 @@ ChromeUtils.defineLazyGetter(lazy, "messenger", () => lazy.getMessenger());
 var cIOL = Ci.calIOperationListener;
 
 var MIN_REFRESH_INTERVAL = 30;
-
-// Delay (ms) before the task list is read again after a task was added or deleted locally. It
-// gives the cache layer time to finish the operation that triggered the read.
-var TASK_SYNC_DELAY = 1000;
 
 /**
  * calGoogleCalendar
@@ -474,9 +471,6 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
       if (cachedAdoptItemCallback) {
         await cachedAdoptItemCallback(this.superCalendar, Cr.NS_OK, cIOL.ADD, item.id, item);
       }
-      if (item.isTodo()) {
-        this.scheduleTaskListSync();
-      }
       return item;
     } catch (e) {
       let code = e.result || Cr.NS_ERROR_FAILURE;
@@ -666,9 +660,6 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
 
       lazy.LOG("[calGoogleCalendar] Deleting " + aItem.title + " succeeded");
       this.observers.notify("onDeleteItem", [aItem]);
-      if (aItem.isTodo()) {
-        this.scheduleTaskListSync();
-      }
     } catch (e) {
       let code = e.result || Cr.NS_ERROR_FAILURE;
       if (code != Ci.calIErrors.OPERATION_CANCELLED) {
@@ -682,10 +673,12 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
 
   /**
    * Resolve a conflict reported for a task change. Google re-issues the ETag of every open task
-   * on a list whenever a task is added to or deleted from that list, without changing the tasks
-   * themselves (see replayChangesOn). Such a conflict is only a stale ETag: the task is read
-   * back from the server and, if it still matches the item the change was based on, the request
-   * is sent again with the current ETag. Anything else is a real conflict and goes to the user.
+   * on a list whenever a task is added to or deleted from that list, but leaves the tasks and
+   * their "updated" stamps alone, so the incremental sync never returns the new ETags. Such a
+   * conflict is only a stale ETag: the task is read back from the server and, if it still
+   * matches the item the change was based on, the request is sent again with the current ETag.
+   * This costs requests only when a stale ETag is hit. Anything else is a real conflict and goes
+   * to the user.
    *
    * @param aRequest          The request that failed with a conflict.
    * @param aItem             The item that was passed to the server.
@@ -708,7 +701,18 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
         request.calendar = this;
         request.uri = this.createTasksURI("tasks", aReferenceItem.id);
         let data = await this.session.asyncItemRequest(request);
-        if (lazy.taskEntryMatches(data, lazy.ItemToJSON(aReferenceItem, this.offlineStorage))) {
+        // The "updated" stamp is the direct test. The fields are compared as well, in case the
+        // stored stamp no longer lines up with the server's.
+        let match = null;
+        if (lazy.taskUpdatedMatches(data, aReferenceItem)) {
+          match = "updated stamp";
+        } else if (
+          lazy.taskEntryMatches(data, lazy.ItemToJSON(aReferenceItem, this.offlineStorage))
+        ) {
+          match = "fields";
+        }
+        if (match) {
+          lazy.LOG("[calGoogleCalendar] Task " + aItem.title + " matched the server by " + match);
           etag = data.etag;
         }
       } catch (e) {
@@ -741,25 +745,6 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
     }
 
     return lazy.checkResolveConflict(aRequest, this, aItem);
-  }
-
-  /**
-   * Read the task list again shortly after a task was added or deleted locally, because that
-   * changes the ETag of every other open task on the list (see replayChangesOn). The throttle is
-   * cleared so the read is not skipped.
-   */
-  scheduleTaskListSync() {
-    delete this.mThrottle.tasks;
-    lazy.setTimeout(() => {
-      try {
-        lazy.LOG("[calGoogleCalendar] Reading the task list again after a local change");
-        this.superCalendar.refresh();
-      } catch (e) {
-        lazy.LOGerror(
-          "[calGoogleCalendar] Could not refresh after a task change: " + lazy.stringException(e)
-        );
-      }
-    }, TASK_SYNC_DELAY);
   }
 
   getItem(aId) {
@@ -954,12 +939,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
       );
     }
 
-    // Set up a request for tasks. The whole list is read every time: Google re-issues the ETag
-    // of every open task on a list whenever a task is added to or deleted from that list, but
-    // leaves their "updated" stamps alone, so a request limited by updatedMin never returns the
-    // new ETags and the next modification of any of those tasks fails with a 412 conflict. Task
-    // lists are small, so a full read costs one request. Deleted tasks are requested so that
-    // deletions made elsewhere still arrive. A very old last sync still resets the calendar.
+    // Set up a request for tasks
     let tasksRequest = new lazy.calGoogleRequest();
     let tasksPromise = Promise.resolve();
     tasksRequest.calendar = this;
@@ -968,8 +948,11 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
     tasksRequest.addQueryParameter("maxResults", maxResults);
     tasksRequest.addQueryParameter("showCompleted", "true");
     tasksRequest.addQueryParameter("showHidden", "true");
-    tasksRequest.addQueryParameter("showDeleted", "true");
-    this.getUpdatedMin("tasks");
+    let lastUpdated = this.getUpdatedMin("tasks");
+    if (lastUpdated) {
+      tasksRequest.addQueryParameter("updatedMin", cal.dtz.toRFC3339(lastUpdated));
+      tasksRequest.addQueryParameter("showDeleted", "true");
+    }
     if (tasksRequest.uri && this.checkThrottle("tasks")) {
       let saver = new lazy.ItemSaver(this);
       let newLastUpdated = null;
