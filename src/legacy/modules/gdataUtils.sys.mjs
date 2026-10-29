@@ -573,6 +573,58 @@ function TaskToJSON(aItem, aOfflineStorage, aIsImport) {
 }
 
 /**
+ * Check whether a task entry from the server carries the same "updated" stamp as a local task.
+ * JSONToTask stores that stamp as the item's LAST-MODIFIED, which only keeps whole seconds, so
+ * the two are compared to the second. Google leaves the stamp alone when it only re-issues an
+ * ETag, so a match means the task is unchanged on the server.
+ *
+ * @param aServerEntry  The JSON entry as returned by the server.
+ * @param aItem         The local task.
+ * @return              True if both carry the same stamp.
+ */
+export function taskUpdatedMatches(aServerEntry, aItem) {
+  if (!aServerEntry.updated || !aItem.lastModifiedTime) {
+    return false;
+  }
+  let server = Math.floor(new Date(aServerEntry.updated).getTime() / 1000);
+  let local = Math.floor(aItem.lastModifiedTime.nativeTime / 1000000);
+  return server == local;
+}
+
+/**
+ * Check whether a task entry from the server still matches a task in its JSON form (as produced
+ * by ItemToJSON) on the fields the provider synchronizes. Used to tell a stale ETag from a real
+ * conflict: Google re-issues the ETags of untouched tasks when their list changes.
+ *
+ * @param aServerEntry  The JSON entry as returned by the server.
+ * @param aLocalData    The JSON representation of the local item.
+ * @return              True if the two describe the same task content.
+ */
+export function taskEntryMatches(aServerEntry, aLocalData) {
+  function text(aValue) {
+    return aValue || "";
+  }
+  function time(aValue) {
+    return aValue ? new Date(aValue).getTime() : null;
+  }
+  function links(aLinks) {
+    return JSON.stringify(
+      (aLinks || []).map(link => [text(link.link), text(link.description), text(link.type)])
+    );
+  }
+
+  return (
+    text(aServerEntry.title) == text(aLocalData.title) &&
+    text(aServerEntry.notes) == text(aLocalData.notes) &&
+    text(aServerEntry.status) == text(aLocalData.status) &&
+    text(aServerEntry.parent) == text(aLocalData.parent) &&
+    time(aServerEntry.due) == time(aLocalData.due) &&
+    time(aServerEntry.completed) == time(aLocalData.completed) &&
+    links(aServerEntry.links) == links(aLocalData.links)
+  );
+}
+
+/**
  * Convenience function to convert any item type (task/event) to its JSON
  * representation
  *

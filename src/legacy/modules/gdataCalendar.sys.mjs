@@ -13,7 +13,7 @@ var lazy = {};
 /* global stringException, getGoogleSessionManager, calGoogleRequest, API_BASE,
  * getCorrectedDate, ItemToJSON, JSONToItem, ItemSaver, checkResolveConflict, getGoogleId,
  * getItemMetadata, saveItemMetadata, deleteItemMetadata, migrateItemMetadata, JSONToAlarm,
- * getMessenger */
+ * getMessenger, taskEntryMatches, taskUpdatedMatches */
 ChromeUtils.defineESModuleGetters(lazy, {
   setTimeout: "resource://gre/modules/Timer.sys.mjs",
 });
@@ -38,6 +38,8 @@ defineGdataModuleGetters(lazy, {
   migrateItemMetadata: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
   JSONToAlarm: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
   getMessenger: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
+  taskEntryMatches: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
+  taskUpdatedMatches: "resource://gdata-provider/legacy/modules/gdataUtils.sys.mjs",
 });
 
 ChromeUtils.defineLazyGetter(lazy, "messenger", () => lazy.getMessenger());
@@ -547,7 +549,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
           e.result == lazy.calGoogleRequest.CONFLICT_MODIFY ||
           e.result == lazy.calGoogleRequest.CONFLICT_DELETED
         ) {
-          data = await lazy.checkResolveConflict(request, this, aNewItem);
+          data = await this.retryWithCurrentTaskEtag(request, aNewItem, aOldItem, e);
         } else {
           throw e;
         }
@@ -648,7 +650,7 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
           e.result == lazy.calGoogleRequest.CONFLICT_MODIFY ||
           e.result == lazy.calGoogleRequest.CONFLICT_DELETED
         ) {
-          await lazy.checkResolveConflict(request, this, aItem);
+          await this.retryWithCurrentTaskEtag(request, aItem, aItem, e);
         } else {
           throw e;
         }
@@ -667,6 +669,82 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
       }
       throw e;
     }
+  }
+
+  /**
+   * Resolve a conflict reported for a task change. Google re-issues the ETag of every open task
+   * on a list whenever a task is added to or deleted from that list, but leaves the tasks and
+   * their "updated" stamps alone, so the incremental sync never returns the new ETags. Such a
+   * conflict is only a stale ETag: the task is read back from the server and, if it still
+   * matches the item the change was based on, the request is sent again with the current ETag.
+   * This costs requests only when a stale ETag is hit. Anything else is a real conflict and goes
+   * to the user.
+   *
+   * @param aRequest          The request that failed with a conflict.
+   * @param aItem             The item that was passed to the server.
+   * @param aReferenceItem    The item the change was based on (the old item for a
+   *                            modification, the item itself for a deletion).
+   * @param aError            The conflict error.
+   * @return                  A promise resolved with the response data.
+   */
+  async retryWithCurrentTaskEtag(aRequest, aItem, aReferenceItem, aError) {
+    if (
+      aError.result == lazy.calGoogleRequest.CONFLICT_MODIFY &&
+      aItem.isTodo() &&
+      aReferenceItem &&
+      aReferenceItem.id
+    ) {
+      let etag = null;
+      try {
+        let request = new lazy.calGoogleRequest();
+        request.type = request.GET;
+        request.calendar = this;
+        request.uri = this.createTasksURI("tasks", aReferenceItem.id);
+        let data = await this.session.asyncItemRequest(request);
+        // The "updated" stamp is the direct test. The fields are compared as well, in case the
+        // stored stamp no longer lines up with the server's.
+        let match = null;
+        if (lazy.taskUpdatedMatches(data, aReferenceItem)) {
+          match = "updated stamp";
+        } else if (
+          lazy.taskEntryMatches(data, lazy.ItemToJSON(aReferenceItem, this.offlineStorage))
+        ) {
+          match = "fields";
+        }
+        if (match) {
+          lazy.LOG("[calGoogleCalendar] Task " + aItem.title + " matched the server by " + match);
+          etag = data.etag;
+        }
+      } catch (e) {
+        lazy.LOG(
+          "[calGoogleCalendar] Could not read back task " +
+            aItem.title +
+            ": " +
+            lazy.stringException(e)
+        );
+      }
+
+      if (etag) {
+        lazy.LOG(
+          "[calGoogleCalendar] Task " +
+            aItem.title +
+            " is unchanged on the server, retrying with its current ETag"
+        );
+        aRequest.addRequestHeader("If-Match", etag);
+        try {
+          return await this.session.asyncItemRequest(aRequest);
+        } catch (e) {
+          if (
+            e.result != lazy.calGoogleRequest.CONFLICT_MODIFY &&
+            e.result != lazy.calGoogleRequest.CONFLICT_DELETED
+          ) {
+            throw e;
+          }
+        }
+      }
+    }
+
+    return lazy.checkResolveConflict(aRequest, this, aItem);
   }
 
   getItem(aId) {
