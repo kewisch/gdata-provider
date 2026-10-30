@@ -203,6 +203,17 @@ describe("jsonToItem", () => {
       expect(remaining.length).toBe(0);
     });
 
+    test("event color as category", async () => {
+      let gcalItem = copy(gcalItems.simple_event);
+      gcalItem.colorId = "11";
+
+      let item = await jsonToItem({ entry: gcalItem, calendar, defaultReminders: [], defaultTimezone });
+      let jcal = new ICAL.Component(item.item).getFirstSubcomponent("vevent");
+
+      expect(jcal.getFirstProperty("categories").getValues()).toEqual(["Tomato", "foo", "bar"]);
+      expect(jcal.getFirstPropertyValue("x-google-color-id")).toBe("11");
+    });
+
     test("simple event no cn", async () => {
       let defaultReminders = [{ method: "popup", minutes: 120 }];
       let gcalItem = copy(gcalItems.simple_event);
@@ -895,6 +906,15 @@ describe("patchItem", () => {
       test("categories", () => {
         event.getFirstProperty("categories").setValues(["foo", "bar", "baz"]);
         item.categories = ["foo", "bar", "baz"];
+        changes = patchItem(item, oldItem);
+        expect(changes).toEqual({
+          extendedProperties: { shared: { "X-MOZ-CATEGORIES": "foo,bar,baz" } },
+        });
+      });
+
+      test("event color categories are not saved", () => {
+        event.getFirstProperty("categories").setValues(["Tomato", "foo", "bar", "baz"]);
+        item.categories = ["Tomato", "foo", "bar", "baz"];
         changes = patchItem(item, oldItem);
         expect(changes).toEqual({
           extendedProperties: { shared: { "X-MOZ-CATEGORIES": "foo,bar,baz" } },

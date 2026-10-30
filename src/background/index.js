@@ -4,7 +4,7 @@
  * Portions Copyright (C) Philipp Kewisch */
 
 import { checkCalendarMigration } from "./migrate.js";
-import { isTesting } from "./utils.js";
+import { EVENT_COLORS, isTesting } from "./utils.js";
 import calGoogleCalendar from "./calendar.js";
 import sessions from "./session.js";
 import TimezoneService from "./timezone.js";
@@ -97,5 +97,8 @@ export async function initListeners() {
   calGoogleCalendar.initListeners();
   await migrateLegacyPrefs();
   await checkCalendarMigration();
+  await messenger.gdata.setCategoryColors(
+    Object.fromEntries(Object.values(EVENT_COLORS).map(({ name, color }) => [name, color]))
+  );
   // installDebugCalendar();
 })();
