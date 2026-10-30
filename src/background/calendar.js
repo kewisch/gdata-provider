@@ -15,6 +15,12 @@ import { itemToJson, jsonToItem, jsonToAlarm, patchItem, ItemSaver } from "./ite
 
 var console = new Console("calGoogleCalendar");
 
+// The conference solutions that can be created on a calendar that has not yet seen an event using
+// them. The calendar list only gives us the type, the label has to come from somewhere else.
+const CONFERENCE_SOLUTION_NAMES = {
+  hangoutsMeet: "Google Meet",
+};
+
 export default class calGoogleCalendar {
   static _instances = {};
 
@@ -407,6 +413,20 @@ export default class calGoogleCalendar {
     await messenger.calendar.calendars.clear(this.cacheId);
   }
 
+  async seedConferenceSolutions(allowedTypes) {
+    let conferenceSolutions = await this.getCalendarPref("conferenceSolutions") ?? {};
+    let missingTypes = allowedTypes.filter(type => {
+      return type in CONFERENCE_SOLUTION_NAMES && !(type in conferenceSolutions);
+    });
+
+    if (missingTypes.length) {
+      for (let type of missingTypes) {
+        conferenceSolutions[type] = { key: { type }, name: CONFERENCE_SOLUTION_NAMES[type] };
+      }
+      await this.setCalendarPref("conferenceSolutions", conferenceSolutions);
+    }
+  }
+
   async onSync(retry = true) {
     let prefs = await messenger.storage.local.get({
       "settings.idleTime": 300,
@@ -421,6 +441,7 @@ export default class calGoogleCalendar {
     }
 
     let promises = [];
+    let allowedConferenceTypes = [];
 
     if (this.calendarName) {
       promises.push(
@@ -432,6 +453,7 @@ export default class calGoogleCalendar {
           });
           let data = await request.commit(this.session);
           this.defaultReminders = data.defaultReminders;
+          allowedConferenceTypes = data.conferenceProperties?.allowedConferenceSolutionTypes ?? [];
 
           let settings = [
             "accessRole",
@@ -536,7 +558,15 @@ export default class calGoogleCalendar {
     }
 
     try {
-      await Promise.all(promises);
+      // Seed only once the events are done, they write the same pref. A failed event sync must not
+      // keep the solutions from being seeded, the calendar list may well have succeeded.
+      let results = await Promise.allSettled(promises);
+      await this.seedConferenceSolutions(allowedConferenceTypes);
+
+      let failure = results.find(result => result.status == "rejected");
+      if (failure) {
+        throw failure.reason;
+      }
       this.session.resetBackoff();
     } catch (e) {
       if (e instanceof ResourceGoneError) {

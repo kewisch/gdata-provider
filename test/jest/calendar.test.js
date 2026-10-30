@@ -1226,6 +1226,80 @@ describe("onSync", () => {
     expect(urls).toContain("https://www.googleapis.com/calendar/v3/calendars/id7%40calendar.google.com/events?maxResults=1000&eventTypes=default&eventTypes=focusTime&eventTypes=outOfOffice&eventTypes=fromGmail&showDeleted=true&syncToken=nextSyncToken");
   });
 
+  describe("conference solutions", () => {
+    async function syncWith(allowedConferenceSolutionTypes, solutions, eventsResponse = mockCalendarRequest) {
+      let calendar = await calGoogleCalendar.get("id1");
+      await calendar.onInit();
+      await calendar.setCalendarPref("conferenceSolutions", solutions);
+
+      fetch.mockResponse(req => {
+        let response;
+
+        if ((response = eventsResponse(req)) !== null) {
+          return response;
+        }
+        if ((response = mockCalendarListRequest(req, {
+          conferenceProperties: { allowedConferenceSolutionTypes }
+        })) !== null) {
+          return response;
+        }
+        if ((response = mockTaskRequest(req)) !== null) {
+          return response;
+        }
+        throw new Error("Unhandled request " + req.url);
+      });
+
+      calendar.session.oauth.accessToken = "accessToken";
+      calendar.session.oauth.expires = new Date(new Date().getTime() + 10000);
+      await calendar.onSync();
+
+      return calendar.getCalendarPref("conferenceSolutions");
+    }
+
+    test("seeded from the calendar list", async () => {
+      expect(await syncWith(["eventHangout", "hangoutsMeet"], null)).toEqual({
+        hangoutsMeet: { key: { type: "hangoutsMeet" }, name: "Google Meet" },
+      });
+    });
+
+    test("seeded when the event sync fails", async () => {
+      let failingEvents = req => {
+        if (req.url.includes("/events")) {
+          return { headers: { "Content-Type": "text/plain" }, body: "blergh" };
+        }
+        return null;
+      };
+
+      await expect(syncWith(["hangoutsMeet"], null, failingEvents)).rejects.toThrow("blergh");
+
+      let calendar = await calGoogleCalendar.get("id1");
+      expect(await calendar.getCalendarPref("conferenceSolutions")).toEqual({
+        hangoutsMeet: { key: { type: "hangoutsMeet" }, name: "Google Meet" },
+      });
+    });
+
+    test("existing solution is kept", async () => {
+      let solution = {
+        key: { type: "hangoutsMeet" },
+        name: "Meet",
+        iconUri: "https://example.com/icon.png",
+        iconCache: [1, 2, 3],
+      };
+
+      expect(await syncWith(["hangoutsMeet"], { hangoutsMeet: solution })).toEqual({
+        hangoutsMeet: solution,
+      });
+    });
+
+    test.each([
+      [undefined],
+      [[]],
+      [["eventHangout", "addOn"]],
+    ])("nothing to seed for %j", async types => {
+      expect(await syncWith(types, null)).toEqual({});
+    });
+  });
+
   test("birthday sync", async () => {
     let calendar = await calGoogleCalendar.get("id10");
     await calendar.onInit();
