@@ -6,6 +6,7 @@
 import {
   categoriesStringToArray,
   categoriesArrayToString,
+  EVENT_COLORS,
   reverseObject,
   addVCalendar,
   stripFractional,
@@ -27,6 +28,7 @@ const ALARM_ACTION_MAP = {
 };
 const ATTENDEE_STATUS_MAP_REV = reverseObject(ATTENDEE_STATUS_MAP);
 const ALARM_ACTION_MAP_REV = reverseObject(ALARM_ACTION_MAP);
+const COLOR_CATEGORIES = new Set(Object.values(EVENT_COLORS).map(color => color.name));
 
 const FOUR_WEEKS_IN_MINUTES = 40320;
 
@@ -602,7 +604,9 @@ function patchEvent(item, oldItem, isImport, isCreate) {
 
   // Categories
   function getAllCategories(vevent) {
-    return vevent.getAllProperties("categories").reduce((acc, comp) => acc.concat(comp.getValues()), []);
+    return vevent.getAllProperties("categories")
+      .reduce((acc, comp) => acc.concat(comp.getValues()), [])
+      .filter(category => !COLOR_CATEGORIES.has(category)); // These come from colorId on each sync
   }
 
   let oldCatSet = new Set(getAllCategories(oldEvent));
@@ -871,6 +875,14 @@ async function jsonToEvent({ entry, calendar, defaultReminders, defaultTimezone,
   // Google does not support categories natively, but allows us to store data as an
   // "extendedProperty", and here it's going to be retrieved again
   let categories = categoriesStringToArray(sharedProps["X-MOZ-CATEGORIES"]);
+
+  // The event color is shown as a category. It goes first, Thunderbird paints the first category
+  // that has a color.
+  let colorCategory = EVENT_COLORS[entry.colorId]?.name;
+  if (colorCategory && !categories.includes(colorCategory)) {
+    categories.unshift(colorCategory);
+  }
+
   if (categories && categories.length) {
     veventprops.push(["categories", {}, "text", ...categories]);
   }

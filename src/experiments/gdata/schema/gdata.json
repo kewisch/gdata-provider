@@ -44,6 +44,14 @@
         "parameters": [
           { "type": "string", "name": "calendarId" }
         ]
+      },
+      {
+        "name": "setCategoryColors",
+        "async": true,
+        "type": "function",
+        "parameters": [
+          { "type": "object", "name": "colors", "additionalProperties": { "type": "string" } }
+        ]
       }
     ]
   }

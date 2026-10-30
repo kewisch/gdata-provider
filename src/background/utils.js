@@ -84,6 +84,22 @@ export function getItemEtag(item, force = false) {
   return item.metadata.etag || "*";
 }
 
+// The event colors of Google Calendar. The API only returns an id and a hex value for each, the
+// names are those shown in the Google Calendar interface.
+export const EVENT_COLORS = {
+  1: { name: "Lavender", color: "#7986cb" },
+  2: { name: "Sage", color: "#33b679" },
+  3: { name: "Grape", color: "#8e24aa" },
+  4: { name: "Flamingo", color: "#e67c73" },
+  5: { name: "Banana", color: "#f6bf26" },
+  6: { name: "Tangerine", color: "#f4511e" },
+  7: { name: "Peacock", color: "#039be5" },
+  8: { name: "Graphite", color: "#616161" },
+  9: { name: "Blueberry", color: "#3f51b5" },
+  10: { name: "Basil", color: "#0b8043" },
+  11: { name: "Tomato", color: "#d50000" },
+};
+
 export function categoriesStringToArray(aCategories) {
   if (!aCategories) {
     return [];

@@ -156,6 +156,16 @@ this.gdata = class extends ExtensionAPI {
           }
         },
 
+        async setCategoryColors(colors) {
+          for (const [name, color] of Object.entries(colors)) {
+            // A color the user has picked for this category stays
+            const pref = "calendar.category.color." + cal.view.formatStringForCSSRule(name);
+            if (!Services.prefs.getStringPref(pref, "")) {
+              Services.prefs.setStringPref(pref, color);
+            }
+          }
+        },
+
         async upgradeCalendar(calendarId) {
           let calendar = cal.manager.getCalendarById(calendarId);
           if (calendar.type != "gdata") {
