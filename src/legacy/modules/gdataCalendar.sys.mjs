@@ -939,6 +939,14 @@ export class calGoogleCalendar extends cal.provider.BaseClass {
    * provider, but we want to advertise that we will always take care of
    * notifications.
    */
+  get supportsScheduling() {
+    return true;
+  }
+
+  getSchedulingSupport() {
+    return this;
+  }
+
   canNotify(aMethod, aItem) {
     return true;
   }

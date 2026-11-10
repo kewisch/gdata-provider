@@ -1465,6 +1465,10 @@ add_task(async function test_modify_invitation() {
   equal(items.length, 1);
 
   let item = items[0];
+
+  ok(client.supportsScheduling);
+  ok(client.getSchedulingSupport().isInvitation(item));
+
   let att = cal.itip.getInvitedAttendee(item);
   let newItem = item.clone();
 
